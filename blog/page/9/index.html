@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>graham gilbert</title>
+  <meta name="author" content="Graham Gilbert">
+
+  
+  <meta name="description" content="So you&rsquo;ve lovingly crafted your never booted image in InstaDMG. It&rsquo;s fully up to date and lovely. And then you try to enable FileVault 2 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://grahamgilbert.com/blog/page/9">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27233739-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">graham gilbert</a></h1>
+  
+    <h2>Mac administration and assorted nerdity</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:grahamgilbert.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/01/making-a-lion-recovery-hd/">Making a Lion Recovery HD</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-01T17:30:35+00:00" pubdate data-updated="true">Feb 1<span>st</span>, 2012</time>
+        
+         | <a href="/blog/2012/02/01/making-a-lion-recovery-hd/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>So you&rsquo;ve lovingly crafted your never booted image in InstaDMG. It&rsquo;s fully up to date and lovely. And then you try to enable FileVault 2. As you have no Recovery HD, it&rsquo;s not going to happen.</p>
+
+<p>I&rsquo;ve tried several methods to get around this, including taking an image of an existing Recovery HD. It worked (ish), but didn&rsquo;t feel right. Then I found this post on <a href="https://plus.google.com/113021614344742332063/posts/8D8FJjps5C6">google +</a>. I&rsquo;ve lovingly ripped off the method and put it into a package for deployment with DeployStudio, ARD, or anything else that can take normal packages. <a href="https://github.com/grahamgilbert/Make-Recovery-HD">You can download everything from my GitHub</a>, usage instructions are in the readme.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/01/web-server-on-linode-part-1/">Web Server on Linode Part 1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-01T20:23:03+00:00" pubdate data-updated="true">Jan 1<span>st</span>, 2012</time>
+        
+         | <a href="/blog/2012/01/01/web-server-on-linode-part-1/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently, I was tasked with moving a client&rsquo;s web server from a box in their office, to something a little more robust when they put something up there that caused the server to go nuts (30 mb/s nuts!).</p>
+
+<p>The main goals were:</p>
+
+<ul>
+<li>Fast, scalable web server</li>
+<li>Multiple FTP users for the client&rsquo;s web team to modify the site</li>
+<li>Integrates with their existing CrashPlan PROe backup system.</li>
+<li>Use GUI&rsquo;s as much as possible for admin so lower level techs could make changes on the server.</li>
+</ul>
+
+
+<p>After considering several options, we decided to go with Linode. I&rsquo;ve had great success hosting my own site with them, and as we had full access to the box, we could install anything we wanted &ndash; including CrashPlan.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/01/01/web-server-on-linode-part-1/">Continue reading &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/10/thoughts-on-profile-manager/">Thoughts on Profile Manager</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-10T20:45:29+00:00" pubdate data-updated="true">Dec 10<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/12/10/thoughts-on-profile-manager/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We&rsquo;ve been using a 10.7 Server in the office since Lion was released, but it is only now that I&rsquo;m about to install an all Lion office, so will get the chance to use Profile Manager in a real install. Over the last few months, I&rsquo;ve noticed a couple of things:</p>
+
+<ul>
+<li><p>Don&rsquo;t bother using a self signed SSL certificate. Preferences will fail to push seemingly at random without a proper certificate. For what they cost, get over to Godaddy and buy yourself a cheap certificate and save yourself hours of head scratching.</p></li>
+<li><p>On first glance, Profile Manager seems to be lacking load of options that we had in Workgroup Manager. Remember that your can upload your own plists, so we can still set all of the options that we could before.</p></li>
+<li><p>I&rsquo;ve not been able to set Mobility preferences using Profile Manager, so have had to fall back to MCX for this as the client mac steadfastly refuses to use the settings I&rsquo;ve set in Profile Manager. If anyone has any ideas about this, I&rsquo;d love to hear them.</p></li>
+<li><p>If you&rsquo;re using DeployStudio, your can cut out a load of post imaging faffing about with enrolling the mac by using an Enrolment Profile and then using the workflow item in DS to get the client talking to your server.</p></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/29/backing-up-postres-in-lion-server/">Backing Up Postres in Lion Server</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-29T16:10:37+00:00" pubdate data-updated="true">Nov 29<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/11/29/backing-up-postres-in-lion-server/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Starting with Lion Server, a fair bit of data is now stored in Postgres databases. If you use Time Machine, you&rsquo;ll get this backed up properly for you. If you use a proper backup solution (I prefer CrashPlan), you won&rsquo;t get automated dumps. This script rectifies this, by dumping all of your Postgres data, and keeping 7 days worth.</p>
+
+<p>You can grab the code, along with a pre-built pkg installer from <a href="https://github.com/grahamgilbert/Postgres-Backup-for-Lion-Server">GitHub</a>.</p>
+
+<h3>Configuration</h3>
+
+<p>By default, the script puts it&rsquo;s backups in /Backups/Postgres &ndash; if you wish to change it, you will need to edit line 3 of /usr/local/pgbackup/pgbackup.sh</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>/usr/local/pgbackup/pgbackup.sh
+</span><span class='line'><span class="nv">FINAL_BACKUP_DIR</span><span class="o">=</span>/path/where/you/want/things/kept
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The LaunchDaemon will trigger the script every night at 21:00. If you wish to change this, you will need to edit the CalendarStartInterval part of com.grahamgilbert.pgbackup.plist</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/22/kerio-connect-vs-web-services-in-lion-server/">Kerio Connect vs Web Services in Lion Server</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-22T21:17:27+00:00" pubdate data-updated="true">Nov 22<span>nd</span>, 2011</time>
+        
+         | <a href="/blog/2011/11/22/kerio-connect-vs-web-services-in-lion-server/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>The problem</h3>
+
+<p>Lion Server takes over every ethernet interface when you enable any web services (Web, Wiki, Profile Manager, basically anything!). This leaves us with two options: putting Kerio on a non-standard port and getting the users to type that in every time, or completely disabling apache and not using any of the good stuff that came with Lion Server. Or, we could work out a way to redirect users to the right port number when they hit mail.example.com</p>
+
+<p>Enter Reverse Proxy. This takes the request for the mail.example.com virtual host, and redirects it to our custom HTTPS port (8843).</p>
+
+<h3>How to do it</h3>
+
+<p>The files you need are on my <a href="https://github.com/grahamgilbert/Lion_Kerio">GitHub</a>. Replace mail.example.com with the FQDN of your mail server.</p>
+
+<ol>
+<li>Set up your lion server first. Configure SSL certificates, OD and web services the way you like it.</li>
+<li>Export your private key for the signed SSL certificate from the keychain.</li>
+<li>Install Kerio Connect. Import the private key and your signed certificate.</li>
+<li>Set Kerio to use only port 8800 for HTTP and 8843 for HTTP and HTTPS, respectively.</li>
+<li>Set Kerio to bind it&rsquo;s services to All Interfaces rather than a specific IP address. (I&rsquo;ve found that services won&rsquo;t start when it&rsquo;s listening on all IPs, but will when it can listen to all &ndash; don&rsquo;t ask me why!)</li>
+<li>In Server.app, configure mail.example.com in Web. Set it to use port 443, set the root folder to whatever you want (it won&rsquo;t be used).</li>
+<li>In Hardware, set the virtual host you just created to use the right ssl cert.</li>
+<li>In terminal: <code>cd /path/to/the/files/you/downloaded</code></li>
+<li>In terminal again: <code>sudo cp httpd_kerio.conf /etc/apache2/httpd_kerio.conf</code></li>
+<li>And again: <code>sudo cp webapps/com.grahamglbert.kerio.plist /etc/apache2/webapps/com.grahamglbert.kerio.plist</code></li>
+<li>One last time: <code>sudo webappctl start com.grahamgilbert.kerio mail.example.com</code></li>
+</ol>
+
+
+<h3>What&rsquo;s happening</h3>
+
+<p>By default, when you specify a vhost to use ssl in lion server, any requests to port 80 are redirected to 443. Once it&rsquo;s wrapped in ssl, it&rsquo;s redirected transparently to 8843, so the user is sent to the webmail login.
+The plist file is the core of the webapp mechanism that was introduced with lion server. Within that all we&rsquo;re doing is importing the httpd_kerio.conf file (which just has a standard apache reverse proxy directive) and telling the app to always use ssl. The webappctl command is simply telling the webapp mechanism to load our plist and start it on the mail.example.com vhost.</p>
+
+<h3>Known Issues</h3>
+
+<h4>Entourage</h4>
+
+<p>Entourage accounts will need to be reconfigured with the Kerio setup tool. They don&rsquo;t seem to like communicating with the server over port 443 when the reverse proxy is running &ndash; they will have issues sending email.</p>
+
+<h4>Kerio Services</h4>
+
+<p>The services in Kerio Admin will need to be set to run on All Interfaces rather than a set IP address, as they won&rsquo;t start on a specific address (it is unknown whether this is because of the reverse proxy / webapp process or if this is a general Lion issue). If the service has stopped, the webapp will need to be restarted:</p>
+
+<pre><code>sudo webappctl stop com.grahamgilbert.kerio mail.example.com
+sudo webappctl start com.grahamgilbert.kerio mail.example.com
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/8/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p><img src="/images/me.jpg" class="left" />A Mac admin, who works for the awesome <a href="http://pebbleit.com">pebble.it</a>. <a href="/about">More?</a></p>
+
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer.</small></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/">Writing Plugins for Sal: Part 3</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/">Writing Plugins for Sal: Part 2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/">Writing Plugins for Sal: Part 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/17/sal-the-munki-puppet/">Sal: The Munki Puppet</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/22/managing-the-authorization-database-with-munki/">Managing the Authorization Database With Munki</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'grahamgilbert',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Graham Gilbert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'grahamgilbert';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

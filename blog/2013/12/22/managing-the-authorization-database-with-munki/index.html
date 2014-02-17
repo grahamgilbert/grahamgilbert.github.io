@@ -1,0 +1,763 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Managing the Authorization Database with Munki - graham gilbert</title>
+  <meta name="author" content="Graham Gilbert">
+
+  
+  <meta name="description" content="Have you ever wished you didn&rsquo;t have to take calls from your users to unlock various parts of System Preferences? That standard users could &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27233739-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">graham gilbert</a></h1>
+  
+    <h2>Mac administration and assorted nerdity</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:grahamgilbert.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Managing the Authorization Database With Munki</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-22T15:25:00+00:00" pubdate data-updated="true">Dec 22<span>nd</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Have you ever wished you didn&rsquo;t have to take calls from your users to unlock various parts of System Preferences? That standard users could unlock Energy Saver or Date and Time preferences? Well dear reader, this is the article for you.</p>
+
+<p>If, for some strange reason you can&rsquo;t be bothered to read this overly long article (I do love to procrastinate), you can head over to my <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki">macscripts repo on GitHub</a> for the scripts and resulting pkginfo files I&rsquo;ve made for this.</p>
+
+<p>Before we start, let&rsquo;s get one thing out of the way &ndash; Munki isn&rsquo;t at heart a configuration management system. I&rsquo;ve traditionally preferred Puppet for these tasks, but as there is at the time of writing a <a href="https://projects.puppetlabs.com/issues/22830">bug open</a> on modifying this with Puppet, I took it upon myself to make this work in my environment. I spent a couple of days trying to get my sub-par Ruby skills to match my aspirations, so I moved onto a much more comfortable technology for me: Python and Munki.</p>
+
+<p>To tackle this issue, I&rsquo;m going to be using the same Philosophy as Puppet:</p>
+
+<ul>
+<li>Check if the resource exists and what it&rsquo;s current value is</li>
+<li>If required, change the value</li>
+<li>And be able to revert back to how things were</li>
+</ul>
+
+
+<p>These translate quite nicely into <code>installcheck_script</code>, <code>postinstall_script</code> and <code>uninstall_script</code> rolled into a <code>nopkg</code> pkginfo (for a good intro into how nopkg pkginfos work, see how to manage printers with them over on the <a href="https://code.google.com/p/munki/wiki/ManagingPrintersWithMunki">Munki wiki</a>). We could do this with a payload free package and an installcheck_script just as easily, but as we&rsquo;re already putting code into our pkginfo, we might as well keep it all in one place.</p>
+
+<p>This isn&rsquo;t intended to be a tutorial on the theory of OS X&rsquo;s authorization database &ndash; there are already <a href="http://mattsmacblog.wordpress.com/2012/01/05/making-use-of-the-etcauthorization-file-in-lion-10-7-x/">excellent resources available</a>.</p>
+
+<h2>installcheck_script</h2>
+
+<p>Our <code>installcheck_script</code> is going to be very basic. To first open up the root <code>system.preferences</code> right, we just need to make sure that the group is set to <code>everyone</code> rather than <code>admin</code>. If you want to use another group, just substitute it in the <code>group</code> variable in the installcheck_script and the postinstall_script.</p>
+
+<figure class='code'><figcaption><span>installcheck.py </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">plistlib</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Group System Preferences should be opened to</span>
+</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s">&#39;everyone&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;read&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">formatted</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</span><span class='line'><span class="c"># if group matches, exit 1 as we don&#39;t need to install</span>
+</span><span class='line'><span class="k">if</span> <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'><span class="k">else</span><span class="p">:</span>
+</span><span class='line'>    <span class="c"># if it doesn&#39;t we&#39;re exiting with 0 as we need to perform the install</span>
+</span><span class='line'>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>postinstall_script</h2>
+
+<p>The <code>postinstall_script</code> is just an extension of the <code>installcheck_script</code> &ndash; but we&rsquo;re going to make use of Python&rsquo;s built-in <code>plistlib</code> to modify the plist and feed it back into <code>security authorizationdb</code> to set our desired settings.</p>
+
+<figure class='code'><figcaption><span>postinstall.py </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">plistlib</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Group System Preferences should be opened to</span>
+</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s">&#39;everyone&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;read&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+</span><span class='line'><span class="n">formatted</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># If the group doesn&#39;t match, we&#39;re going to correct it.</span>
+</span><span class='line'><span class="k">if</span> <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">group</span><span class="p">:</span>
+</span><span class='line'>    <span class="c">#input_plist = {}</span>
+</span><span class='line'>    <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group</span>
+</span><span class='line'>    <span class="c"># Convert back to plist</span>
+</span><span class='line'>    <span class="n">input_plist</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">writePlistToString</span><span class="p">(</span><span class="n">formatted</span><span class="p">)</span>
+</span><span class='line'>    <span class="c"># Write the plist back to the authorizationdb</span>
+</span><span class='line'>    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;write&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
+</span><span class='line'>    <span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">input_plist</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>uninstall_script</h2>
+
+<p>We should be good admins and clean up after ourselves, so we&rsquo;ll include an uninstall script.</p>
+
+<figure class='code'><figcaption><span>uninstall.py </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">plistlib</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Set the group back to admin</span>
+</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s">&#39;admin&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;read&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+</span><span class='line'><span class="n">formatted</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># If the group doesn&#39;t match, we&#39;re going to correct it.</span>
+</span><span class='line'><span class="k">if</span> <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">group</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group</span>
+</span><span class='line'>    <span class="c"># Convert back to plist</span>
+</span><span class='line'>    <span class="n">input_plist</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">writePlistToString</span><span class="p">(</span><span class="n">formatted</span><span class="p">)</span>
+</span><span class='line'>    <span class="c"># Write the plist back to the authorizationdb</span>
+</span><span class='line'>    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;write&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
+</span><span class='line'>    <span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">input_plist</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Getting it into Munki</h2>
+
+<p>Now we&rsquo;ve got our three scripts, we need to get them together into a pkginfo file. Assuming the scripts you&rsquo;ve just made live in <code>~/src/macscripts/Munki/Auth</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd ~/src/macscripts/Munki/Auth
+</span><span class='line'>$ /usr/local/munki/makepkginfo --installcheck_script=installcheck.py --postinstall_script=postinstall.py --uninstall_script=uninstall.py > OpenSysPrefs-1.0.plist</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Which will produce the bare bones of a pkginfo file, but there are a few other things we need to add into it. Modify OpenSysPref-1.0.plist to look like the below. For further documentation on what we&rsquo;re doing here, have a look at the <a href="https://code.google.com/p/munki/wiki/PkginfoFiles">Munki wiki</a>. The important parts you&rsquo;ll need to add / modify are:</p>
+
+<ul>
+<li>autoremove</li>
+<li>catalog</li>
+<li>description</li>
+<li>display_name</li>
+<li>name</li>
+<li>installer_type</li>
+<li>minimum_os_version</li>
+<li>version</li>
+<li>unattended_install (if you want it to apply in the background)</li>
+<li>uninstall_method</li>
+<li>uninstallable</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>autoremove<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;false/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>catalogs<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;string&gt;</span>production<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>description<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>Opens System Preferences to Everyone<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>display_name<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>Open System Preferences<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>name<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>OpenSysPrefs<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>installer_type<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>nopkg<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>minimum_os_version<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>10.8.0<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>unattended_install<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;true/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>version<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>1.0<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>installcheck_script<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>#!/usr/bin/env python
+</span><span class='line'>
+</span><span class='line'>import subprocess
+</span><span class='line'>import sys
+</span><span class='line'>import plistlib
+</span><span class='line'>
+</span><span class='line'># Group System Preferences should be opened to
+</span><span class='line'>group = &#39;everyone&#39;
+</span><span class='line'>
+</span><span class='line'>command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;read&#39;, &#39;system.preferences&#39;]
+</span><span class='line'>
+</span><span class='line'>task = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+</span><span class='line'>(out, err) = task.communicate()
+</span><span class='line'>
+</span><span class='line'>formatted = plistlib.readPlistFromString(out)
+</span><span class='line'>
+</span><span class='line'># if group matches, exit 1 as we don&#39;t need to install
+</span><span class='line'>if formatted[&#39;group&#39;] == group:
+</span><span class='line'>    sys.exit(1)
+</span><span class='line'>else:
+</span><span class='line'>    # if it doesn&#39;t we&#39;re exiting with 0 as we need to perform the install
+</span><span class='line'>    sys.exit(0)<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>postinstall_script<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>#!/usr/bin/env python
+</span><span class='line'>
+</span><span class='line'>import subprocess
+</span><span class='line'>import sys
+</span><span class='line'>import plistlib
+</span><span class='line'>
+</span><span class='line'># Group System Preferences should be opened to
+</span><span class='line'>group = &#39;everyone&#39;
+</span><span class='line'>
+</span><span class='line'>command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;read&#39;, &#39;system.preferences&#39;]
+</span><span class='line'>
+</span><span class='line'>task = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+</span><span class='line'>(out, err) = task.communicate()
+</span><span class='line'>formatted = plistlib.readPlistFromString(out)
+</span><span class='line'>
+</span><span class='line'># If the group doesn&#39;t match, we&#39;re going to correct it.
+</span><span class='line'>if formatted[&#39;group&#39;] != group:
+</span><span class='line'>    #input_plist = {}
+</span><span class='line'>    formatted[&#39;group&#39;] = group
+</span><span class='line'>    # Convert back to plist
+</span><span class='line'>    input_plist = plistlib.writePlistToString(formatted)
+</span><span class='line'>    # Write the plist back to the authorizationdb
+</span><span class='line'>    command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;write&#39;, &#39;system.preferences&#39;]
+</span><span class='line'>    task = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+</span><span class='line'>    (out, err) = task.communicate(input=input_plist)<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>uninstall_method<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>uninstall_script<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>uninstallable<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;true/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>uninstall_script<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>#!/usr/bin/env python
+</span><span class='line'>
+</span><span class='line'>import subprocess
+</span><span class='line'>import sys
+</span><span class='line'>import plistlib
+</span><span class='line'>
+</span><span class='line'># Set the group back to admin
+</span><span class='line'>group = &#39;admin&#39;
+</span><span class='line'>
+</span><span class='line'>command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;read&#39;, &#39;system.preferences&#39;]
+</span><span class='line'>
+</span><span class='line'>task = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+</span><span class='line'>(out, err) = task.communicate()
+</span><span class='line'>formatted = plistlib.readPlistFromString(out)
+</span><span class='line'>
+</span><span class='line'># If the group doesn&#39;t match, we&#39;re going to correct it.
+</span><span class='line'>if formatted[&#39;group&#39;] != group:
+</span><span class='line'>    formatted[&#39;group&#39;] = group
+</span><span class='line'>    # Convert back to plist
+</span><span class='line'>    input_plist = plistlib.writePlistToString(formatted)
+</span><span class='line'>    # Write the plist back to the authorizationdb
+</span><span class='line'>    command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;write&#39;, &#39;system.preferences&#39;]
+</span><span class='line'>    task = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+</span><span class='line'>    (out, err) = task.communicate(input=input_plist)<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'><span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>At this point, you should be able to add this pkginfo to your Munki repository, include it in a manifest and &ndash; well, nothing will happen, as this only unlocks the top level of System Preferences. If you want to do more, you&rsquo;ll need to unlock additional parts as well &ndash; the scripts to do this can be found in my <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki">macscripts repository</a>. I&rsquo;ve specified that <code>OpenSysPrefs</code> is required in all of these &ndash; this means I can include only the needed modifications in the manifest and not worry about the top level being unlocked.</p>
+
+<p>Also remember that Munki has conditional items built right in &ndash; you might only want to unlock the Network pane on laptops so they can install VPN profiles etc using something like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>conditional_items<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'><span class="nt">&lt;array&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>condition<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>machine_type == &quot;laptop&quot;<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>managed_installs<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;string&gt;</span>UnlockNetwork<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'><span class="nt">&lt;/array&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Graham Gilbert</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-22T15:25:00+00:00" pubdate data-updated="true">Dec 22<span>nd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/munki/'>Munki</a>, <a class='category' href='/blog/categories/os-x/'>OS X</a>, <a class='category' href='/blog/categories/python/'>Python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/11/19/crypt-0-dot-5-released/" title="Previous Post: Crypt 0.5 released">&laquo; Crypt 0.5 released</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/01/17/sal-the-munki-puppet/" title="Next Post: Sal: The Munki Puppet">Sal: The Munki Puppet &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p><img src="/images/me.jpg" class="left" />A Mac admin, who works for the awesome <a href="http://pebbleit.com">pebble.it</a>. <a href="/about">More?</a></p>
+
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer.</small></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/">Writing Plugins for Sal: Part 3</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/">Writing Plugins for Sal: Part 2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/">Writing Plugins for Sal: Part 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/17/sal-the-munki-puppet/">Sal: The Munki Puppet</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/22/managing-the-authorization-database-with-munki/">Managing the Authorization Database With Munki</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'grahamgilbert',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Graham Gilbert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'grahamgilbert';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

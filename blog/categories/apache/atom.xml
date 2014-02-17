@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Apache | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/apache/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2014-02-17T21:53:37+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Web server on Linode part 1]]></title>
+    <link href="http://grahamgilbert.com/blog/2012/01/01/web-server-on-linode-part-1/"/>
+    <updated>2012-01-01T20:23:03+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2012/01/01/web-server-on-linode-part-1</id>
+    <content type="html"><![CDATA[<p>Recently, I was tasked with moving a client&rsquo;s web server from a box in their office, to something a little more robust when they put something up there that caused the server to go nuts (30 mb/s nuts!).</p>
+
+<p>The main goals were:</p>
+
+<ul>
+<li>Fast, scalable web server</li>
+<li>Multiple FTP users for the client&rsquo;s web team to modify the site</li>
+<li>Integrates with their existing CrashPlan PROe backup system.</li>
+<li>Use GUI&rsquo;s as much as possible for admin so lower level techs could make changes on the server.</li>
+</ul>
+
+
+<p>After considering several options, we decided to go with Linode. I&rsquo;ve had great success hosting my own site with them, and as we had full access to the box, we could install anything we wanted &ndash; including CrashPlan.<!--more--></p>
+
+<p>So, first things first. Get yourself a Linode account. Start off with the cheapest 512 account and work your way upwards if you need the horsepower. Once you&rsquo;ve got your account, pick your data centre, and get your VM up and running. We usually go for Ubuntu 10.04 LTS as you&rsquo;ll find the most support online for that.</p>
+
+<p>Now you&rsquo;ve got your Ubuntu Linode up and running, let&rsquo;s get the web server up and running (mostly borrowed from the Linode Library).</p>
+
+<p>It&rsquo;s much easier if you set up an A record for your new VM, so for the purposes of this, we&rsquo;ll call our new VM linode.example.com.</p>
+
+<p>The code-type font is stuff your should be putting into your terminal window, one line at a time (but to be honest, if I have to tell you that, maybe this isn&rsquo;t the right thing to be following&hellip;)</p>
+
+<p>Set the hostname<br/>
+<code>bash
+echo "linode.example.com" &gt; /etc/hostname
+</code></p>
+
+<p>Get everything up to date:<br/>
+<code>bash
+apt-get update
+apt-get upgrade
+apt-get install php5 apache2 mysql-server
+</code></p>
+
+<p>Bash in your chosen MySQL root password when you&rsquo;re prompted, and you&rsquo;re done.</p>
+
+<p>That&rsquo;s all you need for the most basic web server, but I&rsquo;m a Mac admin, I quite like having a GUI if I can, so let&rsquo;s get one installed. I quite like webmin, but it&rsquo;s not quite a straightforward as we&rsquo;d like.</p>
+
+<p>First install the dependencies:<br/>
+<code>bash
+apt-get install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl libmd5-perl apt-show-versions libapt-pkg-perl
+</code></p>
+
+<p>You&rsquo;ll notice there&rsquo;s a failure there, so we&rsquo;ll have to hunt that down ourselves. Grab the latest version from: <a href="http://mirrors.kernel.org/ubuntu/pool/universe/libm/libmd5-perl/">http://mirrors.kernel.org/ubuntu/pool/universe/libm/libmd5-perl/</a></p>
+
+<p><code>bash
+cd /tmp
+wget http://mirrors.kernel.org/ubuntu/pool/universe/libm/libmd5-perl/libmd5-perl_2.03-1_all.deb
+dpkg -i libmd5-perl_2.03-1_all.deb
+</code></p>
+
+<p>Now to grab the latest version of Webmin:
+<code>bash
+wget http://prdownloads.sourceforge.net/webadmin/webmin_1.570_all.deb
+dpkg -i webmin_1.570_all.deb
+</code></p>
+
+<p>Now you should be able to log into webmin with your root username and password at <a href="https://linode.example.com:10000">https://linode.example.com:10000</a></p>
+
+<p>I&rsquo;m not going to tell you how to set up Apache &ndash; there&rsquo;s plenty enough on the internet. It&rsquo;s easy with Webmin, the Apache defaults are reasonably sensible. Just make a directory for your web files, and point a new virtual host at the directory. If you get stuck, a good tutorial can be found at <a href="http://doxfer.webmin.com/Webmin/Name-BasedVirtualHosting">http://doxfer.webmin.com/Webmin/Name-BasedVirtualHosting</a></p>
+
+<p>We&rsquo;re nearly done with this part, just a little housekeeping to do. First, a little cleaning up of the MySQL install. Accept the defaults that this script offers:
+<code>bash
+mysql_secure_installation
+</code></p>
+
+<p>If you&rsquo;re going to be running something like Wordpress, chances are you&rsquo;re going to want your server to send emails.
+<code>bash
+apt-get install exim4
+dpkg-reconfigure exim4-config
+</code></p>
+
+<p>In the configuration wizard, choose Internet Site for the first option, bash in your Linode&rsquo;s hostname (it should already be there &ndash; if it&rsquo;s not check you&rsquo;ve set the hostname correctly), and make sure that your server will only accept SMTP connections from itself by putting 127.0.0.1 in the next box. In the box asking which domains to accept relays for, enter your Linode&rsquo;s hostname and localhost. Leave the relay domains and relay machines fields blank, and select No when asked about keeping DNS queries down. On the next question on how to store incoming mail, choose whatever you want as you won&rsquo;t be getting any incoming mail here. Finally, accept the default &ldquo;non-split&rdquo; part for how to store the configuration file.</p>
+
+<p>For a little security through obscurity, I like to change the port that webmin listens on as well. Log in, go to Webmin &ndash;> Webmin Configuration &ndash;> Ports and Addresses, and change the listening port to something of your choosing.</p>
+
+<p>Whilst you&rsquo;re there, you might want to change the port that SSH is on as well. In Webmin, you&rsquo;ll want to be looking at Servers &ndash;> SSH Server &ndash;> Networking</p>
+
+<p>Finally, I like to disable the root user. First add your own user (give the user a password etc), then add them to the admin group (the user&rsquo;s in this group are automatically added to sudoers).
+<code>bash
+adduser myuser
+adduser myuser admin
+</code></p>
+
+<p>Now log in as your new user and make sure you can sudo &ndash; once that&rsquo;s working, you can disable the root user:
+<code>bash
+sudo passwd -l root
+</code></p>
+
+<p>Assuming everything is working up to this point, change the DNS for your site to point to your new Linode, sit back and congratulate yourself for giving yourself one less physical box to worry about.</p>
+
+<p>You&rsquo;ve now got a basic webserver up and running on Linode with a GUI to manage the server. Next time, we&rsquo;ll go over setting up an FTP server with virtual users (with a GUI!), and backing up the server with CrashPlan PROe, including performing a full dump of the mysql databases every night so they&rsquo;re backed up properly.</p>
+]]></content>
+  </entry>
+  
+</feed>

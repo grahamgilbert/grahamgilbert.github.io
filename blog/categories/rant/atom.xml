@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Rant | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/rant/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2014-02-17T21:53:37+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[The agony and ecstasy of 100meg broadband]]></title>
+    <link href="http://grahamgilbert.com/blog/2012/03/24/the-agony-and-ecstasy-of-100meg-broadband/"/>
+    <updated>2012-03-24T13:09:19+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2012/03/24/the-agony-and-ecstasy-of-100meg-broadband</id>
+    <content type="html"><![CDATA[<p>Before I descend into a massive rant, let me preface this post with this: I hate BT. I always have, and I probably always will. They are generally the most incompetent, uncooperative company on the planet.</p>
+
+<p>Let me take you back to October 2011. I was perusing the BT website looking for BT Infinity &ndash; their brand name for up to 40meg VDSL. I popped in my postcode and was told that I was in a trial area for <a href="http://en.wikipedia.org/wiki/Fiber_to_the_x#Fiber_to_the_premises">FTTP</a> at a stonking 100meg. Obviously I thought about the pain I was letting myself in for, having to deal with BT, but I was sure that I could cope with it if I was getting such insanely fast Internet at the end of it.</p>
+
+<p>If only I knew how painful it was going to be. <!--more--></p>
+
+<p>My first install date was in November. This was cancelled a couple of days before the appointment with no real reason given. The exact same happened in December (that&rsquo;s two days of holiday wasted now, if your counting). I was then given an install date in January. Cancelled. I was told they needed to dig through a neighbour&rsquo;s garden. I live on the corner of the street and the BT manhole is literally outside my front door, and the cabinet is on the opposite side of the road &ndash; so basically BT told me a great big fat lie (the final fibre did indeed go to the manhole cover, so they were absolutely lying to me).</p>
+
+<p>February comes around, and I get another appointment.  I was fully expecting this one to be cancelled as well. The day came, and with no word from BT to the contrary, I thought I was finally going to be able to have my lovely fast Internet connection. 9am came and went. 10am. 11am. I was starting to get worried. 12pm. Still no sign. After 1pm passed, I gave BT a call to see what the chuff was happening. &ldquo;No one is scheduled to come to you today&rdquo; the person on the end of the phone tells me. But I have an email and a text message confirming the appointment I say. &ldquo;Computer error&rdquo; the person tells me. Bloody great, I&rsquo;ve wasted a (third) day&rsquo;s holiday because they can&rsquo;t make their computers work properly. At this point, I&rsquo;m livid. If there was a BT monkey within grabbing distance, I&rsquo;d have throttled them. I ask to speak to someone so I could make a complaint.</p>
+
+<p>Magically, this improved the service I got (a little bit anyway). I started getting update calls most days. March rolls around, and they&rsquo;ve finally completed the outside digging, and they make an appointment for a man to come around and install the modem. The chap arrives at 10am, and it all looks like its going well. He announces that he&rsquo;s finished and now we can test it. We just need to wait for a little green light on the modem to stop flashing and we&rsquo;re away.</p>
+
+<p>It keeps flashing.</p>
+
+<p>It kept flashing for over a week.</p>
+
+<p>On Thursday, it stopped flashing, so I plugged the modem into my network, and it worked! I was getting insanely fast speeds, way more than I was paying for &ndash; I was really happy with it. I got a call from BT on Friday saying they&rsquo;ve found the fault and would like to come over and finish the install. &ldquo;No need!&rdquo; I tell them, I&rsquo;ve got it hooked up and it&rsquo;s Internetting like a champ. The man says that&rsquo;s fantastic, and that he&rsquo;ll close the order.</p>
+
+<p>An hour later I got an email and a text message telling me that an engineer was coming on Monday.</p>
+
+<p>Oh dear.</p>
+
+<p>Having had a day of woe at work (several servers deciding to throw their toys out of the pram at once), I called them the day after. &ldquo;The appointment can&rsquo;t be changed Mr Gilbert. You were told about it yesterday (lie #2 if you&rsquo;re counting). You have to have an engineer look at it. We can&rsquo;t close the order without someone making sure its ok (lord knows how I&rsquo;ve managed this far if I can&rsquo;t tell when an Internet connection is working!) No, you can&rsquo;t have a weekend appointment.&rdquo; I was fuming at this point. I categorically told the lady that after four months and four wasted days of holiday, there was no way on this earth that I was taking another day off for something that clearly doesn&rsquo;t require an engineer to come and poke at my networking kit.</p>
+
+<p>My complaint and order remain open. (I do at least have BLOODY FAST INTERNETZ!!!!!1111!!!!!!!)</p>
+]]></content>
+  </entry>
+  
+</feed>

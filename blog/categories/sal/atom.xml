@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Sal | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/sal/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2014-02-17T21:53:37+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Writing Plugins for Sal: Part 3]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3/"/>
+    <updated>2014-02-17T21:12:36+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3</id>
+    <content type="html"><![CDATA[<p>We&rsquo;ve already got a fairly decent plugin &ndash; it shows us how many machines we have that aren&rsquo;t able to run 10.9. However, quite a few people won&rsquo;t have any machines that fall into this category, and just want to know when one manages to sneak under the radar, so let&rsquo;s hide the plugin if we don&rsquo;t need to see it.</p>
+
+<h2>Previously on Lost</h2>
+
+<p>In the first part, you might remember that we had to tell Sal how much space our plugin needed. Well, we&rsquo;re going to cover the eventuality of it not needing any space. First off, <code>mavcompatibility.py</code>.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/mavcompatibility.py </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">not_compatible</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">size</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
+</span><span class='line'>        <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
+</span><span class='line'>    <span class="p">})</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">size</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">filter_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&#39;notcompatible&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">machines</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Macs not compatible with OS X 10.9&#39;</span>
+</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">machines</span> <span class="o">=</span> <span class="bp">None</span>
+</span><span class='line'>        <span class="n">title</span> <span class="o">=</span> <span class="bp">None</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">machines</span><span class="p">,</span> <span class="n">title</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Take a look at lines 22 &ndash; 25. If we get any results from the query on line 20, we&rsquo;re going to be showing the plugin. If there aren&rsquo;t any applicable machines in our inventory, we don&rsquo;t need to show the plugin. We are returning the size to Sal on line 33.  Easy so far.</p>
+
+<p>All that&rsquo;s left to do now is make our templates not do anything if they don&rsquo;t need to.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/front.html </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="cp">{%</span> <span class="k">if</span> <span class="nv">not_compatible</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="cp">%}</span><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_front&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="cp">%}</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            Not Compatible
+</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Notice the if statement on line 1? If the number of machines is 0, we don&rsquo;t need to show anything. You&rsquo;ll need to make a similar change on <code>grahamgilbert/mavcompatibility/templates/id.html</code>.</p>
+
+<p>That&rsquo;s it &ndash; a simple plugin for Sal. You can find this completed plugin in my <a href="https://github.com/grahamgilbert/sal-plugins">sal-plugins repository</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Writing Plugins for Sal: Part 2]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2/"/>
+    <updated>2014-02-07T11:34:24+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2</id>
+    <content type="html"><![CDATA[<p>And now, time for the shocking second part of our series on how to write plugins for Sal.</p>
+
+<p>In the previous part, we got our basic widget working. This time, we&rsquo;re going to link it up so we can get lists of those pesky non-10.9 compatible Macs when we click on the button.</p>
+
+<h2>It&rsquo;s a list, Jim</h2>
+
+<p>When displaying the list of machines, Sal will call the <code>filter_machines</code> function in your plugin. I&rsquo;m sure you don&rsquo;t want to disappoint, so here&rsquo;s that function added on to the plugin we wrote last time.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/mavcompatibility.py </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
+</span><span class='line'>        <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
+</span><span class='line'>    <span class="p">})</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="mi">3</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">filter_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&#39;notcompatible&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">machines</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Macs not compatible with OS X 10.9&#39;</span>
+</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">machines</span> <span class="o">=</span> <span class="bp">None</span>
+</span><span class='line'>        <span class="n">title</span> <span class="o">=</span> <span class="bp">None</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">machines</span><span class="p">,</span> <span class="n">title</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>You&rsquo;ll notice that our filter on the machines is pretty much identical to what we were looking for before &ndash; that&rsquo;s because we&rsquo;re looking for the same machines. We&rsquo;re taking some input (a bunch of machines, and a string that we&rsquo;ll come back to), and giving back the machine that fit our search and a title to show at the top of the page.</p>
+
+<h2>More templating</h2>
+
+<p>So, how did we pass that string? How do we even get to the page where a list of the machines is shown?</p>
+
+<p>We need to edit the templates. First off, the template that is show on the front page of Sal:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/front.html </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_front&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="cp">%}</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            Not Compatible
+</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The only difference here from last time is we&rsquo;ve filled out the URL. The options for the first part are <code>machine_list_front</code> or <code>machine_list_id</code> &ndash; depending on whether you are coming from the front page (all of the Business Units) or from deeper in the application (the machines are limited), then we&rsquo;re just passing the name of our plugin.</p>
+
+<p>There isn&rsquo;t a huge amount you need to change for the other template &ndash; just tell Sal what type of page you came from (group or business unit) and the ID of the page you came from.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/id.html </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_id&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="nv">page</span> <span class="nv">theid</span> <span class="cp">%}</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            Not Compatible
+</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>There you go &ndash; a simple plugin for Sal. But don&rsquo;t go away thinking we&rsquo;re done. Whilst this is functional, it certainly leaves a fair bit to be desired. In the last part of this series, we&rsquo;ll tidy everything up.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Writing plugins for Sal: Part 1]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1/"/>
+    <updated>2014-01-26T10:01:26+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1</id>
+    <content type="html"><![CDATA[<p>Writing a plugin for Sal isn&rsquo;t hard. In fact, I&rsquo;d go so far as to say it&rsquo;s easy. We&rsquo;re going to make a plugin that will flag up any machines that aren&rsquo;t compatible with Mavericks, by using <a href="https://github.com/timsutton/munki-conditions/blob/master/supported_major_os_upgrades">Tim Sutton&rsquo;s script</a>. To start off with, you&rsquo;re going to need to get that script onto your Macs at <code>/usr/local/munki/conditions</code>. I&rsquo;d personally use Puppet for that, but if you&rsquo;re a purely Munki shop, you&rsquo;ll be using a package. <a href="https://github.com/grahamgilbert/macscripts/raw/master/Munki/Condtion%20Packages/supported_major_os_upgrades/supported_major_os_upgrades.pkg">And handily, I&rsquo;ve made one</a>.</p>
+
+<p><img class="center" src="/images/posts/2014-01-26/mavcompatibility.png" width="297" height="131"></p>
+
+<p>The convention I&rsquo;d like everyone to follow is to drop your plugins into the <code>plugins</code> directory, in a subdirectory named after yourself &ndash; mine are going in <code>plugins/grahamgilbert</code>. The plugin we&rsquo;re making today is going in <code>plugins/grahamgilbert/mavcompatibility</code>.</p>
+
+<h2>Metadata</h2>
+
+<p>The first piece you&rsquo;ll need is a <code>.yapsy-plugin</code> file. This contains the metadata for your plugin. It&rsquo;s all pretty self explanatory. This is <code>plugins/grahamgilbert/mavcompatibility/mavcompatibility.yapsy-plugin</code>.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[Core]
+</span><span class='line'>Name = MavCompatibility
+</span><span class='line'>Module = mavcompatibility&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>[Documentation]
+</span><span class='line'>Author = Graham Gilbert
+</span><span class='line'>Version = 0.1
+</span><span class='line'>Website = &lt;a href="http://grahamgilbert.com">http://grahamgilbert.com&lt;/a>
+</span><span class='line'>Description = Displays macs that aren&rsquo;t compatible with 10.9.</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Now for the meat</h2>
+
+<p>Onto the actual plugin. Your plugin is going to be sent at least two pieces of information, possibly three.</p>
+
+<ul>
+<li><code>page</code>: This will be the page the plugin is going to be shown on. This will either be <code>front</code>, <code>bu_dashboard</code> or <code>group_dashboard</code>. You will need this information later on.</li>
+<li><code>machines</code>: This a collection of machines you are going to need to work on. Depending on the page, this might be all of them, or just a subset from a Business Unit or Machine Group.</li>
+<li><code>theid</code>: If you are displaying your plugin on either a Business Unit page or a Machine Group page, this is the unique ID of that Business Unit or Machine Group.</li>
+</ul>
+
+
+<p>And in return, your plugin is expected to return two things:</p>
+
+<ul>
+<li>Some HTML: You plugin needs to return it&rsquo;s output.</li>
+<li>The width of the output: Sal uses <a href="http://getbootstrap.com/2.3.2/">Bootstrap</a>, and it uses a grid system. So Sal can wrap lines properly, you need to tell Sal how many columns your plugin needs. This should be an integer.</li>
+</ul>
+
+
+<p>That&rsquo;s the 50,000 ft view of a Sal plugin, let&rsquo;s make one. The main thing to remember is that Sal is written in Django, so if you have any problems, looking at <a href="https://docs.djangoproject.com/en/1.5/">their documentation</a> will help. You can also enable debug logging on your Sal install by uncommenting lines 24 and 25 in <code>server/views.py</code> (turn it off when you&rsquo;re done though, it is VERY verbose).</p>
+
+<p>First off, a little about how Sal stores the data you send it. Sal stores Munki&rsquo;s conditions in the Condition table, and for each one, the name and it&rsquo;s data is stored (this is the same for Facts). Munki&rsquo;s conditions can consist of a variety of data types (strings, dates, arrays), so Sal will flatten any arrays it is given into a comma separated list. Each machine will have multiple Conditions and Facts associated with it.</p>
+
+<p>When displaying the plugin, Sal will look for a function called show_widget, passing the information mentioned previously. Don&rsquo;t worry too much about the templates, we&rsquo;ll cover them later.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/mavcompatibility.py </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
+</span><span class='line'>        <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
+</span><span class='line'>    <span class="p">})</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="mi">3</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Skip to line 20 &ndash; this is where the real work starts. All we&rsquo;re doing is taking the machines we were passed and first off finding the machines that have the condition we&rsquo;re looking for. We then want to remove those that contain 10.9 in that data.</p>
+
+<h2>Templates</h2>
+
+<p>Then it&rsquo;s just a case of passing those variables to our template. As we aren&rsquo;t linking our buttons to anything for now, both of our templates will be the same, but we will still make two separate ones as we&rsquo;re going to need them next time.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/front.html </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            Not Compatible
+</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Make a file in <code>templates</code> called <code>id.html</code> with the same content for now &ndash; we&rsquo;ll make them different in part two.</p>
+
+<p>We return our plugin on line 28 of <code>mavcompatibility.py</code>. First we render the appropriate template, passing it our data, and we return how wide our plugin is &ndash; in this case it will take up three columns.</p>
+
+<p>That&rsquo;s it for a basic plugin &ndash; we&rsquo;ve taken a bunch of machines, filtered them based on a Munki condition, and we&rsquo;ve returned the data. But this obviously is lacking &ndash; the button doesn&rsquo;t do anything and we still see a big fat zero when all of our machines are 10.9 capable. Anyway, you can get the code so far in my <a href="https://github.com/grahamgilbert/sal-plugins/tree/master/mavcompatibility">sal-plugins repository</a>.</p>
+
+<p>Tune in to part two for the thrilling conclusion!</p>
+]]></content>
+  </entry>
+  
+</feed>

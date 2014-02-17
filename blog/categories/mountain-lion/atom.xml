@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Mountain Lion | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/mountain-lion/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2014-02-17T21:53:37+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Making a Mountain Lion Recovery HD]]></title>
+    <link href="http://grahamgilbert.com/blog/2012/07/28/making-a-mountain-lion-recovery-hd/"/>
+    <updated>2012-07-28T06:48:00+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2012/07/28/making-a-mountain-lion-recovery-hd</id>
+    <content type="html"><![CDATA[<p><strong>Update:</strong> There&rsquo;s a better method over at <a href="http://afp548.com/2012/08/15/creating-a-10-8-recovery-hd-package-with-luggage/">afp548</a> that does this better. Use that!</p>
+
+<p>A few months ago I made a package to create a Recovery HD on a freshly deployed Lion Mac. It&rsquo;s time to do the same for <a href="https://twitter.com/fordy/status/228218744177033216">Mountain Goat</a>.</p>
+
+<p>In true Blue Peter style, you will need:</p>
+
+<ul>
+<li><a href="https://github.com/unixorn/luggage">The Luggage</a> (If you&rsquo;re having problems getting The Luggage working with the latest version of Xcode, please see <a href="https://groups.google.com/forum/#!topic/macenterprise/v4qRFnCutS4/discussion">this post on macenterprise</a></li>
+<li>The <a href="https://github.com/grahamgilbert/recovery-hd-mountain-lion">GitHub Repo</a></li>
+<li>A read only DMG of a never booted 10.8 Recovery HD</li>
+<li>The <a href="http://support.apple.com/kb/DL1464">Lion Recovovery HD Update</a></li>
+</ul>
+
+
+<!--more-->
+
+
+<h2>Getting a 10.8 Recovery HD DMG</h2>
+
+<p>First you need the debug menu turned on in Disk Utility. Make sure Disk Utility is quit and put this into Terminal:
+<code>defaults write com.apple.DiskUtility DUDebugMenuEnabled 1</code></p>
+
+<p>Open up Disk Utility again, select the Recovery HD and choose New Image. In the resulting pop-up leave the name as Recovery HD and change the format to read-only. Save it, and put it in the folder you cloned the repo to.</p>
+
+<p><img class="center" src="/images/posts/2012-07-26/Disk_Utility.jpg"></p>
+
+<h2>Getting dmtest</h2>
+
+<p>Open the Recovery HD Update from Apple and run:
+<code>pkgutil --expand /Volumes/Mac\ OS\ X\ Lion\ Recovery\ HD\ Update/RecoveryHDUpdate.pkg ~/Desktop/RecoveryHDUpdate</code></p>
+
+<p>Copy dmtest from ~/Desktop/RecoveryHDUpdate/RecoveryHDUpdate.pkg/Scripts/Tools to the folder your cloned the repo to &ndash; just a quick <code>make pkg</code> and you&rsquo;re finished.</p>
+]]></content>
+  </entry>
+  
+</feed>
