@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: osx | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/osx/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2014-02-17T21:53:37+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Setting a desktop picture in Mavericks]]></title>
+    <link href="http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/"/>
+    <updated>2013-10-28T14:48:00+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks</id>
+    <content type="html"><![CDATA[<p>Sometimes we are asked by clients to set a default desktop picture for new users &ndash; sometimes we are deleting home directories on logout, so need to warn the users, other times the client just wants their corporate wallpaper to be the default.</p>
+
+<p>If you are lazy and don&rsquo;t want to read this post then the script that changes the desktop picture <a href="https://github.com/grahamgilbert/macscripts/tree/master/set_desktops">is on GitHub</a>.</p>
+
+<p>Whatever, here&rsquo;s what we used to do:</p>
+
+<p><code>bash
+/usr/bin/defaults write com.apple.desktop Background '{default = {ImageFilePath = "/Library/Desktop Pictures/Black &amp; White/Lightning.jpg"; };}'
+/usr/bin/killall Dock
+</code></p>
+
+<p>Nothing earth shattering there if you&rsquo;ve managed Macs for any length of time.</p>
+
+<p>But then 10.9 changed things &ndash; this stopped working.</p>
+
+<p>I ran fs_usage to see what was happening whilst I changed the desktop picture on my machine:</p>
+
+<p><code>bash
+$ sudo fs_usage -w | grep desktop
+</code></p>
+
+<p>Obviously there was a metic buttload of information, but this line caught my eye.</p>
+
+<p><code>
+15:25:06.884820    WrData[A]       D=0x0b2d1d90  B=0x1000   /dev/disk1  /Users/grahamgilbert/Library/Application Support/Dock/desktoppicture.db
+</code></p>
+
+<p>Bingo! I opened up the database in the <a href="https://addons.mozilla.org/en-US/firefox/addon/sqlite-manager/">SQLite Manager Firefox extension</a> (the only thing I use Firefox for these days) and had a peek. And then I got half a brain and googled the path of the desktoppicture.db file and found that there was a <a href="https://gist.github.com/gregneagle/6225747">gist from Greg Neagle</a>. Perfect!</p>
+
+<p>Of course, he&rsquo;d already improved upon this script and written a proof of concept to <a href="https://gist.github.com/gregneagle/6957826">set a random desktop picture using PyObjC</a>. This got me 90% of the way there, so this is my modified version of his script. The full code and usage instructions are <a href="https://github.com/grahamgilbert/macscripts/tree/master/set_desktops">over on GitHub</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[The Luggage: Further automation]]></title>
+    <link href="http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation/"/>
+    <updated>2013-08-19T11:33:00+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation</id>
+    <content type="html"><![CDATA[<p>As promised in my previous post, today we&rsquo;re going to look at how we can further refine our workflow, with the aim of cutting out as many manual steps as possible (every IT person knows it&rsquo;s not computer that make mistakes, it&rsquo;s the idiots in front of them) and making as much of our code re-usable in other packages.</p>
+
+<p>If you&rsquo;ve not read the <a href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/">previous article</a>, you will need to before carrying on with this, unless you&rsquo;re already familiar with The Luggage. If you get stuck, all of the code from this post is <a href="https://github.com/grahamgilbert/the-luggage-post-201308">up on Github</a>.<!--more--></p>
+
+<h2>Getting scriptRunner</h2>
+
+<p>Anyone who uses our Makefile will need a copy of scriptRunner before they can build the script, so we&rsquo;ll cut out that step. Our Makefile becomes:</p>
+
+<p>```
+USE_PKGBUILD=1
+include /usr/local/share/luggage/luggage.make
+TITLE=scriptRunnerPkg
+REVERSE_DOMAIN=com.grahamgilbert
+PAYLOAD=\</p>
+
+<pre><code>pack-scriptRunner\
+pack-Library-LaunchAgents-com.grahamgilbert.scriptrunner.plist
+</code></pre>
+
+<p>REPO_URL=<a href="https://github.com/natewalck/Scripts.git">https://github.com/natewalck/Scripts.git</a></p>
+
+<p>pack-scriptRunner: l_usr_local_bin</p>
+
+<pre><code>@sudo git clone ${REPO_URL} natewalck-scripts
+@sudo ${CP} natewalck-scripts/scriptRunner.py ${WORK_D}/usr/local/bin/scriptRunner.py
+@sudo chmod 755 ${WORK_D}/usr/local/bin/scriptRunner.py
+@sudo chown root:wheel ${WORK_D}/usr/local/bin/scriptRunner.py
+@sudo rm -rf natewalck-scripts
+</code></pre>
+
+<p>```</p>
+
+<p>All we&rsquo;ve done is moved the manual <code>git clone</code> we were performing on the command line into our Makefile, as this is a step that is required for our package to build successfully. Our aim is to be able to give someone else our code and for them to be able to run <code>make pkg</code> and get the package out of the other end.</p>
+
+<h2>The real work</h2>
+
+<p>Whilst we are now successfully installing <code>scriptRunner.py</code>, it&rsquo;s not actually going to do anything. <code>scriptRunner.py</code> is passed the paths of two directories &ndash; one of scripts it runs every time a user logs in, and another of scripts that it runs once for each user. We specified those directories in the Launch Agent: <code>/Library/Management/scriptRunner/once</code> and <code>/Library/Management/scriptRunner/every</code>.</p>
+
+<p>This time we&rsquo;re going to build a package that will drop a shortcut to a file server (an <code>.afploc</code>) on each person&rsquo;s desktop as they log in, but do it once only (so they can delete it if they wish). We could do this by modifying the default user template, but this would only affect new users, if there are existing users on the machine they won&rsquo;t get our lovely shortcut. Our package will do the following:</p>
+
+<ul>
+<li>Install our .afploc file to <code>/Library/Management/Desktop_Icons</code></li>
+<li>Install our script to copy the .afploc to <code>~/Desktop</code> when the user logs in</li>
+</ul>
+
+
+<p>Our Makefile should look like:</p>
+
+<p>```
+USE_PKGBUILD=1
+include /usr/local/share/luggage/luggage.make</p>
+
+<p>TITLE=Desktop_Icons
+PACKAGE_NAME=Desktop_Icons
+REVERSE_DOMAIN=com.grahamgilbert
+PAYLOAD=\</p>
+
+<pre><code>pack-server\
+pack-script
+</code></pre>
+
+<p>pack-server:</p>
+
+<pre><code>@sudo mkdir -p ${WORK_D}/Library/Management/Desktop_Icons
+@sudo ${CP} forpeople\ Server.afploc ${WORK_D}/Library/Management/Desktop_Icons/File\ Server.afploc
+@sudo chown -R root:wheel ${WORK_D}/Library/Management/Desktop_Icons
+@sudo chmod -R 755 ${WORK_D}/Library/Management/Desktop_Icons
+</code></pre>
+
+<p>pack-script:</p>
+
+<pre><code>@sudo mkdir -p ${WORK_D}/Library/Management/scriptRunner/once
+@sudo ${CP} forpeople_Desktop_Icons_20130729 ${WORK_D}/Library/Management/scriptRunner/once/Desktop_Icons_201308
+@sudo chown root:wheel ${WORK_D}/Library/Management/scriptRunner/once/Desktop_Icons_201308
+@sudo chmod 755 ${WORK_D}/Library/Management/scriptRunner/once/Desktop_Icons_201308
+</code></pre>
+
+<p>```</p>
+
+<p>And the script that does the work (<code>Desktop_Icons_201308</code>) will look like:</p>
+
+<p>``` bash</p>
+
+<h1>!/bin/bash</h1>
+
+<p>if [ -e ~/Desktop/File\ Server.afploc ]</p>
+
+<pre><code>then
+rm -f ~/Desktop/File\ Server.afploc
+</code></pre>
+
+<p>fi
+cp /Library/Management/Desktop_Icons/File\ Server.afploc ~/Desktop/File\ Server.afploc
+```</p>
+
+<p>The script is pretty simple &ndash; if the shortcut already exists (maybe they&rsquo;ve got a previous version pointing to an old server) it gets removed, and then a new one is copied onto the desktop. I&rsquo;ve dated the script as scriptRunner only stores the name of the script to know what it&rsquo;s run &ndash; if you replace the script with an updated version but keep the same name, it won&rsquo;t run again (obviously this only applies to scripts that are in the &lsquo;once&rsquo; directory).</p>
+
+<p>Great, it works. But what happens if you want to put another script on the machine to run with scriptRunner? Or maybe you want some more icons &ndash; you&rsquo;re about to do a lot of copying and pasting. Wouldn&rsquo;t it be great if we could store the parts that are creating directories and performing common operations in a shared place so multiple Makefiles could use them?</p>
+
+<p>Enter <code>/usr/local/share/luggage/luggage.local</code> .</p>
+
+<p>When you run <code>make pkg</code>, The Luggage will check for the existence of <code>/usr/local/share/luggage/luggage.local</code>, and use any additions you&rsquo;ve put in there. We&rsquo;re definitely going to be putting scripts into <code>/Library/Management/scriptRunner/once</code> and <code>/Library/Management/scriptRunner/every</code>quite often, so we should automate this.</p>
+
+<p>Here&rsquo;s what my <code>luggage.local</code> file looks like:</p>
+
+<p>```
+l_Library_Management: l_Library</p>
+
+<pre><code>@sudo mkdir -p ${WORK_D}/Library/Management
+@sudo chown root:wheel ${WORK_D}/Library/Management
+@sudo chmod 755 ${WORK_D}/Library/Management
+</code></pre>
+
+<p>l_Library_Management_scriptRunner: l_Library_Management</p>
+
+<pre><code>@sudo mkdir -p ${WORK_D}/Library/Management/scriptRunner
+@sudo chown root:wheel ${WORK_D}/Library/Management/scriptRunner
+@sudo chmod 755 ${WORK_D}/Library/Management/scriptRunner
+</code></pre>
+
+<p>l_Library_Management_scriptRunner_once: l_Library_Management_scriptRunner</p>
+
+<pre><code>@sudo mkdir -p ${WORK_D}/Library/Management/scriptRunner/once
+@sudo chown root:wheel ${WORK_D}/Library/Management/scriptRunner/once
+@sudo chmod 755 ${WORK_D}/Library/Management/scriptRunner/once
+</code></pre>
+
+<p>l_Library_Management_scriptRunner_every: l_Library_Management_scriptRunner</p>
+
+<pre><code>@sudo mkdir -p ${WORK_D}/Library/Management/scriptRunner/every
+@sudo chown root:wheel ${WORK_D}/Library/Management/scriptRunner/every
+@sudo chmod 755 ${WORK_D}/Library/Management/scriptRunner/every
+</code></pre>
+
+<p>pack-Library-Management-scriptRunner-once-%: % l_Library_Management_scriptRunner_once</p>
+
+<pre><code>@sudo ${INSTALL} -m 755 -g wheel -o root "${&lt;}" ${WORK_D}/Library/Management/scriptRunner/once
+</code></pre>
+
+<p>pack-Library-Management-scriptRunner-every-%: % l_Library_Management_scriptRunner_every</p>
+
+<pre><code>@sudo ${INSTALL} -m 755 -g wheel -o root "${&lt;}" ${WORK_D}/Library/Management/scriptRunner/every
+</code></pre>
+
+<p>```</p>
+
+<p>The first few parts should be pretty obvious to you &ndash; we&rsquo;re just making some directories and setting ownership and permissions. The last two sections are of more interest. We&rsquo;re using the <code>INSTALL</code> variable, which is set to <code>/usr/bin/install</code> in <code>luggage.make</code> to move a file and set ownership and permissions. We&rsquo;re using the same technique as we used last time to install the Launch Agent. This means that our Makefile can become:</p>
+
+<p>```
+USE_PKGBUILD=1
+include /usr/local/share/luggage/luggage.make</p>
+
+<p>TITLE=Desktop_Icons
+PACKAGE_NAME=Desktop_Icons
+REVERSE_DOMAIN=com.grahamgilbert
+PAYLOAD=\</p>
+
+<pre><code>pack-server\
+pack-Library-Management-scriptRunner-once-Desktop_Icons_201308
+</code></pre>
+
+<p>pack-server:</p>
+
+<pre><code>@sudo mkdir -p ${WORK_D}/Library/Management/Desktop_Icons
+@sudo ${CP} File\ Server.afploc ${WORK_D}/Library/Management/Desktop_Icons/File\ Server.afploc
+@sudo chown root:wheel ${WORK_D}/Library/Management/Desktop_Icons/File\ Server.afploc
+@sudo chmod 644 ${WORK_D}/Library/Management/Desktop_Icons/File\ Server.afploc
+</code></pre>
+
+<p>```</p>
+
+<p>So we&rsquo;re not only cutting out cruft from our Makefile for this package, but it makes future packages much faster to create, eliminating the problem between the keyboard and chair. You could (should!) even put your <code>luggage.local</code> file under source control (mine is <a href="https://github.com/grahamgilbert/luggage_local">on my Github account</a>), so your changes are tracked, and you can collaborate with your colleagues .</p>
+
+<p>You&rsquo;ll notice there is still the section for copying the .afploc. You have two choices here: maybe this is the only time you&rsquo;re ever going to install a file in this directory, in which case this is perfectly fine to leave in the Makefile. However, if you are going to be putting lots of files here, as we are with <code>/Library/Management/scriptRunner</code>, you might want to move this into your <code>luggage.local</code> file so it is available across all of your Makefiles. You homework, should you choose to accept it, is to generalise that section so it can be reused and move it to <code>luggage.local</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[The Luggage: An Introduction]]></title>
+    <link href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/"/>
+    <updated>2013-08-09T18:00:00+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction</id>
+    <content type="html"><![CDATA[<p>If you&rsquo;ve managed OS X for any amount of time, chances are you&rsquo;ve needed to deploy software. And chances also are that you&rsquo;ve come across a vendor (I&rsquo;m looking at you, Adobe) that seems to be incapable of distributing their software in a useful manner. Or maybe you&rsquo;ve got your own scripts or software that you need to get installed on the machines that you look after &ndash; either way, you&rsquo;re going to want to build a package.</p>
+
+<p>You&rsquo;ve got a few options &ndash; Iceberg, Packages, Composer, you&rsquo;ve even got Package Maker. However, my personal choice is The Luggage. It has a few advantages over the alternatives:</p>
+
+<ul>
+<li><strong>It&rsquo;s all text files:</strong> You&rsquo;re building software distributions, you should be checking the files in to build the packages into version control, such as Git. Text files are ideal for checking into version control.</li>
+<li><strong>It&rsquo;s free:</strong> if it costs nothing, there&rsquo;s no reason it can&rsquo;t be installed on everyone&rsquo;s machine.</li>
+<li><strong>It&rsquo;s (still) all text files:</strong> Want to see what will be in the package without any extra work? Crack open the Makefile and you can see straight away what will be in the package.</li>
+<li><strong>The Luggage has a metric buttload of shortcuts built in:</strong> it does the hard work, so you don&rsquo;t have to.</li>
+<li><strong>It&rsquo;s repeatable:</strong> Have you ever tried to talk someone through a series of windows and buttons to get the same result as you&rsquo;re getting? Every time you run The Luggage, you will get the same result.</li>
+<li><strong>It&rsquo;s (really, still) all text files:</strong> It&rsquo;s the most precise tool I&rsquo;ve used &ndash; you only package exactly what you need, no cruft is left behind.</li>
+<li><strong>Your workflow is limited only by your imagination:</strong> Seriously, you can do pretty much anything you can think of. We&rsquo;ll be going through more advanced workflows in future posts, but let&rsquo;s get started with using The Luggage.<!--more--></li>
+</ul>
+
+
+<h2>Getting set up</h2>
+
+<p>We&rsquo;re going to grab the current version of The Luggage from the git repository. If you don&rsquo;t have git, you can install the Command Line Tools from within <a href="https://itunes.apple.com/gb/app/xcode/id497799835?mt=12">Xcode&rsquo;s</a> preferences if you don&rsquo;t have it. If you don&rsquo;t have Xcode, and the Command Line Tools installed, very little is going to work, so go and install it. It&rsquo;s ok, I&rsquo;ll wait.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src
+</span><span class='line'><span class="nv">$ </span>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/unixorn/luggage.git&quot;</span>&gt;https://github.com/unixorn/luggage.git&lt;/a&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Now we are going to use The Luggage to install itself (oooh, meta). You&rsquo;ll be asked for your password, as it will need to perform some tasks as root.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/luggage
+</span><span class='line'><span class="nv">$ </span>make bootstrap_files
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Your first Makefile</h2>
+
+<p>Now you&rsquo;ve got everything set up, we&rsquo;re going to write our first Makefile. We&rsquo;re going to make a package to deploy Nate Walck&rsquo;s awesome <a href="https://github.com/natewalck/Scripts/blob/master/scriptRunner.py">scriptRunner.py</a>. Everything prefaced with a <code>$</code> should be typed into your Terminal window.</p>
+
+<p>First we&rsquo;re going to grab the repository from GitHub:</p>
+
+<p><code>bash
+$ cd ~/src
+$ git clone https://github.com/natewalck/Scripts.git natewalck-scripts
+</code></p>
+
+<p>Now we&rsquo;re going to make a directory to work in for our package and copy scriptRunner.py into it.</p>
+
+<p><code>bash
+$ cd ~/src
+$ mkdir -p ~/src/scriptRunnerPkg
+$ cp ~/src/natewalck-scripts/scriptRunner.py ~/src/scriptRunnerPkg/scriptRunner.py
+</code></p>
+
+<p>So far so good. Now for the actual Makefile. Create a file in your favourite editor (I recommend <a href="http://macromates.com/download">TextMate 2</a>), save it as Makefile in <code>~/src/scriptRunnerPkg</code> and put in the following content:</p>
+
+<p>```
+USE_PKGBUILD=1
+include /usr/local/share/luggage/luggage.make
+TITLE=scriptRunnerPkg
+REVERSE_DOMAIN=com.grahamgilbert
+PAYLOAD=\</p>
+
+<pre><code>pack-scriptRunner
+</code></pre>
+
+<p>pack-scriptRunner: l_usr_local_bin</p>
+
+<pre><code>@sudo ${CP} ./scriptRunner.py ${WORK_D}/usr/local/bin/scriptRunner.py
+@sudo chmod 755 ${WORK_D}/usr/local/bin/scriptRunner.py
+@sudo chown root:wheel ${WORK_D}/usr/local/bin/scriptRunner.py
+</code></pre>
+
+<p>```</p>
+
+<p>Let&rsquo;s go through this line by line. First, we&rsquo;re overloading a default variable. Back in the day, The Luggage used Package Maker to perform the actual build of the package. This has been deprecated by Apple, replaced with pkgbuild and productbuild. We&rsquo;re just telling The Luggage to go straight ahead and use pkgbuild.</p>
+
+<p>We&rsquo;re then including the main Makefile, which contains all of the pre-built work that we can extend with our own Makefiles.</p>
+
+<p><code>TITLE</code> and <code>REVERSE_DOMAIN</code> are exactly that &ndash; the title and reverse domain of the package.</p>
+
+<p>Finally, we&rsquo;re specifying what our payload is going to consist of &ndash; in this case, just scriptRunner. Line 8 is using the foundation that The Luggage has already built &ndash; installing software into <code>/usr/local/bin</code> is pretty standard, so we don&rsquo;t need to reinvent the wheel here &ndash; we just need to tell The Luggage what to do with the one file we&rsquo;re installing, it will work out the rest.</p>
+
+<h3>An important note on Makefiles</h3>
+
+<p>Makefiles are really picky about formatting and spacing &ndash; if you get strange errors, make sure you are using tab characters rather than spaces for example. and make sure you&rsquo;ve not missed off a colon or a back-slash anywhere.</p>
+
+<h2>Prepare the build!</h2>
+
+<p>We&rsquo;re ready to build. Let&rsquo;s do it. No need to run this as sudo, The Luggage will ask for your password if it needs it.</p>
+
+<p><code>bash
+$ cd ~/src/scriptRunnerPkg
+make pkg
+</code></p>
+
+<p>If everything has gone well, some text will scroll into your Terminal window and you&rsquo;ll be left with a package sitting in <code>~/src/scriptRunnerPkg</code>.</p>
+
+<p>That&rsquo;s all well and good, but we need a LaunchAgent to run the script when someone logs in. Save the following in <code>~/src/scriptRunnerPkg</code> and name it <code>com.grahamgilbert.scriptrunner.plist</code>.</p>
+
+<p>```
+&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo;?>
+&lt;!DOCTYPE plist PUBLIC &ldquo;&ndash;//Apple//DTD PLIST 1.0//EN&rdquo; &ldquo;<a href="http://www.apple.com/DTDs/PropertyList-1.0.dtd">http://www.apple.com/DTDs/PropertyList-1.0.dtd</a>&rdquo;>
+<plist version="1.0">
+<dict></p>
+
+<pre><code>&lt;key&gt;Label&lt;/key&gt;
+&lt;string&gt;com.grahamgilbert.scriptrunner&lt;/string&gt;
+&lt;key&gt;ProgramArguments&lt;/key&gt;
+&lt;array&gt;
+    &lt;string&gt;/usr/local/bin/scriptRunner.py&lt;/string&gt;
+    &lt;string&gt;--once&lt;/string&gt;
+    &lt;string&gt;/Library/Management/scriptRunner/once&lt;/string&gt;
+    &lt;string&gt;--every&lt;/string&gt;
+    &lt;string&gt;/Library/Management/scriptRunner/every&lt;/string&gt;
+&lt;/array&gt;
+&lt;key&gt;RunAtLoad&lt;/key&gt;
+&lt;true/&gt;
+</code></pre>
+
+<p></dict>
+</plist>
+```</p>
+
+<p>This will tell scriptRunner.py to run everything in <code>/Library/Management/scriptRunner/once</code> once per use and everything in <code>/Library/Management/scriptRunner/every</code> each and every single time the user logs in.</p>
+
+<p>That&rsquo;s nice, but how do we get it into our package? Change the payload section to look like this:</p>
+
+<p>```
+PAYLOAD=\</p>
+
+<pre><code>pack-scriptRunner\
+pack-Library-LaunchAgents-com.grahamgilbert.scriptrunner.plist
+</code></pre>
+
+<p>```</p>
+
+<p>And now rebuild the package:</p>
+
+<p><code>bash
+$ cd ~/src/scriptRunnerPkg
+make pkg
+</code></p>
+
+<p>And that&rsquo;s it! As putting a plist into <code>/Library/LaunchAgents</code> is as common as a BSOD on Vista, it&rsquo;s built right into The Luggage. A list of most of the available payload additions can be found on <a href="https://github.com/unixorn/luggage/wiki">the wiki</a> &ndash; this isn&rsquo;t everything though. Have a nose through <code>/usr/local/share/luggage/luggage.make</code> to see everything you can do.</p>
+
+<p>This is obviously a working solution, but there are many manual steps needed if we are sharing our code with others. We&rsquo;ll look into automating some of the steps and deploying a script that scriptRunner.py can work with.</p>
+]]></content>
+  </entry>
+  
+</feed>
