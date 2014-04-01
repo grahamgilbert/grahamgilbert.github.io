@@ -1,0 +1,548 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>buildCrankPkg - graham gilbert</title>
+  <meta name="author" content="Graham Gilbert">
+
+  
+  <meta name="description" content="In my last post I promised a tool I&rsquo;ve been working on to automate the building of a package for crankd. buildCrankPkg is a small script that &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27233739-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">graham gilbert</a></h1>
+  
+    <h2>Mac administration and assorted nerdity</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:grahamgilbert.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">buildCrankPkg</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-17T16:31:00+01:00" pubdate data-updated="true">Jul 17<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>In my <a href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/">last post</a> I promised a tool I&rsquo;ve been working on to automate the building of a package for crankd.</p>
+
+<p><a href="https://github.com/grahamgilbert/buildCrankPkg">buildCrankPkg</a> is a small script that will:</p>
+
+<ul>
+<li>Pull down the latest version of crankd (or use a local or remote repository if you specify one)</li>
+<li>Build a package that includes crankd and your custom settings and scripts.</li>
+</ul>
+
+
+<p>I&rsquo;ve included two examples, one that implements calling Munki and Puppet as detailed in the last post, and one to run a Casper policy.</p>
+
+<p>If you&rsquo;re happy with what crankd does and using the command line, head on over to the <a href="https://github.com/grahamgilbert/buildCrankPkg">repository</a> and enjoy. If you need a bit more help to get started, read on.<!--more--></p>
+
+<h2>Tutorial</h2>
+
+<p>First off, you&rsquo;re going to need to get the buildCrankPkg repository.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/src
+</span><span class='line'>git clone https://github.com/grahamgilbert/buildCrankPkg.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;re left with three directories that you need to fill:</p>
+
+<ul>
+<li><code>crankd</code>: You will be putting your custom code in here.</li>
+<li><code>Preferences</code>: Just a plist that will call our custom code.</li>
+<li><code>LaunchDaemons</code>: A LaunchDaemon to run crankd &ndash; an example that should be fine is already there.</li>
+</ul>
+
+
+<p>Assuming you cloned the <code>buildCrankPkg</code> repository to <code>~/src/buildCrankPkg</code>, save the following as <code>~/src/buildCrankPkg/crankd/CrankTools.py</code> (or copy the example). The only change between this one and the <code>CrankTools.py</code> from last time is that we&rsquo;re calling the JAMF binary to run a Casper policy (I know, the horror, I do actually use Casper occasionally). Our trigger&rsquo;s name is NetworkTrigger &ndash; the line you&rsquo;d need to customise to change this is <code>28</code>.</p>
+
+<figure class='code'><figcaption><span>CrankTools.py </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c">#    CrankTools.py</span>
+</span><span class='line'><span class="c">#        The OnNetworkLoad method is called from crankd on a network state change, all other</span>
+</span><span class='line'><span class="c">#            methods assist it. Modified from Gary Larizza&#39;s script (https://gist.github.com/glarizza/626169).</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c">#    Last Revised - 10/07/2013</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Graham Gilbert (graham@grahamgilbert.com)&#39;</span>
+</span><span class='line'><span class="n">__version__</span> <span class="o">=</span> <span class="s">&#39;0.2&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">syslog</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">syslog</span><span class="o">.</span><span class="n">openlog</span><span class="p">(</span><span class="s">&quot;CrankD&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">CrankTools</span><span class="p">():</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;The main CrankTools class needed for our crankd config plist&quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">policyRun</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot;Checks for an active network connection and calls the jamf binary if it finds one.</span>
+</span><span class='line'><span class="sd">            If the network is NOT active, it logs an error and exits</span>
+</span><span class='line'><span class="sd">        ---</span>
+</span><span class='line'><span class="sd">        Arguments: None</span>
+</span><span class='line'><span class="sd">        Returns:  Nothing</span>
+</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
+</span><span class='line'>        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;jamf&#39;</span><span class="p">,</span><span class="s">&#39;policy&#39;</span><span class="p">,</span><span class="s">&#39;-trigger&#39;</span><span class="p">,</span><span class="s">&#39;NetworkTrigger&#39;</span><span class="p">]</span>
+</span><span class='line'>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">LinkState</span><span class="p">(</span><span class="s">&#39;en1&#39;</span><span class="p">):</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">callCmd</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">LinkState</span><span class="p">(</span><span class="s">&#39;en0&#39;</span><span class="p">):</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">callCmd</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">syslog</span><span class="o">.</span><span class="n">syslog</span><span class="p">(</span><span class="n">syslog</span><span class="o">.</span><span class="n">LOG_ALERT</span><span class="p">,</span> <span class="s">&quot;Internet Connection Not Found, Puppet Run Exiting...&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">callCmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot;Simple utility function that calls a command via subprocess</span>
+</span><span class='line'><span class="sd">        ---</span>
+</span><span class='line'><span class="sd">        Arguments: command - A list of arguments for the command</span>
+</span><span class='line'><span class="sd">        Returns: Nothing</span>
+</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
+</span><span class='line'>        <span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">LinkState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot;This utility returns the status of the passed interface.</span>
+</span><span class='line'><span class="sd">        ---</span>
+</span><span class='line'><span class="sd">        Arguments:</span>
+</span><span class='line'><span class="sd">            interface - Either en0 or en1, the BSD interface name of a Network Adapter</span>
+</span><span class='line'><span class="sd">        Returns:</span>
+</span><span class='line'><span class="sd">            status - The return code of the subprocess call</span>
+</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&quot;ipconfig&quot;</span><span class="p">,</span> <span class="s">&quot;getifaddr&quot;</span><span class="p">,</span> <span class="n">interface</span><span class="p">])</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">OnNetworkLoad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot;Called from crankd directly on a Network State Change. We sleep for 10 seconds to ensure that</span>
+</span><span class='line'><span class="sd">            an IP address has been cleared or attained, and then perform a Puppet run and a Munki run.</span>
+</span><span class='line'><span class="sd">        ---</span>
+</span><span class='line'><span class="sd">        Arguments:</span>
+</span><span class='line'><span class="sd">            *args and **kwargs - Catchall arguments coming from crankd</span>
+</span><span class='line'><span class="sd">        Returns:  Nothing</span>
+</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
+</span><span class='line'>        <span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">policyRun</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span><span class='line'>    <span class="n">crank</span> <span class="o">=</span> <span class="n">CrankTools</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">crank</span><span class="o">.</span><span class="n">OnNetworkLoad</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">main</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now for the preferences &ndash; no change from last time here, as we&rsquo;ve not changed the name of our class or method. This goes into <code>~/src/buildCrankPkg/Preferences/com.googlecode.pymacadmin.crankd.plist</code></p>
+
+<figure class='code'><figcaption><span>com.googlecode.pymacadmin.crankd.plist </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;key&gt;</span>SystemConfiguration<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;key&gt;</span>State:/Network/Global/IPv4<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;key&gt;</span>method<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;string&gt;</span>CrankTools<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;string&gt;</span>OnNetworkLoad<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>One last step until we can build our package is the Launch Daemon &ndash; we&rsquo;re going to use the one that&rsquo;s included in the repository, as 99% of people won&rsquo;t need to change it.</p>
+
+<h2>Prepare the build!</h2>
+
+<p>Our package needs to have the version number of 2.1 and we&rsquo;re going to set the package&rsquo;s identifier to com.example.crankd</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/src/buildCrankPkg
+</span><span class='line'>sudo ./buildCrankPkg.py  --version 2.1 --identifier com.example.crankd
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Your package will be in <code>~/src/buildCrankPkg</code> waiting for you.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Graham Gilbert</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-17T16:31:00+01:00" pubdate data-updated="true">Jul 17<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/casper/'>Casper</a>, <a class='category' href='/blog/categories/munki/'>Munki</a>, <a class='category' href='/blog/categories/os-x/'>OS X</a>, <a class='category' href='/blog/categories/packaging/'>Packaging</a>, <a class='category' href='/blog/categories/puppet/'>Puppet</a>, <a class='category' href='/blog/categories/python/'>Python</a>, <a class='category' href='/blog/categories/script/'>Script</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/07/12/using-crankd-to-react-to-network-events/" title="Previous Post: Using crankd to react to network events">&laquo; Using crankd to react to network events</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/08/09/the-luggage-an-introduction/" title="Next Post: The Luggage: An Introduction">The Luggage: An Introduction &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
+
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer or clients.</small></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/">Writing Plugins for Sal: Part 3</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/">Writing Plugins for Sal: Part 2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/">Writing Plugins for Sal: Part 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/17/sal-the-munki-puppet/">Sal: The Munki Puppet</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/22/managing-the-authorization-database-with-munki/">Managing the Authorization Database With Munki</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'grahamgilbert',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Graham Gilbert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'grahamgilbert';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

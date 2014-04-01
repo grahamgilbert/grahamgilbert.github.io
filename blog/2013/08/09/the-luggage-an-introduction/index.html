@@ -1,0 +1,489 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>The Luggage: An Introduction - graham gilbert</title>
+  <meta name="author" content="Graham Gilbert">
+
+  
+  <meta name="description" content="If you&rsquo;ve managed OS X for any amount of time, chances are you&rsquo;ve needed to deploy software. And chances also are that you&rsquo;ve come &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27233739-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">graham gilbert</a></h1>
+  
+    <h2>Mac administration and assorted nerdity</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:grahamgilbert.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">The Luggage: An Introduction</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-09T18:00:00+01:00" pubdate data-updated="true">Aug 9<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>If you&rsquo;ve managed OS X for any amount of time, chances are you&rsquo;ve needed to deploy software. And chances also are that you&rsquo;ve come across a vendor (I&rsquo;m looking at you, Adobe) that seems to be incapable of distributing their software in a useful manner. Or maybe you&rsquo;ve got your own scripts or software that you need to get installed on the machines that you look after &ndash; either way, you&rsquo;re going to want to build a package.</p>
+
+<p>You&rsquo;ve got a few options &ndash; Iceberg, Packages, Composer, you&rsquo;ve even got Package Maker. However, my personal choice is The Luggage. It has a few advantages over the alternatives:</p>
+
+<ul>
+<li><strong>It&rsquo;s all text files:</strong> You&rsquo;re building software distributions, you should be checking the files in to build the packages into version control, such as Git. Text files are ideal for checking into version control.</li>
+<li><strong>It&rsquo;s free:</strong> if it costs nothing, there&rsquo;s no reason it can&rsquo;t be installed on everyone&rsquo;s machine.</li>
+<li><strong>It&rsquo;s (still) all text files:</strong> Want to see what will be in the package without any extra work? Crack open the Makefile and you can see straight away what will be in the package.</li>
+<li><strong>The Luggage has a metric buttload of shortcuts built in:</strong> it does the hard work, so you don&rsquo;t have to.</li>
+<li><strong>It&rsquo;s repeatable:</strong> Have you ever tried to talk someone through a series of windows and buttons to get the same result as you&rsquo;re getting? Every time you run The Luggage, you will get the same result.</li>
+<li><strong>It&rsquo;s (really, still) all text files:</strong> It&rsquo;s the most precise tool I&rsquo;ve used &ndash; you only package exactly what you need, no cruft is left behind.</li>
+<li><strong>Your workflow is limited only by your imagination:</strong> Seriously, you can do pretty much anything you can think of. We&rsquo;ll be going through more advanced workflows in future posts, but let&rsquo;s get started with using The Luggage.<!--more--></li>
+</ul>
+
+
+<h2>Getting set up</h2>
+
+<p>We&rsquo;re going to grab the current version of The Luggage from the git repository. If you don&rsquo;t have git, you can install the Command Line Tools from within <a href="https://itunes.apple.com/gb/app/xcode/id497799835?mt=12">Xcode&rsquo;s</a> preferences if you don&rsquo;t have it. If you don&rsquo;t have Xcode, and the Command Line Tools installed, very little is going to work, so go and install it. It&rsquo;s ok, I&rsquo;ll wait.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src
+</span><span class='line'><span class="nv">$ </span>git clone https://github.com/unixorn/luggage.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we are going to use The Luggage to install itself (oooh, meta). You&rsquo;ll be asked for your password, as it will need to perform some tasks as root.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/luggage
+</span><span class='line'><span class="nv">$ </span>make bootstrap_files
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Your first Makefile</h2>
+
+<p>Now you&rsquo;ve got everything set up, we&rsquo;re going to write our first Makefile. We&rsquo;re going to make a package to deploy Nate Walck&rsquo;s awesome <a href="https://github.com/natewalck/Scripts/blob/master/scriptRunner.py">scriptRunner.py</a>. Everything prefaced with a <code>$</code> should be typed into your Terminal window.</p>
+
+<p>First we&rsquo;re going to grab the repository from GitHub:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src
+</span><span class='line'><span class="nv">$ </span>git clone https://github.com/natewalck/Scripts.git natewalck-scripts
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we&rsquo;re going to make a directory to work in for our package and copy scriptRunner.py into it.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src
+</span><span class='line'><span class="nv">$ </span>mkdir -p ~/src/scriptRunnerPkg
+</span><span class='line'><span class="nv">$ </span>cp ~/src/natewalck-scripts/scriptRunner.py ~/src/scriptRunnerPkg/scriptRunner.py
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So far so good. Now for the actual Makefile. Create a file in your favourite editor (I recommend <a href="http://macromates.com/download">TextMate 2</a>), save it as Makefile in <code>~/src/scriptRunnerPkg</code> and put in the following content:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">USE_PKGBUILD</span><span class="o">=</span>1
+</span><span class='line'>include /usr/local/share/luggage/luggage.make
+</span><span class='line'><span class="nv">TITLE</span><span class="o">=</span>scriptRunnerPkg
+</span><span class='line'><span class="nv">REVERSE_DOMAIN</span><span class="o">=</span>com.grahamgilbert
+</span><span class='line'><span class="nv">PAYLOAD</span><span class="o">=</span><span class="se">\</span>
+</span><span class='line'>  pack-scriptRunner
+</span><span class='line'>
+</span><span class='line'>pack-scriptRunner: l_usr_local_bin
+</span><span class='line'>  @sudo <span class="k">${</span><span class="nv">CP</span><span class="k">}</span> ./scriptRunner.py <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/usr/local/bin/scriptRunner.py
+</span><span class='line'>  @sudo chmod 755 <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/usr/local/bin/scriptRunner.py
+</span><span class='line'>  @sudo chown root:wheel <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/usr/local/bin/scriptRunner.py
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let&rsquo;s go through this line by line. First, we&rsquo;re overloading a default variable. Back in the day, The Luggage used Package Maker to perform the actual build of the package. This has been deprecated by Apple, replaced with pkgbuild and productbuild. We&rsquo;re just telling The Luggage to go straight ahead and use pkgbuild.</p>
+
+<p>We&rsquo;re then including the main Makefile, which contains all of the pre-built work that we can extend with our own Makefiles.</p>
+
+<p><code>TITLE</code> and <code>REVERSE_DOMAIN</code> are exactly that &ndash; the title and reverse domain of the package.</p>
+
+<p>Finally, we&rsquo;re specifying what our payload is going to consist of &ndash; in this case, just scriptRunner. Line 8 is using the foundation that The Luggage has already built &ndash; installing software into <code>/usr/local/bin</code> is pretty standard, so we don&rsquo;t need to reinvent the wheel here &ndash; we just need to tell The Luggage what to do with the one file we&rsquo;re installing, it will work out the rest.</p>
+
+<h3>An important note on Makefiles</h3>
+
+<p>Makefiles are really picky about formatting and spacing &ndash; if you get strange errors, make sure you are using tab characters rather than spaces for example. and make sure you&rsquo;ve not missed off a colon or a back-slash anywhere.</p>
+
+<h2>Prepare the build!</h2>
+
+<p>We&rsquo;re ready to build. Let&rsquo;s do it. No need to run this as sudo, The Luggage will ask for your password if it needs it.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/scriptRunnerPkg
+</span><span class='line'>make pkg
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If everything has gone well, some text will scroll into your Terminal window and you&rsquo;ll be left with a package sitting in <code>~/src/scriptRunnerPkg</code>.</p>
+
+<p>That&rsquo;s all well and good, but we need a LaunchAgent to run the script when someone logs in. Save the following in <code>~/src/scriptRunnerPkg</code> and name it <code>com.grahamgilbert.scriptrunner.plist</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;?xml <span class="nv">version</span><span class="o">=</span><span class="s2">&quot;1.0&quot;</span> <span class="nv">encoding</span><span class="o">=</span><span class="s2">&quot;UTF-8&quot;</span>?&gt;
+</span><span class='line'>&lt;!DOCTYPE plist PUBLIC <span class="s2">&quot;-//Apple//DTD PLIST 1.0//EN&quot;</span> <span class="s2">&quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;</span>&gt;
+</span><span class='line'>&lt;plist <span class="nv">version</span><span class="o">=</span><span class="s2">&quot;1.0&quot;</span>&gt;
+</span><span class='line'>&lt;dict&gt;
+</span><span class='line'>  &lt;key&gt;Label&lt;/key&gt;
+</span><span class='line'>  &lt;string&gt;com.grahamgilbert.scriptrunner&lt;/string&gt;
+</span><span class='line'>  &lt;key&gt;ProgramArguments&lt;/key&gt;
+</span><span class='line'>  &lt;array&gt;
+</span><span class='line'>      &lt;string&gt;/usr/local/bin/scriptRunner.py&lt;/string&gt;
+</span><span class='line'>      &lt;string&gt;--once&lt;/string&gt;
+</span><span class='line'>      &lt;string&gt;/Library/Management/scriptRunner/once&lt;/string&gt;
+</span><span class='line'>      &lt;string&gt;--every&lt;/string&gt;
+</span><span class='line'>      &lt;string&gt;/Library/Management/scriptRunner/every&lt;/string&gt;
+</span><span class='line'>  &lt;/array&gt;
+</span><span class='line'>  &lt;key&gt;RunAtLoad&lt;/key&gt;
+</span><span class='line'>  &lt;<span class="nb">true</span>/&gt;
+</span><span class='line'>&lt;/dict&gt;
+</span><span class='line'>&lt;/plist&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will tell scriptRunner.py to run everything in <code>/Library/Management/scriptRunner/once</code> once per use and everything in <code>/Library/Management/scriptRunner/every</code> each and every single time the user logs in.</p>
+
+<p>That&rsquo;s nice, but how do we get it into our package? Change the payload section to look like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">PAYLOAD</span><span class="o">=</span><span class="se">\</span>
+</span><span class='line'>  pack-scriptRunner<span class="se">\</span>
+</span><span class='line'>  pack-Library-LaunchAgents-com.grahamgilbert.scriptrunner.plist
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now rebuild the package:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/scriptRunnerPkg
+</span><span class='line'>make pkg
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And that&rsquo;s it! As putting a plist into <code>/Library/LaunchAgents</code> is as common as a BSOD on Vista, it&rsquo;s built right into The Luggage. A list of most of the available payload additions can be found on <a href="https://github.com/unixorn/luggage/wiki">the wiki</a> &ndash; this isn&rsquo;t everything though. Have a nose through <code>/usr/local/share/luggage/luggage.make</code> to see everything you can do.</p>
+
+<p>This is obviously a working solution, but there are many manual steps needed if we are sharing our code with others. We&rsquo;ll look into automating some of the steps and deploying a script that scriptRunner.py can work with.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Graham Gilbert</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-09T18:00:00+01:00" pubdate data-updated="true">Aug 9<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/deployment/'>deployment</a>, <a class='category' href='/blog/categories/osx/'>osx</a>, <a class='category' href='/blog/categories/packaging/'>packaging</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/07/17/buildcrankpkg/" title="Previous Post: buildCrankPkg">&laquo; buildCrankPkg</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/08/19/the-luggage-further-automation/" title="Next Post: The Luggage: Further automation">The Luggage: Further automation &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
+
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer or clients.</small></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/">Writing Plugins for Sal: Part 3</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/">Writing Plugins for Sal: Part 2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/">Writing Plugins for Sal: Part 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/17/sal-the-munki-puppet/">Sal: The Munki Puppet</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/22/managing-the-authorization-database-with-munki/">Managing the Authorization Database With Munki</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'grahamgilbert',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Graham Gilbert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'grahamgilbert';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: IRC | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/irc/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2014-02-18T09:46:32+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[ZNC: An IRC Bouncer]]></title>
+    <link href="http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer/"/>
+    <updated>2013-10-13T08:35:00+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer</id>
+    <content type="html"><![CDATA[<p>Yes,  it&rsquo;s true. The most interesting conversations in the Mac admin world take place using technology from the 1980&rsquo;s &ndash; <a href="http://en.wikipedia.org/wiki/Internet_Relay_Chat">IRC</a> (##osx-server on <a href="http://freenode.net/">freenode</a>). Those of you who know me will know that I&rsquo;m borderline OCD. In this instance, my major annoyance was that I&rsquo;d only get half of the conversation and I&rsquo;d miss private messages when I had to put my laptop to sleep. I needed to somehow keep a persistient conenction to IRC without having to sit infront of my computer 24/7.</p>
+
+<p>I&rsquo;d heard of IRC bouncers before &ndash; an app that runs on a server, saving the messages in the rooms you specify for you until you are able to read them, but always assumed they were much more difficult to set up than it turned out to be.</p>
+
+<p>This is set up on a box running Ubuntu 12.04, with port 6666 opened on your firewall and forwarded to the box if you want to access it from outside the network. Mine is running on an <a href="http://aws.amazon.com/free/">Amazon EC2 Micro instance</a> &ndash; available for free for one year if you don&rsquo;t already have a server to run it on.</p>
+
+<p>Right, let&rsquo;s get started. All of these commands are to be run as your normal user (<code>graham</code> in this case &ndash; <strong>not root</strong>). First we&rsquo;re going to enable backports in Ubuntu. I like editing text files in <code>nano</code> so I&rsquo;m going to install that first, but feel free to use Vi or whatever you like.</p>
+
+<p><code>bash
+$ sudo apt-get install -y nano
+$ sudo nano /etc/apt/sources.list
+</code></p>
+
+<p>Find the two backports lines commented out (lines 44-45 on my test box) and unomment them.</p>
+
+<p><code>bash
+deb http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse
+deb-src http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse
+</code></p>
+
+<p>If you are using nano, hit <code>CTRL+O</code> and press return to save it, then <code>CTRL-X</code> to exit.</p>
+
+<p>To install ZNC, issue the following command:</p>
+
+<p><code>bash
+$ sudo apt-get update
+$ sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-dev/precise-backports znc-extra/precise-backports znc-perl/precise-backports znc-python/precise-backports znc-tcl/precise-backports
+</code></p>
+
+<!-- more -->
+
+
+<p>Thankfully there is a easy wizard to follow to configure ZNC. Below is a transcript of my settings, but feel free to adjust them to your tastes (make sure you are running this as your normal user, not sudo/root). Do not be scared by the masses of text, you have to type in very little.</p>
+
+<p><code>
+$ znc --makeconf
+[ ok ] Checking for list of available modules...
+[ ** ] Building new config
+[ ** ]
+[ ** ] First let's start with some global settings...
+[ ** ]
+[ ?? ] What port would you like ZNC to listen on? (1025 to 65535): 6666
+[ ?? ] Would you like ZNC to listen using SSL? (yes/no) [no]: yes
+[ ** ] Unable to locate pem file: [/home/graham/.znc/znc.pem]
+[ ?? ] Would you like to create a new pem file now? (yes/no) [yes]: yes
+[ ok ] Writing Pem file [/home/graham/.znc/znc.pem]...
+[ ?? ] Would you like ZNC to listen using ipv6? (yes/no) [yes]: no
+[ ?? ] Listen Host (Blank for all ips):
+[ ok ] Verifying the listener...
+[ ** ]
+[ ** ] -- Global Modules --
+[ ** ]
+[ ** ] +-----------+----------------------------------------------------------+
+[ ** ] | Name      | Description                                              |
+[ ** ] +-----------+----------------------------------------------------------+
+[ ** ] | partyline | Internal channels and queries for users connected to znc |
+[ ** ] | webadmin  | Web based administration module                          |
+[ ** ] +-----------+----------------------------------------------------------+
+[ ** ] And 12 other (uncommon) modules. You can enable those later.
+[ ** ]
+[ ?? ] Load global module &lt;partyline&gt;? (yes/no) [no]:
+[ ?? ] Load global module &lt;webadmin&gt;? (yes/no) [no]:
+[ ** ]
+[ ** ] Now we need to set up a user...
+[ ** ]
+[ ?? ] Username (AlphaNumeric): grahamgilbert
+[ ?? ] Enter Password:
+[ ?? ] Confirm Password:
+[ ?? ] Would you like this user to be an admin? (yes/no) [yes]: yes
+[ ?? ] Nick [grahamgilbert]:
+[ ?? ] Alt Nick [grahamgilbert_]:
+[ ?? ] Ident [grahamgilbert]:
+[ ?? ] Real Name [Got ZNC?]: Graham Gilbert
+[ ?? ] Bind Host (optional):
+[ ?? ] Number of lines to buffer per channel [50]: 1000
+[ ?? ] Would you like to clear channel buffers after replay? (yes/no) [yes]: yes
+[ ?? ] Default channel modes [+stn]:
+[ ** ]
+[ ** ] -- User Modules --
+[ ** ]
+[ ** ] +--------------+------------------------------------------------------------------------------------------+
+[ ** ] | Name         | Description                                                                              |
+[ ** ] +--------------+------------------------------------------------------------------------------------------+
+[ ** ] | chansaver    | Keep config up-to-date when user joins/parts                                             |
+[ ** ] | controlpanel | Dynamic configuration through IRC. Allows editing only yourself if you're not ZNC admin. |
+[ ** ] | perform      | Keeps a list of commands to be executed when ZNC connects to IRC.                        |
+[ ** ] +--------------+------------------------------------------------------------------------------------------+
+[ ** ] And 22 other (uncommon) modules. You can enable those later.
+[ ** ]
+[ ?? ] Load module &lt;chansaver&gt;? (yes/no) [no]: yes
+[ ?? ] Load module &lt;controlpanel&gt;? (yes/no) [no]:
+[ ?? ] Load module &lt;perform&gt;? (yes/no) [no]:
+[ ** ]
+[ ?? ] Would you like to set up a network? (yes/no) [no]: yes
+[ ?? ] Network (e.g. `freenode' or `efnet'): freenode
+[ ** ]
+[ ** ] -- Network Modules --
+[ ** ]
+[ ** ] +-------------+-------------------------------------------------------------------------------------------------+
+[ ** ] | Name        | Description                                                                                     |
+[ ** ] +-------------+-------------------------------------------------------------------------------------------------+
+[ ** ] | chansaver   | Keep config up-to-date when user joins/parts                                                    |
+[ ** ] | keepnick    | Keep trying for your primary nick                                                               |
+[ ** ] | kickrejoin  | Autorejoin on kick                                                                              |
+[ ** ] | nickserv    | Auths you with NickServ                                                                         |
+[ ** ] | perform     | Keeps a list of commands to be executed when ZNC connects to IRC.                               |
+[ ** ] | simple_away | This module will automatically set you away on IRC while you are disconnected from the bouncer. |
+[ ** ] +-------------+-------------------------------------------------------------------------------------------------+
+[ ** ] And 17 other (uncommon) modules. You can enable those later.
+[ ** ]
+[ ?? ] Load module &lt;chansaver&gt;? (yes/no) [no]: yes
+[ ?? ] Load module &lt;keepnick&gt;? (yes/no) [no]: no
+[ ?? ] Load module &lt;kickrejoin&gt;? (yes/no) [no]: no
+[ ?? ] Load module &lt;nickserv&gt;? (yes/no) [no]: no
+[ ?? ] Load module &lt;perform&gt;? (yes/no) [no]: no
+[ ?? ] Load module &lt;simple_away&gt;? (yes/no) [no]: yes
+[ ** ]
+[ ** ] -- IRC Servers --
+[ ** ] Only add servers from the same IRC network.
+[ ** ] If a server from the list can't be reached, another server will be used.
+[ ** ]
+[ ?? ] IRC server (host only): irc.freenode.net
+[ ?? ] [irc.freenode.net] Port (1 to 65535) [6667]:
+[ ?? ] [irc.freenode.net] Password (probably empty):
+[ ?? ] Does this server use SSL? (yes/no) [no]:
+[ ** ]
+[ ?? ] Would you like to add another server for this IRC network? (yes/no) [no]:
+[ ** ]
+[ ** ] -- Channels --
+[ ** ]
+[ ?? ] Would you like to add a channel for ZNC to automatically join? (yes/no) [yes]: yes
+[ ?? ] Channel name: ##osx-server
+[ ?? ] Would you like to add another channel? (yes/no) [no]: no
+[ ?? ] Would you like to set up another network? (yes/no) [no]: no
+[ ** ]
+[ ?? ] Would you like to set up another user? (yes/no) [no]: no
+[ ok ] Writing config [/home/vagrant/.znc/configs/znc.conf]...
+[ ** ]
+[ ** ] To connect to this ZNC you need to connect to it as your IRC server
+[ ** ] using the port that you supplied.  You have to supply your login info
+[ ** ] as the IRC server password like this: user/network:pass.
+[ ** ]
+[ ** ] Try something like this in your IRC client...
+[ ** ] /server &lt;znc_server_ip&gt; +6666 grahamgilbert:&lt;pass&gt;
+[ ** ] And this in your browser...
+[ ** ] https://&lt;znc_server_ip&gt;:6666/
+[ ** ]
+[ ?? ] Launch ZNC now? (yes/no) [yes]: no
+</code></p>
+
+<p>Still with me? One last thing to do &ndash; make sure ZNC starts and keeps running. We&rsquo;ll use Upstart (hat-tip to <a href="https://twitter.com/natewalck/status/389345376811356160">@natewalck</a>).</p>
+
+<p><code>bash
+$ sudo nano /etc/init/znc.conf
+</code></p>
+
+<p>And pop in the following, replacing <code>sudo -u graham</code> with your own username.</p>
+
+<p>```</p>
+
+<h1>znc &ndash; IRC Bouncer</h1>
+
+<p>description &ldquo;IRC Bouncer&rdquo;</p>
+
+<p>start on runlevel [2345]</p>
+
+<p>stop on runlevel [016]</p>
+
+<p>respawn
+respawn limit 15 5</p>
+
+<p>script
+  exec sudo -u graham /usr/bin/znc
+end script
+```</p>
+
+<p>Then finally start it up:</p>
+
+<p><code>bash
+$ sudo start znc
+</code></p>
+
+<p>Configuring each IRC client is different, but for Textual (my prefered client), it&rsquo;s pretty straightforward. Go to the Server menu and choose Add Server. Make the settings look like below, obviously replaing the hostname and password with the ones you chose.</p>
+
+<p><img class="center" src="/images/posts/2013-10-13/textual_settings.png"></p>
+]]></content>
+  </entry>
+  
+</feed>

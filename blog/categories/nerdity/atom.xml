@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Nerdity | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/nerdity/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2014-02-18T09:46:32+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Hello Octopress]]></title>
+    <link href="http://grahamgilbert.com/blog/2012/04/03/hello-octopress/"/>
+    <updated>2012-04-03T12:49:00+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2012/04/03/hello-octopress</id>
+    <content type="html"><![CDATA[<p>Inspired by some of the <a href="http://mattgemmell.com/2011/09/12/blogging-with-octopress/">cool kids</a>, I&rsquo;ve spent the last couple of evenings migrating my blog over to <a href="http://octopress.org">Octopress</a>.  The main motivators were my desire to put my posts under version control (we&rsquo;ve been going a bit nuts for Git at Pebble towers recently), and that I wanted to use the excellent Byword app to compose my posts (I just need to work out how I&rsquo;m going to be able to use the iOS app to publish on the go &ndash; probably some Dropbox trickery).</p>
+
+<p>Plus, using Ruby scripts and Rsync to publish the blog really appealed to my (not so) inner geek.</p>
+
+<p>Anyway, normal mac-type sysadmin-y posts will resume shortly.</p>
+]]></content>
+  </entry>
+  
+</feed>

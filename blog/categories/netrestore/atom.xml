@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: netrestore | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/netrestore/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2014-02-18T09:46:32+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Updating InstaDMG based NetRestore images]]></title>
+    <link href="http://grahamgilbert.com/blog/2013/01/07/updating-instadmg-based-netrestore-images/"/>
+    <updated>2013-01-07T11:54:00+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2013/01/07/updating-instadmg-based-netrestore-images</id>
+    <content type="html"><![CDATA[<p>This probably isn&rsquo;t news to anyone else, but I made a discovery last week that will save me a fair bit of time.</p>
+
+<p>Whilst staring at System Image Utility after yet another change to the build, I thought that there must be a better way of doing this, bearing in mind that the basic InstaDMG process is:</p>
+
+<ul>
+<li>Install the OS</li>
+<li>Install Packages</li>
+<li><strong>Make a read-only DMG</strong></li>
+<li><strong>Prep the DMG for ASR</strong></li>
+</ul>
+
+
+<p>And SIU&rsquo;s process is:</p>
+
+<ul>
+<li><strong>Make a read-only DMG</strong></li>
+<li><strong>Prep the DMG for ASR</strong></li>
+<li>Copy it into a writable disk image with a stripped down OS to restore the image.</li>
+</ul>
+
+
+<p>So, two steps are duplicated. This inefficiency must be stopped!</p>
+
+<p>After a 30 second hunt in the NetInstall.dmg file that SIU spits out, I saw a file called System.dmg in the Packages folder &ndash; sure enough, it was my InstaDMG image. I replaced it with my new build, and it worked flawlessly.</p>
+
+<p>If your new image is larger than the one you&rsquo;re replacing, you just need to expand the NetInstall.dmg image to a size large enough to accomodate the new image.</p>
+
+<pre><code>hdiutil resize -growonly -size 15g /path/to/your/NetRestore.nbi/NetInstall.dmg
+</code></pre>
+
+<p>Replace the 15g with whatever size you want, 15 GB was plenty to accomodate my updated image.</p>
+]]></content>
+  </entry>
+  
+</feed>

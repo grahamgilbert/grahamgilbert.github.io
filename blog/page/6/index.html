@@ -1,0 +1,480 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>graham gilbert</title>
+  <meta name="author" content="Graham Gilbert">
+
+  
+  <meta name="description" content="I&rsquo;ve been using InstaDMG for nearly two years now. We all know it&rsquo;s awesome (if you aren&rsquo;t aware of it&rsquo;s awesomeness, I &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://grahamgilbert.com/blog/page/6">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27233739-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">graham gilbert</a></h1>
+  
+    <h2>Mac administration and assorted nerdity</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:grahamgilbert.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/05/instadmg-tips/">InstaDMG Tips</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-05T14:35:00+00:00" pubdate data-updated="true">Jan 5<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/01/05/instadmg-tips/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been using <a href="http://code.google.com/p/instadmg/">InstaDMG</a> for nearly two years now. We all know it&rsquo;s awesome (if you aren&rsquo;t aware of it&rsquo;s awesomeness, I suggest taking a look at <a href="http://www.youtube.com/watch?v=o8xtO5E4MzE">Allister Banks&#8217; talk at PSU MacAdmins last year</a>). I&rsquo;m almost ashamed to admit that I was happily making my Golden Master images on my test iMac and hoping for the best when I cleaned them up by hand and pushed them out. Anyway, that&rsquo;s enough of my admissions. Over these two years, I&rsquo;ve picked up a few tips and tricks for working effectively with InstaDMG.</p>
+
+<h2>Put an SSD in your laptop</h2>
+
+<p>Seriously, just do it. If your boss complains at how much it costs, then they&rsquo;re not charging enough for you. The price of the SSD was covered by the time I saved when doing one particularly chunky build (around 30GB including packages). InstaDMG is primarily I/O bound, so an SSD will change your InstaDMG life.</p>
+
+<h2>Keep your InstaUp2DatePackages on a web server</h2>
+
+<p>If you&rsquo;ve got more than one person building images in your organisation, you&rsquo;ll soon find that your packages will get out of sync with each other. One person will be using 0.8.2 of Munki, another 0.8.3, it all goes horribly wrong. As InstaDMG can pull packages from a web server, this lends itself to having a central repository for packages in your oganisation. Remember to keep it safely behind your firewall if you&rsquo;ve got sensitive info in your packages (like one that creates your admin user, for example).</p>
+
+<h2>Keep our CatalogFiles in source control</h2>
+
+<p>Now that everyone has access to your InstaUp2DatePackages, we ought to get our CatalogFiles in check too. Keep them in some sort of source control like <a href="http://grahamgilbert.com/blog/2012/09/21/five-reasons-sysadmins-should-use-git/">Git</a> and be happy. Mine can be found on my <a href="https://github.com/grahamgilbert/InstaDMG-Catalogs">GitHub</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/01/macscripts/">MacScripts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-01T16:12:00+00:00" pubdate data-updated="true">Jan 1<span>st</span>, 2013</time>
+        
+         | <a href="/blog/2013/01/01/macscripts/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve had my Mac scripts dotted around my Macs over the years, so after spending twenty minutes looking for my script to add a login item to a user, I decided to put them all in one place on GitHub. Hopefully someone will find them useful, I&rsquo;ll be adding the rest as soon as I work out where I put them.</p>
+
+<p><a href="https://github.com/grahamgilbert/macscripts">MacScripts on GitHub</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/15/casper-versus-deploystudio/">Casper Versus DeployStudio</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-15T13:00:00+00:00" pubdate data-updated="true">Dec 15<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/12/15/casper-versus-deploystudio/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ll preface this with one thing &ndash; I&rsquo;m not a Casper Suite expert. I don&rsquo;t use it reguarly, and at what it costs, I probably won&rsquo;t! It&rsquo;s this price that gave me high expectations for this last install. Unfortunately they were unfounded.</p>
+
+<p>I&rsquo;m hoping to write a series of articles comparing the various aspects of Casper against the free tools I use every day. First up is DeployStudio.</p>
+
+<h2>Workflow creation</h2>
+
+<p>Both Casper Imaging and DeployStudio have a nice GUI for creating the workflow. It&rsquo;s just a drag and drop to place the tasks you need. The DeployStudio interface feels a bit more polished, but that&rsquo;s probably just my bias showing though. The only real differentiator here are the package groups that DeployStudio offers. If you had a standard group of packages that you deploy over several different workflows, DeployStudio makes it easy to maintain &ndash; yes, this should probably be done elsewhere, but it can be handy to install a certain set of applications at imaging time. I couldn&rsquo;t see a direct replacement for this in Casper Imaging.</p>
+
+<p><strong>Winner: Draw (just! if pushed, I&rsquo;d say DeployStudio just edged it)</strong></p>
+
+<h2>NetBoot</h2>
+
+<p>This is where DeployStudio really starts to poop on Casper Imaging from a great height. With Casper, the chap doing the jump start told me that I had to manually build up a NetBoot image with Casper Imaging set up. Hilarious. Surely he was joking, right? No. DeployStudio, a <em>free product</em>, has a wizard for making a customised NetBoot set that offers an iTunes like interface that is so simple, I&rsquo;ve regularly taken an office manager through imaging a Mac. I dread to think how that same person would cope with the random UI elements that have been thrown at the screen when making the casper imaging app.</p>
+
+<p><strong>Winner: DeployStudio, hands down. Casper didn&rsquo;t even turn up</strong></p>
+
+<h2>Imaging process</h2>
+
+<p>So, you&rsquo;ve managed to get past the lovely Casper Imaging interface, and now you&rsquo;re installing a package that&rsquo;s best installed when running from the target system &ndash; like an Adobe CS package. One that is likely to be the biggest package you&rsquo;re installing. With DeployStudio, you at least get some indication that <em>something</em> is happening &ndash; you have the log scrolling by in the background. With Casper Imaging you get nothing other than a back window, and the nice Casper logo. No idea if it&rsquo;s going to take five minutes or two hours.</p>
+
+<p><strong>Winner: DeployStudio</strong></p>
+
+<p>I&rsquo;ll finish this post with an admission: I don&rsquo;t use DeployStudio either. I&rsquo;ve been trying to get rid of OS X in my server rooms, so as I mentioned in my last post, we&rsquo;re using JAMF&rsquo;s NetSUS appliance (dear JAMF, why can you make an awesome free product like NetSUS, but your flagship product be so poor?) and NetRestore with a InstaDMG made image with just an OS and a package to hook it into Puppet. I chose to compare Casper Imaging with DeployStudio as they&rsquo;re closer competitors than the one trick pony of NetRestore.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/12/macnamer/">MacNamer</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-12T11:05:00+00:00" pubdate data-updated="true">Dec 12<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/12/12/macnamer/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A few months ago, we decided to move away from DeployStudio for imaging our Macs to reduce the OS X footprint in the server room (a plain old NetRestore can be run from <a href="https://jamfnation.jamfsoftware.com/viewProduct.html?id=180&amp;view=info">NetSUS</a>). This left us with a problem &ndash; how are we going to name our Macs now (a task previously performed by DeployStudio)?</p>
+
+<p>Enter <a href="https://github.com/grahamgilbert/macnamer">MacNamer</a>. It&rsquo;s usage and installation is detailled in the Readme file, please fork, try to break, file pull requests. This has been in production for several months at work, but I&rsquo;m sure someone will manage to make it break!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/12/meraki-systems-manager/">Meraki Systems Manager</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-12T16:07:00+00:00" pubdate data-updated="true">Nov 12<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/11/12/meraki-systems-manager/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Maintaining visibility over your fleet of machines is always difficult. It&rsquo;s even more difficult when you&rsquo;ve got Macs. It gets nearly impossible when you decide you&rsquo;d like something hosted in the cloud.</p>
+
+<p>We&rsquo;ve been looking for a good solution for ages now &ndash; we even resorted to using <a href="http://www.ocsinventory-ng.org/en/">OCS Inventory</a> for a while. We then discovered <a href="http://www.meraki.com/products/systems-manager/">Meraki&rsquo;s Systems Manager</a>.</p>
+
+<p>This isn&rsquo;t going to be one of those fancy review type things &ndash; you can go and look at it&rsquo;s features yourself. This is more an overview of the factors that came into our decision:</p>
+
+<h2>Pros</h2>
+
+<ul>
+<li>It&rsquo;s cloud based! No servers for us to deploy, no VPNs between sites for clients to communicate over</li>
+<li>It does basic iOS MDM. It&rsquo;s not the best in the world, but it does a lot of what we wanted (basically configuring email and Wi-Fi settings)</li>
+<li>It has SSH over the Internet. If all else fails, we have a way into a machine, no matter where it is.</li>
+<li>It&rsquo;s free! It&rsquo;s hard to argue with a price like that!</li>
+</ul>
+
+
+<h2>Cons</h2>
+
+<ul>
+<li>It&rsquo;s free! If you&rsquo;re not paying for something, you have no SLA, no guarantee it will be working tomorrow</li>
+<li>It&rsquo;s location services suck in the UK. My home network is in Sheffield apparently. We supposedly have clients in Bath (we don&rsquo;t).</li>
+<li>It&rsquo;s not particuarly customisable. With Puppet, Facter, Puppet Dashboard and the inventory service configured, you can pull out practically any information you require (for example, we have a Fact that tells us if there are any admin users on a Mac other than our own).</li>
+</ul>
+
+
+<h2>Summary</h2>
+
+<p>For what it does, Meraki Systems Manager is hard to beat. If you need more than basic system information, or something that runs on Linux, you&rsquo;re going to need to look elsewhere. It&rsquo;s a great compliment to Puppet Inventory, but it&rsquo;s not a total replacement.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/7/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/5/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
+
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer or clients.</small></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/">Writing Plugins for Sal: Part 3</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/">Writing Plugins for Sal: Part 2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/">Writing Plugins for Sal: Part 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/17/sal-the-munki-puppet/">Sal: The Munki Puppet</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/22/managing-the-authorization-database-with-munki/">Managing the Authorization Database With Munki</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'grahamgilbert',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Graham Gilbert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'grahamgilbert';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
