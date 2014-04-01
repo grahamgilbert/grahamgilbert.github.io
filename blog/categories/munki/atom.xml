@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Munki | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/munki/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-02-18T09:46:32+00:00</updated>
+  <updated>2014-04-01T20:39:54+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,134 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Binding to Active Directory with Munki]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki/"/>
+    <updated>2014-04-01T20:15:39+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki</id>
+    <content type="html"><![CDATA[<p>Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It&rsquo;s quite  a straightforward process to automate this with Munki, although you do have a few options to consider.</p>
+
+<p>First off, how are you going to deliver the actual bind script? You have the option of a <a href="https://code.google.com/p/munki/wiki/ManagingPrintersWithMunki#Alternate_Method_Using_nopkg">no-pkg pkginfo</a> file, with the script directly in the pkginfo plist. Whilst the script is now easily editable in the pkginfo, it does pose a security issue in that the catalog is kept in /Library/Managed Installs/catalogs, which will contain your script. Along with your AD bind account&rsquo;s details. Whoops!</p>
+
+<h2>Prepare the Bind!</h2>
+
+<p>My preferred way of deploying the bind script is with a payload-free package made with The Luggage. My bind script is nothing special, it was originally borrowed from DeployStudio. You can find the <a href="https://github.com/grahamgilbert/macscripts/blob/master/AD%20Bind/postinstall">script</a> and the <a href="https://github.com/grahamgilbert/macscripts/blob/master/AD%20Bind/Makefile">Makefile</a> on my <a href="https://github.com/grahamgilbert/macscripts/tree/master/AD%20Bind">macscripts repo</a>. If you need a primer on The Luggage, <a href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/">I wrote about it in August 2013</a>. You just need to edit the variables at the top of the script to suit your environment and build the package.</p>
+
+<p>So you&rsquo;ve got the machine bound to AD. Great. What happens if the binding doesn&rsquo;t go to plan? Or a well meaning tech manages to unbind the machine, but can&rsquo;t manage to re-bind it? Or even worse, the user manages to unbind it themselves? We need to make Munki check that the Mac is still bound to AD.</p>
+
+<!--more-->
+
+
+<h2>installcheck_script.sh</h2>
+
+<p>``` bash</p>
+
+<h1>!/bin/sh</h1>
+
+<h1>You need to change this.</h1>
+
+<h1>The Domain we&rsquo;re supposed to be on</h1>
+
+<p>DOMAIN=&ldquo;ad.company.com&rdquo;</p>
+
+<h2>STOP EDITING</h2>
+
+<h1>The version from dsconfigad</h1>
+
+<p>ACTUAL_DOMAIN=<code>/usr/sbin/dsconfigad -show | /usr/bin/grep -i "Active Directory Domain" | /usr/bin/sed -n 's/[^.]*= //p'</code></p>
+
+<p>if [ &ldquo;$ACTUAL_DOMAIN&rdquo; = &ldquo;$DOMAIN&rdquo; ]</p>
+
+<pre><code>then
+# We're on the right domain, no need to install
+exit 1
+</code></pre>
+
+<p>else</p>
+
+<pre><code># Domain isn't being returned from dsconfigad, need to install
+exit 0
+</code></pre>
+
+<p>fi
+```</p>
+
+<p>You should save this as install <code>check_script.sh</code> in the same directory as your binding package. This script is querying the Active Directory domain the Mac is on and checking it&rsquo;s the one you want.</p>
+
+<p>Simple.</p>
+
+<p>Job done.</p>
+
+<p>Right&hellip;?</p>
+
+<h2>Not quite finished</h2>
+
+<p>The main issue with using an <code>installcheck_script</code> is that we&rsquo;re bypassing every other mechanism that Munki uses to check if an item needs to be installed, which means that if we ever need to update our AD bind package and install it, or if the Mac was previously bound to AD, Munki will cheerfully ignore the package because as far as it&rsquo;s concerned, if it passes the installcheck_script, everything&rsquo;s fine and dandy.</p>
+
+<h2>installcheck_script.sh take 2</h2>
+
+<p>``` bash</p>
+
+<h1>!/bin/sh</h1>
+
+<h1>You need to change these.</h1>
+
+<h1>The Domain we&rsquo;re supposed to be on</h1>
+
+<p>DOMAIN=&ldquo;ad.company.com&rdquo;</p>
+
+<h1>The version of the package (today&rsquo;s date if created using the usual Luggage Makefile)</h1>
+
+<p>PKG_VERSION=&ldquo;20140401&rdquo;</p>
+
+<h1>The identifier of the package</h1>
+
+<p>PKG_ID=&ldquo;com.grahamgilbert.ad-bind&rdquo;</p>
+
+<h2>STOP EDITING</h2>
+
+<h1>The version from dsconfigad</h1>
+
+<p>ACTUAL_DOMAIN=<code>/usr/sbin/dsconfigad -show | /usr/bin/grep -i "Active Directory Domain" | /usr/bin/sed -n 's/[^.]*= //p'</code></p>
+
+<h1>The version installed from pkgutil</h1>
+
+<p>VERSION_INSTALLED=<code>/usr/sbin/pkgutil --pkg-info ${PKG_ID} | /usr/bin/grep version | /usr/bin/sed 's/^[^:]*: //'</code>
+if [ &ldquo;$ACTUAL_DOMAIN&rdquo; = &ldquo;$DOMAIN&rdquo; ]</p>
+
+<pre><code>then
+# We're on the right domain, make sure we've got the right version of the package
+if [ "$VERSION_INSTALLED" = "$PKG_VERSION" ]
+then
+    # Everything's ok, no need to install
+    exit 1
+else
+    # Package is out of date, need to install
+    exit 0
+fi
+</code></pre>
+
+<p>else</p>
+
+<pre><code># Domain isn't being returned from dsconfigad, need to install
+exit 0
+</code></pre>
+
+<p>fi
+```</p>
+
+<p>This is a little more complicated, but not much. First off we&rsquo;re doing the same check as before, making sure we&rsquo;re actually bound to the domain. If we aren&rsquo;t, we obviously need to install the package, so that&rsquo;s the end of that. If we are bound, we next need to check which version of the package we have. As previously mentioned, Munki would usually do this for us, but by using the installcheck_script, we&rsquo;ve engaged the &ldquo;leave me alone, I know what the fuck I&rsquo;m doing&rdquo; mode in Munki, so we&rsquo;re implementing that check ourselves. If the version or package identifier don&rsquo;t match, we want our bind script installed, screw those other guys with their not-as-good-as-our-way of binding.</p>
+
+<p>All that&rsquo;s left now is to <code>munkiimport</code> your package with your script as an <code>installcheck_script</code>:</p>
+
+<p><code>bash
+$ /usr/local/munki/munkiimport ad-bind.pkg --installcheck_script=installcheck_script.sh
+</code></p>
+
+<p>There you have it, how to keep a Mac bound to AD with Munki. You may wish to change some other settings later on (particularly if you have to do battle with a .local domain), but this will get you going with a basic AD bind.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Writing Plugins for Sal: Part 3]]></title>
@@ -509,557 +637,6 @@
 <p><img class="center" src="/images/posts/2014-01-17/Sal.png"></p>
 
 <p>There is a plugin system built in to Sal, and over the next few days I will have a couple of posts covering how to make your own.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Managing the Authorization Database with Munki]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki/"/>
-    <updated>2013-12-22T15:25:00+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki</id>
-    <content type="html"><![CDATA[<p>Have you ever wished you didn&rsquo;t have to take calls from your users to unlock various parts of System Preferences? That standard users could unlock Energy Saver or Date and Time preferences? Well dear reader, this is the article for you.</p>
-
-<p>If, for some strange reason you can&rsquo;t be bothered to read this overly long article (I do love to procrastinate), you can head over to my <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki">macscripts repo on GitHub</a> for the scripts and resulting pkginfo files I&rsquo;ve made for this.</p>
-
-<p>Before we start, let&rsquo;s get one thing out of the way &ndash; Munki isn&rsquo;t at heart a configuration management system. I&rsquo;ve traditionally preferred Puppet for these tasks, but as there is at the time of writing a <a href="https://projects.puppetlabs.com/issues/22830">bug open</a> on modifying this with Puppet, I took it upon myself to make this work in my environment. I spent a couple of days trying to get my sub-par Ruby skills to match my aspirations, so I moved onto a much more comfortable technology for me: Python and Munki.</p>
-
-<p>To tackle this issue, I&rsquo;m going to be using the same Philosophy as Puppet:</p>
-
-<ul>
-<li>Check if the resource exists and what it&rsquo;s current value is</li>
-<li>If required, change the value</li>
-<li>And be able to revert back to how things were</li>
-</ul>
-
-
-<p>These translate quite nicely into <code>installcheck_script</code>, <code>postinstall_script</code> and <code>uninstall_script</code> rolled into a <code>nopkg</code> pkginfo (for a good intro into how nopkg pkginfos work, see how to manage printers with them over on the <a href="https://code.google.com/p/munki/wiki/ManagingPrintersWithMunki">Munki wiki</a>). We could do this with a payload free package and an installcheck_script just as easily, but as we&rsquo;re already putting code into our pkginfo, we might as well keep it all in one place.</p>
-
-<p>This isn&rsquo;t intended to be a tutorial on the theory of OS X&rsquo;s authorization database &ndash; there are already <a href="http://mattsmacblog.wordpress.com/2012/01/05/making-use-of-the-etcauthorization-file-in-lion-10-7-x/">excellent resources available</a>.</p>
-
-<h2>installcheck_script</h2>
-
-<p>Our <code>installcheck_script</code> is going to be very basic. To first open up the root <code>system.preferences</code> right, we just need to make sure that the group is set to <code>everyone</code> rather than <code>admin</code>. If you want to use another group, just substitute it in the <code>group</code> variable in the installcheck_script and the postinstall_script.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>installcheck.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="err">!</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">env</span> <span class="n">python</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">plistlib</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">Group</span> <span class="n">System</span> <span class="n">Preferences</span> <span class="n">should</span> <span class="n">be</span> <span class="n">opened</span> <span class="n">to</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">group</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">everyone</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">security</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">authorizationdb</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">read</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">system</span><span class="o">.</span><span class="n">preferences</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;]</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">formatted</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">if</span> <span class="n">group</span> <span class="n">matches</span><span class="p">,</span> <span class="nb">exit</span> <span class="mi">1</span> <span class="k">as</span> <span class="n">we</span> <span class="n">don</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="n">t</span> <span class="n">need</span> <span class="n">to</span> <span class="n">install</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">if</span> <span class="n">formatted</span><span class="p">[</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">group</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;]</span> <span class="o">==</span> <span class="n">group</span><span class="p">:</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">else</span><span class="p">:</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="c"># if it doesn&#39;t we&#39;re exiting with 0 as we need to perform the install</span>
-</span><span class='line'><span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>postinstall_script</h2>
-
-<p>The <code>postinstall_script</code> is just an extension of the <code>installcheck_script</code> &ndash; but we&rsquo;re going to make use of Python&rsquo;s built-in <code>plistlib</code> to modify the plist and feed it back into <code>security authorizationdb</code> to set our desired settings.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>postinstall.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="err">!</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">env</span> <span class="n">python</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">plistlib</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">Group</span> <span class="n">System</span> <span class="n">Preferences</span> <span class="n">should</span> <span class="n">be</span> <span class="n">opened</span> <span class="n">to</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">group</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">everyone</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">security</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">authorizationdb</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">read</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">system</span><span class="o">.</span><span class="n">preferences</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;]</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-</span><span class='line'><span class="n">formatted</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">If</span> <span class="n">the</span> <span class="n">group</span> <span class="n">doesn</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="n">t</span> <span class="n">match</span><span class="p">,</span> <span class="n">we</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="n">re</span> <span class="n">going</span> <span class="n">to</span> <span class="n">correct</span> <span class="n">it</span><span class="o">.&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">if</span> <span class="n">formatted</span><span class="p">[</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">group</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;]</span> <span class="o">!=</span> <span class="n">group</span><span class="p">:</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="c">#input_plist = {}</span>
-</span><span class='line'><span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group</span>
-</span><span class='line'><span class="c"># Convert back to plist</span>
-</span><span class='line'><span class="n">input_plist</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">writePlistToString</span><span class="p">(</span><span class="n">formatted</span><span class="p">)</span>
-</span><span class='line'><span class="c"># Write the plist back to the authorizationdb</span>
-</span><span class='line'><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;write&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
-</span><span class='line'><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">input_plist</span><span class="p">)</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>uninstall_script</h2>
-
-<p>We should be good admins and clean up after ourselves, so we&rsquo;ll include an uninstall script.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>uninstall.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="err">!</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">env</span> <span class="n">python</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">plistlib</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">Set</span> <span class="n">the</span> <span class="n">group</span> <span class="n">back</span> <span class="n">to</span> <span class="n">admin</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">group</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">admin</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">security</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">authorizationdb</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">read</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">system</span><span class="o">.</span><span class="n">preferences</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;]</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-</span><span class='line'><span class="n">formatted</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">If</span> <span class="n">the</span> <span class="n">group</span> <span class="n">doesn</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="n">t</span> <span class="n">match</span><span class="p">,</span> <span class="n">we</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="n">re</span> <span class="n">going</span> <span class="n">to</span> <span class="n">correct</span> <span class="n">it</span><span class="o">.&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">if</span> <span class="n">formatted</span><span class="p">[</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">group</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;]</span> <span class="o">!=</span> <span class="n">group</span><span class="p">:</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group</span>
-</span><span class='line'><span class="c"># Convert back to plist</span>
-</span><span class='line'><span class="n">input_plist</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">writePlistToString</span><span class="p">(</span><span class="n">formatted</span><span class="p">)</span>
-</span><span class='line'><span class="c"># Write the plist back to the authorizationdb</span>
-</span><span class='line'><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;write&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
-</span><span class='line'><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">input_plist</span><span class="p">)</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>Getting it into Munki</h2>
-
-<p>Now we&rsquo;ve got our three scripts, we need to get them together into a pkginfo file. Assuming the scripts you&rsquo;ve just made live in <code>~/src/macscripts/Munki/Auth</code>:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd ~/src/macscripts/Munki/Auth
-</span><span class='line'>$ /usr/local/munki/makepkginfo &mdash;installcheck_script=installcheck.py &mdash;postinstall_script=postinstall.py &mdash;uninstall_script=uninstall.py > OpenSysPrefs-1.0.plist</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Which will produce the bare bones of a pkginfo file, but there are a few other things we need to add into it. Modify OpenSysPref-1.0.plist to look like the below. For further documentation on what we&rsquo;re doing here, have a look at the <a href="https://code.google.com/p/munki/wiki/PkginfoFiles">Munki wiki</a>. The important parts you&rsquo;ll need to add / modify are:</p>
-
-<ul>
-<li>autoremove</li>
-<li>catalog</li>
-<li>description</li>
-<li>display_name</li>
-<li>name</li>
-<li>installer_type</li>
-<li>minimum_os_version</li>
-<li>version</li>
-<li>unattended_install (if you want it to apply in the background)</li>
-<li>uninstall_method</li>
-<li>uninstallable</li>
-</ul>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-<span class='line-number'>101</span>
-<span class='line-number'>102</span>
-<span class='line-number'>103</span>
-<span class='line-number'>104</span>
-<span class='line-number'>105</span>
-<span class='line-number'>106</span>
-<span class='line-number'>107</span>
-<span class='line-number'>108</span>
-<span class='line-number'>109</span>
-<span class='line-number'>110</span>
-<span class='line-number'>111</span>
-<span class='line-number'>112</span>
-<span class='line-number'>113</span>
-<span class='line-number'>114</span>
-<span class='line-number'>115</span>
-<span class='line-number'>116</span>
-<span class='line-number'>117</span>
-<span class='line-number'>118</span>
-<span class='line-number'>119</span>
-<span class='line-number'>120</span>
-<span class='line-number'>121</span>
-<span class='line-number'>122</span>
-<span class='line-number'>123</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>?xml version=<span class="ni">&amp;ldquo;</span>1.0<span class="ni">&amp;rdquo;</span> encoding=<span class="ni">&amp;ldquo;</span>UTF-8<span class="ni">&amp;rdquo;</span>?&gt;
-</span><span class='line'><span class="ni">&amp;lt;</span>!DOCTYPE plist PUBLIC <span class="ni">&amp;ldquo;&amp;ndash;</span>//Apple//DTD PLIST 1.0//EN<span class="ni">&amp;rdquo;</span> <span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;</span><span class="nt">&gt;</span>http://www.apple.com/DTDs/PropertyList-1.0.dtd<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span>&gt;
-</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;dict&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>autoremove<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>false/<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>catalogs<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>array<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>production<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>/array<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>description<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>Opens System Preferences to Everyone<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>display_name<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>Open System Preferences<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>name<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>OpenSysPrefs<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>installer_type<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>nopkg<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>minimum_os_version<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>10.8.0<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>unattended_install<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>true/<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>version<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>1.0<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>installcheck_script<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>#!/usr/bin/env python
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>import subprocess
-</span><span class='line'>import sys
-</span><span class='line'>import plistlib<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;h1&gt;</span>Group System Preferences should be opened to<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>group = <span class="ni">&amp;lsquo;</span>everyone<span class="ni">&amp;rsquo;</span><span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>command = [<span class="ni">&amp;lsquo;</span>/usr/bin/security<span class="ni">&amp;rsquo;</span>, <span class="ni">&amp;lsquo;</span>authorizationdb<span class="ni">&amp;rsquo;</span>, <span class="ni">&amp;lsquo;</span>read<span class="ni">&amp;rsquo;</span>, <span class="ni">&amp;lsquo;</span>system.preferences<span class="ni">&amp;rsquo;</span>]<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>task = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>(out, err) = task.communicate()<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>formatted = plistlib.readPlistFromString(out)<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;h1&gt;</span>if group matches, exit 1 as we don<span class="ni">&amp;rsquo;</span>t need to install<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>if formatted[<span class="ni">&amp;lsquo;</span>group<span class="ni">&amp;rsquo;</span>] == group:<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>sys.exit(1)
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>else:<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span># if it doesn&#39;t we&#39;re exiting with 0 as we need to perform the install
-</span><span class='line'>sys.exit(0)<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>postinstall_script<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>#!/usr/bin/env python
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>import subprocess
-</span><span class='line'>import sys
-</span><span class='line'>import plistlib<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;h1&gt;</span>Group System Preferences should be opened to<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>group = <span class="ni">&amp;lsquo;</span>everyone<span class="ni">&amp;rsquo;</span><span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>command = [<span class="ni">&amp;lsquo;</span>/usr/bin/security<span class="ni">&amp;rsquo;</span>, <span class="ni">&amp;lsquo;</span>authorizationdb<span class="ni">&amp;rsquo;</span>, <span class="ni">&amp;lsquo;</span>read<span class="ni">&amp;rsquo;</span>, <span class="ni">&amp;lsquo;</span>system.preferences<span class="ni">&amp;rsquo;</span>]<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>task = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>(out, err) = task.communicate()
-</span><span class='line'>formatted = plistlib.readPlistFromString(out)<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;h1&gt;</span>If the group doesn<span class="ni">&amp;rsquo;</span>t match, we<span class="ni">&amp;rsquo;</span>re going to correct it.<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>if formatted[<span class="ni">&amp;lsquo;</span>group<span class="ni">&amp;rsquo;</span>] != group:<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>#input_plist = {}
-</span><span class='line'>formatted[&#39;group&#39;] = group
-</span><span class='line'># Convert back to plist
-</span><span class='line'>input_plist = plistlib.writePlistToString(formatted)
-</span><span class='line'># Write the plist back to the authorizationdb
-</span><span class='line'>command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;write&#39;, &#39;system.preferences&#39;]
-</span><span class='line'>task = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>(out, err) = task.communicate(input=input_plist)<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>uninstall_method<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>uninstall_script<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>uninstallable<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>true/<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>uninstall_script<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>#!/usr/bin/env python
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>import subprocess
-</span><span class='line'>import sys
-</span><span class='line'>import plistlib<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;h1&gt;</span>Set the group back to admin<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>group = <span class="ni">&amp;lsquo;</span>admin<span class="ni">&amp;rsquo;</span><span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>command = [<span class="ni">&amp;lsquo;</span>/usr/bin/security<span class="ni">&amp;rsquo;</span>, <span class="ni">&amp;lsquo;</span>authorizationdb<span class="ni">&amp;rsquo;</span>, <span class="ni">&amp;lsquo;</span>read<span class="ni">&amp;rsquo;</span>, <span class="ni">&amp;lsquo;</span>system.preferences<span class="ni">&amp;rsquo;</span>]<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>task = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>(out, err) = task.communicate()
-</span><span class='line'>formatted = plistlib.readPlistFromString(out)<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;h1&gt;</span>If the group doesn<span class="ni">&amp;rsquo;</span>t match, we<span class="ni">&amp;rsquo;</span>re going to correct it.<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>if formatted[<span class="ni">&amp;lsquo;</span>group<span class="ni">&amp;rsquo;</span>] != group:<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span>formatted[&#39;group&#39;] = group
-</span><span class='line'># Convert back to plist
-</span><span class='line'>input_plist = plistlib.writePlistToString(formatted)
-</span><span class='line'># Write the plist back to the authorizationdb
-</span><span class='line'>command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;write&#39;, &#39;system.preferences&#39;]
-</span><span class='line'>task = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>(out, err) = task.communicate(input=input_plist)<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;&lt;/dict&gt;</span>
-</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>At this point, you should be able to add this pkginfo to your Munki repository, include it in a manifest and &ndash; well, nothing will happen, as this only unlocks the top level of System Preferences. If you want to do more, you&rsquo;ll need to unlock additional parts as well &ndash; the scripts to do this can be found in my <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki">macscripts repository</a>. I&rsquo;ve specified that <code>OpenSysPrefs</code> is required in all of these &ndash; this means I can include only the needed modifications in the manifest and not worry about the top level being unlocked.</p>
-
-<p>Also remember that Munki has conditional items built right in &ndash; you might only want to unlock the Network pane on laptops so they can install VPN profiles etc using something like this:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>conditional_items<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'><span class="nt">&lt;array&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;dict&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>condition<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>machine_type == &quot;laptop&quot;<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>managed_installs<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>array<span class="ni">&amp;gt;</span>
-</span><span class='line'>  <span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>UnlockNetwork<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>/array<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/dict&gt;</span>
-</span><span class='line'><span class="nt">&lt;/array&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   

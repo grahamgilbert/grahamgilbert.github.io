@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-02-18T09:46:32+00:00</updated>
+  <updated>2014-04-01T20:39:54+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,169 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Binding to Active Directory with Munki]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki/"/>
+    <updated>2014-04-01T20:15:39+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki</id>
+    <content type="html"><![CDATA[<p>Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It&rsquo;s quite  a straightforward process to automate this with Munki, although you do have a few options to consider.</p>
+
+<p>First off, how are you going to deliver the actual bind script? You have the option of a <a href="https://code.google.com/p/munki/wiki/ManagingPrintersWithMunki#Alternate_Method_Using_nopkg">no-pkg pkginfo</a> file, with the script directly in the pkginfo plist. Whilst the script is now easily editable in the pkginfo, it does pose a security issue in that the catalog is kept in /Library/Managed Installs/catalogs, which will contain your script. Along with your AD bind account&rsquo;s details. Whoops!</p>
+
+<h2>Prepare the Bind!</h2>
+
+<p>My preferred way of deploying the bind script is with a payload-free package made with The Luggage. My bind script is nothing special, it was originally borrowed from DeployStudio. You can find the <a href="https://github.com/grahamgilbert/macscripts/blob/master/AD%20Bind/postinstall">script</a> and the <a href="https://github.com/grahamgilbert/macscripts/blob/master/AD%20Bind/Makefile">Makefile</a> on my <a href="https://github.com/grahamgilbert/macscripts/tree/master/AD%20Bind">macscripts repo</a>. If you need a primer on The Luggage, <a href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/">I wrote about it in August 2013</a>. You just need to edit the variables at the top of the script to suit your environment and build the package.</p>
+
+<p>So you&rsquo;ve got the machine bound to AD. Great. What happens if the binding doesn&rsquo;t go to plan? Or a well meaning tech manages to unbind the machine, but can&rsquo;t manage to re-bind it? Or even worse, the user manages to unbind it themselves? We need to make Munki check that the Mac is still bound to AD.</p>
+
+<!--more-->
+
+
+<h2>installcheck_script.sh</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># You need to change this.</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># The Domain we&#39;re supposed to be on</span>
+</span><span class='line'><span class="nv">DOMAIN</span><span class="o">=</span><span class="s2">&quot;ad.company.com&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">## STOP EDITING ##</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># The version from dsconfigad</span>
+</span><span class='line'><span class="nv">ACTUAL_DOMAIN</span><span class="o">=</span><span class="sb">`</span>/usr/sbin/dsconfigad -show | /usr/bin/grep -i <span class="s2">&quot;Active Directory Domain&quot;</span> | /usr/bin/sed -n <span class="s1">&#39;s/[^.]*= //p&#39;</span><span class="sb">`</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$ACTUAL_DOMAIN&quot;</span> <span class="o">=</span> <span class="s2">&quot;$DOMAIN&quot;</span> <span class="o">]</span>
+</span><span class='line'>    <span class="k">then</span>
+</span><span class='line'>    <span class="c"># We&#39;re on the right domain, no need to install</span>
+</span><span class='line'>    <span class="nb">exit </span>1
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>    <span class="c"># Domain isn&#39;t being returned from dsconfigad, need to install</span>
+</span><span class='line'>    <span class="nb">exit </span>0
+</span><span class='line'><span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You should save this as install <code>check_script.sh</code> in the same directory as your binding package. This script is querying the Active Directory domain the Mac is on and checking it&rsquo;s the one you want.</p>
+
+<p>Simple.</p>
+
+<p>Job done.</p>
+
+<p>Right&hellip;?</p>
+
+<h2>Not quite finished</h2>
+
+<p>The main issue with using an <code>installcheck_script</code> is that we&rsquo;re bypassing every other mechanism that Munki uses to check if an item needs to be installed, which means that if we ever need to update our AD bind package and install it, or if the Mac was previously bound to AD, Munki will cheerfully ignore the package because as far as it&rsquo;s concerned, if it passes the installcheck_script, everything&rsquo;s fine and dandy.</p>
+
+<h2>installcheck_script.sh take 2</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># You need to change these.</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># The Domain we&#39;re supposed to be on</span>
+</span><span class='line'><span class="nv">DOMAIN</span><span class="o">=</span><span class="s2">&quot;ad.company.com&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># The version of the package (today&#39;s date if created using the usual Luggage Makefile)</span>
+</span><span class='line'><span class="nv">PKG_VERSION</span><span class="o">=</span><span class="s2">&quot;20140401&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># The identifier of the package</span>
+</span><span class='line'><span class="nv">PKG_ID</span><span class="o">=</span><span class="s2">&quot;com.grahamgilbert.ad-bind&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">## STOP EDITING ##</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># The version from dsconfigad</span>
+</span><span class='line'><span class="nv">ACTUAL_DOMAIN</span><span class="o">=</span><span class="sb">`</span>/usr/sbin/dsconfigad -show | /usr/bin/grep -i <span class="s2">&quot;Active Directory Domain&quot;</span> | /usr/bin/sed -n <span class="s1">&#39;s/[^.]*= //p&#39;</span><span class="sb">`</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># The version installed from pkgutil</span>
+</span><span class='line'><span class="nv">VERSION_INSTALLED</span><span class="o">=</span><span class="sb">`</span>/usr/sbin/pkgutil --pkg-info <span class="k">${</span><span class="nv">PKG_ID</span><span class="k">}</span> | /usr/bin/grep version | /usr/bin/sed <span class="s1">&#39;s/^[^:]*: //&#39;</span><span class="sb">`</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$ACTUAL_DOMAIN&quot;</span> <span class="o">=</span> <span class="s2">&quot;$DOMAIN&quot;</span> <span class="o">]</span>
+</span><span class='line'>    <span class="k">then</span>
+</span><span class='line'>    <span class="c"># We&#39;re on the right domain, make sure we&#39;ve got the right version of the package</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$VERSION_INSTALLED&quot;</span> <span class="o">=</span> <span class="s2">&quot;$PKG_VERSION&quot;</span> <span class="o">]</span>
+</span><span class='line'>    <span class="k">then</span>
+</span><span class='line'>        <span class="c"># Everything&#39;s ok, no need to install</span>
+</span><span class='line'>        <span class="nb">exit </span>1
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>        <span class="c"># Package is out of date, need to install</span>
+</span><span class='line'>        <span class="nb">exit </span>0
+</span><span class='line'>    <span class="k">fi</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>    <span class="c"># Domain isn&#39;t being returned from dsconfigad, need to install</span>
+</span><span class='line'>    <span class="nb">exit </span>0
+</span><span class='line'><span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is a little more complicated, but not much. First off we&rsquo;re doing the same check as before, making sure we&rsquo;re actually bound to the domain. If we aren&rsquo;t, we obviously need to install the package, so that&rsquo;s the end of that. If we are bound, we next need to check which version of the package we have. As previously mentioned, Munki would usually do this for us, but by using the installcheck_script, we&rsquo;ve engaged the &ldquo;leave me alone, I know what the fuck I&rsquo;m doing&rdquo; mode in Munki, so we&rsquo;re implementing that check ourselves. If the version or package identifier don&rsquo;t match, we want our bind script installed, screw those other guys with their not-as-good-as-our-way of binding.</p>
+
+<p>All that&rsquo;s left now is to <code>munkiimport</code> your package with your script as an <code>installcheck_script</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>/usr/local/munki/munkiimport ad-bind.pkg --installcheck_script<span class="o">=</span>installcheck_script.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There you have it, how to keep a Mac bound to AD with Munki. You may wish to change some other settings later on (particularly if you have to do battle with a .local domain), but this will get you going with a basic AD bind.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Writing Plugins for Sal: Part 3]]></title>
@@ -3083,50 +3246,6 @@ vagrant reload
 <p>Save it, and perform a Puppet run on your client.You’ll notice that the defaults command is now only run when Puppet needs to modify the user.</p>
 
 <p>Next time, we’ll be taking a look at Modules &ndash; pre-built bits of Puppet code that you can plug into your workflow to save you re-inventing the wheel.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Building a test Puppet Master with Vagrant]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/02/13/building-a-test-puppet-master-with-vagrant/"/>
-    <updated>2013-02-13T08:27:00+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/02/13/building-a-test-puppet-master-with-vagrant</id>
-    <content type="html"><![CDATA[<p>Puppet is awesome. Until you deploy some code that worked locally, but for some reason didn’t when you put it onto your Puppet Master. Whoops.</p>
-
-<p>So, you need a testing setup. But Puppet can take a while to keep configuring. Which is where <a href="http://www.vagrantup.com">Vagrant</a> comes in. It it a tool which allows you to build virtual machines automatically (currently only with VirtualBox, but VMWare Fusion support is coming very soon). And the best part (for me, anyway) is that it uses Puppet to configure the VM (Puppet to configure your Puppet Master? All too meta for this time of the morning).</p>
-
-<p>Anyway, that’s enough waffle &ndash; the Vagrant configuration is up on my <a href="https://github.com/grahamgilbert/vagrant-puppetmaster">GitHub</a>.</p>
-
-<p>If you are following along with my series on getting started with Puppet on OS X, you can replace the Puppet Labs provided VM with this setup (which would be a good idea, as the Enterprise version is a few versions behind the Open Source version, missing some features when managing Macs).</p>
-
-<p>This testing setup includes:</p>
-
-<ul>
-<li>A Puppet Master running using the built in web server (fine for testing, not enough poke for a production server)</li>
-<li>Puppet Dashboard (we all love a GUI, right?)</li>
-<li>PuppetDB (this will store data about your nodes, and then hooks into the Dashboard to display it)</li>
-</ul>
-
-
-<p>To get up and running quickly, you will need:</p>
-
-<ul>
-<li><a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a></li>
-<li><a href="http://downloads.vagrantup.com/">Vagrant</a></li>
-</ul>
-
-
-<p>Once those are installed, cd into the directory where you keep your code (mine lives in ~/Documents/Code), clone the repo and then tell Vagrant to bring the VM up.</p>
-
-<pre><code>cd ~/Documents/Code
-git clone https://github.com/grahamgilbert/vagrant-puppetmaster.git
-cd vagrant-puppetmaster
-vagrant up
-</code></pre>
-
-<p>If you don’t have the base box Ubuntu box downloaded, Vagrant will pull it down for you and cache the clean VM for you. It will then make a copy, run the script that installs the latest version of Puppet, then run through the Puppet code that will configure the VM to be a Puppet Master for you. Once the VM is running, you can place your modules and manifests in <code>puppet/modules</code> and <code>puppet/manifests</code>, respectively. The dashboard is accessible at <a href="http://192.168.33.10:3000">http://192.168.33.10:3000</a>.</p>
-
-<p><strong>This VM is not suitable for production.</strong> I’ve made several tweaks to the configuration that makes it easier to test your code, but would be a security risk if used on a production server. <strong>Only use this configuration for testing.</strong> We’re also installing everything onto one VM &ndash; you probably want to separate this out into at least two boxes in production, maybe even three if you have a large deployment. Like I said, the idea here is to quickly set up a testing environment that behaves like our production environment.</p>
 ]]></content>
   </entry>
   

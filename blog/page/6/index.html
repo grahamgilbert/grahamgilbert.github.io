@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="I&rsquo;ve been using InstaDMG for nearly two years now. We all know it&rsquo;s awesome (if you aren&rsquo;t aware of it&rsquo;s awesomeness, I &hellip;">
+  <meta name="description" content="This probably isn&rsquo;t news to anyone else, but I made a discovery last week that will save me a fair bit of time. Whilst staring at System Image &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,74 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/07/updating-instadmg-based-netrestore-images/">Updating InstaDMG Based NetRestore Images</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-07T11:54:00+00:00" pubdate data-updated="true">Jan 7<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/01/07/updating-instadmg-based-netrestore-images/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This probably isn&rsquo;t news to anyone else, but I made a discovery last week that will save me a fair bit of time.</p>
+
+<p>Whilst staring at System Image Utility after yet another change to the build, I thought that there must be a better way of doing this, bearing in mind that the basic InstaDMG process is:</p>
+
+<ul>
+<li>Install the OS</li>
+<li>Install Packages</li>
+<li><strong>Make a read-only DMG</strong></li>
+<li><strong>Prep the DMG for ASR</strong></li>
+</ul>
+
+
+<p>And SIU&rsquo;s process is:</p>
+
+<ul>
+<li><strong>Make a read-only DMG</strong></li>
+<li><strong>Prep the DMG for ASR</strong></li>
+<li>Copy it into a writable disk image with a stripped down OS to restore the image.</li>
+</ul>
+
+
+<p>So, two steps are duplicated. This inefficiency must be stopped!</p>
+
+<p>After a 30 second hunt in the NetInstall.dmg file that SIU spits out, I saw a file called System.dmg in the Packages folder &ndash; sure enough, it was my InstaDMG image. I replaced it with my new build, and it worked flawlessly.</p>
+
+<p>If your new image is larger than the one you&rsquo;re replacing, you just need to expand the NetInstall.dmg image to a size large enough to accomodate the new image.</p>
+
+<pre><code>hdiutil resize -growonly -size 15g /path/to/your/NetRestore.nbi/NetInstall.dmg
+</code></pre>
+
+<p>Replace the 15g with whatever size you want, 15 GB was plenty to accomodate my updated image.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -270,71 +338,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/12/meraki-systems-manager/">Meraki Systems Manager</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-12T16:07:00+00:00" pubdate data-updated="true">Nov 12<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/11/12/meraki-systems-manager/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Maintaining visibility over your fleet of machines is always difficult. It&rsquo;s even more difficult when you&rsquo;ve got Macs. It gets nearly impossible when you decide you&rsquo;d like something hosted in the cloud.</p>
-
-<p>We&rsquo;ve been looking for a good solution for ages now &ndash; we even resorted to using <a href="http://www.ocsinventory-ng.org/en/">OCS Inventory</a> for a while. We then discovered <a href="http://www.meraki.com/products/systems-manager/">Meraki&rsquo;s Systems Manager</a>.</p>
-
-<p>This isn&rsquo;t going to be one of those fancy review type things &ndash; you can go and look at it&rsquo;s features yourself. This is more an overview of the factors that came into our decision:</p>
-
-<h2>Pros</h2>
-
-<ul>
-<li>It&rsquo;s cloud based! No servers for us to deploy, no VPNs between sites for clients to communicate over</li>
-<li>It does basic iOS MDM. It&rsquo;s not the best in the world, but it does a lot of what we wanted (basically configuring email and Wi-Fi settings)</li>
-<li>It has SSH over the Internet. If all else fails, we have a way into a machine, no matter where it is.</li>
-<li>It&rsquo;s free! It&rsquo;s hard to argue with a price like that!</li>
-</ul>
-
-
-<h2>Cons</h2>
-
-<ul>
-<li>It&rsquo;s free! If you&rsquo;re not paying for something, you have no SLA, no guarantee it will be working tomorrow</li>
-<li>It&rsquo;s location services suck in the UK. My home network is in Sheffield apparently. We supposedly have clients in Bath (we don&rsquo;t).</li>
-<li>It&rsquo;s not particuarly customisable. With Puppet, Facter, Puppet Dashboard and the inventory service configured, you can pull out practically any information you require (for example, we have a Fact that tells us if there are any admin users on a Mac other than our own).</li>
-</ul>
-
-
-<h2>Summary</h2>
-
-<p>For what it does, Meraki Systems Manager is hard to beat. If you need more than basic system information, or something that runs on Linux, you&rsquo;re going to need to look elsewhere. It&rsquo;s a great compliment to Puppet Inventory, but it&rsquo;s not a total replacement.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -358,6 +361,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/01/binding-to-active-directory-with-munki/">Binding to Active Directory With Munki</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/">Writing Plugins for Sal: Part 3</a>
       </li>
     
@@ -371,10 +378,6 @@
     
       <li class="post">
         <a href="/blog/2014/01/17/sal-the-munki-puppet/">Sal: The Munki Puppet</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/12/22/managing-the-authorization-database-with-munki/">Managing the Authorization Database With Munki</a>
       </li>
     
   </ul>
