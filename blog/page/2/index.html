@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Have you ever wished you didn&rsquo;t have to take calls from your users to unlock various parts of System Preferences? That standard users could &hellip;">
+  <meta name="description" content="At pebble.it, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/17/sal-the-munki-puppet/">Sal: The Munki Puppet</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-17T10:51:46+00:00" pubdate data-updated="true">Jan 17<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/01/17/sal-the-munki-puppet/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>At <a href="http://pebbleit.com">pebble.it</a>, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a few options, but didn&rsquo;t like any of them, so we made our own.</p>
+
+<p>Say hi to Sal &ndash; the Munki Puppet. It&rsquo;s a multi-tenanted reporting solution for Munki and optionally, Facter.  You can find all of the details <a href="https://github.com/grahamgilbert/sal">over on GitHub</a>, including installation instructions and a package to send out to your clients.</p>
+
+<p><img class="center" src="/images/posts/2014-01-17/Sal.png"></p>
+
+<p>There is a plugin system built in to Sal, and over the next few days I will have a couple of posts covering how to make your own.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -717,84 +761,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/13/znc-an-irc-bouncer/">ZNC: An IRC Bouncer</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-13T08:35:00+01:00" pubdate data-updated="true">Oct 13<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/10/13/znc-an-irc-bouncer/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Yes,  it&rsquo;s true. The most interesting conversations in the Mac admin world take place using technology from the 1980&rsquo;s &ndash; <a href="http://en.wikipedia.org/wiki/Internet_Relay_Chat">IRC</a> (##osx-server on <a href="http://freenode.net/">freenode</a>). Those of you who know me will know that I&rsquo;m borderline OCD. In this instance, my major annoyance was that I&rsquo;d only get half of the conversation and I&rsquo;d miss private messages when I had to put my laptop to sleep. I needed to somehow keep a persistient conenction to IRC without having to sit infront of my computer 24/7.</p>
-
-<p>I&rsquo;d heard of IRC bouncers before &ndash; an app that runs on a server, saving the messages in the rooms you specify for you until you are able to read them, but always assumed they were much more difficult to set up than it turned out to be.</p>
-
-<p>This is set up on a box running Ubuntu 12.04, with port 6666 opened on your firewall and forwarded to the box if you want to access it from outside the network. Mine is running on an <a href="http://aws.amazon.com/free/">Amazon EC2 Micro instance</a> &ndash; available for free for one year if you don&rsquo;t already have a server to run it on.</p>
-
-<p>Right, let&rsquo;s get started. All of these commands are to be run as your normal user (<code>graham</code> in this case &ndash; <strong>not root</strong>). First we&rsquo;re going to enable backports in Ubuntu. I like editing text files in <code>nano</code> so I&rsquo;m going to install that first, but feel free to use Vi or whatever you like.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo apt-get install -y nano
-</span><span class='line'><span class="nv">$ </span>sudo nano /etc/apt/sources.list
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Find the two backports lines commented out (lines 44-45 on my test box) and unomment them.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>deb http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse
-</span><span class='line'>deb-src http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If you are using nano, hit <code>CTRL+O</code> and press return to save it, then <code>CTRL-X</code> to exit.</p>
-
-<p>To install ZNC, issue the following command:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo apt-get update
-</span><span class='line'><span class="nv">$ </span>sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-dev/precise-backports znc-extra/precise-backports znc-perl/precise-backports znc-python/precise-backports znc-tcl/precise-backports
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/10/13/znc-an-irc-bouncer/">Continue reading &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -818,6 +784,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/04/updating-boxen/">Updating Boxen</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/01/binding-to-active-directory-with-munki/">Binding to Active Directory With Munki</a>
       </li>
     
@@ -831,10 +801,6 @@
     
       <li class="post">
         <a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/">Writing Plugins for Sal: Part 1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/17/sal-the-munki-puppet/">Sal: The Munki Puppet</a>
       </li>
     
   </ul>

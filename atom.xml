@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-04-01T20:39:54+01:00</updated>
+  <updated>2014-04-04T08:34:29+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,80 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Updating Boxen]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/"/>
+    <updated>2014-04-04T07:54:26+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/04/04/updating-boxen</id>
+    <content type="html"><![CDATA[<p>As you might know, I&rsquo;m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn&rsquo;t on the Mac I was working on. Then there came the time when I wanted to do a clean install &ndash; that was easily a day down the drain there!</p>
+
+<h2>Automate all of the things</h2>
+
+<p>Then <a href="https://boxen.github.com/">Boxen</a> was released &ndash; based on Puppet, but targeted at setting up individual&rsquo;s machines. I got on board just over a year ago, and haven&rsquo;t really looked back &ndash; manually installing an app on my Mac seems very strange now. I&rsquo;m not going to cover how to get started with Boxen, as there are <a href="http://lmgtfy.com/?q=getting+started+with+Boxen">many getting started guides out there</a> (however, <a href="http://garylarizza.com/blog/2013/02/15/puppet-plus-github-equals-laptop-love/">Gary Larizza&rsquo;s</a> is rather good).</p>
+
+<p>There will come a time when you need to update the core part of Boxen. This happened to me when I clean installed 10.9 on my work laptop &ndash; all kinds of shit broke (somehow it managed to survive the upgrade process &ndash; go figure). I looked around, but couldn&rsquo;t really find a definitive guide, so here it is (it&rsquo;s shorter than this piece of rambling).</p>
+
+<h2>Ok, stop talking</h2>
+
+<p>As Boxen is made by GitHub, updating it is much like updating any other project on there that you&rsquo;ve made a fork of.  First we&rsquo;re going to add it as a remote repository:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/our-boxen
+</span><span class='line'><span class="nv">$ </span>git remote add upstream https://github.com/boxen/our-boxen.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then we&rsquo;re going to fetch the stuff from the upstream repository:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git fetch upstream
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we&rsquo;re going to merge the updated repository with our own:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git checkout master
+</span><span class='line'><span class="nv">$ </span>git merge upstream/master
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you haven&rsquo;t modified any of the core Boxen files (<code>Puppetfile</code>, <code>Gemfile</code> or <code>manifests/site.pp</code> in my case), you might get away without having to fix any conflicts (you can ignore any in <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>, we&rsquo;ll deal with those next). I had conflicts as I had previously:</p>
+
+<ul>
+<li>Been stupid and tried to update Boxen by just changing the Puppet Module and Gem versions</li>
+<li>Edited <code>site.pp</code> as I didn&rsquo;t want Nginx or node.js installed</li>
+<li>Been dumb and put my custom Puppet modules in the wrong place in my <code>Puppetfile</code></li>
+</ul>
+
+
+<p>None of these were particularly arduous to fix, but annoying none the less. If you find you have loads, you might want to run:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git mergetool
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The next step is to update your Puppet modules and RubyGems. First delete <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>. Now go back to your trusty Terminal and:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>bundle install --without development
+</span><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>librarian-puppet install --clean
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>At this point, you might want to go through the custom modules you&rsquo;ve added to your <code>Puppetfile</code> and update those, although this is by no means required &ndash; some apps I&rsquo;ve installed through Boxen don&rsquo;t have a built in updater, so Boxen is more convenient than hunting for installers on various vendor&rsquo;s websites. Once your modules are up to date in your <code>Puppetfile</code>,  you&rsquo;re done! You can now get your Mac back to how you like it by issuing the usual:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>boxen
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Binding to Active Directory with Munki]]></title>
@@ -3044,208 +3118,6 @@ vagrant reload
 <p>Next time, we&rsquo;ll look at using Facter to make our code a little more intelligent. As ever, comments, corrections and general abuse is welcome.</p>
 
 <p>(Not the abuse, that&rsquo;s not nice.)</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Getting Started With Puppet on OS X (Part 3)]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3/"/>
-    <updated>2013-02-24T14:59:00+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3</id>
-    <content type="html"><![CDATA[<p>In this post, we’ll do something pretty much all Mac admins will need to do &ndash; set up their admin user. Bust first, a little housekeeping.</p>
-
-<p>Before reading this post, you really need to read <a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">part 1</a>, <a href="http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">part 2</a> and most importantly my post on <a href="http://grahamgilbert.com/blog/2013/02/13/building-a-test-puppet-master-with-vagrant/">building a Puppet Master with Vagrant</a>. The Puppet Labs provided VM won’t cut it here, we need the latest version of Puppet on our Master. If you are using the same Mac / OS X VM that was previously hooked up to the Puppet Master VM, you will need to run the following command on the client &ndash; don’t worry, it will get new certificates from your very own Puppet Master:</p>
-
-<pre><code>sudo rm -rf /var/lib/puppet/ssl
-</code></pre>
-
-<p>Make sure your test Mac is pointing to the right server &ndash; unless you’ve changed your Vagrantfile, your Puppet Master’s IP address will be 192.168.33.10 &ndash; you will need to change your test Mac’s /etc/hosts file to reflect this change.</p>
-
-<p><strong>Updates from the previous post:</strong> Since the last post was published, Puppet version 3.1 has been released &ndash; the main bonus to Mac users is that the Puppet user and group are now created, so the manual Puppet run command is a little shorter. What was this:</p>
-
-<pre><code>sudo puppet agent --test --group 0
-</code></pre>
-
-<p>Can now be shortened to:</p>
-
-<pre><code>sudo puppet agent --test
-</code></pre>
-
-<p>As the Puppet user and group now exist, you no longer need to run Puppet as root. This creates another issue (the Puppet user is visible at the login screen despite it not being able to log in), but we&rsquo;ll get around that in this article. Regardless, you want to install <a href="http://downloads.puppetlabs.com/mac/">Puppet 3.1</a>. Back to the main event.</p>
-
-<p>First thing’s first, create your admin user. I’ve called mine “Local Administrator”, with a short name of “ladmin” and the very imaginative passord of “password”. Next open up a Terminal window on your puppetclient Mac and issue the following command:</p>
-
-<pre><code>sudo puppet resource user ladmin
-</code></pre>
-
-<p>You’ll see output similar to this:</p>
-
-<figure class='code'><figcaption><span>site.pp </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user</span> <span class="p">{</span> <span class="s1">&#39;ladmin&#39;</span><span class="p">:</span>
-</span><span class='line'>  <span class="k">ensure</span>     <span class="o">=&gt;</span> <span class="s1">&#39;present&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="n">comment</span>    <span class="o">=&gt;</span> <span class="s1">&#39;Local Admin&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="n">gid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="n">groups</span>     <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;_appserveradm&#39;</span><span class="p">,</span> <span class="s1">&#39;_appserverusr&#39;</span><span class="p">,</span> <span class="s1">&#39;_lpadmin&#39;</span><span class="p">,</span> <span class="s1">&#39;admin&#39;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>  <span class="n">home</span>       <span class="o">=&gt;</span> <span class="s1">&#39;/Users/ladmin&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="n">iterations</span> <span class="o">=&gt;</span> <span class="s1">&#39;21881&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="n">password</span>   <span class="o">=&gt;</span> <span class="s1">&#39;401e3aa796b3bfff2c8e929a003b727be1bd548aa0f0b0e131f0d11f3953162be210200a70872734a28be747a933e12e2458ffdcc60d209eab9e006a9f4042dc883148070e6e8ad05f4a5e5d44bd0ddfc9494482f0d16c9d5eb1de086183db1b89df9982d2856eeed431d65e03ff99177c3185aa61bc926b1a0020c49621ddd8&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="n">salt</span>       <span class="o">=&gt;</span> <span class="s1">&#39;0c3cd42b97d0b0df45542fcb5961a2920f2fd6204aa151bf08d762d9dd44fd0c&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="n">shell</span>      <span class="o">=&gt;</span> <span class="s1">&#39;/bin/bash&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="n">uid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;502&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That looks suspiciously like Puppet code. Let&rsquo;s try it.</p>
-
-<p>With the Vagrant based Puppet Master, the manifests file that previously lived at /etc/puppet/manifests is now located on your Mac at puppet/manifests (as is the modules folder, Vagrant takes care of linking it to the right place on the VM). Open up puppet/manifests/sites.pp in your favourite text editor (for the love of all that’s holy, please don’t use TextEdit. Try TextWrangler, or my current favourite <a href="http://www.chocolatapp.com/">Chocolat</a>).</p>
-
-<figure class='code'><figcaption><span>site.pp </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">node</span> <span class="n">puppetclient</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">user</span> <span class="p">{</span> <span class="s1">&#39;ladmin&#39;</span><span class="p">:</span>
-</span><span class='line'>          <span class="k">ensure</span>     <span class="o">=&gt;</span> <span class="s1">&#39;present&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">comment</span>    <span class="o">=&gt;</span> <span class="s1">&#39;Local Admin&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">gid</span>    <span class="o">=&gt;</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">groups</span>     <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;_appserveradm&#39;</span><span class="p">,</span> <span class="s1">&#39;_appserverusr&#39;</span><span class="p">,</span> <span class="s1">&#39;_lpadmin&#39;</span><span class="p">,</span> <span class="s1">&#39;admin&#39;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">home</span>       <span class="o">=&gt;</span> <span class="s1">&#39;/Users/ladmin&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">iterations</span> <span class="o">=&gt;</span> <span class="s1">&#39;21881&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">password</span>   <span class="o">=&gt;</span> <span class="s1">&#39;401e3aa796b3bfff2c8e929a003b727be1bd548aa0f0b0e131f0d11f3953162be210200a70872734a28be747a933e12e2458ffdcc60d209eab9e006a9f4042dc883148070e6e8ad05f4a5e5d44bd0ddfc9494482f0d16c9d5eb1de086183db1b89df9982d2856eeed431d65e03ff99177c3185aa61bc926b1a0020c49621ddd8&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">salt</span>       <span class="o">=&gt;</span> <span class="s1">&#39;0c3cd42b97d0b0df45542fcb5961a2920f2fd6204aa151bf08d762d9dd44fd0c&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">shell</span>      <span class="o">=&gt;</span> <span class="s1">&#39;/bin/bash&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">uid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;502&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Save it, and then back on your client perform a Puppet run:</p>
-
-<pre><code>sudo puppet agent --test
-</code></pre>
-
-<p>Of course nothing has changed &ndash; that’s because your client’s configuration is how you have described it in site.pp. Try changing ladmin’s password in system preferences, then perform another Puppet run. You’ll see Puppet change the password right back.</p>
-
-<p>Now we’ve got our Local Admin user working, it might be nice to hide it away from inquisitive users. The first step is to change our Local Admin’s UID to something lower than 500 &ndash; I like 404 (nerd joke), and then for good measure, we’ll move the home folder out of /Users and into /var.</p>
-
-<figure class='code'><figcaption><span>site.pp </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">node</span> <span class="n">puppetclient</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">user</span> <span class="p">{</span> <span class="s1">&#39;ladmin&#39;</span><span class="p">:</span>
-</span><span class='line'>          <span class="k">ensure</span>     <span class="o">=&gt;</span> <span class="s1">&#39;present&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">comment</span>    <span class="o">=&gt;</span> <span class="s1">&#39;Local Admin&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">gid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">groups</span>     <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;_appserveradm&#39;</span><span class="p">,</span> <span class="s1">&#39;_appserverusr&#39;</span><span class="p">,</span> <span class="s1">&#39;_lpadmin&#39;</span><span class="p">,</span> <span class="s1">&#39;admin&#39;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">home</span>       <span class="o">=&gt;</span> <span class="s1">&#39;/var/ladmin&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">iterations</span> <span class="o">=&gt;</span> <span class="s1">&#39;21881&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">password</span>   <span class="o">=&gt;</span> <span class="s1">&#39;401e3aa796b3bfff2c8e929a003b727be1bd548aa0f0b0e131f0d11f3953162be210200a70872734a28be747a933e12e2458ffdcc60d209eab9e006a9f4042dc883148070e6e8ad05f4a5e5d44bd0ddfc9494482f0d16c9d5eb1de086183db1b89df9982d2856eeed431d65e03ff99177c3185aa61bc926b1a0020c49621ddd8&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">salt</span>       <span class="o">=&gt;</span> <span class="s1">&#39;0c3cd42b97d0b0df45542fcb5961a2920f2fd6204aa151bf08d762d9dd44fd0c&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">shell</span>      <span class="o">=&gt;</span> <span class="s1">&#39;/bin/bash&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">uid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;404&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That gets the home folder moved, now to actually hide the home folder. Add this just before the closing } (curly bracket) in your site.pp:</p>
-
-<figure class='code'><figcaption><span>site.pp </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">exec</span> <span class="p">{</span><span class="s1">&#39;Hide sub-500 users&#39;</span><span class="p">:</span>
-</span><span class='line'>        <span class="n">command</span> <span class="o">=&gt;</span> <span class="s2">&quot;/usr/bin/defaults write /Library/Preferences/com.apple.loginwindow Hide500Users -bool TRUE&quot;</span><span class="p">,</span>
-</span><span class='line'>        <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>When you perform a Puppet run, you’ll notice that your command is run every time, regardless of whether it needs to. We only really need to run that when we change our Local Admin user. To do that, we’ll change two lines. When the Admin User changes, we’ll send a signal to the exec, and we’ll change the exec to only run when it is told to.</p>
-
-<figure class='code'><figcaption><span>site.pp </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">node</span> <span class="n">puppetclient</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">user</span> <span class="p">{</span> <span class="s1">&#39;ladmin&#39;</span><span class="p">:</span>
-</span><span class='line'>          <span class="k">ensure</span>     <span class="o">=&gt;</span> <span class="s1">&#39;present&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">comment</span>    <span class="o">=&gt;</span> <span class="s1">&#39;Local Admin&#39;</span><span class="p">,</span>
-</span><span class='line'>      <span class="n">gid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">groups</span>     <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;_appserveradm&#39;</span><span class="p">,</span> <span class="s1">&#39;_appserverusr&#39;</span><span class="p">,</span> <span class="s1">&#39;_lpadmin&#39;</span><span class="p">,</span> <span class="s1">&#39;admin&#39;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">home</span>       <span class="o">=&gt;</span> <span class="s1">&#39;/var/ladmin&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">iterations</span> <span class="o">=&gt;</span> <span class="s1">&#39;21881&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">password</span>   <span class="o">=&gt;</span> <span class="s1">&#39;401e3aa796b3bfff2c8e929a003b727be1bd548aa0f0b0e131f0d11f3953162be210200a70872734a28be747a933e12e2458ffdcc60d209eab9e006a9f4042dc883148070e6e8ad05f4a5e5d44bd0ddfc9494482f0d16c9d5eb1de086183db1b89df9982d2856eeed431d65e03ff99177c3185aa61bc926b1a0020c49621ddd8&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">salt</span>       <span class="o">=&gt;</span> <span class="s1">&#39;0c3cd42b97d0b0df45542fcb5961a2920f2fd6204aa151bf08d762d9dd44fd0c&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">shell</span>      <span class="o">=&gt;</span> <span class="s1">&#39;/bin/bash&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">uid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;404&#39;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">notify</span>     <span class="o">=&gt;</span> <span class="no">Exec</span><span class="o">[</span><span class="s1">&#39;Hide sub-500 users&#39;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  
-</span><span class='line'>      <span class="nb">exec</span> <span class="p">{</span><span class="s1">&#39;Hide sub-500 users&#39;</span><span class="p">:</span>
-</span><span class='line'>        <span class="n">command</span> <span class="o">=&gt;</span> <span class="s2">&quot;/usr/bin/defaults write /Library/Preferences/com.apple.loginwindow Hide500Users -bool TRUE&quot;</span><span class="p">,</span>
-</span><span class='line'>        <span class="n">refreshonly</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Save it, and perform a Puppet run on your client.You’ll notice that the defaults command is now only run when Puppet needs to modify the user.</p>
-
-<p>Next time, we’ll be taking a look at Modules &ndash; pre-built bits of Puppet code that you can plug into your workflow to save you re-inventing the wheel.</p>
 ]]></content>
   </entry>
   

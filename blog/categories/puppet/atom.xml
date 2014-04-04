@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Puppet | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/puppet/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-04-01T20:39:54+01:00</updated>
+  <updated>2014-04-04T08:34:29+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,70 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Updating Boxen]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/"/>
+    <updated>2014-04-04T07:54:26+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/04/04/updating-boxen</id>
+    <content type="html"><![CDATA[<p>As you might know, I&rsquo;m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn&rsquo;t on the Mac I was working on. Then there came the time when I wanted to do a clean install &ndash; that was easily a day down the drain there!</p>
+
+<h2>Automate all of the things</h2>
+
+<p>Then <a href="https://boxen.github.com/">Boxen</a> was released &ndash; based on Puppet, but targeted at setting up individual&rsquo;s machines. I got on board just over a year ago, and haven&rsquo;t really looked back &ndash; manually installing an app on my Mac seems very strange now. I&rsquo;m not going to cover how to get started with Boxen, as there are <a href="http://lmgtfy.com/?q=getting+started+with+Boxen">many getting started guides out there</a> (however, <a href="http://garylarizza.com/blog/2013/02/15/puppet-plus-github-equals-laptop-love/">Gary Larizza&rsquo;s</a> is rather good).</p>
+
+<p>There will come a time when you need to update the core part of Boxen. This happened to me when I clean installed 10.9 on my work laptop &ndash; all kinds of shit broke (somehow it managed to survive the upgrade process &ndash; go figure). I looked around, but couldn&rsquo;t really find a definitive guide, so here it is (it&rsquo;s shorter than this piece of rambling).</p>
+
+<h2>Ok, stop talking</h2>
+
+<p>As Boxen is made by GitHub, updating it is much like updating any other project on there that you&rsquo;ve made a fork of.  First we&rsquo;re going to add it as a remote repository:</p>
+
+<p><code>bash
+$ cd ~/src/our-boxen
+$ git remote add upstream https://github.com/boxen/our-boxen.git
+</code></p>
+
+<p>Then we&rsquo;re going to fetch the stuff from the upstream repository:</p>
+
+<p><code>bash
+$ git fetch upstream
+</code>
+Now we&rsquo;re going to merge the updated repository with our own:</p>
+
+<p><code>bash
+$ git checkout master
+$ git merge upstream/master
+</code></p>
+
+<p>If you haven&rsquo;t modified any of the core Boxen files (<code>Puppetfile</code>, <code>Gemfile</code> or <code>manifests/site.pp</code> in my case), you might get away without having to fix any conflicts (you can ignore any in <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>, we&rsquo;ll deal with those next). I had conflicts as I had previously:</p>
+
+<ul>
+<li>Been stupid and tried to update Boxen by just changing the Puppet Module and Gem versions</li>
+<li>Edited <code>site.pp</code> as I didn&rsquo;t want Nginx or node.js installed</li>
+<li>Been dumb and put my custom Puppet modules in the wrong place in my <code>Puppetfile</code></li>
+</ul>
+
+
+<p>None of these were particularly arduous to fix, but annoying none the less. If you find you have loads, you might want to run:</p>
+
+<p><code>bash
+$ git mergetool
+</code></p>
+
+<p>The next step is to update your Puppet modules and RubyGems. First delete <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>. Now go back to your trusty Terminal and:</p>
+
+<p><code>bash
+$ bundle install --without development
+$ bundle exec librarian-puppet install --clean
+</code></p>
+
+<p>At this point, you might want to go through the custom modules you&rsquo;ve added to your <code>Puppetfile</code> and update those, although this is by no means required &ndash; some apps I&rsquo;ve installed through Boxen don&rsquo;t have a built in updater, so Boxen is more convenient than hunting for installers on various vendor&rsquo;s websites. Once your modules are up to date in your <code>Puppetfile</code>,  you&rsquo;re done! You can now get your Mac back to how you like it by issuing the usual:</p>
+
+<p><code>bash
+$ boxen
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Sal: The Munki Puppet]]></title>
@@ -172,7 +236,7 @@
 </span><span class='line'>
 </span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">Last</span> <span class="n">Revised</span> <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span> <span class="mi">10</span><span class="o">/</span><span class="mo">07</span><span class="o">/</span><span class="mi">2013</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">author</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">Graham</span> <span class="n">Gilbert</span> <span class="p">(</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#108;&amp;#x74;&amp;#111;&amp;#x3a;&amp;#103;&amp;#114;&amp;#x61;&amp;#104;&amp;#x61;&amp;#x6d;&amp;#64;&amp;#103;&amp;#114;&amp;#x61;&amp;#104;&amp;#x61;&amp;#x6d;&amp;#x67;&amp;#105;&amp;#108;&amp;#98;&amp;#101;&amp;#114;&amp;#116;&amp;#46;&amp;#99;&amp;#x6f;&amp;#x6d;&quot;</span><span class="o">&gt;&amp;</span><span class="c">#103;&amp;#x72;&amp;#97;&amp;#104;&amp;#97;&amp;#109;&amp;#x40;&amp;#x67;&amp;#114;&amp;#x61;&amp;#x68;&amp;#97;&amp;#109;&amp;#x67;&amp;#105;&amp;#108;&amp;#98;&amp;#101;&amp;#x72;&amp;#116;&amp;#46;&amp;#99;&amp;#111;&amp;#109;&lt;/a&gt;)&amp;rsquo;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">author</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">Graham</span> <span class="n">Gilbert</span> <span class="p">(</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;&amp;#109;&amp;#x61;&amp;#105;&amp;#108;&amp;#x74;&amp;#111;&amp;#58;&amp;#x67;&amp;#114;&amp;#97;&amp;#x68;&amp;#97;&amp;#x6d;&amp;#64;&amp;#x67;&amp;#x72;&amp;#x61;&amp;#104;&amp;#x61;&amp;#x6d;&amp;#103;&amp;#105;&amp;#108;&amp;#x62;&amp;#x65;&amp;#114;&amp;#116;&amp;#x2e;&amp;#x63;&amp;#x6f;&amp;#x6d;&quot;</span><span class="o">&gt;&amp;</span><span class="c">#103;&amp;#x72;&amp;#x61;&amp;#104;&amp;#97;&amp;#x6d;&amp;#64;&amp;#x67;&amp;#x72;&amp;#x61;&amp;#104;&amp;#x61;&amp;#109;&amp;#x67;&amp;#105;&amp;#108;&amp;#98;&amp;#x65;&amp;#x72;&amp;#x74;&amp;#x2e;&amp;#x63;&amp;#x6f;&amp;#x6d;&lt;/a&gt;)&amp;rsquo;</span>
 </span><span class='line'><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">version</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="mf">0.2</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">syslog</span>
@@ -499,170 +563,6 @@ This Mac is running OS X 10.8.3 (12D78)
 </code></p>
 
 <p>This is a very simple example of how you can use Facter to configure your machines. Facter can be used anywhere you&rsquo;d set a variable manually &ndash; the <a href="http://docs.puppetlabs.com/puppet/latest/reference/lang_conditional.html">Puppet documentation on Conditional Statements</a> is an excellent next step with dynamically assigning configuration to your machines.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Getting Started With Puppet on OS X (Part 4)]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4/"/>
-    <updated>2013-03-05T14:59:00+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4</id>
-    <content type="html"><![CDATA[<p>We&rsquo;ve made quite a bit of progress with our Puppet install. We&rsquo;ve already made Puppet do something useful with setting up an admin user, but let&rsquo;s get back to being lazy &ndash; let&rsquo;s get someone else to write the code.</p>
-
-<p>Before reading this post, you really need to read <a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">part 1</a>, <a href="http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">part 2</a> and <a href="http://grahamgilbert.com/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3/">part 3</a> of the series.</p>
-
-<p>Modules are little pre-built bits of Puppet code. They&rsquo;re a good example of Puppet&rsquo;s philosophy of convention over configuration &ndash; Puppet will assume your modules follow a set pattern. We&rsquo;ll be using two of the available folders in modules today: files and manifests. Files are static files that Puppet will copy over to our client machine, and manifests will contain the Puppet code we&rsquo;ve previously been putting into <code>/etc/puppet/manifests/site.pp</code> &ndash; whilst it&rsquo;s been easy to put code into this file, it can become unwieldy when you have a few nodes to manage.</p>
-
-<p>There are also loads of pre-built modules on the <a href="http://forge.puppetlabs.com/">Puppet Forge</a> &ndash; it&rsquo;s one of these modules we&rsquo;ll be using today.<!--more--></p>
-
-<p>Assuming you&rsquo;re still using the Vagrant-based Puppet Master from <a href="http://grahamgilbert.com/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3/">part 3</a>, cd into the directory you&rsquo;ve cloned the repository to, issue a <code>vagrant up</code> command. Once you&rsquo;ve booted the VM, we need to SSH into it.</p>
-
-<pre><code>vagrant ssh
-</code></pre>
-
-<p>Puppet provides a handy tool to manage modules &ndash; <code>puppet module</code>. To install the <a href="http://forge.puppetlabs.com/rcoleman/mac_profiles_handler">mac_profiles_handler by Ryan Coleman</a>, tap in:</p>
-
-<pre><code>sudo puppet module install rcoleman/mac_profiles_handler
-</code></pre>
-
-<p>Pretty straightforward syntax there &ndash; the person who wrote the module comes before the slash, and the name of the module after it. You&rsquo;ll see some bumph about Puppet downloading the module, and if the author has specified any dependency on other modules, they&rsquo;ll be downloaded as well.</p>
-
-<p>If you switch back to your Mac and look in the folder you cloned the vagrant-puppetmaster git repository into (mine is at <code>~/src/Mine/blog-post</code>), you&rsquo;ll see the module you just installed in the <code>puppet/modules</code> directory.</p>
-
-<p><img src="/images/posts/2013-03-05/mac_profiles_handler.png"></p>
-
-<p>Feel free to have a nose around to get the general structure for what a Puppet module can look like. It&rsquo;s ok, I&rsquo;ll wait.</p>
-
-<p>Time for us to make our own module. In <code>puppet/modules</code> create a folder called <code>my_super_module</code>. Within that, make <code>files</code> and <code>manifests</code> directories.</p>
-
-<p><img src="/images/posts/2013-03-05/my_super_module.png"></p>
-
-<p>Next, grab <a href="/images/posts/2013-03-05/com.grahamgilbert.vpn.mobileconfig">this simple configuration profile</a> I made. It configures a VPN connection &ndash; it&rsquo;s unsigned, so you can see what you&rsquo;re installing on your test Mac if you&rsquo;d like. Place this .mobileconfig file in <code>puppet/modules/my_super_module/files</code>. Or, if you&rsquo;d rather, you can make your own for something else &ndash; configuring WiFi is pretty handy &ndash; I made this one in two minutes using <a href="http://support.apple.com/kb/dl1465">iPhone Configuration Utility</a>, but you can also make them with Profile Manager (I would recommend making them unsigned though, but that&rsquo;s outside the scope of this article).</p>
-
-<p>For the actual meat of our module, we need some Puppet code. In your favourite text editor (please remember, not TextEdit!), create <code>puppet/modules/my_super_module/init.pp</code>, and make it look like the following:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>puppet/modules/my_super_module/init.pp </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="n">my_super_module</span> <span class="p">{</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;mac_profiles_handler::manage { &#39;com.grahamgilbert.vpn&#39;:</span>
-</span><span class='line'><span class="sr">  ensure       =&amp;gt; present,</span>
-</span><span class='line'><span class="sr">  file_source  =&amp;gt; &#39;puppet:/</span><span class="o">//</span><span class="n">modules</span><span class="o">/</span><span class="n">my_super_module</span><span class="o">/</span><span class="n">com</span><span class="o">.</span><span class="n">grahamgilbert</span><span class="o">.</span><span class="n">vpn</span><span class="o">.</span><span class="n">mobileconfig</span><span class="err">&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>There are a few bits we&rsquo;ve not seen before here:</p>
-
-<pre><code>ensure =&gt; present,
-</code></pre>
-
-<p>We&rsquo;re simply telling puppet that we want to make sure this profile is always installed. If it&rsquo;s missing, re-install it. If we set this to <code>ensure =&gt; absent</code>, we&rsquo;d be telling Puppet to remove the profile. If we wanted to simply update the profile, we&rsquo;d just replace the mobileconfig file (this module will be aware of the change and update the installed profile).</p>
-
-<pre><code>file_source  =&gt; 'puppet:///modules/my_super_module/com.grahamgilbert.vpn.mobileconfig',
-</code></pre>
-
-<p>This is referring to the file in our module. The important bit is <code>puppet:///</code> with three slashes. That point to the server we&rsquo;re currently running on (and also makes our module portable to other servers). We don&rsquo;t need to do any other configuration to get Puppet serving this file now, as it expects to serve static files out of the <code>files</code> directory.</p>
-
-<p>As we are using the built in web server for our Puppet Master, we need to restart the puppetmaster service to let it know about our new module. When you&rsquo;re on the Mac side, it&rsquo;s easiest just to reload the whole server:</p>
-
-<pre><code>cd ~/src/wherever/your/code/is
-vagrant reload
-</code></pre>
-
-<p>Time to test it. Fire up your test Mac or your VM (if you need to configure it, please look at the <a href="http://grahamgilbert.com/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3/">last post</a>, I&rsquo;m assuming it&rsquo;s still set up), and perform a Puppet run:</p>
-
-<pre><code>sudo puppet agent --test
-</code></pre>
-
-<p>Wait! Nothing happened. That&rsquo;s because we&rsquo;ve not told the Puppet Master to apply this particular module to our client Mac.</p>
-
-<p>Make your <code>puppet/manifests/site.pp</code> look like this:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>puppet/manifests/site.pp </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">node</span> <span class="n">puppetclient</span> <span class="p">{</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;include my_super_module</span>
-</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>All we&rsquo;re doing here is telling Puppet to include our module with the default settings (as we didn&rsquo;t make any settings that can be changed &ndash; once again, outside the scope of this post). Splitting your code into modules not only allows you to share them with others if you wish, but also means you only need to change your code once and have it affect all of your applicable nodes.</p>
-
-<p>Anyway, save your <code>site.pp</code> and perform another run on your client:</p>
-
-<pre><code>sudo puppet agent --test
-</code></pre>
-
-<p>And now you&rsquo;ll see something along the lines of:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Info: Retrieving plugin
-</span><span class='line'>Notice: /File[/var/lib/puppet/lib/puppet]/ensure: created
-</span><span class='line'>Notice: /File[/var/lib/puppet/lib/puppet/provider]/ensure: created
-</span><span class='line'>Notice: /File[/var/lib/puppet/lib/puppet/provider/profile_manager]/ensure: created
-</span><span class='line'>Notice: /File[/var/lib/puppet/lib/puppet/provider/profile_manager/osx.rb]/ensure: defined content as &lsquo;{md5}48a098b58bf3fdf38f32a0261026fa59&rsquo;
-</span><span class='line'>Notice: /File[/var/lib/puppet/lib/puppet/type]/ensure: created
-</span><span class='line'>Notice: /File[/var/lib/puppet/lib/puppet/type/profile_manager.rb]/ensure: defined content as &lsquo;{md5}578a75ebe7f9972c7f49f8c5d4e1ad43&rsquo;
-</span><span class='line'>Notice: /File[/var/lib/puppet/lib/facter]/ensure: created
-</span><span class='line'>Notice: /File[/var/lib/puppet/lib/facter/profiles.rb]/ensure: defined content as &lsquo;{md5}54c12303c601579fb2282304363c8425&rsquo;
-</span><span class='line'>Info: Loading facts in /var/lib/puppet/lib/facter/profiles.rb
-</span><span class='line'>Info: Caching catalog for puppetclient
-</span><span class='line'>Info: Applying configuration version &lsquo;1362471535&rsquo;
-</span><span class='line'>Notice: /Stage[main]/My_super_module/Mac_profiles_handler::Manage[com.grahamgilbert.vpn]/File[/var/lib/puppet/mobileconfigs]/ensure: created
-</span><span class='line'>Notice: /Stage[main]/My_super_module/Mac_profiles_handler::Manage[com.grahamgilbert.vpn]/File[/var/lib/puppet/mobileconfigs/com.grahamgilbert.vpn]/ensure: defined content as &lsquo;{md5}48232db3a25fd851d1b1c7ec7c9557c8&rsquo;
-</span><span class='line'>Info: /Stage[main]/My_super_module/Mac_profiles_handler::Manage[com.grahamgilbert.vpn]/File[/var/lib/puppet/mobileconfigs/com.grahamgilbert.vpn]: Scheduling refresh of Exec[remove-profile-com.grahamgilbert.vpn]
-</span><span class='line'>Notice: /Stage[main]/My_super_module/Mac_profiles_handler::Manage[com.grahamgilbert.vpn]/Exec[remove-profile-com.grahamgilbert.vpn]: Triggered &lsquo;refresh&rsquo; from 1 events
-</span><span class='line'>Notice: /Stage[main]/My_super_module/Mac_profiles_handler::Manage[com.grahamgilbert.vpn]/Profile_manager[com.grahamgilbert.vpn]/ensure: created
-</span><span class='line'>Info: Creating state file /var/lib/puppet/state/state.yaml
-</span><span class='line'>Notice: Finished catalog run in 1.57 seconds</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>And if you look in System Preferences, you&rsquo;ll see the Profiles icon has appeared, and that your profile has been installed.</p>
-
-<p><img src="/images/posts/2013-03-05/profiles.png"></p>
-
-<p>And in the Network pane, your VPN connection has been configured:</p>
-
-<p><img src="/images/posts/2013-03-05/vpn.png"></p>
-
-<p>Next time, we&rsquo;ll look at using Facter to make our code a little more intelligent. As ever, comments, corrections and general abuse is welcome.</p>
-
-<p>(Not the abuse, that&rsquo;s not nice.)</p>
 ]]></content>
   </entry>
   
