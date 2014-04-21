@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="In this post, we’ll do something pretty much all Mac admins will need to do &ndash; set up their admin user. Bust first, a little housekeeping. &hellip;">
+  <meta name="description" content="We&rsquo;ve made quite a bit of progress with our Puppet install. We&rsquo;ve already made Puppet do something useful with setting up an admin user, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4/">Getting Started With Puppet on OS X (Part 4)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-05T14:59:00+00:00" pubdate data-updated="true">Mar 5<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We&rsquo;ve made quite a bit of progress with our Puppet install. We&rsquo;ve already made Puppet do something useful with setting up an admin user, but let&rsquo;s get back to being lazy &ndash; let&rsquo;s get someone else to write the code.</p>
+
+<p>Before reading this post, you really need to read <a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">part 1</a>, <a href="http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">part 2</a> and <a href="http://grahamgilbert.com/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3/">part 3</a> of the series.</p>
+
+<p>Modules are little pre-built bits of Puppet code. They&rsquo;re a good example of Puppet&rsquo;s philosophy of convention over configuration &ndash; Puppet will assume your modules follow a set pattern. We&rsquo;ll be using two of the available folders in modules today: files and manifests. Files are static files that Puppet will copy over to our client machine, and manifests will contain the Puppet code we&rsquo;ve previously been putting into <code>/etc/puppet/manifests/site.pp</code> &ndash; whilst it&rsquo;s been easy to put code into this file, it can become unwieldy when you have a few nodes to manage.</p>
+
+<p>There are also loads of pre-built modules on the <a href="http://forge.puppetlabs.com/">Puppet Forge</a> &ndash; it&rsquo;s one of these modules we&rsquo;ll be using today.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4/">Continue reading &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -479,52 +526,6 @@ ls -la
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/18/crypt-a-filevault-2-escrow-solution/">Crypt: A FileVault 2 Escrow Solution</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-18T08:05:00+00:00" pubdate data-updated="true">Jan 18<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/01/18/crypt-a-filevault-2-escrow-solution/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Although it&rsquo;s been blogged about over at <a href="http://afp548.com/2013/01/02/crypt-a-client-and-web-app-for-filevault-2-encryption-and-escrow/">afp548</a> and <a href="http://derflounder.wordpress.com/2012/12/31/first-look-at-crypt/">Rich Trouton&rsquo;s blog</a>, I&rsquo;d like to introduce you all to <a href="https://github.com/grahamgilbert/Crypt">Crypt</a>.</p>
-
-<p><img class="center" src="/images/posts/2013-01-18/Crypt-Screenshot.png"></p>
-
-<p>Crypt is a solution for enabling FileVault 2 on Macs running either 10.7 or 10.8 and securely storing those keys, using no outside infrastructure like other solutions do (Cauliflower Vest&rsquo;s requirement of Google App Engine). It&rsquo;s only requirement is a web server that can run a Django app (which is pretty much anything &ndash; the example setup uses Apache on Ubuntu 12, but you can use anything you want).</p>
-
-<p>Crypt is made up of two parts: A <a href="https://github.com/grahamgilbert/Crypt-Server">web app</a>, which stores the recovery keys and a <a href="https://github.com/grahamgilbert/Crypt">client app</a> for enabling FileVault 2 on a Mac which then sends the recovery key to the server. The server has two user levels, so access to keys can be restricted, and all key access is logged for auditing.</p>
-
-<p>We&rsquo;ve been using it at <a href="http://pebbleit.com">pebble.it</a> for a few weeks now and haven&rsquo;t found any issues during use, but please be aware that this is what I&rsquo;d call &ldquo;beta&rdquo; software. You might be happy using beta software in production, but that&rsquo;s up to you! I&rsquo;d welcome all feedback, both good and bad. Planned features include AD authentication and emails to admins when new requests come in. Please file bugs and feature requests over at <a href="https://github.com/grahamgilbert/Crypt">GitHub</a> so I can keep track of them all.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -548,6 +549,10 @@ ls -la
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/21/first-boot-pkg/">First-boot-pkg</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/04/updating-boxen/">Updating Boxen</a>
       </li>
     
@@ -561,10 +566,6 @@ ls -la
     
       <li class="post">
         <a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/">Writing Plugins for Sal: Part 2</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/">Writing Plugins for Sal: Part 1</a>
       </li>
     
   </ul>

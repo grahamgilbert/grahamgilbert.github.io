@@ -4,7 +4,7 @@
   <title><![CDATA[Category: OS X | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/os-x/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-04-05T09:19:11+01:00</updated>
+  <updated>2014-04-21T09:40:57+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,30 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[first-boot-pkg]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/04/21/first-boot-pkg/"/>
+    <updated>2014-04-21T09:01:24+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/04/21/first-boot-pkg</id>
+    <content type="html"><![CDATA[<p>There are some packages that can&rsquo;t be deployed to an unbooted OS, such as when building an image with AutoDMG. If you are using Greg Neagle&rsquo;s <a href="http://managingosx.wordpress.com/2012/07/25/son-of-installlion-pkg/">createOSXinstallPkg</a>, the OS X installer environment doesn&rsquo;t have everything a full OS X install has. For times like this, you need to install the packages at first boot. For a long time, I&rsquo;ve used Rich Trouton&rsquo;s <a href="http://derflounder.wordpress.com/2014/04/17/first-boot-package-install-revisited/">First Boot Package Install</a>, however I found myself repeating things quite a bit and having a folder full of first boot packages.</p>
+
+<p>So, I made my own. The main features of <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> are:</p>
+
+<ul>
+<li>It is designed with scripting and automation in mind, with options able to be configured with a configuration plist or via options on the command line (or a mixture of both)</li>
+<li>It will re-try failed packages a specified number of times (in case of Active Directory not being available, for example)</li>
+<li>Will wait for the network to be available before installing (optional, can be disabled if desired just in case your package is going to let the Mac get onto the network)</li>
+</ul>
+
+
+<p><a href="/images/posts/2014-04-21/first-boot-pkg.png"><img class="center" src="/images/posts/2014-04-21/first-boot-pkg.png" width="578" height="433"></a></p>
+
+<p>If you&rsquo;re happy with using Git, I&rsquo;d recommend just making a clone of the repository and doing a <code>git pull</code> to keep the script updated. If the thought of all those gits and pulls makes you run away, you can <a href="https://github.com/grahamgilbert/first-boot-pkg/archive/master.zip">download a zip</a> of the project.</p>
+
+<p>This script makes use of Per Olofsson&rsquo;s <a href="https://github.com/MagerValp/LoginLog">LoginLog</a> for displaying the log file whilst the script is running, so massive thanks to him for releasing it.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Updating Boxen]]></title>
@@ -768,17 +792,6 @@ $ /usr/local/munki/munkiimport ad-bind.pkg --installcheck_script=installcheck_sc
 </span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/dict&gt;</span>
 </span><span class='line'><span class="nt">&lt;/array&gt;</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Crypt 0.5 released]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/11/19/crypt-0-dot-5-released/"/>
-    <updated>2013-11-19T11:29:00+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/11/19/crypt-0-dot-5-released</id>
-    <content type="html"><![CDATA[<p>I just pushed up version 0.5 of Crypt &ndash; the <a href="https://github.com/grahamgilbert/Crypt/releases/tag/0.5">release details are over at GitHub</a>. This is the last version that will be compatibile with the current version of <a href="https://github.com/grahamgilbert/Crypt-server">Crypt-Server</a> &ndash; which has also been updated to be compatible with Django 1.5.</p>
-
-<p>This is fully tested (in my environment!) with Mavericks, so go forth and escrow FileVault keys.</p>
 ]]></content>
   </entry>
   

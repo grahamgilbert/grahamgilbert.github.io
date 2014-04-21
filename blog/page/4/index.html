@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Updated 14/7/2013: After Alister&rsquo;s suggestion, the script now loops over network interfaces up to en19 (hopefully that&rsquo;s enough!). So, &hellip;">
+  <meta name="description" content="In my last post I promised a tool I&rsquo;ve been working on to automate the building of a package for crankd. buildCrankPkg is a small script that &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/17/buildcrankpkg/">buildCrankPkg</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-17T16:31:00+01:00" pubdate data-updated="true">Jul 17<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/07/17/buildcrankpkg/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In my <a href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/">last post</a> I promised a tool I&rsquo;ve been working on to automate the building of a package for crankd.</p>
+
+<p><a href="https://github.com/grahamgilbert/buildCrankPkg">buildCrankPkg</a> is a small script that will:</p>
+
+<ul>
+<li>Pull down the latest version of crankd (or use a local or remote repository if you specify one)</li>
+<li>Build a package that includes crankd and your custom settings and scripts.</li>
+</ul>
+
+
+<p>I&rsquo;ve included two examples, one that implements calling Munki and Puppet as detailed in the last post, and one to run a Casper policy.</p>
+
+<p>If you&rsquo;re happy with what crankd does and using the command line, head on over to the <a href="https://github.com/grahamgilbert/buildCrankPkg">repository</a> and enjoy. If you need a bit more help to get started, read on.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/17/buildcrankpkg/">Continue reading &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -296,53 +349,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4/">Getting Started With Puppet on OS X (Part 4)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-05T14:59:00+00:00" pubdate data-updated="true">Mar 5<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>We&rsquo;ve made quite a bit of progress with our Puppet install. We&rsquo;ve already made Puppet do something useful with setting up an admin user, but let&rsquo;s get back to being lazy &ndash; let&rsquo;s get someone else to write the code.</p>
-
-<p>Before reading this post, you really need to read <a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">part 1</a>, <a href="http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">part 2</a> and <a href="http://grahamgilbert.com/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3/">part 3</a> of the series.</p>
-
-<p>Modules are little pre-built bits of Puppet code. They&rsquo;re a good example of Puppet&rsquo;s philosophy of convention over configuration &ndash; Puppet will assume your modules follow a set pattern. We&rsquo;ll be using two of the available folders in modules today: files and manifests. Files are static files that Puppet will copy over to our client machine, and manifests will contain the Puppet code we&rsquo;ve previously been putting into <code>/etc/puppet/manifests/site.pp</code> &ndash; whilst it&rsquo;s been easy to put code into this file, it can become unwieldy when you have a few nodes to manage.</p>
-
-<p>There are also loads of pre-built modules on the <a href="http://forge.puppetlabs.com/">Puppet Forge</a> &ndash; it&rsquo;s one of these modules we&rsquo;ll be using today.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4/">Continue reading &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -366,6 +372,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/21/first-boot-pkg/">First-boot-pkg</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/04/updating-boxen/">Updating Boxen</a>
       </li>
     
@@ -379,10 +389,6 @@
     
       <li class="post">
         <a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/">Writing Plugins for Sal: Part 2</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/">Writing Plugins for Sal: Part 1</a>
       </li>
     
   </ul>
