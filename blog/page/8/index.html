@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Update: There&rsquo;s a better method over at afp548 that does this better. Use that! A few months ago I made a package to create a Recovery HD on a &hellip;">
+  <meta name="description" content="This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,79 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/18/location-based-printers-with-puppet/">Location Based Printers With Puppet</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-18T21:08:00+01:00" pubdate data-updated="true">Aug 18<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/08/18/location-based-printers-with-puppet/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn&rsquo;t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything &ndash; they go to the other site, and they automatically get the right printers set up &ndash; so after a little thought,  came up with this. I&rsquo;ve made use of the excellent <a href="https://github.com/mosen/puppet-cups">mosen-puppet-cups</a> module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).</p>
+
+<div><script src='https://gist.github.com/3389457.js'></script>
+<noscript><pre><code>case $operatingsystem{
+    Darwin:{
+        ##London is on the 10.30.2.0 and 10.30.3.0 Subnets
+        if ($network_en0 == '10.30.2.0') or ($network_en1 == '10.30.2.0') or ($network_en0 == '10.30.3.0') or ($network_en1 == '10.30.3.0'){
+                printer { &quot;Sharp_ARM316&quot;:
+                    ensure      =&gt; present,
+            uri         =&gt; &quot;lpd://sharparm316.ldn.example.com&quot;,
+            description =&gt; &quot;Sharp ARM316&quot;,
+            shared      =&gt; false,
+            ppd         =&gt; &quot;/Library/Printers/PPDs/Contents/Resources/SHARP AR-M316.PPD.gz&quot;, # PPD file will be autorequired
+            }
+        printer { &quot;Xerox_WorkCentre_7120&quot;:
+            ensure      =&gt; present,
+            uri         =&gt; &quot;lpd://xeroxwc7120.ldn.example.com&quot;,
+            description =&gt; &quot;Xerox WorkCentre 7120&quot;,
+            shared      =&gt; false,
+            ppd         =&gt; &quot;/Library/Printers/PPDs/Contents/Resources/Xerox WorkCentre 7120.gz&quot;, # PPD file will be autorequired
+            }
+        }
+            
+        ##San Francisco is on the 10.30.10.0 Subnet
+        if ($network_en0 == '10.30.10.0') or ($network_en1 == '10.30.10.0'){
+        printer { &quot;Xerox_550&quot;:
+            ensure      =&gt; present,
+            uri         =&gt; &quot;lpd://xerox550.sf.example.com&quot;,
+            description =&gt; &quot;Xerox 550&quot;,
+            shared      =&gt; false,
+            ppd         =&gt; &quot;/Library/Printers/PPDs/Contents/Resources/en.lproj/Xerox 550-560 Integrated Fiery&quot;, # PPD file will be autorequired
+            }
+        }
+    }
+}</code></pre></noscript></div>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -303,60 +376,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/04/06/profile-manager-enrollment-package/">Profile Manager Enrollment Package</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-06T10:38:00+01:00" pubdate data-updated="true">Apr 6<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/04/06/profile-manager-enrollment-package/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Over the past week or so, we had a need to enroll macs automagically with a Lion Profile Manager server. My first plan was to do what Charles Edge did in his recent <a href="http://krypted.com/mac-os-x/automating-profile-manager-enrollment-through-deploystudio/">blog post</a> and use DeployStudio. Then I remembered another post by Charles on <a href="http://krypted.com/iphone/profile-manager-and-profiles/">/usr/bin/profiles</a> and wondered if I could make a workflow that can be used throughout our deployment and system maintenance process &ndash; yup, the humble pkg, that can be popped into Munki for existing macs, installed with DeployStudio for imaging and pushed out with ARD if need be.</p>
-
-<p><a href="https://github.com/grahamgilbert/Profile-Manager-Enrollment">Get the code from GitHub</a></p>
-
-<p>Assuming you&rsquo;ve got <a href="https://github.com/unixorn/luggage">The Luggage</a> set up, first off you&rsquo;ll need your enrollment and trust profiles:</p>
-
-<ol>
-<li>Create a new enrollment profile</li>
-<li>Give your enrollement profile a name</li>
-<li>Download the trust profile</li>
-<li>Download the enrollment profile</li>
-</ol>
-
-
-<p><a href="/images/posts/2012-04-06/profile_enrollment_and_trust-full.jpg"><img class="center" src="/images/posts/2012-04-06/profile_enrollment_and_trust-thumb.jpg"></a></p>
-
-<p>If your attachments auto open, click cancel when you&rsquo;re asked if you want to install the profiles so they stay in ~/Downloads. Rename them to enroll.mobileconfig and trust.mobileconfig and pop them into the directory you cloned from GitHub. A quick <code>make pkg</code> and you&rsquo;ve got your package.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -380,6 +399,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/19/deploying-sal-on-heroku/">Deploying Sal on Heroku</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/21/first-boot-pkg/">First-boot-pkg</a>
       </li>
     
@@ -393,10 +416,6 @@
     
       <li class="post">
         <a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/">Writing Plugins for Sal: Part 3</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/">Writing Plugins for Sal: Part 2</a>
       </li>
     
   </ul>

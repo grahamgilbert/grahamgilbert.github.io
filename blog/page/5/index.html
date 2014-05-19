@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="We&rsquo;ve made quite a bit of progress with our Puppet install. We&rsquo;ve already made Puppet do something useful with setting up an admin user, &hellip;">
+  <meta name="description" content="Facter is what gives Puppet it’s brains. It collects information about the computer it is run on and then passes it to the Puppet Master for use in &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/02/facter-101/">Facter 101</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-02T10:11:00+01:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2013</time>
+        
+         | <a href="/blog/2013/04/02/facter-101/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Facter is what gives Puppet it’s brains. It collects information about the computer it is run on and then passes it to the Puppet Master for use in manifests and can optionally be stored. I know, it doesn’t sound like the most earth shattering revelation of all time, but stop for a moment. Every time your current scripts need to taget a specific OS version or a machine with a certain bit of hardware, you need to code it directly into the script. If the method of extracting that information changes, you need to modify every single script that uses that method. With Facter, you&rsquo;re editing one file, which is always up to date on the client. Anyway, that&rsquo;s enough waffle from me. Let&rsquo;s get started.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/02/facter-101/">Continue reading &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -483,49 +524,6 @@ ls -la
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/25/getting-started-with-puppet-part-1/">Getting Started With Puppet on OS X (Part 1)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-25T21:22:00+00:00" pubdate data-updated="true">Jan 25<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/01/25/getting-started-with-puppet-part-1/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When I was first getting started, the first hurdle I had to get over was trying to work out how it would apply to what I do &ndash; manage Macs. There are plenty of resources on managing servers with Puppet, but precious little on using Puppet with OS X &ndash; so, here&rsquo;s how to get started with Puppet.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/01/25/getting-started-with-puppet-part-1/">Continue reading &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -549,6 +547,10 @@ ls -la
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/19/deploying-sal-on-heroku/">Deploying Sal on Heroku</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/21/first-boot-pkg/">First-boot-pkg</a>
       </li>
     
@@ -562,10 +564,6 @@ ls -la
     
       <li class="post">
         <a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/">Writing Plugins for Sal: Part 3</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/">Writing Plugins for Sal: Part 2</a>
       </li>
     
   </ul>

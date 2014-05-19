@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-04-21T09:40:57+01:00</updated>
+  <updated>2014-05-19T09:53:45+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,80 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Deploying Sal on Heroku]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku/"/>
+    <updated>2014-05-19T09:04:05+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku</id>
+    <content type="html"><![CDATA[<p>Setting up everything you need for Sal can be difficult, especially if you only have an OS X server available. Thankfully, Sal is built on top of a very common Python framework, Django. And even more thankfully, you can run Django on a whole host of <a href="http://en.wikipedia.org/wiki/Platform_as_a_service">PaaS</a> providers, including <a href="https://www.heroku.com">Heroku</a>.</p>
+
+<p>Heroku has a very generous <a href="https://www.heroku.com/pricing">free tier</a> that will easily handle a small Sal installation, so let&rsquo;s get started.</p>
+
+<h2>Heroku toolkit</h2>
+
+<p>If you&rsquo;ve never used Heroku before, you&rsquo;re going to need to head over to <a href="http://heroku.com">their site</a> and sign up for a free account. Whilst you&rsquo;re there, you&rsquo;re also going to need to install their toolbelt. <a href="http://toolbelt.herokuapp.com/">Grab the package</a> and follow their instructions for linking it to your account.</p>
+
+<h2>Configure</h2>
+
+<p>Now we need to get a copy of Sal and configure it. Assuming you keep your code in ~/src:</p>
+
+<p><code>bash
+$ cd ~/src
+$ git clone https://github.com/grahamgilbert/sal
+$ cd sal
+</code></p>
+
+<p>Now we need to make a copy of sal/example_settings.py</p>
+
+<p><code>bash
+$ cp sal/example_settings.py sal/settings.py
+</code></p>
+
+<p>And edit sal/settings.py in your favourite editor to your liking (probably time zone at least).</p>
+
+<p>Heroku uses git for deployment, so we need to commit our changes.</p>
+
+<p><code>bash
+$ git add .
+$ git commit -m "initial commit to heroku"
+</code></p>
+
+<p>We&rsquo;re nearly there! Time to create our environment on Heroku</p>
+
+<p><code>bash
+$ heroku create
+</code></p>
+
+<p>Of course we haven&rsquo;t pushed Sal to Heroku yet. Let&rsquo;s fix that.</p>
+
+<p><code>bash
+$ git push heroku master
+</code></p>
+
+<p>You&rsquo;ll see Sal being pushed up to Heroku and Sal&rsquo;s requirements being installed. A Postgres database will also automatically be created for you. The database will be empty though, so let&rsquo;s populate it with what we need.</p>
+
+<p><code>bash
+$ heroku run python manage.py syncdb
+</code></p>
+
+<p>When asked, you certainly <em>do</em> want to create a super user. Use a strong username and password as this is the admin for your Sal application.</p>
+
+<p>One last command to run:</p>
+
+<p><code>bash
+$ heroku run python manage.py migrate
+</code></p>
+
+<p>Your Sal installation is ready to use:</p>
+
+<p><code>bash
+$ heroku open
+</code></p>
+
+<p>As said earlier, the free version does have some limits. The most important with Sal is the number of rows you can have in the free database (10,000), so the more information you collect from each machine (Facter Facts and Munki Conditions), the larger your database is. It&rsquo;s a measley $9 a month to upgrade your database to 10 million rows, so it&rsquo;s easy to scale your database. For more information on upgrading your Heroku environment see <a href="https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups">their documentation</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[first-boot-pkg]]></title>
@@ -518,21 +592,6 @@
 <p>That&rsquo;s it for a basic plugin &ndash; we&rsquo;ve taken a bunch of machines, filtered them based on a Munki condition, and we&rsquo;ve returned the data. But this obviously is lacking &ndash; the button doesn&rsquo;t do anything and we still see a big fat zero when all of our machines are 10.9 capable. Anyway, you can get the code so far in my <a href="https://github.com/grahamgilbert/sal-plugins/tree/master/mavcompatibility">sal-plugins repository</a>.</p>
 
 <p>Tune in to part two for the thrilling conclusion!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Sal: The Munki Puppet]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet/"/>
-    <updated>2014-01-17T10:51:46+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet</id>
-    <content type="html"><![CDATA[<p>At <a href="http://pebbleit.com">pebble.it</a>, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a few options, but didn&rsquo;t like any of them, so we made our own.</p>
-
-<p>Say hi to Sal &ndash; the Munki Puppet. It&rsquo;s a multi-tenanted reporting solution for Munki and optionally, Facter.  You can find all of the details <a href="https://github.com/grahamgilbert/sal">over on GitHub</a>, including installation instructions and a package to send out to your clients.</p>
-
-<p><img class="center" src="/images/posts/2014-01-17/Sal.png"></p>
-
-<p>There is a plugin system built in to Sal, and over the next few days I will have a couple of posts covering how to make your own.</p>
 ]]></content>
   </entry>
   

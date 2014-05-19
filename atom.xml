@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-04-21T09:40:57+01:00</updated>
+  <updated>2014-05-19T09:53:45+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,91 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Deploying Sal on Heroku]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku/"/>
+    <updated>2014-05-19T09:04:05+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku</id>
+    <content type="html"><![CDATA[<p>Setting up everything you need for Sal can be difficult, especially if you only have an OS X server available. Thankfully, Sal is built on top of a very common Python framework, Django. And even more thankfully, you can run Django on a whole host of <a href="http://en.wikipedia.org/wiki/Platform_as_a_service">PaaS</a> providers, including <a href="https://www.heroku.com">Heroku</a>.</p>
+
+<p>Heroku has a very generous <a href="https://www.heroku.com/pricing">free tier</a> that will easily handle a small Sal installation, so let&rsquo;s get started.</p>
+
+<h2>Heroku toolkit</h2>
+
+<p>If you&rsquo;ve never used Heroku before, you&rsquo;re going to need to head over to <a href="http://heroku.com">their site</a> and sign up for a free account. Whilst you&rsquo;re there, you&rsquo;re also going to need to install their toolbelt. <a href="http://toolbelt.herokuapp.com/">Grab the package</a> and follow their instructions for linking it to your account.</p>
+
+<h2>Configure</h2>
+
+<p>Now we need to get a copy of Sal and configure it. Assuming you keep your code in ~/src:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src
+</span><span class='line'><span class="nv">$ </span>git clone https://github.com/grahamgilbert/sal
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>sal
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we need to make a copy of sal/example_settings.py</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>cp sal/example_settings.py sal/settings.py
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And edit sal/settings.py in your favourite editor to your liking (probably time zone at least).</p>
+
+<p>Heroku uses git for deployment, so we need to commit our changes.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git add .
+</span><span class='line'><span class="nv">$ </span>git commit -m <span class="s2">&quot;initial commit to heroku&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We&rsquo;re nearly there! Time to create our environment on Heroku</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku create
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Of course we haven&rsquo;t pushed Sal to Heroku yet. Let&rsquo;s fix that.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git push heroku master
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll see Sal being pushed up to Heroku and Sal&rsquo;s requirements being installed. A Postgres database will also automatically be created for you. The database will be empty though, so let&rsquo;s populate it with what we need.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku run python manage.py syncdb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When asked, you certainly <em>do</em> want to create a super user. Use a strong username and password as this is the admin for your Sal application.</p>
+
+<p>One last command to run:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku run python manage.py migrate
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Your Sal installation is ready to use:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku open
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As said earlier, the free version does have some limits. The most important with Sal is the number of rows you can have in the free database (10,000), so the more information you collect from each machine (Facter Facts and Munki Conditions), the larger your database is. It&rsquo;s a measley $9 a month to upgrade your database to 10 million rows, so it&rsquo;s easy to scale your database. For more information on upgrading your Heroku environment see <a href="https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups">their documentation</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[first-boot-pkg]]></title>
@@ -2775,218 +2860,6 @@ git clone https://github.com/acdha/pymacadmin.git
 
 
 <p>This clearly isn&rsquo;t required or suitable for all types of script &ndash; but if you have a package that is frequently updated and you have staff installing it by hand, this is a relatively simple way to make sure they&rsquo;ve got the latest version at all times.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Facter 101]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/04/02/facter-101/"/>
-    <updated>2013-04-02T10:11:00+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/04/02/facter-101</id>
-    <content type="html"><![CDATA[<p>Facter is what gives Puppet it’s brains. It collects information about the computer it is run on and then passes it to the Puppet Master for use in manifests and can optionally be stored. I know, it doesn’t sound like the most earth shattering revelation of all time, but stop for a moment. Every time your current scripts need to taget a specific OS version or a machine with a certain bit of hardware, you need to code it directly into the script. If the method of extracting that information changes, you need to modify every single script that uses that method. With Facter, you&rsquo;re editing one file, which is always up to date on the client. Anyway, that&rsquo;s enough waffle from me. Let&rsquo;s get started.<!--more--></p>
-
-<h2>Requirements</h2>
-
-<ul>
-<li><a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a></li>
-<li><a href="http://downloads.vagrantup.com/">Vagrant</a></li>
-<li>Either a Mac running 10.8 that you don’t mind wiping, or a Virtual Machine running in VMWare Fusion or similar.</li>
-<li>Git (Install the Command Line Tools from within <a href="https://itunes.apple.com/gb/app/xcode/id497799835?mt=12">Xcode&rsquo;s</a> preferences if you don&rsquo;t have it).</li>
-</ul>
-
-
-<h2>Setup</h2>
-
-<p>We need a Puppet Master &ndash; fortunately there’s one pre-built that has everything we need. Make sure you’ve installed everything in the requirements, and then open up your trusty Terminal:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mkdir ~/src
-</span><span class='line'><span class="nv">$ </span>git clone https://github.com/grahamgilbert/vagrant-puppetmaster.git facter-101
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>facter-101
-</span><span class='line'><span class="nv">$ </span>vagrant up
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This will pull down the needed bits to get your own Puppet Master running and then <code>vagrant up</code> will start things going. If you get errors about Postgres, just issue a <code>vagrant reload</code></p>
-
-<p>Now for your test Mac: I&rsquo;ve made a script to automate the process. If you <strong>don&rsquo;t</strong> have a DNS entry for your Puppet Master, and you&rsquo;re using the Vagrant setup described above, run this in your terminal:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>curl -o /tmp/install_puppet.py https://raw.github.com/grahamgilbert/macscripts/master/Puppet-Install/install_puppet.py; sudo python /tmp/install_puppet.py --appendhosts
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If you are using a different setup, please refer to the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Puppet-Install">script&rsquo;s readme</a> for more information</p>
-
-<h2>Learn some Facts</h2>
-
-<p>On your client machine, run this in a Terminal</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo facter
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Your test Mac will churn away for a minute and then spit out a ton of information &ndash; you&rsquo;ll see everything from the uptime of the machine to the amount of RAM. Still not overly useful sitting on that one machine. We need this information somewhere central to make use of it.</p>
-
-<p>We need to make one small change to <code>~/src/facter-101/puppet/manifests/site.pp</code> to get the puppet run working:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># comment out the next line by putting a hash in front of it</span>
-</span><span class='line'><span class="c1"># import &quot;classes/*&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This is to stop Puppet complaining that there&rsquo;s nothing to import &ndash; which there isn&rsquo;t yet.</p>
-
-<p> Assuming your Puppet Master is running, this is on your test Mac:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo puppet agent -t
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You&rsquo;ll see a load of files being synced to your test Mac &ndash; these are custom Facts, plugins and assorted other goodies being pulled from the server. We&rsquo;ll get to using custom Facts in a moment. If you load up <a href="http://192.168.33.10:3000">http://192.168.33.10:3000</a> in your browser of choice, you&rsquo;ll see your client having checked into Puppet. Click on it&rsquo;s hostname and you&rsquo;ll be presented with a list of all of the available Facts for that machine.</p>
-
-<p><a href="http://grahamgilbert.com/images/posts/2013-04-02/Puppet_Node_Manager.png"><img class="center" src="http://grahamgilbert.com/images/posts/2013-04-02/Puppet_Node_Manager.png" title="" ></a></p>
-
-<p>That&rsquo;s all very nice, but what can we use it for?</p>
-
-<h2>The Plan</h2>
-
-<p>We&rsquo;re going to install some extra facts from the Puppet Forge onto our Master, and then write some code to target a specific set of machines. In our fictional world, every Mac with 4GB or more of RAM will be designated a &ldquo;design&rdquo; Mac. We&rsquo;ll install Firefox on those (that&rsquo;s a design app, right?).</p>
-
-<p>First we&rsquo;ll install the extra Facts onto our Master from the Forge.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/facter-101
-</span><span class='line'><span class="nv">$ </span>vagrant ssh
-</span><span class='line'><span class="c"># You&#39;re on the Puppet Master now</span>
-</span><span class='line'><span class="nv">$ </span>sudo puppet module install grahamgilbert/mac_facts
-</span><span class='line'><span class="c"># Get out of the Puppet Master</span>
-</span><span class='line'><span class="nv">$ </span><span class="nb">exit</span>
-</span><span class='line'><span class="c"># Restart the Puppet Master to pick up the new module</span>
-</span><span class='line'><span class="nv">$ </span>vagrant reload
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now we&rsquo;ll write a class that will:</p>
-
-<ul>
-<li>Test that the client machine is a Mac</li>
-<li>Test that the client machine also has more than 4GB RAM</li>
-<li>If both conditions are satisfied, will install Firefox.</li>
-</ul>
-
-
-<p>Create your <code>~/src/facter-101/puppet/manifests/classes/design.pp</code>and make it look like the following.</p>
-
-<figure class='code'><figcaption><span>~/src/facter-101/puppet/manifests/classes/design.pp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="n">design</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">if</span> <span class="vg">$:</span><span class="ss">:operatingsystem</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span> <span class="ow">and</span> <span class="vg">$:</span><span class="ss">:mac_memory_in_gb</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">{</span>
-</span><span class='line'>      <span class="n">package</span> <span class="p">{</span> <span class="s1">&#39;Firefox&#39;</span><span class="p">:</span>
-</span><span class='line'>          <span class="k">ensure</span> <span class="o">=&gt;</span> <span class="n">installed</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">provider</span> <span class="o">=&gt;</span> <span class="n">appdmg</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">source</span> <span class="o">=&gt;</span> <span class="s2">&quot;http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/19.0.2/mac/en-US/Firefox%2019.0.2.dmg&quot;</span><span class="p">,</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Puppet has a default node &ndash; all machines checking into the Master get anything that&rsquo;s declared in this node by default. Open up <code>~/src/facter-101/puppet/manifests/site.pp</code> and make it look like:</p>
-
-<figure class='code'><figcaption><span>~/src/facter-101/puppet/manifests/site.pp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">import</span> <span class="s2">&quot;classes/*&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">node</span> <span class="n">default</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="n">design</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>We&rsquo;ve added some classes, so the Puppet Master process needs to be restarted &ndash; rebooting the whole VM is probably quicker.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>vagrant reload
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>On your Test Mac, perform a Puppet run.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo puppet agent -t
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><img class="center" src="http://grahamgilbert.com/images/posts/2013-04-02/Firefox_Installed.png" title="" ></p>
-
-<p>Depending on how much memory is in your test Mac, this might or might not do anything. Play with the $::mac_memory_in_gb value, starting high and then bringing it down to the amount of RAM in your test Mac &ndash; or if you are running your test Mac in a VM, you could also adjust the amount of memory assigned to it.</p>
-
-<p>So that&rsquo;s Facter &ndash; you&rsquo;re not limited to using this with the default node, this technique can be used anywhere you write Puppet code. Try changing your design.pp file to look like the following &ndash; we&rsquo;re using Facter Facts directly within our manifest to write data to the test Mac.</p>
-
-<figure class='code'><figcaption><span>~/src/facter-101/puppet/manifests/classes/design.pp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="n">design</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">if</span> <span class="vg">$:</span><span class="ss">:operatingsystem</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span> <span class="ow">and</span> <span class="vg">$:</span><span class="ss">:mac_memory_in_gb</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">{</span>
-</span><span class='line'>      <span class="n">package</span> <span class="p">{</span> <span class="s1">&#39;Firefox&#39;</span><span class="p">:</span>
-</span><span class='line'>          <span class="k">ensure</span> <span class="o">=&gt;</span> <span class="n">installed</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">provider</span> <span class="o">=&gt;</span> <span class="n">appdmg</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">source</span> <span class="o">=&gt;</span> <span class="s2">&quot;http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/19.0.2/mac/en-US/Firefox%2019.0.2.dmg&quot;</span><span class="p">,</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  
-</span><span class='line'>  <span class="n">file</span> <span class="p">{</span> <span class="s1">&#39;/tmp/mac_ver&#39;</span><span class="p">:</span>
-</span><span class='line'>      <span class="n">content</span> <span class="o">=&gt;</span> <span class="s2">&quot;This Mac is running ${::sp_os_version}&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Which gives us</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>less /tmp/mac_ver
-</span><span class='line'>This Mac is running OS X 10.8.3 <span class="o">(</span>12D78<span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This is a very simple example of how you can use Facter to configure your machines. Facter can be used anywhere you&rsquo;d set a variable manually &ndash; the <a href="http://docs.puppetlabs.com/puppet/latest/reference/lang_conditional.html">Puppet documentation on Conditional Statements</a> is an excellent next step with dynamically assigning configuration to your machines.</p>
 ]]></content>
   </entry>
   
