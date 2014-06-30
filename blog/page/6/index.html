@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="When I was first getting started, the first hurdle I had to get over was trying to work out how it would apply to what I do &ndash; manage Macs. &hellip;">
+  <meta name="description" content="Before reading this post, you really need to read part 1 &ndash; none of this will make sense without it! Still with me? Let&rsquo;s do finally do &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">Getting Started With Puppet on OS X (Part 2)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-27T09:30:00+00:00" pubdate data-updated="true">Jan 27<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Before reading this post, you really need to read <a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">part 1</a> &ndash; none of this will make sense without it!</p>
+
+<p>Still with me? Let&rsquo;s do finally do something with Puppet. SSH into your Puppet Master (if it&rsquo;s IP has changed since you first did the setup, make sure you reflect this change in the Mac client&rsquo;s /etc/hosts file) and navigate to /etc/puppet and list the directory&rsquo;s contents:</p>
+
+<pre><code>cd /etc/puppet
+ls -la
+</code></pre>
+
+<p>You&rsquo;ll see a few directories here &ndash; we&rsquo;re interested in two today &ndash; manifests and modules. Manifests will be where you describe your nodes, and the modules are the functional Puppet code.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">Continue reading &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -352,56 +403,6 @@ Some might be, others won&rsquo;t for one reason or another.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/05/instadmg-tips/">InstaDMG Tips</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-05T14:35:00+00:00" pubdate data-updated="true">Jan 5<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/01/05/instadmg-tips/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve been using <a href="http://code.google.com/p/instadmg/">InstaDMG</a> for nearly two years now. We all know it&rsquo;s awesome (if you aren&rsquo;t aware of it&rsquo;s awesomeness, I suggest taking a look at <a href="http://www.youtube.com/watch?v=o8xtO5E4MzE">Allister Banks&#8217; talk at PSU MacAdmins last year</a>). I&rsquo;m almost ashamed to admit that I was happily making my Golden Master images on my test iMac and hoping for the best when I cleaned them up by hand and pushed them out. Anyway, that&rsquo;s enough of my admissions. Over these two years, I&rsquo;ve picked up a few tips and tricks for working effectively with InstaDMG.</p>
-
-<h2>Put an SSD in your laptop</h2>
-
-<p>Seriously, just do it. If your boss complains at how much it costs, then they&rsquo;re not charging enough for you. The price of the SSD was covered by the time I saved when doing one particularly chunky build (around 30GB including packages). InstaDMG is primarily I/O bound, so an SSD will change your InstaDMG life.</p>
-
-<h2>Keep your InstaUp2DatePackages on a web server</h2>
-
-<p>If you&rsquo;ve got more than one person building images in your organisation, you&rsquo;ll soon find that your packages will get out of sync with each other. One person will be using 0.8.2 of Munki, another 0.8.3, it all goes horribly wrong. As InstaDMG can pull packages from a web server, this lends itself to having a central repository for packages in your oganisation. Remember to keep it safely behind your firewall if you&rsquo;ve got sensitive info in your packages (like one that creates your admin user, for example).</p>
-
-<h2>Keep our CatalogFiles in source control</h2>
-
-<p>Now that everyone has access to your InstaUp2DatePackages, we ought to get our CatalogFiles in check too. Keep them in some sort of source control like <a href="http://grahamgilbert.com/blog/2012/09/21/five-reasons-sysadmins-should-use-git/">Git</a> and be happy. Mine can be found on my <a href="https://github.com/grahamgilbert/InstaDMG-Catalogs">GitHub</a>.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -425,6 +426,10 @@ Some might be, others won&rsquo;t for one reason or another.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/06/30/making-packages-with-autopkg/">Making Packages With AutoPkg</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/19/deploying-sal-on-heroku/">Deploying Sal on Heroku</a>
       </li>
     
@@ -438,10 +443,6 @@ Some might be, others won&rsquo;t for one reason or another.</p>
     
       <li class="post">
         <a href="/blog/2014/04/01/binding-to-active-directory-with-munki/">Binding to Active Directory With Munki</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/">Writing Plugins for Sal: Part 3</a>
       </li>
     
   </ul>
@@ -476,6 +477,11 @@ Some might be, others won&rsquo;t for one reason or another.</p>
   <script src="/javascripts/github.js" type="text/javascript"> </script>
 </section>
 
+<section>
+  <h1>Twitter</h1>
+<a class="twitter-timeline" href="https://twitter.com/grahamgilbert" data-widget-id="483550747481489408">Tweets by @grahamgilbert</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
 
 
 

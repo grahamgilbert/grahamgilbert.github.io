@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-06-24T21:19:52+01:00</updated>
+  <updated>2014-06-30T11:09:25+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,173 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Making packages with AutoPkg]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg/"/>
+    <updated>2014-06-30T10:12:10+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg</id>
+    <content type="html"><![CDATA[<p>Over the past few weeks, I&rsquo;ve had the same conversation over and over:
+people telling me that once they get started using Munki, their next
+step will be to start using AutoPkg. I gave each person the same
+response: &ldquo;you&rsquo;re doing it wrong&rdquo;.</p>
+
+<p>AutoPkg a has a reputation of being difficult to use. This is totally
+unjustfied. You don&rsquo;t need to be using Munki for it to be useful, you
+don&rsquo;t need to set it up to run automatically via Jenkins or a
+LaunchDaemon. If you need to get software into a package,  AutoPkg is
+the easiest way.</p>
+
+<h2>Installing AutoPkg</h2>
+
+<p>Head over to the <a href="https://github.com/autopkg/autopkg/releases/latest">releases page on AutoPkg&rsquo;s GitHub repository</a> and
+download the latest version  (0.3.0 at the time of writing). It&rsquo;s an
+Apple package, so double click it and get it installed. If you have Gate Keeper enabled, you&rsquo;ll need to right-click on the package and choose to install it from there, as it&rsquo;s not been signed.</p>
+
+<h2>Recipes</h2>
+
+<p>AutoPkg is useless without recipes. Fortunately, there are hundreds
+that have already been made by the community.</p>
+
+<p>We&rsquo;ll add the set of recipes maintained by AutoPkg&rsquo;s authors, which
+contains some of the most common software. Open up a terminal window
+and enter :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>autopkg repo-add https://github.com/autopkg/recipes
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll see AutoPkg downloading and adding the recipes to your Mac.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Attempting git clone...
+</span><span class='line'>
+</span><span class='line'>Adding /Users/grahamgilbert/Library/AutoPkg/RecipeRepos/com.github.autopkg.recipes to RECIPE_SEARCH_DIRS...
+</span><span class='line'>Updated search path:
+</span><span class='line'>  <span class="s1">&#39;.&#39;</span>
+</span><span class='line'>  <span class="s1">&#39;~/Library/AutoPkg/Recipes&#39;</span>
+</span><span class='line'>  <span class="s1">&#39;/Library/AutoPkg/Recipes&#39;</span>
+</span><span class='line'>  <span class="s1">&#39;/Users/vagrant/Library/AutoPkg/RecipeRepos/com.github.autopkg.recipes&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Using the thing</h2>
+
+<p>Let&rsquo;s see what recipes we just added. Still in your terminal, enter:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>autopkg list-recipes
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll see a whole load of output like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Adium.download
+</span><span class='line'>Adium.munki
+</span><span class='line'>Adium.pkg
+</span><span class='line'>AdobeAIR.pkg
+</span><span class='line'>AdobeAcrobatPro9Update.download
+</span><span class='line'>AdobeAcrobatPro9Update.munki
+</span><span class='line'>AdobeAcrobatProXUpdate.download
+</span><span class='line'>AdobeAcrobatProXUpdate.munki
+</span><span class='line'>AdobeAir.munki
+</span><span class='line'>AdobeFlashPlayer.download
+</span><span class='line'>AdobeFlashPlayer.munki
+</span><span class='line'>AdobeFlashPlayer.pkg
+</span><span class='line'>AdobeFlashPlayerExtractPackage.munki
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The naming convention in AutoPKG is SoftwareName.output. For for
+example, to run a recipe that downloads Google Chrome and adds it to
+Munki, you would use the GoogleChrome.munki recipe, but if you just
+wanted to download it an make a package, you&rsquo;d use the GoogleChrome.pkg recipe. It just so happens that making a package of Chrome is exactly what we want to do.</p>
+
+<p>Back into your terminal and enter:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>autopkg run GoogleChrome.pkg
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The AutoPkg robot will churn away and you&rsquo;ll get some output similar to:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Processing GoogleChrome.pkg...
+</span><span class='line'>
+</span><span class='line'>The following new items were downloaded:
+</span><span class='line'>    /Users/grahamgilbert/Library/AutoPkg/Cache/com.github.autopkg.pkg.googlechrome/downloads/GoogleChrome.dmg
+</span><span class='line'>
+</span><span class='line'>The following packages were built:
+</span><span class='line'>    Identifier               Version          Pkg path
+</span><span class='line'>    ----------               -------          --------
+</span><span class='line'>    com.google.Chrome        35.0.1916.153    /Users/grahamgilbert/Library/AutoPkg/Cache/com.github.autopkg.pkg.googlechrome/GoogleChrome-35.0.1916.153.pkg
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And when it&rsquo;s all finished, you&rsquo;ll be left with a nice package that
+you can use anywhere you&rsquo;d use finely crafted packages &ndash; ARD, AutoDMG or even Casper if you&rsquo;re that way inclined (although Allister Banks has been
+working on a way of automating importing packages into the JSS &ndash; see
+his <a href="http://tmblr.co/ZHT_Wy1J-Hk5I">recent talk</a> for more on that subject).</p>
+
+<h2>Doing it all again</h2>
+
+<p>What happens next time you want to build an updated package?</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>autopkg run GoogleChrome.pkg
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Right?</p>
+
+<p>Well, kinda.</p>
+
+<p>What happens if Google changes the URL AutoPkg uses to download
+Chrome? Fortunately we&rsquo;re using the community provided recipes, and if
+something&rsquo;s broken they usually get fixed pretty quickly. We just need
+to tell AutoPkg to update the installed recipes.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>autopkg update-repo
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And then we&rsquo;re able to build our package safe in the knowledge that
+someone else has done all of the hard work for us.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Deploying Sal on Heroku]]></title>
@@ -2819,47 +2986,6 @@ git clone https://github.com/acdha/pymacadmin.git
 
 <iframe width="480" height="360" src="http://www.youtube.com/embed/GqerWmKU1Js" frameborder="0" allowfullscreen></iframe>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[One bootstrap package to rule them all]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/04/07/one-bootstrap-package-to-rule-them-all/"/>
-    <updated>2013-04-07T15:36:00+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/04/07/one-bootstrap-package-to-rule-them-all</id>
-    <content type="html"><![CDATA[<p>At work, we&rsquo;ve recently changed how we build our bootstrap package to having the main code that connects a Mac to our Puppet infrastructure pulled down from GitHub when the client boots up for the first time.</p>
-
-<h2>Why?</h2>
-
-<p>This might sound like madness to you. Why would anyone want to do this? We had two main issues to solve:</p>
-
-<ul>
-<li>I got sick of rebuilding our images every time our bootstrap script changed.</li>
-<li>Our engineers got sick of downloading the latest version of our package every time they thin / no-imaged a Mac.</li>
-</ul>
-
-
-<p>Why would our script change so much? In our case, it is to install the latest versions of Puppet and Facter. This isn&rsquo;t strictly necessary, as we update Puppet and Facter with Munki, but occasionally there will be something in our Puppet config that requires a specific version &ndash; for example, when we started configuring usernames on 10.8 Macs with Puppet, the <code>salt</code> parameter was introduced. This required Puppet 3.0.2-ish or higher &ndash; which meant that any NetRestore image or old package that contained a version of Puppet lower than this would fail, and the engineer on site was in for a world of pain.</p>
-
-<h2>Ok, I&rsquo;m convinced.</h2>
-
-<p>I&rsquo;ve put an <a href="https://github.com/grahamgilbert/macscripts/tree/master/Puppet-Bootstrap">example up on GitHub</a>. This is a sanitised version of the bootstrap script we use at pebble.it. All we do in the script that gets deployed to the client is set the address of our Puppet server and then pull the rest of the script from GitHub &ndash; if you don&rsquo;t need to set any variables, you could do all of the work in the remote script.</p>
-
-<p>So this can be used with all of the deployment methods we use at pebble.it (<a href="https://code.google.com/p/instadmg/">imaging</a>, <a href="http://managingosx.wordpress.com/2012/07/25/son-of-installlion-pkg/">createOSXinstallPkg</a> and no imaging), we do the actual work in a script that is triggered by a launch daemon, so we can be sure we&rsquo;re a) performing the work in a full OS X environment (we need Python to be available for our script) and that we&rsquo;re running it on the boot volume of the client Mac (we need the serial number, and this could be installed via Target Disk Mode when no-imaging.</p>
-
-<p>So when the bootstrap script needs to be updated, rather than rebuilding the package and distributing it to engineers and baking it into images, the workflow becomes:</p>
-
-<ol>
-<li>Update script, push to GitHub.</li>
-<li>Restore image with <a href="https://github.com/grahamgilbert/macscripts/tree/master/Puppet-Bootstrap">puppet_bootstrap.pkg</a> baked in or install the package manually.</li>
-<li>Mac boots, downloads the latest version of <a href="https://github.com/grahamgilbert/macscripts/tree/master/Puppet-Install"><code>install_puppet.py</code></a>.</li>
-<li><code>install_puppet.py</code> downloads and installs the correct versions of Puppet and Facter and configures Puppet.</li>
-<li>Puppet downloads, installs and configures Munki along with all of the other configuration.</li>
-<li>PROFIT</li>
-</ol>
-
-
-<p>This clearly isn&rsquo;t required or suitable for all types of script &ndash; but if you have a package that is frequently updated and you have staff installing it by hand, this is a relatively simple way to make sure they&rsquo;ve got the latest version at all times.</p>
 ]]></content>
   </entry>
   

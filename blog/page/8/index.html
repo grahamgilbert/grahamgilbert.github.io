@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently &hellip;">
+  <meta name="description" content="This post could also be called &ldquo;Things we could learn from our developer brethren, but I digress, to the list! (Lists are awesome, aren&rsquo;t &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/21/five-reasons-sysadmins-should-use-git/">Five Reasons Sysadmins Should Use Git</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-21T07:28:00+01:00" pubdate data-updated="true">Sep 21<span>st</span>, 2012</time>
+        
+         | <a href="/blog/2012/09/21/five-reasons-sysadmins-should-use-git/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This post could also be called &ldquo;Things we could learn from our developer brethren, but I digress, to the list! (Lists are awesome, aren&rsquo;t they?)</p>
+
+<p>I&rsquo;m not going to try and tell you how to get started with Git (<a href="http://glarizza.posterous.com/using-git-for-mac-sysadmins-part-1">go here instead for that</a>), I&rsquo;m merely going to get on my soapbox.</p>
+
+<ol>
+<li><strong>Branches</strong> &ndash; need to test something? No need to spend all day making a test setup, just make a branch and clone it to the test server. If it turns out that I wasn&rsquo;t mad and my changes were a good idea, they can be merged back into the main branch just as easily.</li>
+<li><strong>Accountability</strong> &ndash; who made that strange config change? A quick look at the commit history is all you need.</li>
+<li><strong>Diff</strong> &ndash; what actually changed? It&rsquo;s easy to see the exact changes</li>
+<li><strong>Change history</strong> &ndash; why was that random change even made? Hopefully it&rsquo;s in the commit message! (Your commit messages are useful, aren&rsquo;t they?!)</li>
+<li><strong>You can be a nice sysadmin</strong> &ndash; if you use GitHub it&rsquo;s simple to take your repo public and share your awesomeness.</li>
+</ol>
+
+
+<p>So there you go &ndash; I hope this goes some way to answering the question &ldquo;why shuold I be using Git?&rdquo;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -299,90 +350,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/04/21/headless-virtualbox/">Headless VirtualBox</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-21T22:06:00+01:00" pubdate data-updated="true">Apr 21<span>st</span>, 2012</time>
-        
-         | <a href="/blog/2012/04/21/headless-virtualbox/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I recently had a requirement to run an Ununtu machine, but the client had only mac servers, and no budget for additional hardware. The solution turned out to be VirtualBox &ndash; we could run it headless and have it start when the mac booted.</p>
-
-<p>First, get your VM set up how you like it and shut it down. I like to move my VMs out of the boot drive, so move the entire ~/VirtualBox VMs directory onto your storage device.</p>
-
-<p>VirtualBox needs to know where the vm lives now, so remove the original vm you made, then double click the moved vbox file.</p>
-
-<p>One last step &ndash; the launchd item to control the vm.</p>
-
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
-&lt;plist version="1.0"&gt;
-&lt;dict&gt;
-&lt;key&gt;Label&lt;/key&gt;
-  &lt;string&gt;com.yourcompany.mysupervm.plist&lt;/string&gt;
-  &lt;key&gt;ProgramArguments&lt;/key&gt;
-  &lt;array&gt;
-    &lt;string&gt;/usr/bin/VBoxHeadless&lt;/string&gt;
-    &lt;string&gt;-startvm&lt;/string&gt;
-    &lt;string&gt;The name of your VM&lt;/string&gt;
-  &lt;/array&gt;
-&lt;key&gt;KeepAlive&lt;/key&gt;
-&lt;true/&gt;
-  &lt;key&gt;UserName&lt;/key&gt;
-  &lt;string&gt;admin&lt;/string&gt;
-  &lt;key&gt;WorkingDirectory&lt;/key&gt;
-  &lt;string&gt;/Volumes/Storage&lt;/string&gt;
-  &lt;key&gt;RunAtLoad&lt;/key&gt;
-  &lt;true/&gt;
-&lt;/dict&gt;
-&lt;/plist&gt;
-</code></pre>
-
-<p>Change some &ldquo;The name of your VM&rdquo; to what your vm is actually called, change UserName to the admin username on the server, and finally change the WorkingDirectory path to match the location of your VirtualBox VMs directory.</p>
-
-<p>Save the plist into /Library/LaunchDaemons/ as com.yourcompany.mysupervm.plist (or whatever you want) and chown it to root:wheel</p>
-
-<p>To start the vm, crack open terminal and issue</p>
-
-<pre><code>sudo launchctl load /Library/LaunchDaemons/com.yourcompany.mysupervm.plist
-</code></pre>
-
-<p>And to stop:</p>
-
-<pre><code>sudo launchctl unload /Library/LaunchDaemons/com.yourcompany.mysupervm.plist
-</code></pre>
-
-<p>The vm will start at boot, and will continue to run, so to stop it, you need to unload the plist.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -406,6 +373,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/06/30/making-packages-with-autopkg/">Making Packages With AutoPkg</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/19/deploying-sal-on-heroku/">Deploying Sal on Heroku</a>
       </li>
     
@@ -419,10 +390,6 @@
     
       <li class="post">
         <a href="/blog/2014/04/01/binding-to-active-directory-with-munki/">Binding to Active Directory With Munki</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/">Writing Plugins for Sal: Part 3</a>
       </li>
     
   </ul>
@@ -457,6 +424,11 @@
   <script src="/javascripts/github.js" type="text/javascript"> </script>
 </section>
 
+<section>
+  <h1>Twitter</h1>
+<a class="twitter-timeline" href="https://twitter.com/grahamgilbert" data-widget-id="483550747481489408">Tweets by @grahamgilbert</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
 
 
 
