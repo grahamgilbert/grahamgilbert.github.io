@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="A while ago, the chaps over at the Vagrant project have recently released a plugin to let Vagrant work with VMWare Fusion &ndash; this means we can &hellip;">
+  <meta name="description" content="Yes, it&rsquo;s true. The most interesting conversations in the Mac admin world take place using technology from the 1980&rsquo;s &ndash; IRC (##osx- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,84 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/13/znc-an-irc-bouncer/">ZNC: An IRC Bouncer</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-13T08:35:00-04:00" pubdate data-updated="true">Oct 13<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/10/13/znc-an-irc-bouncer/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Yes,  it&rsquo;s true. The most interesting conversations in the Mac admin world take place using technology from the 1980&rsquo;s &ndash; <a href="http://en.wikipedia.org/wiki/Internet_Relay_Chat">IRC</a> (##osx-server on <a href="http://freenode.net/">freenode</a>). Those of you who know me will know that I&rsquo;m borderline OCD. In this instance, my major annoyance was that I&rsquo;d only get half of the conversation and I&rsquo;d miss private messages when I had to put my laptop to sleep. I needed to somehow keep a persistient conenction to IRC without having to sit infront of my computer 24/7.</p>
+
+<p>I&rsquo;d heard of IRC bouncers before &ndash; an app that runs on a server, saving the messages in the rooms you specify for you until you are able to read them, but always assumed they were much more difficult to set up than it turned out to be.</p>
+
+<p>This is set up on a box running Ubuntu 12.04, with port 6666 opened on your firewall and forwarded to the box if you want to access it from outside the network. Mine is running on an <a href="http://aws.amazon.com/free/">Amazon EC2 Micro instance</a> &ndash; available for free for one year if you don&rsquo;t already have a server to run it on.</p>
+
+<p>Right, let&rsquo;s get started. All of these commands are to be run as your normal user (<code>graham</code> in this case &ndash; <strong>not root</strong>). First we&rsquo;re going to enable backports in Ubuntu. I like editing text files in <code>nano</code> so I&rsquo;m going to install that first, but feel free to use Vi or whatever you like.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo apt-get install -y nano
+</span><span class='line'><span class="nv">$ </span>sudo nano /etc/apt/sources.list
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Find the two backports lines commented out (lines 44-45 on my test box) and unomment them.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>deb http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse
+</span><span class='line'>deb-src http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you are using nano, hit <code>CTRL+O</code> and press return to save it, then <code>CTRL-X</code> to exit.</p>
+
+<p>To install ZNC, issue the following command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo apt-get update
+</span><span class='line'><span class="nv">$ </span>sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-dev/precise-backports znc-extra/precise-backports znc-perl/precise-backports znc-python/precise-backports znc-tcl/precise-backports
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/10/13/znc-an-irc-bouncer/">Continue reading &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -279,67 +357,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/12/using-crankd-to-react-to-network-events/">Using Crankd to React to Network Events</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-12T14:04:00-04:00" pubdate data-updated="true">Jul 12<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/12/using-crankd-to-react-to-network-events/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Updated 14/7/2013: After <a href="https://twitter.com/Sacrilicious/status/355756510535614464">Alister&rsquo;s suggestion</a>, the script now loops over network interfaces up to en19 (hopefully that&rsquo;s enough!).</p>
-
-<p>So, you&rsquo;ve heard of this crankd thing, maybe even had a look at it, but have no idea how to get it going? You&rsquo;re in the right place. I&rsquo;m by no means an expert on it, having only been playing with it for less than a week, but I already have it running in production running the simple script below. My initial work, and therefore this post was inspired by Gary Larizza&rsquo;s <a href="http://web.archive.org/web/20120111031339/http://glarizza.posterous.com/using-crankd-to-react-to-network-events">two</a> <a href="http://garylarizza.com/blog/2011/12/31/using-the-google-macops-crankd-and-facter-code/">articles</a> on the subject.</p>
-
-<h2>What is crankd?</h2>
-
-<p>It&rsquo;s part of the <a href="https://github.com/acdha/pymacadmin">PyMacAdmin</a> set of tools that <a href="http://chris.improbable.org/">Chris Adams</a> and <a href="http://explanatorygap.net">Nigel Kersten</a> released a while ago. In a nutshell, it runs in the background via a LaunchDaemon and reacts to events on the Mac by running a script or a Python function, class or method. It has loads of events it knows about (application launches, power events, network events etc), but in this case I wanted to run something when there was a network change. Some of our machines never get turned off (and for some reason the Puppet Launch Daemon has crapped out), or aren&rsquo;t turned on long enough for Puppet or Munki to run. I wanted a script that would run every time the machine came back onto the network, checking if there was an active connection and run Puppet and Munki.</p>
-
-<h2>What do I need to do?</h2>
-
-<p>There are a few parts that we need to bring together to make this work:</p>
-
-<ul>
-<li>The crankd.py executable and the supporting files</li>
-<li>A Launch Daemon to start the thing</li>
-<li>A preferences file to tell crankd what to do</li>
-<li>And finally, our custom code</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/12/using-crankd-to-react-to-network-events/">Continue reading &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -363,6 +380,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/10/automate-yourself-out-of-a-job/">Automate Yourself Out of a Job</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/">Multi Tenanted Munki With Puppet and Sal</a>
       </li>
     
@@ -376,10 +397,6 @@
     
       <li class="post">
         <a href="/blog/2014/04/21/first-boot-pkg/">First-boot-pkg</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/04/updating-boxen/">Updating Boxen</a>
       </li>
     
   </ul>

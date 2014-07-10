@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It&rsquo;s quite a straightforward &hellip;">
+  <meta name="description" content="As you might know, I&rsquo;m a bit of a fan of Munki and Puppet for managing the Macs I look after. Around a year ago, I really wanted to be able to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,109 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/04/updating-boxen/">Updating Boxen</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-04T02:54:26-04:00" pubdate data-updated="true">Apr 4<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/04/04/updating-boxen/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>As you might know, I&rsquo;m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn&rsquo;t on the Mac I was working on. Then there came the time when I wanted to do a clean install &ndash; that was easily a day down the drain there!</p>
+
+<h2>Automate all of the things</h2>
+
+<p>Then <a href="https://boxen.github.com/">Boxen</a> was released &ndash; based on Puppet, but targeted at setting up individual&rsquo;s machines. I got on board just over a year ago, and haven&rsquo;t really looked back &ndash; manually installing an app on my Mac seems very strange now. I&rsquo;m not going to cover how to get started with Boxen, as there are <a href="http://lmgtfy.com/?q=getting+started+with+Boxen">many getting started guides out there</a> (however, <a href="http://garylarizza.com/blog/2013/02/15/puppet-plus-github-equals-laptop-love/">Gary Larizza&rsquo;s</a> is rather good).</p>
+
+<p>There will come a time when you need to update the core part of Boxen. This happened to me when I clean installed 10.9 on my work laptop &ndash; all kinds of shit broke (somehow it managed to survive the upgrade process &ndash; go figure). I looked around, but couldn&rsquo;t really find a definitive guide, so here it is (it&rsquo;s shorter than this piece of rambling).</p>
+
+<h2>Ok, stop talking</h2>
+
+<p>As Boxen is made by GitHub, updating it is much like updating any other project on there that you&rsquo;ve made a fork of.  First we&rsquo;re going to add it as a remote repository:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/our-boxen
+</span><span class='line'><span class="nv">$ </span>git remote add upstream https://github.com/boxen/our-boxen.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then we&rsquo;re going to fetch the stuff from the upstream repository:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git fetch upstream
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we&rsquo;re going to merge the updated repository with our own:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git checkout master
+</span><span class='line'><span class="nv">$ </span>git merge upstream/master
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you haven&rsquo;t modified any of the core Boxen files (<code>Puppetfile</code>, <code>Gemfile</code> or <code>manifests/site.pp</code> in my case), you might get away without having to fix any conflicts (you can ignore any in <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>, we&rsquo;ll deal with those next). I had conflicts as I had previously:</p>
+
+<ul>
+<li>Been stupid and tried to update Boxen by just changing the Puppet Module and Gem versions</li>
+<li>Edited <code>site.pp</code> as I didn&rsquo;t want Nginx or node.js installed</li>
+<li>Been dumb and put my custom Puppet modules in the wrong place in my <code>Puppetfile</code></li>
+</ul>
+
+
+<p>None of these were particularly arduous to fix, but annoying none the less. If you find you have loads, you might want to run:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git mergetool
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The next step is to update your Puppet modules and RubyGems. First delete <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>. Now go back to your trusty Terminal and:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>bundle install --without development
+</span><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>librarian-puppet install --clean
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>At this point, you might want to go through the custom modules you&rsquo;ve added to your <code>Puppetfile</code> and update those, although this is by no means required &ndash; some apps I&rsquo;ve installed through Boxen don&rsquo;t have a built in updater, so Boxen is more convenient than hunting for installers on various vendor&rsquo;s websites. Once your modules are up to date in your <code>Puppetfile</code>,  you&rsquo;re done! You can now get your Mac back to how you like it by issuing the usual:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>boxen
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -658,50 +761,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/17/sal-the-munki-puppet/">Sal: The Munki Puppet</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-17T05:51:46-05:00" pubdate data-updated="true">Jan 17<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/01/17/sal-the-munki-puppet/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>At <a href="http://pebbleit.com">pebble.it</a>, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a few options, but didn&rsquo;t like any of them, so we made our own.</p>
-
-<p>Say hi to Sal &ndash; the Munki Puppet. It&rsquo;s a multi-tenanted reporting solution for Munki and optionally, Facter.  You can find all of the details <a href="https://github.com/grahamgilbert/sal">over on GitHub</a>, including installation instructions and a package to send out to your clients.</p>
-
-<p><img class="center" src="/images/posts/2014-01-17/Sal.png"></p>
-
-<p>There is a plugin system built in to Sal, and over the next few days I will have a couple of posts covering how to make your own.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -725,6 +784,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/10/automate-yourself-out-of-a-job/">Automate Yourself Out of a Job</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/">Multi Tenanted Munki With Puppet and Sal</a>
       </li>
     
@@ -738,10 +801,6 @@
     
       <li class="post">
         <a href="/blog/2014/04/21/first-boot-pkg/">First-boot-pkg</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/04/updating-boxen/">Updating Boxen</a>
       </li>
     
   </ul>
