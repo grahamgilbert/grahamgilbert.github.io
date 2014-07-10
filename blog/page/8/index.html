@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="This post could also be called &ldquo;Things we could learn from our developer brethren, but I digress, to the list! (Lists are awesome, aren&rsquo;t &hellip;">
+  <meta name="description" content="Maintaining visibility over your fleet of machines is always difficult. It&rsquo;s even more difficult when you&rsquo;ve got Macs. It gets nearly &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,71 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/11/12/meraki-systems-manager/">Meraki Systems Manager</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-12T16:07:00-05:00" pubdate data-updated="true">Nov 12<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/11/12/meraki-systems-manager/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Maintaining visibility over your fleet of machines is always difficult. It&rsquo;s even more difficult when you&rsquo;ve got Macs. It gets nearly impossible when you decide you&rsquo;d like something hosted in the cloud.</p>
+
+<p>We&rsquo;ve been looking for a good solution for ages now &ndash; we even resorted to using <a href="http://www.ocsinventory-ng.org/en/">OCS Inventory</a> for a while. We then discovered <a href="http://www.meraki.com/products/systems-manager/">Meraki&rsquo;s Systems Manager</a>.</p>
+
+<p>This isn&rsquo;t going to be one of those fancy review type things &ndash; you can go and look at it&rsquo;s features yourself. This is more an overview of the factors that came into our decision:</p>
+
+<h2>Pros</h2>
+
+<ul>
+<li>It&rsquo;s cloud based! No servers for us to deploy, no VPNs between sites for clients to communicate over</li>
+<li>It does basic iOS MDM. It&rsquo;s not the best in the world, but it does a lot of what we wanted (basically configuring email and Wi-Fi settings)</li>
+<li>It has SSH over the Internet. If all else fails, we have a way into a machine, no matter where it is.</li>
+<li>It&rsquo;s free! It&rsquo;s hard to argue with a price like that!</li>
+</ul>
+
+
+<h2>Cons</h2>
+
+<ul>
+<li>It&rsquo;s free! If you&rsquo;re not paying for something, you have no SLA, no guarantee it will be working tomorrow</li>
+<li>It&rsquo;s location services suck in the UK. My home network is in Sheffield apparently. We supposedly have clients in Bath (we don&rsquo;t).</li>
+<li>It&rsquo;s not particuarly customisable. With Puppet, Facter, Puppet Dashboard and the inventory service configured, you can pull out practically any information you require (for example, we have a Fact that tells us if there are any admin users on a Mac other than our own).</li>
+</ul>
+
+
+<h2>Summary</h2>
+
+<p>For what it does, Meraki Systems Manager is hard to beat. If you need more than basic system information, or something that runs on Linux, you&rsquo;re going to need to look elsewhere. It&rsquo;s a great compliment to Puppet Inventory, but it&rsquo;s not a total replacement.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/09/21/five-reasons-sysadmins-should-use-git/">Five Reasons Sysadmins Should Use Git</a></h1>
     
     
@@ -109,7 +174,7 @@
   
 
 
-<time datetime="2012-09-21T07:28:00+01:00" pubdate data-updated="true">Sep 21<span>st</span>, 2012</time>
+<time datetime="2012-09-21T07:28:00-04:00" pubdate data-updated="true">Sep 21<span>st</span>, 2012</time>
         
          | <a href="/blog/2012/09/21/five-reasons-sysadmins-should-use-git/#disqus_thread">Comments</a>
         
@@ -160,7 +225,7 @@
   
 
 
-<time datetime="2012-08-18T21:08:00+01:00" pubdate data-updated="true">Aug 18<span>th</span>, 2012</time>
+<time datetime="2012-08-18T21:08:00-04:00" pubdate data-updated="true">Aug 18<span>th</span>, 2012</time>
         
          | <a href="/blog/2012/08/18/location-based-printers-with-puppet/#disqus_thread">Comments</a>
         
@@ -233,7 +298,7 @@
   
 
 
-<time datetime="2012-07-28T06:48:00+01:00" pubdate data-updated="true">Jul 28<span>th</span>, 2012</time>
+<time datetime="2012-07-28T06:48:00-04:00" pubdate data-updated="true">Jul 28<span>th</span>, 2012</time>
         
          | <a href="/blog/2012/07/28/making-a-mountain-lion-recovery-hd/#disqus_thread">Comments</a>
         
@@ -288,7 +353,7 @@
   
 
 
-<time datetime="2012-07-01T20:11:00+01:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
+<time datetime="2012-07-01T20:11:00-04:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
         
          | <a href="/blog/2012/07/01/google-directory/#disqus_thread">Comments</a>
         
@@ -305,46 +370,6 @@
     <footer>
       <a rel="full-article" href="/blog/2012/07/01/google-directory/">Continue reading &rarr;</a>
     </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/07/run-munki-at-boot/">Run Munki at Boot</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-07T09:19:00+01:00" pubdate data-updated="true">May 7<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/05/07/run-munki-at-boot/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Munki is great. It keeps your macs up to date &ndash; well it does most of the time. Sometimes you get a user that just refuses to click on &ldquo;Update&rdquo; now matter how many times it pops up. Now you have a tool to defeat them &ndash; install this package over ARD and munki will install everything that&rsquo;s available, including Apple software updates (it will reboot the mac if needed and carry on where it left off).</p>
-
-<p>I wish I could take credit for all this <a href="http://code.google.com/p/munki/wiki/BootstrappingWithMunki">amazingness</a>, but I just wrapped it up into a package. The source is over at <a href="https://github.com/grahamgilbert/Munki-Bootstrap">GitHub</a>, and there&rsquo;s <a href="https://github.com/downloads/grahamgilbert/Munki-Bootstrap/Munki_Bootstrap.pkg.zip">a pre built package</a> as well.</p>
-</div>
-  
   
 
 
@@ -373,6 +398,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/">Multi Tenanted Munki With Puppet and Sal</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/30/making-packages-with-autopkg/">Making Packages With AutoPkg</a>
       </li>
     
@@ -386,10 +415,6 @@
     
       <li class="post">
         <a href="/blog/2014/04/04/updating-boxen/">Updating Boxen</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/01/binding-to-active-directory-with-munki/">Binding to Active Directory With Munki</a>
       </li>
     
   </ul>

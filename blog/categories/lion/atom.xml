@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Lion | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/lion/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-06-30T14:08:56+01:00</updated>
+  <updated>2014-07-10T15:35:31-04:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Profile Manager Enrollment Package]]></title>
     <link href="http://grahamgilbert.com/blog/2012/04/06/profile-manager-enrollment-package/"/>
-    <updated>2012-04-06T10:38:00+01:00</updated>
+    <updated>2012-04-06T10:38:00-04:00</updated>
     <id>http://grahamgilbert.com/blog/2012/04/06/profile-manager-enrollment-package</id>
     <content type="html"><![CDATA[<p>Over the past week or so, we had a need to enroll macs automagically with a Lion Profile Manager server. My first plan was to do what Charles Edge did in his recent <a href="http://krypted.com/mac-os-x/automating-profile-manager-enrollment-through-deploystudio/">blog post</a> and use DeployStudio. Then I remembered another post by Charles on <a href="http://krypted.com/iphone/profile-manager-and-profiles/">/usr/bin/profiles</a> and wondered if I could make a workflow that can be used throughout our deployment and system maintenance process &ndash; yup, the humble pkg, that can be popped into Munki for existing macs, installed with DeployStudio for imaging and pushed out with ARD if need be.</p>
 
@@ -41,7 +41,7 @@
   <entry>
     <title type="html"><![CDATA[Making a Lion Recovery HD]]></title>
     <link href="http://grahamgilbert.com/blog/2012/02/01/making-a-lion-recovery-hd/"/>
-    <updated>2012-02-01T17:30:35+00:00</updated>
+    <updated>2012-02-01T17:30:35-05:00</updated>
     <id>http://grahamgilbert.com/blog/2012/02/01/making-a-lion-recovery-hd</id>
     <content type="html"><![CDATA[<p>So you&rsquo;ve lovingly crafted your never booted image in InstaDMG. It&rsquo;s fully up to date and lovely. And then you try to enable FileVault 2. As you have no Recovery HD, it&rsquo;s not going to happen.</p>
 
@@ -52,7 +52,7 @@
   <entry>
     <title type="html"><![CDATA[Thoughts on Profile Manager]]></title>
     <link href="http://grahamgilbert.com/blog/2011/12/10/thoughts-on-profile-manager/"/>
-    <updated>2011-12-10T20:45:29+00:00</updated>
+    <updated>2011-12-10T20:45:29-05:00</updated>
     <id>http://grahamgilbert.com/blog/2011/12/10/thoughts-on-profile-manager</id>
     <content type="html"><![CDATA[<p>We&rsquo;ve been using a 10.7 Server in the office since Lion was released, but it is only now that I&rsquo;m about to install an all Lion office, so will get the chance to use Profile Manager in a real install. Over the last few months, I&rsquo;ve noticed a couple of things:</p>
 
@@ -69,7 +69,7 @@
   <entry>
     <title type="html"><![CDATA[Backing up Postres in Lion Server]]></title>
     <link href="http://grahamgilbert.com/blog/2011/11/29/backing-up-postres-in-lion-server/"/>
-    <updated>2011-11-29T16:10:37+00:00</updated>
+    <updated>2011-11-29T16:10:37-05:00</updated>
     <id>http://grahamgilbert.com/blog/2011/11/29/backing-up-postres-in-lion-server</id>
     <content type="html"><![CDATA[<p>Starting with Lion Server, a fair bit of data is now stored in Postgres databases. If you use Time Machine, you&rsquo;ll get this backed up properly for you. If you use a proper backup solution (I prefer CrashPlan), you won&rsquo;t get automated dumps. This script rectifies this, by dumping all of your Postgres data, and keeping 7 days worth.</p>
 
@@ -91,7 +91,7 @@ FINAL_BACKUP_DIR=/path/where/you/want/things/kept
   <entry>
     <title type="html"><![CDATA[Kerio Connect vs Web Services in Lion Server]]></title>
     <link href="http://grahamgilbert.com/blog/2011/11/22/kerio-connect-vs-web-services-in-lion-server/"/>
-    <updated>2011-11-22T21:17:27+00:00</updated>
+    <updated>2011-11-22T21:17:27-05:00</updated>
     <id>http://grahamgilbert.com/blog/2011/11/22/kerio-connect-vs-web-services-in-lion-server</id>
     <content type="html"><![CDATA[<h3>The problem</h3>
 

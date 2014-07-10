@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="As promised in my previous post, today we&rsquo;re going to look at how we can further refine our workflow, with the aim of cutting out as many &hellip;">
+  <meta name="description" content="A while ago, the chaps over at the Vagrant project have recently released a plugin to let Vagrant work with VMWare Fusion &ndash; this means we can &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,49 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/">Creating an OS X Base Box for Vagrant With Packer</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-23T11:30:00-04:00" pubdate data-updated="true">Aug 23<span>rd</span>, 2013</time>
+        
+         | <a href="/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A while ago, the chaps over at the <a href="http://www.vagrantup.com/">Vagrant</a> project have recently released a <a href="http://www.vagrantup.com/vmware">plugin to let Vagrant work with VMWare Fusion</a> &ndash; this means we can finally use Vagrant to provision OS X VMs.</p>
+
+<p>Why is this a good thing? Do you NetBoot VMWare to test your builds? Or maybe you still have that test Mac on your desk to test your builds. Either way, it&rsquo;s going to be several minutes to restore an image, even if you&rsquo;re thin imaging. With the VM already on your machine, you&rsquo;re ready to go in seconds. Another bonus is that Vagrant isn&rsquo;t only limited to OS X virtual machines &ndash; for example, I have a Vagrant configuration that spins up an Ubuntu box configured as a Munki server, with a copy of my repository on an external drive. This allows me to test deployments from anywhere, with everything local to my Mac (have you ever tried testing a Final Cut Studio package from home? 48GB takes a while to download.). I&rsquo;ll go into more detail on this setup in a future post, but for now here&rsquo;s how to get a Mac base box into Vagrant.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/">Continue reading &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/08/19/the-luggage-further-automation/">The Luggage: Further Automation</a></h1>
     
     
@@ -109,7 +152,7 @@
   
 
 
-<time datetime="2013-08-19T11:33:00+01:00" pubdate data-updated="true">Aug 19<span>th</span>, 2013</time>
+<time datetime="2013-08-19T11:33:00-04:00" pubdate data-updated="true">Aug 19<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/08/19/the-luggage-further-automation/#disqus_thread">Comments</a>
         
@@ -152,7 +195,7 @@
   
 
 
-<time datetime="2013-08-09T18:00:00+01:00" pubdate data-updated="true">Aug 9<span>th</span>, 2013</time>
+<time datetime="2013-08-09T18:00:00-04:00" pubdate data-updated="true">Aug 9<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/08/09/the-luggage-an-introduction/#disqus_thread">Comments</a>
         
@@ -204,7 +247,7 @@
   
 
 
-<time datetime="2013-07-17T16:31:00+01:00" pubdate data-updated="true">Jul 17<span>th</span>, 2013</time>
+<time datetime="2013-07-17T16:31:00-04:00" pubdate data-updated="true">Jul 17<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/07/17/buildcrankpkg/#disqus_thread">Comments</a>
         
@@ -257,7 +300,7 @@
   
 
 
-<time datetime="2013-07-12T14:04:00+01:00" pubdate data-updated="true">Jul 12<span>th</span>, 2013</time>
+<time datetime="2013-07-12T14:04:00-04:00" pubdate data-updated="true">Jul 12<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/07/12/using-crankd-to-react-to-network-events/#disqus_thread">Comments</a>
         
@@ -297,49 +340,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013/">Managing Macs With Puppet at PSU 2013</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-24T13:56:00+01:00" pubdate data-updated="true">May 24<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>For those of you who attended my talk yesterday at PSU MacAdmins on Managing Macs with Puppet, here are are my <a href="/images/posts/2013-05-24/Managing_Macs_with_Puppet.pdf">slides</a> and all of the code and servers used are up on <a href="https://github.com/grahamgilbert/puppet_psu_2013">grahamgilbert/puppet_psu_2013 on GitHub</a>. Please comment, <a href="/about">email me</a> or catch me on the <a href="http://twitter.com/grahamgilbert">twitter</a> if you have any questions about any of this. Hopefully the video will be up soon, so those of you who weren&rsquo;t there to laugh at the guy with the funny accent can see me dealing with internet fails and my obscure British sit-com references.</p>
-
-<p><strong>Update:</strong> the video has now been posted.</p>
-
-<iframe width="480" height="360" src="http://www.youtube.com/embed/GqerWmKU1Js" frameborder="0" allowfullscreen></iframe>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -363,6 +363,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/">Multi Tenanted Munki With Puppet and Sal</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/30/making-packages-with-autopkg/">Making Packages With AutoPkg</a>
       </li>
     
@@ -376,10 +380,6 @@
     
       <li class="post">
         <a href="/blog/2014/04/04/updating-boxen/">Updating Boxen</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/01/binding-to-active-directory-with-munki/">Binding to Active Directory With Munki</a>
       </li>
     
   </ul>

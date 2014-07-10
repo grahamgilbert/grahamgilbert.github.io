@@ -4,7 +4,7 @@
   <title><![CDATA[Category: OS X | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/os-x/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-06-30T14:08:56+01:00</updated>
+  <updated>2014-07-10T15:35:31-04:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -14,9 +14,18 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Multi tenanted Munki with Puppet and Sal]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/"/>
+    <updated>2014-07-09T15:27:25-04:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal</id>
+    <content type="html"><![CDATA[<p>Thanks for everyone that came to my talk today, it was fun to finally show off what I&rsquo;ve been working on for the last year or so. I&rsquo;m sure the video will be up soon, but in the meantime, <a href="http://grahamgilbert.com/images/posts/2014-07-09/Multi_site_Munki.pdf">here are the slides from the talk</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Making packages with AutoPkg]]></title>
     <link href="http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg/"/>
-    <updated>2014-06-30T10:12:10+01:00</updated>
+    <updated>2014-06-30T05:12:10-04:00</updated>
     <id>http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg</id>
     <content type="html"><![CDATA[<p>Over the past few weeks, I&rsquo;ve had the same conversation over and over:
 people telling me that once they get started using Munki, their next
@@ -187,7 +196,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[first-boot-pkg]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/21/first-boot-pkg/"/>
-    <updated>2014-04-21T09:01:24+01:00</updated>
+    <updated>2014-04-21T04:01:24-04:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/21/first-boot-pkg</id>
     <content type="html"><![CDATA[<p>There are some packages that can&rsquo;t be deployed to an unbooted OS, such as when building an image with AutoDMG. If you are using Greg Neagle&rsquo;s <a href="http://managingosx.wordpress.com/2012/07/25/son-of-installlion-pkg/">createOSXinstallPkg</a>, the OS X installer environment doesn&rsquo;t have everything a full OS X install has. For times like this, you need to install the packages at first boot. For a long time, I&rsquo;ve used Rich Trouton&rsquo;s <a href="http://derflounder.wordpress.com/2014/04/17/first-boot-package-install-revisited/">First Boot Package Install</a>, however I found myself repeating things quite a bit and having a folder full of first boot packages.</p>
 
@@ -211,7 +220,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Updating Boxen]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/"/>
-    <updated>2014-04-04T07:54:26+01:00</updated>
+    <updated>2014-04-04T02:54:26-04:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/04/updating-boxen</id>
     <content type="html"><![CDATA[<p>As you might know, I&rsquo;m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn&rsquo;t on the Mac I was working on. Then there came the time when I wanted to do a clean install &ndash; that was easily a day down the drain there!</p>
 
@@ -275,7 +284,7 @@ $ boxen
   <entry>
     <title type="html"><![CDATA[Binding to Active Directory with Munki]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki/"/>
-    <updated>2014-04-01T20:15:39+01:00</updated>
+    <updated>2014-04-01T15:15:39-04:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki</id>
     <content type="html"><![CDATA[<p>Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It&rsquo;s quite  a straightforward process to automate this with Munki, although you do have a few options to consider.</p>
 
@@ -397,21 +406,6 @@ $ /usr/local/munki/munkiimport ad-bind.pkg --installcheck_script=installcheck_sc
 </code></p>
 
 <p>There you have it, how to keep a Mac bound to AD with Munki. You may wish to change some other settings later on (particularly if you have to do battle with a .local domain), but this will get you going with a basic AD bind.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Sal: The Munki Puppet]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet/"/>
-    <updated>2014-01-17T10:51:46+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet</id>
-    <content type="html"><![CDATA[<p>At <a href="http://pebbleit.com">pebble.it</a>, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a few options, but didn&rsquo;t like any of them, so we made our own.</p>
-
-<p>Say hi to Sal &ndash; the Munki Puppet. It&rsquo;s a multi-tenanted reporting solution for Munki and optionally, Facter.  You can find all of the details <a href="https://github.com/grahamgilbert/sal">over on GitHub</a>, including installation instructions and a package to send out to your clients.</p>
-
-<p><img class="center" src="/images/posts/2014-01-17/Sal.png"></p>
-
-<p>There is a plugin system built in to Sal, and over the next few days I will have a couple of posts covering how to make your own.</p>
 ]]></content>
   </entry>
   

@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="I recently had a requirement to run an Ununtu machine, but the client had only mac servers, and no budget for additional hardware. The solution &hellip;">
+  <meta name="description" content="Munki is great. It keeps your macs up to date &ndash; well it does most of the time. Sometimes you get a user that just refuses to click on &ldquo; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,46 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/05/07/run-munki-at-boot/">Run Munki at Boot</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-07T09:19:00-04:00" pubdate data-updated="true">May 7<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/05/07/run-munki-at-boot/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Munki is great. It keeps your macs up to date &ndash; well it does most of the time. Sometimes you get a user that just refuses to click on &ldquo;Update&rdquo; now matter how many times it pops up. Now you have a tool to defeat them &ndash; install this package over ARD and munki will install everything that&rsquo;s available, including Apple software updates (it will reboot the mac if needed and carry on where it left off).</p>
+
+<p>I wish I could take credit for all this <a href="http://code.google.com/p/munki/wiki/BootstrappingWithMunki">amazingness</a>, but I just wrapped it up into a package. The source is over at <a href="https://github.com/grahamgilbert/Munki-Bootstrap">GitHub</a>, and there&rsquo;s <a href="https://github.com/downloads/grahamgilbert/Munki-Bootstrap/Munki_Bootstrap.pkg.zip">a pre built package</a> as well.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/04/21/headless-virtualbox/">Headless VirtualBox</a></h1>
     
     
@@ -109,7 +149,7 @@
   
 
 
-<time datetime="2012-04-21T22:06:00+01:00" pubdate data-updated="true">Apr 21<span>st</span>, 2012</time>
+<time datetime="2012-04-21T22:06:00-04:00" pubdate data-updated="true">Apr 21<span>st</span>, 2012</time>
         
          | <a href="/blog/2012/04/21/headless-virtualbox/#disqus_thread">Comments</a>
         
@@ -193,7 +233,7 @@
   
 
 
-<time datetime="2012-04-06T10:38:00+01:00" pubdate data-updated="true">Apr 6<span>th</span>, 2012</time>
+<time datetime="2012-04-06T10:38:00-04:00" pubdate data-updated="true">Apr 6<span>th</span>, 2012</time>
         
          | <a href="/blog/2012/04/06/profile-manager-enrollment-package/#disqus_thread">Comments</a>
         
@@ -247,7 +287,7 @@
   
 
 
-<time datetime="2012-04-03T12:49:00+01:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2012</time>
+<time datetime="2012-04-03T12:49:00-04:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2012</time>
         
          | <a href="/blog/2012/04/03/hello-octopress/#disqus_thread">Comments</a>
         
@@ -289,7 +329,7 @@
   
 
 
-<time datetime="2012-03-24T13:09:19+00:00" pubdate data-updated="true">Mar 24<span>th</span>, 2012</time>
+<time datetime="2012-03-24T13:09:19-04:00" pubdate data-updated="true">Mar 24<span>th</span>, 2012</time>
         
          | <a href="/blog/2012/03/24/the-agony-and-ecstasy-of-100meg-broadband/#disqus_thread">Comments</a>
         
@@ -308,44 +348,6 @@
     <footer>
       <a rel="full-article" href="/blog/2012/03/24/the-agony-and-ecstasy-of-100meg-broadband/">Continue reading &rarr;</a>
     </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/23/making-a-lion-recovery-hd-revisited/">Making a Lion Recovery HD Revisited</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-23T11:55:29+00:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
-        
-         | <a href="/blog/2012/02/23/making-a-lion-recovery-hd-revisited/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve pushed some updates to this script, mainly switching to using <a href="https://github.com/unixorn/luggage">The Luggage</a> for making the package. As ever, it&rsquo;s up on <a href="https://github.com/grahamgilbert/Make-Recovery-HD">Github</a>.</p>
-</div>
-  
   
 
 
@@ -374,6 +376,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/">Multi Tenanted Munki With Puppet and Sal</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/30/making-packages-with-autopkg/">Making Packages With AutoPkg</a>
       </li>
     
@@ -387,10 +393,6 @@
     
       <li class="post">
         <a href="/blog/2014/04/04/updating-boxen/">Updating Boxen</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/01/binding-to-active-directory-with-munki/">Binding to Active Directory With Munki</a>
       </li>
     
   </ul>

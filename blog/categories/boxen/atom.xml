@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Boxen | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/boxen/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-06-30T14:08:56+01:00</updated>
+  <updated>2014-07-10T15:35:31-04:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Updating Boxen]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/"/>
-    <updated>2014-04-04T07:54:26+01:00</updated>
+    <updated>2014-04-04T02:54:26-04:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/04/updating-boxen</id>
     <content type="html"><![CDATA[<p>As you might know, I&rsquo;m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn&rsquo;t on the Mac I was working on. Then there came the time when I wanted to do a clean install &ndash; that was easily a day down the drain there!</p>
 

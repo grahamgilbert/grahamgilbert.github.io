@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-06-30T14:08:56+01:00</updated>
+  <updated>2014-07-10T15:35:31-04:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -14,9 +14,18 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Multi tenanted Munki with Puppet and Sal]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/"/>
+    <updated>2014-07-09T15:27:25-04:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal</id>
+    <content type="html"><![CDATA[<p>Thanks for everyone that came to my talk today, it was fun to finally show off what I&rsquo;ve been working on for the last year or so. I&rsquo;m sure the video will be up soon, but in the meantime, <a href="http://grahamgilbert.com/images/posts/2014-07-09/Multi_site_Munki.pdf">here are the slides from the talk</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Making packages with AutoPkg]]></title>
     <link href="http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg/"/>
-    <updated>2014-06-30T10:12:10+01:00</updated>
+    <updated>2014-06-30T05:12:10-04:00</updated>
     <id>http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg</id>
     <content type="html"><![CDATA[<p>Over the past few weeks, I&rsquo;ve had the same conversation over and over:
 people telling me that once they get started using Munki, their next
@@ -183,7 +192,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Deploying Sal on Heroku]]></title>
     <link href="http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku/"/>
-    <updated>2014-05-19T09:04:05+01:00</updated>
+    <updated>2014-05-19T04:04:05-04:00</updated>
     <id>http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku</id>
     <content type="html"><![CDATA[<p>Setting up everything you need for Sal can be difficult, especially if you only have an OS X server available. Thankfully, Sal is built on top of a very common Python framework, Django. And even more thankfully, you can run Django on a whole host of <a href="http://en.wikipedia.org/wiki/Platform_as_a_service">PaaS</a> providers, including <a href="https://www.heroku.com">Heroku</a>.</p>
 
@@ -268,7 +277,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[first-boot-pkg]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/21/first-boot-pkg/"/>
-    <updated>2014-04-21T09:01:24+01:00</updated>
+    <updated>2014-04-21T04:01:24-04:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/21/first-boot-pkg</id>
     <content type="html"><![CDATA[<p>There are some packages that can&rsquo;t be deployed to an unbooted OS, such as when building an image with AutoDMG. If you are using Greg Neagle&rsquo;s <a href="http://managingosx.wordpress.com/2012/07/25/son-of-installlion-pkg/">createOSXinstallPkg</a>, the OS X installer environment doesn&rsquo;t have everything a full OS X install has. For times like this, you need to install the packages at first boot. For a long time, I&rsquo;ve used Rich Trouton&rsquo;s <a href="http://derflounder.wordpress.com/2014/04/17/first-boot-package-install-revisited/">First Boot Package Install</a>, however I found myself repeating things quite a bit and having a folder full of first boot packages.</p>
 
@@ -292,7 +301,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Updating Boxen]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/"/>
-    <updated>2014-04-04T07:54:26+01:00</updated>
+    <updated>2014-04-04T02:54:26-04:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/04/updating-boxen</id>
     <content type="html"><![CDATA[<p>As you might know, I&rsquo;m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn&rsquo;t on the Mac I was working on. Then there came the time when I wanted to do a clean install &ndash; that was easily a day down the drain there!</p>
 
@@ -366,7 +375,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Binding to Active Directory with Munki]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki/"/>
-    <updated>2014-04-01T20:15:39+01:00</updated>
+    <updated>2014-04-01T15:15:39-04:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki</id>
     <content type="html"><![CDATA[<p>Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It&rsquo;s quite  a straightforward process to automate this with Munki, although you do have a few options to consider.</p>
 
@@ -529,7 +538,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Writing Plugins for Sal: Part 3]]></title>
     <link href="http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3/"/>
-    <updated>2014-02-17T21:12:36+00:00</updated>
+    <updated>2014-02-17T16:12:36-05:00</updated>
     <id>http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3</id>
     <content type="html"><![CDATA[<p>We&rsquo;ve already got a fairly decent plugin &ndash; it shows us how many machines we have that aren&rsquo;t able to run 10.9. However, quite a few people won&rsquo;t have any machines that fall into this category, and just want to know when one manages to sneak under the radar, so let&rsquo;s hide the plugin if we don&rsquo;t need to see it.</p>
 
@@ -662,7 +671,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Writing Plugins for Sal: Part 2]]></title>
     <link href="http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2/"/>
-    <updated>2014-02-07T11:34:24+00:00</updated>
+    <updated>2014-02-07T06:34:24-05:00</updated>
     <id>http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2</id>
     <content type="html"><![CDATA[<p>And now, time for the shocking second part of our series on how to write plugins for Sal.</p>
 
@@ -807,7 +816,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Writing plugins for Sal: Part 1]]></title>
     <link href="http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1/"/>
-    <updated>2014-01-26T10:01:26+00:00</updated>
+    <updated>2014-01-26T05:01:26-05:00</updated>
     <id>http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1</id>
     <content type="html"><![CDATA[<p>Writing a plugin for Sal isn&rsquo;t hard. In fact, I&rsquo;d go so far as to say it&rsquo;s easy. We&rsquo;re going to make a plugin that will flag up any machines that aren&rsquo;t compatible with Mavericks, by using <a href="https://github.com/timsutton/munki-conditions/blob/master/supported_major_os_upgrades">Tim Sutton&rsquo;s script</a>. To start off with, you&rsquo;re going to need to get that script onto your Macs at <code>/usr/local/munki/conditions</code>. I&rsquo;d personally use Puppet for that, but if you&rsquo;re a purely Munki shop, you&rsquo;ll be using a package. <a href="https://github.com/grahamgilbert/macscripts/raw/master/Munki/Condtion%20Packages/supported_major_os_upgrades/supported_major_os_upgrades.pkg">And handily, I&rsquo;ve made one</a>.</p>
 
@@ -961,7 +970,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Sal: The Munki Puppet]]></title>
     <link href="http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet/"/>
-    <updated>2014-01-17T10:51:46+00:00</updated>
+    <updated>2014-01-17T05:51:46-05:00</updated>
     <id>http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet</id>
     <content type="html"><![CDATA[<p>At <a href="http://pebbleit.com">pebble.it</a>, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a few options, but didn&rsquo;t like any of them, so we made our own.</p>
 
@@ -976,7 +985,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Managing the Authorization Database with Munki]]></title>
     <link href="http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki/"/>
-    <updated>2013-12-22T15:25:00+00:00</updated>
+    <updated>2013-12-22T15:25:00-05:00</updated>
     <id>http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki</id>
     <content type="html"><![CDATA[<p>Have you ever wished you didn&rsquo;t have to take calls from your users to unlock various parts of System Preferences? That standard users could unlock Energy Saver or Date and Time preferences? Well dear reader, this is the article for you.</p>
 
@@ -1435,7 +1444,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Crypt 0.5 released]]></title>
     <link href="http://grahamgilbert.com/blog/2013/11/19/crypt-0-dot-5-released/"/>
-    <updated>2013-11-19T11:29:00+00:00</updated>
+    <updated>2013-11-19T11:29:00-05:00</updated>
     <id>http://grahamgilbert.com/blog/2013/11/19/crypt-0-dot-5-released</id>
     <content type="html"><![CDATA[<p>I just pushed up version 0.5 of Crypt &ndash; the <a href="https://github.com/grahamgilbert/Crypt/releases/tag/0.5">release details are over at GitHub</a>. This is the last version that will be compatibile with the current version of <a href="https://github.com/grahamgilbert/Crypt-server">Crypt-Server</a> &ndash; which has also been updated to be compatible with Django 1.5.</p>
 
@@ -1446,7 +1455,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[AFP548 Podcast Episode 4: Don't Stab Yourself in the Leg, Then]]></title>
     <link href="http://grahamgilbert.com/blog/2013/11/13/afp548-podcast-episode-4-dont-stab-yourself-in-the-leg-then/"/>
-    <updated>2013-11-13T11:46:00+00:00</updated>
+    <updated>2013-11-13T11:46:00-05:00</updated>
     <id>http://grahamgilbert.com/blog/2013/11/13/afp548-podcast-episode-4-dont-stab-yourself-in-the-leg-then</id>
     <content type="html"><![CDATA[<p>A couple of weeks ago, I had a chat with Ed Marczak for the AFP548 Podcast. We discussed packaging, community and convincing clients that they shouldn&rsquo;t stab themselves in the leg. <a href="https://soundcloud.com/afp548/episode-four-dont-stab-yourself-in-the-leg-then">Go listen.</a></p>
 ]]></content>
@@ -1455,7 +1464,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Setting a desktop picture in Mavericks]]></title>
     <link href="http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/"/>
-    <updated>2013-10-28T14:48:00+00:00</updated>
+    <updated>2013-10-28T14:48:00-04:00</updated>
     <id>http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks</id>
     <content type="html"><![CDATA[<p>Sometimes we are asked by clients to set a default desktop picture for new users &ndash; sometimes we are deleting home directories on logout, so need to warn the users, other times the client just wants their corporate wallpaper to be the default.</p>
 
@@ -1497,7 +1506,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[ZNC: An IRC Bouncer]]></title>
     <link href="http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer/"/>
-    <updated>2013-10-13T08:35:00+01:00</updated>
+    <updated>2013-10-13T08:35:00-04:00</updated>
     <id>http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer</id>
     <content type="html"><![CDATA[<p>Yes,  it&rsquo;s true. The most interesting conversations in the Mac admin world take place using technology from the 1980&rsquo;s &ndash; <a href="http://en.wikipedia.org/wiki/Internet_Relay_Chat">IRC</a> (##osx-server on <a href="http://freenode.net/">freenode</a>). Those of you who know me will know that I&rsquo;m borderline OCD. In this instance, my major annoyance was that I&rsquo;d only get half of the conversation and I&rsquo;d miss private messages when I had to put my laptop to sleep. I needed to somehow keep a persistient conenction to IRC without having to sit infront of my computer 24/7.</p>
 
@@ -1826,7 +1835,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Creating an OS X base box for Vagrant with Packer]]></title>
     <link href="http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/"/>
-    <updated>2013-08-23T11:30:00+01:00</updated>
+    <updated>2013-08-23T11:30:00-04:00</updated>
     <id>http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer</id>
     <content type="html"><![CDATA[<p>A while ago, the chaps over at the <a href="http://www.vagrantup.com/">Vagrant</a> project have recently released a <a href="http://www.vagrantup.com/vmware">plugin to let Vagrant work with VMWare Fusion</a> &ndash; this means we can finally use Vagrant to provision OS X VMs.</p>
 
@@ -2012,7 +2021,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[The Luggage: Further automation]]></title>
     <link href="http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation/"/>
-    <updated>2013-08-19T11:33:00+01:00</updated>
+    <updated>2013-08-19T11:33:00-04:00</updated>
     <id>http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation</id>
     <content type="html"><![CDATA[<p>As promised in my previous post, today we&rsquo;re going to look at how we can further refine our workflow, with the aim of cutting out as many manual steps as possible (every IT person knows it&rsquo;s not computer that make mistakes, it&rsquo;s the idiots in front of them) and making as much of our code re-usable in other packages.</p>
 
@@ -2240,7 +2249,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[The Luggage: An Introduction]]></title>
     <link href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/"/>
-    <updated>2013-08-09T18:00:00+01:00</updated>
+    <updated>2013-08-09T18:00:00-04:00</updated>
     <id>http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction</id>
     <content type="html"><![CDATA[<p>If you&rsquo;ve managed OS X for any amount of time, chances are you&rsquo;ve needed to deploy software. And chances also are that you&rsquo;ve come across a vendor (I&rsquo;m looking at you, Adobe) that seems to be incapable of distributing their software in a useful manner. Or maybe you&rsquo;ve got your own scripts or software that you need to get installed on the machines that you look after &ndash; either way, you&rsquo;re going to want to build a package.</p>
 
@@ -2425,7 +2434,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[buildCrankPkg]]></title>
     <link href="http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg/"/>
-    <updated>2013-07-17T16:31:00+01:00</updated>
+    <updated>2013-07-17T16:31:00-04:00</updated>
     <id>http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg</id>
     <content type="html"><![CDATA[<p>In my <a href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/">last post</a> I promised a tool I&rsquo;ve been working on to automate the building of a package for crankd.</p>
 
@@ -2669,7 +2678,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Using crankd to react to network events]]></title>
     <link href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/"/>
-    <updated>2013-07-12T14:04:00+01:00</updated>
+    <updated>2013-07-12T14:04:00-04:00</updated>
     <id>http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events</id>
     <content type="html"><![CDATA[<p>Updated 14/7/2013: After <a href="https://twitter.com/Sacrilicious/status/355756510535614464">Alister&rsquo;s suggestion</a>, the script now loops over network interfaces up to en19 (hopefully that&rsquo;s enough!).</p>
 
@@ -2972,20 +2981,6 @@ git clone https://github.com/acdha/pymacadmin.git
 <h2>What&rsquo;s next?</h2>
 
 <p>Obviously this is not a good way of deploying crankd &ndash; I&rsquo;ve got a method in the works that will build a package to install this (I currently deploy this with Puppet &ndash; I&rsquo;ll put in a pull request on <a href="https://github.com/glarizza/puppetlabs-crankd">Gary&rsquo;s module</a> with my changes when I get chance). I&rsquo;m also going to be doing more with crankd &ndash; possibly some application use monitoring, almost certainly some scripts fired off when a machine wakes and sleeps.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Managing Macs with Puppet at PSU 2013]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013/"/>
-    <updated>2013-05-24T13:56:00+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013</id>
-    <content type="html"><![CDATA[<p>For those of you who attended my talk yesterday at PSU MacAdmins on Managing Macs with Puppet, here are are my <a href="http://grahamgilbert.com/images/posts/2013-05-24/Managing_Macs_with_Puppet.pdf">slides</a> and all of the code and servers used are up on <a href="https://github.com/grahamgilbert/puppet_psu_2013">grahamgilbert/puppet_psu_2013 on GitHub</a>. Please comment, <a href="http://grahamgilbert.com/about">email me</a> or catch me on the <a href="http://twitter.com/grahamgilbert">twitter</a> if you have any questions about any of this. Hopefully the video will be up soon, so those of you who weren&rsquo;t there to laugh at the guy with the funny accent can see me dealing with internet fails and my obscure British sit-com references.</p>
-
-<p><strong>Update:</strong> the video has now been posted.</p>
-
-<iframe width="480" height="360" src="http://www.youtube.com/embed/GqerWmKU1Js" frameborder="0" allowfullscreen></iframe>
-
 ]]></content>
   </entry>
   
