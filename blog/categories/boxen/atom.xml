@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Boxen | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/boxen/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-07-12T11:49:20-04:00</updated>
+  <updated>2014-07-26T16:32:57+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -14,9 +14,42 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Personal Automation (Part 1)]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/"/>
+    <updated>2014-07-26T11:27:00+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1</id>
+    <content type="html"><![CDATA[<p><a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">Earlier this year</a>, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was deigned for internal use at Github, it set some things up how they liked them &ndash; which wasn&rsquo;t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.</p>
+
+<p>Then I updated Boxen. All of my modules were out of date, so I spent a good couple of hours updating all of them so they worked again. Ugh.</p>
+
+<p>So I started looking at moving to my own solution. One of my major irritations when using Boxen was that it didn&rsquo;t really handle updating your apps &ndash; you got whatever version the module author decided to install and then you had to hope that there was an updatng mechanism built in. I&rsquo;ve said before that there is no better method of getting software onto your Mac then Munki, so the first decison was straightforward. The rest took a little thought.</p>
+
+<h2>The six P&rsquo;s</h2>
+
+<p>My first requirement was that I shouldn&rsquo;t need to run anything to get my configuration to apply. Boxen requires that you run the <code>boxen</code> command periodically across each of your Macs to get the configuration applied. This wasn&rsquo;t always practical. I needed something that would run in the background and keep itself up to date.</p>
+
+<p>As I said before, I really disliked how Boxen installs software. Munki does a much better job, and AutoPkg makes it trivial to make sure you have the latest software version. Being a sysadmin, I need more than simple drag and drop apps and packages though &ndash; I make extensive use of <a href="http://brew.sh">Homebrew</a> to install command line tools like <a href="http://packer.io">Packer</a>, so I needed to come up with a way of installing these with Munki.</p>
+
+<p>However, Munki isn&rsquo;t the best tool for managing my configuration. I&rsquo;ve been using Puppet to manage the Macs  I look after for nearly three years now, and I wanted to base my system on it as I&rsquo;ve already done a lot of the work with making OS X specific modules. I also wanted to use the modules made for Boxen as much as possible (some made too many assumptions about where they were running, so couldn&rsquo;t be re-used.</p>
+
+<p>So to recap:</p>
+
+<ul>
+<li>Munki for software deployment.</li>
+<li>Puppet must run in the background periodically</li>
+<li>The configuration must update itself &ndash; I don&rsquo;t want to have to sync code across machines.</li>
+<li>Where possible, re-use existing Puppet modules</li>
+</ul>
+
+
+<p>Over the next few posts, I&rsquo;ll go over the different parts of this solution, how I put it together and how you might be able to use this.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Updating Boxen]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/"/>
-    <updated>2014-04-04T02:54:26-04:00</updated>
+    <updated>2014-04-04T07:54:26+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/04/updating-boxen</id>
     <content type="html"><![CDATA[<p>As you might know, I&rsquo;m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn&rsquo;t on the Mac I was working on. Then there came the time when I wanted to do a clean install &ndash; that was easily a day down the drain there!</p>
 

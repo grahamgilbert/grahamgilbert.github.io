@@ -4,7 +4,7 @@
   <title><![CDATA[Category: AutoPkg | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/autopkg/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-07-12T11:49:20-04:00</updated>
+  <updated>2014-07-26T16:32:57+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Making packages with AutoPkg]]></title>
     <link href="http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg/"/>
-    <updated>2014-06-30T05:12:10-04:00</updated>
+    <updated>2014-06-30T10:12:10+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg</id>
     <content type="html"><![CDATA[<p>Over the past few weeks, I&rsquo;ve had the same conversation over and over:
 people telling me that once they get started using Munki, their next

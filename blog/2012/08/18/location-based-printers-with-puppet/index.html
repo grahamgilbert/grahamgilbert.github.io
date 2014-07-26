@@ -106,7 +106,7 @@
   
 
 
-<time datetime="2012-08-18T21:08:00-04:00" pubdate data-updated="true">Aug 18<span>th</span>, 2012</time>
+<time datetime="2012-08-18T21:08:00+01:00" pubdate data-updated="true">Aug 18<span>th</span>, 2012</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -121,7 +121,7 @@
 <noscript><pre><code>case $operatingsystem{
     Darwin:{
         ##London is on the 10.30.2.0 and 10.30.3.0 Subnets
-        if ($network_en0 == '10.30.2.0') or ($network_en1 == '10.30.2.0') or ($network_en0 == '10.30.3.0') or ($network_en1 == '10.30.3.0'){
+        if ($network_en0 == &#39;10.30.2.0&#39;) or ($network_en1 == &#39;10.30.2.0&#39;) or ($network_en0 == &#39;10.30.3.0&#39;) or ($network_en1 == &#39;10.30.3.0&#39;){
                 printer { &quot;Sharp_ARM316&quot;:
                     ensure      =&gt; present,
             uri         =&gt; &quot;lpd://sharparm316.ldn.example.com&quot;,
@@ -139,7 +139,7 @@
         }
             
         ##San Francisco is on the 10.30.10.0 Subnet
-        if ($network_en0 == '10.30.10.0') or ($network_en1 == '10.30.10.0'){
+        if ($network_en0 == &#39;10.30.10.0&#39;) or ($network_en1 == &#39;10.30.10.0&#39;){
         printer { &quot;Xerox_550&quot;:
             ensure      =&gt; present,
             uri         =&gt; &quot;lpd://xerox550.sf.example.com&quot;,
@@ -173,7 +173,7 @@
   
 
 
-<time datetime="2012-08-18T21:08:00-04:00" pubdate data-updated="true">Aug 18<span>th</span>, 2012</time>
+<time datetime="2012-08-18T21:08:00+01:00" pubdate data-updated="true">Aug 18<span>th</span>, 2012</time>
       
 
 <span class="categories">
@@ -230,6 +230,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/26/personal-automation-part-1/">Personal Automation (Part 1)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/10/automate-yourself-out-of-a-job/">Automate Yourself Out of a Job</a>
       </li>
     
@@ -243,10 +247,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/19/deploying-sal-on-heroku/">Deploying Sal on Heroku</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/21/first-boot-pkg/">First-boot-pkg</a>
       </li>
     
   </ul>

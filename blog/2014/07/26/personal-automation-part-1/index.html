@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Setting a desktop picture in Mavericks - graham gilbert</title>
+  <title>Personal Automation (Part 1) - graham gilbert</title>
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Sometimes we are asked by clients to set a default desktop picture for new users &ndash; sometimes we are deleting home directories on logout, so &hellip;">
+  <meta name="description" content="Earlier this year, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks">
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
@@ -90,7 +90,7 @@
   
   <header>
     
-      <h1 class="entry-title">Setting a Desktop Picture in Mavericks</h1>
+      <h1 class="entry-title">Personal Automation (Part 1)</h1>
     
     
       <p class="meta">
@@ -106,7 +106,7 @@
   
 
 
-<time datetime="2013-10-28T14:48:00+00:00" pubdate data-updated="true">Oct 28<span>th</span>, 2013</time>
+<time datetime="2014-07-26T11:27:00+01:00" pubdate data-updated="true">Jul 26<span>th</span>, 2014</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -115,40 +115,31 @@
   </header>
 
 
-<div class="entry-content"><p>Sometimes we are asked by clients to set a default desktop picture for new users &ndash; sometimes we are deleting home directories on logout, so need to warn the users, other times the client just wants their corporate wallpaper to be the default.</p>
+<div class="entry-content"><p><a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">Earlier this year</a>, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was deigned for internal use at Github, it set some things up how they liked them &ndash; which wasn&rsquo;t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.</p>
 
-<p>If you are lazy and don&rsquo;t want to read this post then the script that changes the desktop picture <a href="https://github.com/grahamgilbert/macscripts/tree/master/set_desktops">is on GitHub</a>.</p>
+<p>Then I updated Boxen. All of my modules were out of date, so I spent a good couple of hours updating all of them so they worked again. Ugh.</p>
 
-<p>Whatever, here&rsquo;s what we used to do:</p>
+<p>So I started looking at moving to my own solution. One of my major irritations when using Boxen was that it didn&rsquo;t really handle updating your apps &ndash; you got whatever version the module author decided to install and then you had to hope that there was an updatng mechanism built in. I&rsquo;ve said before that there is no better method of getting software onto your Mac then Munki, so the first decison was straightforward. The rest took a little thought.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>/usr/bin/defaults write com.apple.desktop Background <span class="s1">&#39;{default = {ImageFilePath = &quot;/Library/Desktop Pictures/Black &amp; White/Lightning.jpg&quot;; };}&#39;</span>
-</span><span class='line'>/usr/bin/killall Dock
-</span></code></pre></td></tr></table></div></figure>
+<h2>The six P&rsquo;s</h2>
 
+<p>My first requirement was that I shouldn&rsquo;t need to run anything to get my configuration to apply. Boxen requires that you run the <code>boxen</code> command periodically across each of your Macs to get the configuration applied. This wasn&rsquo;t always practical. I needed something that would run in the background and keep itself up to date.</p>
 
-<p>Nothing earth shattering there if you&rsquo;ve managed Macs for any length of time.</p>
+<p>As I said before, I really disliked how Boxen installs software. Munki does a much better job, and AutoPkg makes it trivial to make sure you have the latest software version. Being a sysadmin, I need more than simple drag and drop apps and packages though &ndash; I make extensive use of <a href="http://brew.sh">Homebrew</a> to install command line tools like <a href="http://packer.io">Packer</a>, so I needed to come up with a way of installing these with Munki.</p>
 
-<p>But then 10.9 changed things &ndash; this stopped working.</p>
+<p>However, Munki isn&rsquo;t the best tool for managing my configuration. I&rsquo;ve been using Puppet to manage the Macs  I look after for nearly three years now, and I wanted to base my system on it as I&rsquo;ve already done a lot of the work with making OS X specific modules. I also wanted to use the modules made for Boxen as much as possible (some made too many assumptions about where they were running, so couldn&rsquo;t be re-used.</p>
 
-<p>I ran fs_usage to see what was happening whilst I changed the desktop picture on my machine:</p>
+<p>So to recap:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo fs_usage -w | grep desktop
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Obviously there was a metic buttload of information, but this line caught my eye.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>15:25:06.884820    WrData<span class="o">[</span>A<span class="o">]</span>       <span class="nv">D</span><span class="o">=</span>0x0b2d1d90  <span class="nv">B</span><span class="o">=</span>0x1000   /dev/disk1  /Users/grahamgilbert/Library/Application Support/Dock/desktoppicture.db
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>Munki for software deployment.</li>
+<li>Puppet must run in the background periodically</li>
+<li>The configuration must update itself &ndash; I don&rsquo;t want to have to sync code across machines.</li>
+<li>Where possible, re-use existing Puppet modules</li>
+</ul>
 
 
-<p>Bingo! I opened up the database in the <a href="https://addons.mozilla.org/en-US/firefox/addon/sqlite-manager/">SQLite Manager Firefox extension</a> (the only thing I use Firefox for these days) and had a peek. And then I got half a brain and googled the path of the desktoppicture.db file and found that there was a <a href="https://gist.github.com/gregneagle/6225747">gist from Greg Neagle</a>. Perfect!</p>
-
-<p>Of course, he&rsquo;d already improved upon this script and written a proof of concept to <a href="https://gist.github.com/gregneagle/6957826">set a random desktop picture using PyObjC</a>. This got me 90% of the way there, so this is my modified version of his script. The full code and usage instructions are <a href="https://github.com/grahamgilbert/macscripts/tree/master/set_desktops">over on GitHub</a>.</p>
+<p>Over the next few posts, I&rsquo;ll go over the different parts of this solution, how I put it together and how you might be able to use this.</p>
 </div>
 
 
@@ -171,12 +162,12 @@
   
 
 
-<time datetime="2013-10-28T14:48:00+00:00" pubdate data-updated="true">Oct 28<span>th</span>, 2013</time>
+<time datetime="2014-07-26T11:27:00+01:00" pubdate data-updated="true">Jul 26<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/mavericks/'>Mavericks</a>, <a class='category' href='/blog/categories/os-x/'>OS X</a>, <a class='category' href='/blog/categories/python/'>Python</a>
+    <a class='category' href='/blog/categories/automation/'>Automation</a>, <a class='category' href='/blog/categories/boxen/'>Boxen</a>, <a class='category' href='/blog/categories/munki/'>Munki</a>, <a class='category' href='/blog/categories/os-x/'>OS X</a>, <a class='category' href='/blog/categories/puppet/'>Puppet</a>
   
 </span>
 
@@ -185,7 +176,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -198,10 +189,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/10/13/znc-an-irc-bouncer/" title="Previous Post: ZNC: An IRC Bouncer">&laquo; ZNC: An IRC Bouncer</a>
+        <a class="basic-alignment left" href="/blog/2014/07/10/automate-yourself-out-of-a-job/" title="Previous Post: Automate yourself out of a job">&laquo; Automate yourself out of a job</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/11/13/afp548-podcast-episode-4-dont-stab-yourself-in-the-leg-then/" title="Next Post: AFP548 Podcast Episode 4: Don't Stab Yourself in the Leg, Then">AFP548 Podcast Episode 4: Don't Stab Yourself in the Leg, Then &raquo;</a>
       
     </p>
   </footer>
@@ -307,8 +296,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/';
-        var disqus_url = 'http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/';
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/';
         var disqus_script = 'embed.js';
       
     (function () {

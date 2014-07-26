@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Yes, it&rsquo;s true. The most interesting conversations in the Mac admin world take place using technology from the 1980&rsquo;s &ndash; IRC (##osx- &hellip;">
+  <meta name="description" content="Sometimes we are asked by clients to set a default desktop picture for new users &ndash; sometimes we are deleting home directories on logout, so &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,77 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/">Setting a Desktop Picture in Mavericks</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-28T14:48:00+00:00" pubdate data-updated="true">Oct 28<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Sometimes we are asked by clients to set a default desktop picture for new users &ndash; sometimes we are deleting home directories on logout, so need to warn the users, other times the client just wants their corporate wallpaper to be the default.</p>
+
+<p>If you are lazy and don&rsquo;t want to read this post then the script that changes the desktop picture <a href="https://github.com/grahamgilbert/macscripts/tree/master/set_desktops">is on GitHub</a>.</p>
+
+<p>Whatever, here&rsquo;s what we used to do:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>/usr/bin/defaults write com.apple.desktop Background <span class="s1">&#39;{default = {ImageFilePath = &quot;/Library/Desktop Pictures/Black &amp; White/Lightning.jpg&quot;; };}&#39;</span>
+</span><span class='line'>/usr/bin/killall Dock
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Nothing earth shattering there if you&rsquo;ve managed Macs for any length of time.</p>
+
+<p>But then 10.9 changed things &ndash; this stopped working.</p>
+
+<p>I ran fs_usage to see what was happening whilst I changed the desktop picture on my machine:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo fs_usage -w | grep desktop
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Obviously there was a metic buttload of information, but this line caught my eye.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>15:25:06.884820    WrData<span class="o">[</span>A<span class="o">]</span>       <span class="nv">D</span><span class="o">=</span>0x0b2d1d90  <span class="nv">B</span><span class="o">=</span>0x1000   /dev/disk1  /Users/grahamgilbert/Library/Application Support/Dock/desktoppicture.db
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bingo! I opened up the database in the <a href="https://addons.mozilla.org/en-US/firefox/addon/sqlite-manager/">SQLite Manager Firefox extension</a> (the only thing I use Firefox for these days) and had a peek. And then I got half a brain and googled the path of the desktoppicture.db file and found that there was a <a href="https://gist.github.com/gregneagle/6225747">gist from Greg Neagle</a>. Perfect!</p>
+
+<p>Of course, he&rsquo;d already improved upon this script and written a proof of concept to <a href="https://gist.github.com/gregneagle/6957826">set a random desktop picture using PyObjC</a>. This got me 90% of the way there, so this is my modified version of his script. The full code and usage instructions are <a href="https://github.com/grahamgilbert/macscripts/tree/master/set_desktops">over on GitHub</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/10/13/znc-an-irc-bouncer/">ZNC: An IRC Bouncer</a></h1>
     
     
@@ -109,7 +180,7 @@
   
 
 
-<time datetime="2013-10-13T08:35:00-04:00" pubdate data-updated="true">Oct 13<span>th</span>, 2013</time>
+<time datetime="2013-10-13T08:35:00+01:00" pubdate data-updated="true">Oct 13<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/10/13/znc-an-irc-bouncer/#disqus_thread">Comments</a>
         
@@ -187,7 +258,7 @@
   
 
 
-<time datetime="2013-08-23T11:30:00-04:00" pubdate data-updated="true">Aug 23<span>rd</span>, 2013</time>
+<time datetime="2013-08-23T11:30:00+01:00" pubdate data-updated="true">Aug 23<span>rd</span>, 2013</time>
         
          | <a href="/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/#disqus_thread">Comments</a>
         
@@ -230,7 +301,7 @@
   
 
 
-<time datetime="2013-08-19T11:33:00-04:00" pubdate data-updated="true">Aug 19<span>th</span>, 2013</time>
+<time datetime="2013-08-19T11:33:00+01:00" pubdate data-updated="true">Aug 19<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/08/19/the-luggage-further-automation/#disqus_thread">Comments</a>
         
@@ -273,7 +344,7 @@
   
 
 
-<time datetime="2013-08-09T18:00:00-04:00" pubdate data-updated="true">Aug 9<span>th</span>, 2013</time>
+<time datetime="2013-08-09T18:00:00+01:00" pubdate data-updated="true">Aug 9<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/08/09/the-luggage-an-introduction/#disqus_thread">Comments</a>
         
@@ -304,59 +375,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/17/buildcrankpkg/">buildCrankPkg</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-17T16:31:00-04:00" pubdate data-updated="true">Jul 17<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/17/buildcrankpkg/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In my <a href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/">last post</a> I promised a tool I&rsquo;ve been working on to automate the building of a package for crankd.</p>
-
-<p><a href="https://github.com/grahamgilbert/buildCrankPkg">buildCrankPkg</a> is a small script that will:</p>
-
-<ul>
-<li>Pull down the latest version of crankd (or use a local or remote repository if you specify one)</li>
-<li>Build a package that includes crankd and your custom settings and scripts.</li>
-</ul>
-
-
-<p>I&rsquo;ve included two examples, one that implements calling Munki and Puppet as detailed in the last post, and one to run a Casper policy.</p>
-
-<p>If you&rsquo;re happy with what crankd does and using the command line, head on over to the <a href="https://github.com/grahamgilbert/buildCrankPkg">repository</a> and enjoy. If you need a bit more help to get started, read on.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/17/buildcrankpkg/">Continue reading &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -380,6 +398,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/26/personal-automation-part-1/">Personal Automation (Part 1)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/10/automate-yourself-out-of-a-job/">Automate Yourself Out of a Job</a>
       </li>
     
@@ -393,10 +415,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/19/deploying-sal-on-heroku/">Deploying Sal on Heroku</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/21/first-boot-pkg/">First-boot-pkg</a>
       </li>
     
   </ul>

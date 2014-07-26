@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Puppet | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/puppet/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-07-12T11:49:20-04:00</updated>
+  <updated>2014-07-26T16:32:57+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -14,9 +14,42 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Personal Automation (Part 1)]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/"/>
+    <updated>2014-07-26T11:27:00+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1</id>
+    <content type="html"><![CDATA[<p><a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">Earlier this year</a>, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was deigned for internal use at Github, it set some things up how they liked them &ndash; which wasn&rsquo;t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.</p>
+
+<p>Then I updated Boxen. All of my modules were out of date, so I spent a good couple of hours updating all of them so they worked again. Ugh.</p>
+
+<p>So I started looking at moving to my own solution. One of my major irritations when using Boxen was that it didn&rsquo;t really handle updating your apps &ndash; you got whatever version the module author decided to install and then you had to hope that there was an updatng mechanism built in. I&rsquo;ve said before that there is no better method of getting software onto your Mac then Munki, so the first decison was straightforward. The rest took a little thought.</p>
+
+<h2>The six P&rsquo;s</h2>
+
+<p>My first requirement was that I shouldn&rsquo;t need to run anything to get my configuration to apply. Boxen requires that you run the <code>boxen</code> command periodically across each of your Macs to get the configuration applied. This wasn&rsquo;t always practical. I needed something that would run in the background and keep itself up to date.</p>
+
+<p>As I said before, I really disliked how Boxen installs software. Munki does a much better job, and AutoPkg makes it trivial to make sure you have the latest software version. Being a sysadmin, I need more than simple drag and drop apps and packages though &ndash; I make extensive use of <a href="http://brew.sh">Homebrew</a> to install command line tools like <a href="http://packer.io">Packer</a>, so I needed to come up with a way of installing these with Munki.</p>
+
+<p>However, Munki isn&rsquo;t the best tool for managing my configuration. I&rsquo;ve been using Puppet to manage the Macs  I look after for nearly three years now, and I wanted to base my system on it as I&rsquo;ve already done a lot of the work with making OS X specific modules. I also wanted to use the modules made for Boxen as much as possible (some made too many assumptions about where they were running, so couldn&rsquo;t be re-used.</p>
+
+<p>So to recap:</p>
+
+<ul>
+<li>Munki for software deployment.</li>
+<li>Puppet must run in the background periodically</li>
+<li>The configuration must update itself &ndash; I don&rsquo;t want to have to sync code across machines.</li>
+<li>Where possible, re-use existing Puppet modules</li>
+</ul>
+
+
+<p>Over the next few posts, I&rsquo;ll go over the different parts of this solution, how I put it together and how you might be able to use this.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Updating Boxen]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/"/>
-    <updated>2014-04-04T02:54:26-04:00</updated>
+    <updated>2014-04-04T07:54:26+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/04/updating-boxen</id>
     <content type="html"><![CDATA[<p>As you might know, I&rsquo;m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn&rsquo;t on the Mac I was working on. Then there came the time when I wanted to do a clean install &ndash; that was easily a day down the drain there!</p>
 
@@ -80,7 +113,7 @@ $ boxen
   <entry>
     <title type="html"><![CDATA[Sal: The Munki Puppet]]></title>
     <link href="http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet/"/>
-    <updated>2014-01-17T05:51:46-05:00</updated>
+    <updated>2014-01-17T10:51:46+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet</id>
     <content type="html"><![CDATA[<p>At <a href="http://pebbleit.com">pebble.it</a>, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a few options, but didn&rsquo;t like any of them, so we made our own.</p>
 
@@ -95,7 +128,7 @@ $ boxen
   <entry>
     <title type="html"><![CDATA[buildCrankPkg]]></title>
     <link href="http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg/"/>
-    <updated>2013-07-17T16:31:00-04:00</updated>
+    <updated>2013-07-17T16:31:00+01:00</updated>
     <id>http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg</id>
     <content type="html"><![CDATA[<p>In my <a href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/">last post</a> I promised a tool I&rsquo;ve been working on to automate the building of a package for crankd.</p>
 
@@ -236,7 +269,7 @@ $ boxen
 </span><span class='line'>
 </span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">Last</span> <span class="n">Revised</span> <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span> <span class="mi">10</span><span class="o">/</span><span class="mo">07</span><span class="o">/</span><span class="mi">2013</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">author</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">Graham</span> <span class="n">Gilbert</span> <span class="p">(</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;&amp;#x6d;&amp;#x61;&amp;#x69;&amp;#108;&amp;#116;&amp;#111;&amp;#x3a;&amp;#x67;&amp;#114;&amp;#x61;&amp;#x68;&amp;#x61;&amp;#109;&amp;#x40;&amp;#x67;&amp;#114;&amp;#x61;&amp;#104;&amp;#97;&amp;#109;&amp;#x67;&amp;#x69;&amp;#108;&amp;#98;&amp;#101;&amp;#x72;&amp;#x74;&amp;#46;&amp;#99;&amp;#x6f;&amp;#x6d;&quot;</span><span class="o">&gt;&amp;</span><span class="c">#x67;&amp;#114;&amp;#97;&amp;#104;&amp;#97;&amp;#x6d;&amp;#x40;&amp;#103;&amp;#x72;&amp;#x61;&amp;#x68;&amp;#97;&amp;#x6d;&amp;#103;&amp;#x69;&amp;#x6c;&amp;#98;&amp;#x65;&amp;#114;&amp;#116;&amp;#46;&amp;#x63;&amp;#111;&amp;#109;&lt;/a&gt;)&amp;rsquo;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">author</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">Graham</span> <span class="n">Gilbert</span> <span class="p">(</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#x6c;&amp;#116;&amp;#111;&amp;#58;&amp;#x67;&amp;#x72;&amp;#x61;&amp;#104;&amp;#97;&amp;#x6d;&amp;#x40;&amp;#103;&amp;#114;&amp;#x61;&amp;#x68;&amp;#x61;&amp;#x6d;&amp;#103;&amp;#105;&amp;#108;&amp;#x62;&amp;#x65;&amp;#114;&amp;#x74;&amp;#x2e;&amp;#99;&amp;#111;&amp;#109;&quot;</span><span class="o">&gt;&amp;</span><span class="c">#x67;&amp;#114;&amp;#x61;&amp;#104;&amp;#97;&amp;#109;&amp;#64;&amp;#103;&amp;#x72;&amp;#97;&amp;#104;&amp;#97;&amp;#x6d;&amp;#x67;&amp;#105;&amp;#x6c;&amp;#98;&amp;#x65;&amp;#x72;&amp;#116;&amp;#x2e;&amp;#x63;&amp;#111;&amp;#109;&lt;/a&gt;)&amp;rsquo;</span>
 </span><span class='line'><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">version</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="mf">0.2</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">syslog</span>
@@ -373,7 +406,7 @@ $ boxen
   <entry>
     <title type="html"><![CDATA[Managing Macs with Puppet at PSU 2013]]></title>
     <link href="http://grahamgilbert.com/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013/"/>
-    <updated>2013-05-24T13:56:00-04:00</updated>
+    <updated>2013-05-24T13:56:00+01:00</updated>
     <id>http://grahamgilbert.com/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013</id>
     <content type="html"><![CDATA[<p>For those of you who attended my talk yesterday at PSU MacAdmins on Managing Macs with Puppet, here are are my <a href="/images/posts/2013-05-24/Managing_Macs_with_Puppet.pdf">slides</a> and all of the code and servers used are up on <a href="https://github.com/grahamgilbert/puppet_psu_2013">grahamgilbert/puppet_psu_2013 on GitHub</a>. Please comment, <a href="/about">email me</a> or catch me on the <a href="http://twitter.com/grahamgilbert">twitter</a> if you have any questions about any of this. Hopefully the video will be up soon, so those of you who weren&rsquo;t there to laugh at the guy with the funny accent can see me dealing with internet fails and my obscure British sit-com references.</p>
 
@@ -381,188 +414,6 @@ $ boxen
 
 <iframe width="480" height="360" src="http://www.youtube.com/embed/GqerWmKU1Js" frameborder="0" allowfullscreen></iframe>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Facter 101]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/04/02/facter-101/"/>
-    <updated>2013-04-02T10:11:00-04:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/04/02/facter-101</id>
-    <content type="html"><![CDATA[<p>Facter is what gives Puppet it’s brains. It collects information about the computer it is run on and then passes it to the Puppet Master for use in manifests and can optionally be stored. I know, it doesn’t sound like the most earth shattering revelation of all time, but stop for a moment. Every time your current scripts need to taget a specific OS version or a machine with a certain bit of hardware, you need to code it directly into the script. If the method of extracting that information changes, you need to modify every single script that uses that method. With Facter, you&rsquo;re editing one file, which is always up to date on the client. Anyway, that&rsquo;s enough waffle from me. Let&rsquo;s get started.<!--more--></p>
-
-<h2>Requirements</h2>
-
-<ul>
-<li><a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a></li>
-<li><a href="http://downloads.vagrantup.com/">Vagrant</a></li>
-<li>Either a Mac running 10.8 that you don’t mind wiping, or a Virtual Machine running in VMWare Fusion or similar.</li>
-<li>Git (Install the Command Line Tools from within <a href="https://itunes.apple.com/gb/app/xcode/id497799835?mt=12">Xcode&rsquo;s</a> preferences if you don&rsquo;t have it).</li>
-</ul>
-
-
-<h2>Setup</h2>
-
-<p>We need a Puppet Master &ndash; fortunately there’s one pre-built that has everything we need. Make sure you’ve installed everything in the requirements, and then open up your trusty Terminal:</p>
-
-<p><code>bash
-$ mkdir ~/src
-$ git clone https://github.com/grahamgilbert/vagrant-puppetmaster.git facter-101
-$ cd facter-101
-$ vagrant up
-</code></p>
-
-<p>This will pull down the needed bits to get your own Puppet Master running and then <code>vagrant up</code> will start things going. If you get errors about Postgres, just issue a <code>vagrant reload</code></p>
-
-<p>Now for your test Mac: I&rsquo;ve made a script to automate the process. If you <strong>don&rsquo;t</strong> have a DNS entry for your Puppet Master, and you&rsquo;re using the Vagrant setup described above, run this in your terminal:</p>
-
-<p><code>bash
-$ curl -o /tmp/install_puppet.py https://raw.github.com/grahamgilbert/macscripts/master/Puppet-Install/install_puppet.py; sudo python /tmp/install_puppet.py --appendhosts
-</code></p>
-
-<p>If you are using a different setup, please refer to the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Puppet-Install">script&rsquo;s readme</a> for more information</p>
-
-<h2>Learn some Facts</h2>
-
-<p>On your client machine, run this in a Terminal</p>
-
-<p><code>bash
-$ sudo facter
-</code></p>
-
-<p>Your test Mac will churn away for a minute and then spit out a ton of information &ndash; you&rsquo;ll see everything from the uptime of the machine to the amount of RAM. Still not overly useful sitting on that one machine. We need this information somewhere central to make use of it.</p>
-
-<p>We need to make one small change to <code>~/src/facter-101/puppet/manifests/site.pp</code> to get the puppet run working:</p>
-
-<p>``` ruby</p>
-
-<h1>comment out the next line by putting a hash in front of it</h1>
-
-<h1>import &ldquo;classes/*&rdquo;</h1>
-
-<p>```</p>
-
-<p>This is to stop Puppet complaining that there&rsquo;s nothing to import &ndash; which there isn&rsquo;t yet.</p>
-
-<p> Assuming your Puppet Master is running, this is on your test Mac:</p>
-
-<p><code>bash
-sudo puppet agent -t
-</code></p>
-
-<p>You&rsquo;ll see a load of files being synced to your test Mac &ndash; these are custom Facts, plugins and assorted other goodies being pulled from the server. We&rsquo;ll get to using custom Facts in a moment. If you load up <a href="http://192.168.33.10:3000">http://192.168.33.10:3000</a> in your browser of choice, you&rsquo;ll see your client having checked into Puppet. Click on it&rsquo;s hostname and you&rsquo;ll be presented with a list of all of the available Facts for that machine.</p>
-
-<p><a href="/images/posts/2013-04-02/Puppet_Node_Manager.png"><img class="center" src="/images/posts/2013-04-02/Puppet_Node_Manager.png" title="" ></a></p>
-
-<p>That&rsquo;s all very nice, but what can we use it for?</p>
-
-<h2>The Plan</h2>
-
-<p>We&rsquo;re going to install some extra facts from the Puppet Forge onto our Master, and then write some code to target a specific set of machines. In our fictional world, every Mac with 4GB or more of RAM will be designated a &ldquo;design&rdquo; Mac. We&rsquo;ll install Firefox on those (that&rsquo;s a design app, right?).</p>
-
-<p>First we&rsquo;ll install the extra Facts onto our Master from the Forge.</p>
-
-<p>``` bash
-$ cd ~/src/facter-101
-$ vagrant ssh</p>
-
-<h1>You&rsquo;re on the Puppet Master now</h1>
-
-<p>$ sudo puppet module install grahamgilbert/mac_facts</p>
-
-<h1>Get out of the Puppet Master</h1>
-
-<p>$ exit</p>
-
-<h1>Restart the Puppet Master to pick up the new module</h1>
-
-<p>$ vagrant reload
-```</p>
-
-<p>Now we&rsquo;ll write a class that will:</p>
-
-<ul>
-<li>Test that the client machine is a Mac</li>
-<li>Test that the client machine also has more than 4GB RAM</li>
-<li>If both conditions are satisfied, will install Firefox.</li>
-</ul>
-
-
-<p>Create your <code>~/src/facter-101/puppet/manifests/classes/design.pp</code>and make it look like the following.</p>
-
-<p>``` ruby ~/src/facter-101/puppet/manifests/classes/design.pp
-class design {</p>
-
-<pre><code>if $::operatingsystem == "Darwin" and $::mac_memory_in_gb &gt;= 4{
-    package { 'Firefox':
-        ensure =&gt; installed,
-        provider =&gt; appdmg,
-        source =&gt; "http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/19.0.2/mac/en-US/Firefox%2019.0.2.dmg",
-    }
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<p>Puppet has a default node &ndash; all machines checking into the Master get anything that&rsquo;s declared in this node by default. Open up <code>~/src/facter-101/puppet/manifests/site.pp</code> and make it look like:</p>
-
-<p>``` ruby ~/src/facter-101/puppet/manifests/site.pp
-import &ldquo;classes/*&rdquo;</p>
-
-<p>node default {</p>
-
-<pre><code>include design
-</code></pre>
-
-<p>}
-```</p>
-
-<p>We&rsquo;ve added some classes, so the Puppet Master process needs to be restarted &ndash; rebooting the whole VM is probably quicker.</p>
-
-<p><code>bash
-$ vagrant reload
-</code></p>
-
-<p>On your Test Mac, perform a Puppet run.</p>
-
-<p><code>bash
-$ sudo puppet agent -t
-</code></p>
-
-<p><img class="center" src="/images/posts/2013-04-02/Firefox_Installed.png" title="" ></p>
-
-<p>Depending on how much memory is in your test Mac, this might or might not do anything. Play with the $::mac_memory_in_gb value, starting high and then bringing it down to the amount of RAM in your test Mac &ndash; or if you are running your test Mac in a VM, you could also adjust the amount of memory assigned to it.</p>
-
-<p>So that&rsquo;s Facter &ndash; you&rsquo;re not limited to using this with the default node, this technique can be used anywhere you write Puppet code. Try changing your design.pp file to look like the following &ndash; we&rsquo;re using Facter Facts directly within our manifest to write data to the test Mac.</p>
-
-<p>``` ruby ~/src/facter-101/puppet/manifests/classes/design.pp
-class design {</p>
-
-<pre><code>if $::operatingsystem == "Darwin" and $::mac_memory_in_gb &gt;= 4{
-    package { 'Firefox':
-        ensure =&gt; installed,
-        provider =&gt; appdmg,
-        source =&gt; "http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/19.0.2/mac/en-US/Firefox%2019.0.2.dmg",
-    }
-}
-
-file { '/tmp/mac_ver': 
-    content =&gt; "This Mac is running ${::sp_os_version}",
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<p>Which gives us</p>
-
-<p><code>bash
-$ less /tmp/mac_ver
-This Mac is running OS X 10.8.3 (12D78)
-</code></p>
-
-<p>This is a very simple example of how you can use Facter to configure your machines. Facter can be used anywhere you&rsquo;d set a variable manually &ndash; the <a href="http://docs.puppetlabs.com/puppet/latest/reference/lang_conditional.html">Puppet documentation on Conditional Statements</a> is an excellent next step with dynamically assigning configuration to your machines.</p>
 ]]></content>
   </entry>
   

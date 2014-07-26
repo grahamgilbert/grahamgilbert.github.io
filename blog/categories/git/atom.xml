@@ -4,7 +4,7 @@
   <title><![CDATA[Category: git | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-07-12T11:49:20-04:00</updated>
+  <updated>2014-07-26T16:32:57+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[MacScripts]]></title>
     <link href="http://grahamgilbert.com/blog/2013/01/01/macscripts/"/>
-    <updated>2013-01-01T16:12:00-05:00</updated>
+    <updated>2013-01-01T16:12:00+00:00</updated>
     <id>http://grahamgilbert.com/blog/2013/01/01/macscripts</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve had my Mac scripts dotted around my Macs over the years, so after spending twenty minutes looking for my script to add a login item to a user, I decided to put them all in one place on GitHub. Hopefully someone will find them useful, I&rsquo;ll be adding the rest as soon as I work out where I put them.</p>
 

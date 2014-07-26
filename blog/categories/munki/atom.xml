@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Munki | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/munki/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-07-12T11:49:20-04:00</updated>
+  <updated>2014-07-26T16:32:57+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -14,9 +14,42 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Personal Automation (Part 1)]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/"/>
+    <updated>2014-07-26T11:27:00+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1</id>
+    <content type="html"><![CDATA[<p><a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">Earlier this year</a>, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was deigned for internal use at Github, it set some things up how they liked them &ndash; which wasn&rsquo;t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.</p>
+
+<p>Then I updated Boxen. All of my modules were out of date, so I spent a good couple of hours updating all of them so they worked again. Ugh.</p>
+
+<p>So I started looking at moving to my own solution. One of my major irritations when using Boxen was that it didn&rsquo;t really handle updating your apps &ndash; you got whatever version the module author decided to install and then you had to hope that there was an updatng mechanism built in. I&rsquo;ve said before that there is no better method of getting software onto your Mac then Munki, so the first decison was straightforward. The rest took a little thought.</p>
+
+<h2>The six P&rsquo;s</h2>
+
+<p>My first requirement was that I shouldn&rsquo;t need to run anything to get my configuration to apply. Boxen requires that you run the <code>boxen</code> command periodically across each of your Macs to get the configuration applied. This wasn&rsquo;t always practical. I needed something that would run in the background and keep itself up to date.</p>
+
+<p>As I said before, I really disliked how Boxen installs software. Munki does a much better job, and AutoPkg makes it trivial to make sure you have the latest software version. Being a sysadmin, I need more than simple drag and drop apps and packages though &ndash; I make extensive use of <a href="http://brew.sh">Homebrew</a> to install command line tools like <a href="http://packer.io">Packer</a>, so I needed to come up with a way of installing these with Munki.</p>
+
+<p>However, Munki isn&rsquo;t the best tool for managing my configuration. I&rsquo;ve been using Puppet to manage the Macs  I look after for nearly three years now, and I wanted to base my system on it as I&rsquo;ve already done a lot of the work with making OS X specific modules. I also wanted to use the modules made for Boxen as much as possible (some made too many assumptions about where they were running, so couldn&rsquo;t be re-used.</p>
+
+<p>So to recap:</p>
+
+<ul>
+<li>Munki for software deployment.</li>
+<li>Puppet must run in the background periodically</li>
+<li>The configuration must update itself &ndash; I don&rsquo;t want to have to sync code across machines.</li>
+<li>Where possible, re-use existing Puppet modules</li>
+</ul>
+
+
+<p>Over the next few posts, I&rsquo;ll go over the different parts of this solution, how I put it together and how you might be able to use this.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Binding to Active Directory with Munki]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki/"/>
-    <updated>2014-04-01T15:15:39-04:00</updated>
+    <updated>2014-04-01T20:15:39+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki</id>
     <content type="html"><![CDATA[<p>Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It&rsquo;s quite  a straightforward process to automate this with Munki, although you do have a few options to consider.</p>
 
@@ -144,7 +177,7 @@ $ /usr/local/munki/munkiimport ad-bind.pkg --installcheck_script=installcheck_sc
   <entry>
     <title type="html"><![CDATA[Writing Plugins for Sal: Part 3]]></title>
     <link href="http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3/"/>
-    <updated>2014-02-17T16:12:36-05:00</updated>
+    <updated>2014-02-17T21:12:36+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3</id>
     <content type="html"><![CDATA[<p>We&rsquo;ve already got a fairly decent plugin &ndash; it shows us how many machines we have that aren&rsquo;t able to run 10.9. However, quite a few people won&rsquo;t have any machines that fall into this category, and just want to know when one manages to sneak under the radar, so let&rsquo;s hide the plugin if we don&rsquo;t need to see it.</p>
 
@@ -289,7 +322,7 @@ $ /usr/local/munki/munkiimport ad-bind.pkg --installcheck_script=installcheck_sc
   <entry>
     <title type="html"><![CDATA[Writing Plugins for Sal: Part 2]]></title>
     <link href="http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2/"/>
-    <updated>2014-02-07T06:34:24-05:00</updated>
+    <updated>2014-02-07T11:34:24+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2</id>
     <content type="html"><![CDATA[<p>And now, time for the shocking second part of our series on how to write plugins for Sal.</p>
 
@@ -459,7 +492,7 @@ $ /usr/local/munki/munkiimport ad-bind.pkg --installcheck_script=installcheck_sc
   <entry>
     <title type="html"><![CDATA[Writing plugins for Sal: Part 1]]></title>
     <link href="http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1/"/>
-    <updated>2014-01-26T05:01:26-05:00</updated>
+    <updated>2014-01-26T10:01:26+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1</id>
     <content type="html"><![CDATA[<p>Writing a plugin for Sal isn&rsquo;t hard. In fact, I&rsquo;d go so far as to say it&rsquo;s easy. We&rsquo;re going to make a plugin that will flag up any machines that aren&rsquo;t compatible with Mavericks, by using <a href="https://github.com/timsutton/munki-conditions/blob/master/supported_major_os_upgrades">Tim Sutton&rsquo;s script</a>. To start off with, you&rsquo;re going to need to get that script onto your Macs at <code>/usr/local/munki/conditions</code>. I&rsquo;d personally use Puppet for that, but if you&rsquo;re a purely Munki shop, you&rsquo;ll be using a package. <a href="https://github.com/grahamgilbert/macscripts/raw/master/Munki/Condtion%20Packages/supported_major_os_upgrades/supported_major_os_upgrades.pkg">And handily, I&rsquo;ve made one</a>.</p>
 
@@ -622,21 +655,6 @@ $ /usr/local/munki/munkiimport ad-bind.pkg --installcheck_script=installcheck_sc
 <p>That&rsquo;s it for a basic plugin &ndash; we&rsquo;ve taken a bunch of machines, filtered them based on a Munki condition, and we&rsquo;ve returned the data. But this obviously is lacking &ndash; the button doesn&rsquo;t do anything and we still see a big fat zero when all of our machines are 10.9 capable. Anyway, you can get the code so far in my <a href="https://github.com/grahamgilbert/sal-plugins/tree/master/mavcompatibility">sal-plugins repository</a>.</p>
 
 <p>Tune in to part two for the thrilling conclusion!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Sal: The Munki Puppet]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet/"/>
-    <updated>2014-01-17T05:51:46-05:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet</id>
-    <content type="html"><![CDATA[<p>At <a href="http://pebbleit.com">pebble.it</a>, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a few options, but didn&rsquo;t like any of them, so we made our own.</p>
-
-<p>Say hi to Sal &ndash; the Munki Puppet. It&rsquo;s a multi-tenanted reporting solution for Munki and optionally, Facter.  You can find all of the details <a href="https://github.com/grahamgilbert/sal">over on GitHub</a>, including installation instructions and a package to send out to your clients.</p>
-
-<p><img class="center" src="/images/posts/2014-01-17/Sal.png"></p>
-
-<p>There is a plugin system built in to Sal, and over the next few days I will have a couple of posts covering how to make your own.</p>
 ]]></content>
   </entry>
   

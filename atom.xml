@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-07-12T11:49:20-04:00</updated>
+  <updated>2014-07-26T16:32:57+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -14,9 +14,42 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Personal Automation (Part 1)]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/"/>
+    <updated>2014-07-26T11:27:00+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1</id>
+    <content type="html"><![CDATA[<p><a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">Earlier this year</a>, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was deigned for internal use at Github, it set some things up how they liked them &ndash; which wasn&rsquo;t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.</p>
+
+<p>Then I updated Boxen. All of my modules were out of date, so I spent a good couple of hours updating all of them so they worked again. Ugh.</p>
+
+<p>So I started looking at moving to my own solution. One of my major irritations when using Boxen was that it didn&rsquo;t really handle updating your apps &ndash; you got whatever version the module author decided to install and then you had to hope that there was an updatng mechanism built in. I&rsquo;ve said before that there is no better method of getting software onto your Mac then Munki, so the first decison was straightforward. The rest took a little thought.</p>
+
+<h2>The six P&rsquo;s</h2>
+
+<p>My first requirement was that I shouldn&rsquo;t need to run anything to get my configuration to apply. Boxen requires that you run the <code>boxen</code> command periodically across each of your Macs to get the configuration applied. This wasn&rsquo;t always practical. I needed something that would run in the background and keep itself up to date.</p>
+
+<p>As I said before, I really disliked how Boxen installs software. Munki does a much better job, and AutoPkg makes it trivial to make sure you have the latest software version. Being a sysadmin, I need more than simple drag and drop apps and packages though &ndash; I make extensive use of <a href="http://brew.sh">Homebrew</a> to install command line tools like <a href="http://packer.io">Packer</a>, so I needed to come up with a way of installing these with Munki.</p>
+
+<p>However, Munki isn&rsquo;t the best tool for managing my configuration. I&rsquo;ve been using Puppet to manage the Macs  I look after for nearly three years now, and I wanted to base my system on it as I&rsquo;ve already done a lot of the work with making OS X specific modules. I also wanted to use the modules made for Boxen as much as possible (some made too many assumptions about where they were running, so couldn&rsquo;t be re-used.</p>
+
+<p>So to recap:</p>
+
+<ul>
+<li>Munki for software deployment.</li>
+<li>Puppet must run in the background periodically</li>
+<li>The configuration must update itself &ndash; I don&rsquo;t want to have to sync code across machines.</li>
+<li>Where possible, re-use existing Puppet modules</li>
+</ul>
+
+
+<p>Over the next few posts, I&rsquo;ll go over the different parts of this solution, how I put it together and how you might be able to use this.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Automate yourself out of a job]]></title>
     <link href="http://grahamgilbert.com/blog/2014/07/10/automate-yourself-out-of-a-job/"/>
-    <updated>2014-07-10T15:39:33-04:00</updated>
+    <updated>2014-07-10T20:39:33+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/07/10/automate-yourself-out-of-a-job</id>
     <content type="html"><![CDATA[<p>A massive thanks to everyone who came to my talk today, and thanks to everyone who helped out with the Q&amp;A at the end. All of the code I used in the talk is <a href="https://github.com/grahamgilbert/automate_psu_2014">up on GitHub</a> and <a href="http://grahamgilbert.com/images/posts/2014-07-10/Automate_yourself_out_of_a_job.pdf">here are the slides</a>. Hopefully the video will convey how much fun it actually was &ndash; it could have been a disaster, so I&rsquo;m hugely grateful to everyone who contributed to the discussion at the end.</p>
 ]]></content>
@@ -25,7 +58,7 @@
   <entry>
     <title type="html"><![CDATA[Multi tenanted Munki with Puppet and Sal]]></title>
     <link href="http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/"/>
-    <updated>2014-07-09T15:27:25-04:00</updated>
+    <updated>2014-07-09T20:27:25+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal</id>
     <content type="html"><![CDATA[<p>Thanks for everyone that came to my talk today, it was fun to finally show off what I&rsquo;ve been working on for the last year or so. I&rsquo;m sure the video will be up soon, but in the meantime, <a href="http://grahamgilbert.com/images/posts/2014-07-09/Multi_site_Munki.pdf">here are the slides from the talk</a>.</p>
 ]]></content>
@@ -34,7 +67,7 @@
   <entry>
     <title type="html"><![CDATA[Making packages with AutoPkg]]></title>
     <link href="http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg/"/>
-    <updated>2014-06-30T05:12:10-04:00</updated>
+    <updated>2014-06-30T10:12:10+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg</id>
     <content type="html"><![CDATA[<p>Over the past few weeks, I&rsquo;ve had the same conversation over and over:
 people telling me that once they get started using Munki, their next
@@ -201,7 +234,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Deploying Sal on Heroku]]></title>
     <link href="http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku/"/>
-    <updated>2014-05-19T04:04:05-04:00</updated>
+    <updated>2014-05-19T09:04:05+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku</id>
     <content type="html"><![CDATA[<p>Setting up everything you need for Sal can be difficult, especially if you only have an OS X server available. Thankfully, Sal is built on top of a very common Python framework, Django. And even more thankfully, you can run Django on a whole host of <a href="http://en.wikipedia.org/wiki/Platform_as_a_service">PaaS</a> providers, including <a href="https://www.heroku.com">Heroku</a>.</p>
 
@@ -286,7 +319,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[first-boot-pkg]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/21/first-boot-pkg/"/>
-    <updated>2014-04-21T04:01:24-04:00</updated>
+    <updated>2014-04-21T09:01:24+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/21/first-boot-pkg</id>
     <content type="html"><![CDATA[<p>There are some packages that can&rsquo;t be deployed to an unbooted OS, such as when building an image with AutoDMG. If you are using Greg Neagle&rsquo;s <a href="http://managingosx.wordpress.com/2012/07/25/son-of-installlion-pkg/">createOSXinstallPkg</a>, the OS X installer environment doesn&rsquo;t have everything a full OS X install has. For times like this, you need to install the packages at first boot. For a long time, I&rsquo;ve used Rich Trouton&rsquo;s <a href="http://derflounder.wordpress.com/2014/04/17/first-boot-package-install-revisited/">First Boot Package Install</a>, however I found myself repeating things quite a bit and having a folder full of first boot packages.</p>
 
@@ -310,7 +343,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Updating Boxen]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/"/>
-    <updated>2014-04-04T02:54:26-04:00</updated>
+    <updated>2014-04-04T07:54:26+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/04/updating-boxen</id>
     <content type="html"><![CDATA[<p>As you might know, I&rsquo;m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn&rsquo;t on the Mac I was working on. Then there came the time when I wanted to do a clean install &ndash; that was easily a day down the drain there!</p>
 
@@ -384,7 +417,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Binding to Active Directory with Munki]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki/"/>
-    <updated>2014-04-01T15:15:39-04:00</updated>
+    <updated>2014-04-01T20:15:39+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki</id>
     <content type="html"><![CDATA[<p>Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It&rsquo;s quite  a straightforward process to automate this with Munki, although you do have a few options to consider.</p>
 
@@ -547,7 +580,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Writing Plugins for Sal: Part 3]]></title>
     <link href="http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3/"/>
-    <updated>2014-02-17T16:12:36-05:00</updated>
+    <updated>2014-02-17T21:12:36+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3</id>
     <content type="html"><![CDATA[<p>We&rsquo;ve already got a fairly decent plugin &ndash; it shows us how many machines we have that aren&rsquo;t able to run 10.9. However, quite a few people won&rsquo;t have any machines that fall into this category, and just want to know when one manages to sneak under the radar, so let&rsquo;s hide the plugin if we don&rsquo;t need to see it.</p>
 
@@ -680,7 +713,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Writing Plugins for Sal: Part 2]]></title>
     <link href="http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2/"/>
-    <updated>2014-02-07T06:34:24-05:00</updated>
+    <updated>2014-02-07T11:34:24+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2</id>
     <content type="html"><![CDATA[<p>And now, time for the shocking second part of our series on how to write plugins for Sal.</p>
 
@@ -825,7 +858,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Writing plugins for Sal: Part 1]]></title>
     <link href="http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1/"/>
-    <updated>2014-01-26T05:01:26-05:00</updated>
+    <updated>2014-01-26T10:01:26+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1</id>
     <content type="html"><![CDATA[<p>Writing a plugin for Sal isn&rsquo;t hard. In fact, I&rsquo;d go so far as to say it&rsquo;s easy. We&rsquo;re going to make a plugin that will flag up any machines that aren&rsquo;t compatible with Mavericks, by using <a href="https://github.com/timsutton/munki-conditions/blob/master/supported_major_os_upgrades">Tim Sutton&rsquo;s script</a>. To start off with, you&rsquo;re going to need to get that script onto your Macs at <code>/usr/local/munki/conditions</code>. I&rsquo;d personally use Puppet for that, but if you&rsquo;re a purely Munki shop, you&rsquo;ll be using a package. <a href="https://github.com/grahamgilbert/macscripts/raw/master/Munki/Condtion%20Packages/supported_major_os_upgrades/supported_major_os_upgrades.pkg">And handily, I&rsquo;ve made one</a>.</p>
 
@@ -979,7 +1012,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Sal: The Munki Puppet]]></title>
     <link href="http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet/"/>
-    <updated>2014-01-17T05:51:46-05:00</updated>
+    <updated>2014-01-17T10:51:46+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet</id>
     <content type="html"><![CDATA[<p>At <a href="http://pebbleit.com">pebble.it</a>, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a few options, but didn&rsquo;t like any of them, so we made our own.</p>
 
@@ -994,7 +1027,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Managing the Authorization Database with Munki]]></title>
     <link href="http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki/"/>
-    <updated>2013-12-22T15:25:00-05:00</updated>
+    <updated>2013-12-22T15:25:00+00:00</updated>
     <id>http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki</id>
     <content type="html"><![CDATA[<p>Have you ever wished you didn&rsquo;t have to take calls from your users to unlock various parts of System Preferences? That standard users could unlock Energy Saver or Date and Time preferences? Well dear reader, this is the article for you.</p>
 
@@ -1453,7 +1486,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Crypt 0.5 released]]></title>
     <link href="http://grahamgilbert.com/blog/2013/11/19/crypt-0-dot-5-released/"/>
-    <updated>2013-11-19T11:29:00-05:00</updated>
+    <updated>2013-11-19T11:29:00+00:00</updated>
     <id>http://grahamgilbert.com/blog/2013/11/19/crypt-0-dot-5-released</id>
     <content type="html"><![CDATA[<p>I just pushed up version 0.5 of Crypt &ndash; the <a href="https://github.com/grahamgilbert/Crypt/releases/tag/0.5">release details are over at GitHub</a>. This is the last version that will be compatibile with the current version of <a href="https://github.com/grahamgilbert/Crypt-server">Crypt-Server</a> &ndash; which has also been updated to be compatible with Django 1.5.</p>
 
@@ -1464,7 +1497,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[AFP548 Podcast Episode 4: Don't Stab Yourself in the Leg, Then]]></title>
     <link href="http://grahamgilbert.com/blog/2013/11/13/afp548-podcast-episode-4-dont-stab-yourself-in-the-leg-then/"/>
-    <updated>2013-11-13T11:46:00-05:00</updated>
+    <updated>2013-11-13T11:46:00+00:00</updated>
     <id>http://grahamgilbert.com/blog/2013/11/13/afp548-podcast-episode-4-dont-stab-yourself-in-the-leg-then</id>
     <content type="html"><![CDATA[<p>A couple of weeks ago, I had a chat with Ed Marczak for the AFP548 Podcast. We discussed packaging, community and convincing clients that they shouldn&rsquo;t stab themselves in the leg. <a href="https://soundcloud.com/afp548/episode-four-dont-stab-yourself-in-the-leg-then">Go listen.</a></p>
 ]]></content>
@@ -1473,7 +1506,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Setting a desktop picture in Mavericks]]></title>
     <link href="http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/"/>
-    <updated>2013-10-28T14:48:00-04:00</updated>
+    <updated>2013-10-28T14:48:00+00:00</updated>
     <id>http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks</id>
     <content type="html"><![CDATA[<p>Sometimes we are asked by clients to set a default desktop picture for new users &ndash; sometimes we are deleting home directories on logout, so need to warn the users, other times the client just wants their corporate wallpaper to be the default.</p>
 
@@ -1515,7 +1548,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[ZNC: An IRC Bouncer]]></title>
     <link href="http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer/"/>
-    <updated>2013-10-13T08:35:00-04:00</updated>
+    <updated>2013-10-13T08:35:00+01:00</updated>
     <id>http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer</id>
     <content type="html"><![CDATA[<p>Yes,  it&rsquo;s true. The most interesting conversations in the Mac admin world take place using technology from the 1980&rsquo;s &ndash; <a href="http://en.wikipedia.org/wiki/Internet_Relay_Chat">IRC</a> (##osx-server on <a href="http://freenode.net/">freenode</a>). Those of you who know me will know that I&rsquo;m borderline OCD. In this instance, my major annoyance was that I&rsquo;d only get half of the conversation and I&rsquo;d miss private messages when I had to put my laptop to sleep. I needed to somehow keep a persistient conenction to IRC without having to sit infront of my computer 24/7.</p>
 
@@ -1844,7 +1877,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[Creating an OS X base box for Vagrant with Packer]]></title>
     <link href="http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/"/>
-    <updated>2013-08-23T11:30:00-04:00</updated>
+    <updated>2013-08-23T11:30:00+01:00</updated>
     <id>http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer</id>
     <content type="html"><![CDATA[<p>A while ago, the chaps over at the <a href="http://www.vagrantup.com/">Vagrant</a> project have recently released a <a href="http://www.vagrantup.com/vmware">plugin to let Vagrant work with VMWare Fusion</a> &ndash; this means we can finally use Vagrant to provision OS X VMs.</p>
 
@@ -2030,7 +2063,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[The Luggage: Further automation]]></title>
     <link href="http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation/"/>
-    <updated>2013-08-19T11:33:00-04:00</updated>
+    <updated>2013-08-19T11:33:00+01:00</updated>
     <id>http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation</id>
     <content type="html"><![CDATA[<p>As promised in my previous post, today we&rsquo;re going to look at how we can further refine our workflow, with the aim of cutting out as many manual steps as possible (every IT person knows it&rsquo;s not computer that make mistakes, it&rsquo;s the idiots in front of them) and making as much of our code re-usable in other packages.</p>
 
@@ -2258,7 +2291,7 @@ someone else has done all of the hard work for us.</p>
   <entry>
     <title type="html"><![CDATA[The Luggage: An Introduction]]></title>
     <link href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/"/>
-    <updated>2013-08-09T18:00:00-04:00</updated>
+    <updated>2013-08-09T18:00:00+01:00</updated>
     <id>http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction</id>
     <content type="html"><![CDATA[<p>If you&rsquo;ve managed OS X for any amount of time, chances are you&rsquo;ve needed to deploy software. And chances also are that you&rsquo;ve come across a vendor (I&rsquo;m looking at you, Adobe) that seems to be incapable of distributing their software in a useful manner. Or maybe you&rsquo;ve got your own scripts or software that you need to get installed on the machines that you look after &ndash; either way, you&rsquo;re going to want to build a package.</p>
 
@@ -2437,250 +2470,6 @@ someone else has done all of the hard work for us.</p>
 <p>And that&rsquo;s it! As putting a plist into <code>/Library/LaunchAgents</code> is as common as a BSOD on Vista, it&rsquo;s built right into The Luggage. A list of most of the available payload additions can be found on <a href="https://github.com/unixorn/luggage/wiki">the wiki</a> &ndash; this isn&rsquo;t everything though. Have a nose through <code>/usr/local/share/luggage/luggage.make</code> to see everything you can do.</p>
 
 <p>This is obviously a working solution, but there are many manual steps needed if we are sharing our code with others. We&rsquo;ll look into automating some of the steps and deploying a script that scriptRunner.py can work with.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[buildCrankPkg]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg/"/>
-    <updated>2013-07-17T16:31:00-04:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg</id>
-    <content type="html"><![CDATA[<p>In my <a href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/">last post</a> I promised a tool I&rsquo;ve been working on to automate the building of a package for crankd.</p>
-
-<p><a href="https://github.com/grahamgilbert/buildCrankPkg">buildCrankPkg</a> is a small script that will:</p>
-
-<ul>
-<li>Pull down the latest version of crankd (or use a local or remote repository if you specify one)</li>
-<li>Build a package that includes crankd and your custom settings and scripts.</li>
-</ul>
-
-
-<p>I&rsquo;ve included two examples, one that implements calling Munki and Puppet as detailed in the last post, and one to run a Casper policy.</p>
-
-<p>If you&rsquo;re happy with what crankd does and using the command line, head on over to the <a href="https://github.com/grahamgilbert/buildCrankPkg">repository</a> and enjoy. If you need a bit more help to get started, read on.<!--more--></p>
-
-<h2>Tutorial</h2>
-
-<p>First off, you&rsquo;re going to need to get the buildCrankPkg repository.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/src
-</span><span class='line'>git clone https://github.com/grahamgilbert/buildCrankPkg.git
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You&rsquo;re left with three directories that you need to fill:</p>
-
-<ul>
-<li><code>crankd</code>: You will be putting your custom code in here.</li>
-<li><code>Preferences</code>: Just a plist that will call our custom code.</li>
-<li><code>LaunchDaemons</code>: A LaunchDaemon to run crankd &ndash; an example that should be fine is already there.</li>
-</ul>
-
-
-<p>Assuming you cloned the <code>buildCrankPkg</code> repository to <code>~/src/buildCrankPkg</code>, save the following as <code>~/src/buildCrankPkg/crankd/CrankTools.py</code> (or copy the example). The only change between this one and the <code>CrankTools.py</code> from last time is that we&rsquo;re calling the JAMF binary to run a Casper policy (I know, the horror, I do actually use Casper occasionally). Our trigger&rsquo;s name is NetworkTrigger &ndash; the line you&rsquo;d need to customise to change this is <code>28</code>.</p>
-
-<figure class='code'><figcaption><span>CrankTools.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
-</span><span class='line'><span class="c">#</span>
-</span><span class='line'><span class="c">#    CrankTools.py</span>
-</span><span class='line'><span class="c">#        The OnNetworkLoad method is called from crankd on a network state change, all other</span>
-</span><span class='line'><span class="c">#            methods assist it. Modified from Gary Larizza&#39;s script (https://gist.github.com/glarizza/626169).</span>
-</span><span class='line'><span class="c">#</span>
-</span><span class='line'><span class="c">#    Last Revised - 10/07/2013</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Graham Gilbert (graham@grahamgilbert.com)&#39;</span>
-</span><span class='line'><span class="n">__version__</span> <span class="o">=</span> <span class="s">&#39;0.2&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">syslog</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">syslog</span><span class="o">.</span><span class="n">openlog</span><span class="p">(</span><span class="s">&quot;CrankD&quot;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">CrankTools</span><span class="p">():</span>
-</span><span class='line'>    <span class="sd">&quot;&quot;&quot;The main CrankTools class needed for our crankd config plist&quot;&quot;&quot;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">policyRun</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;Checks for an active network connection and calls the jamf binary if it finds one.</span>
-</span><span class='line'><span class="sd">            If the network is NOT active, it logs an error and exits</span>
-</span><span class='line'><span class="sd">        ---</span>
-</span><span class='line'><span class="sd">        Arguments: None</span>
-</span><span class='line'><span class="sd">        Returns:  Nothing</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;jamf&#39;</span><span class="p">,</span><span class="s">&#39;policy&#39;</span><span class="p">,</span><span class="s">&#39;-trigger&#39;</span><span class="p">,</span><span class="s">&#39;NetworkTrigger&#39;</span><span class="p">]</span>
-</span><span class='line'>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">LinkState</span><span class="p">(</span><span class="s">&#39;en1&#39;</span><span class="p">):</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">callCmd</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">LinkState</span><span class="p">(</span><span class="s">&#39;en0&#39;</span><span class="p">):</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">callCmd</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">syslog</span><span class="o">.</span><span class="n">syslog</span><span class="p">(</span><span class="n">syslog</span><span class="o">.</span><span class="n">LOG_ALERT</span><span class="p">,</span> <span class="s">&quot;Internet Connection Not Found, Puppet Run Exiting...&quot;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">callCmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;Simple utility function that calls a command via subprocess</span>
-</span><span class='line'><span class="sd">        ---</span>
-</span><span class='line'><span class="sd">        Arguments: command - A list of arguments for the command</span>
-</span><span class='line'><span class="sd">        Returns: Nothing</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">LinkState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;This utility returns the status of the passed interface.</span>
-</span><span class='line'><span class="sd">        ---</span>
-</span><span class='line'><span class="sd">        Arguments:</span>
-</span><span class='line'><span class="sd">            interface - Either en0 or en1, the BSD interface name of a Network Adapter</span>
-</span><span class='line'><span class="sd">        Returns:</span>
-</span><span class='line'><span class="sd">            status - The return code of the subprocess call</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&quot;ipconfig&quot;</span><span class="p">,</span> <span class="s">&quot;getifaddr&quot;</span><span class="p">,</span> <span class="n">interface</span><span class="p">])</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">OnNetworkLoad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot;Called from crankd directly on a Network State Change. We sleep for 10 seconds to ensure that</span>
-</span><span class='line'><span class="sd">            an IP address has been cleared or attained, and then perform a Puppet run and a Munki run.</span>
-</span><span class='line'><span class="sd">        ---</span>
-</span><span class='line'><span class="sd">        Arguments:</span>
-</span><span class='line'><span class="sd">            *args and **kwargs - Catchall arguments coming from crankd</span>
-</span><span class='line'><span class="sd">        Returns:  Nothing</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>        <span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">policyRun</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-</span><span class='line'>    <span class="n">crank</span> <span class="o">=</span> <span class="n">CrankTools</span><span class="p">()</span>
-</span><span class='line'>    <span class="n">crank</span><span class="o">.</span><span class="n">OnNetworkLoad</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-</span><span class='line'>    <span class="n">main</span><span class="p">()</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now for the preferences &ndash; no change from last time here, as we&rsquo;ve not changed the name of our class or method. This goes into <code>~/src/buildCrankPkg/Preferences/com.googlecode.pymacadmin.crankd.plist</code></p>
-
-<figure class='code'><figcaption><span>com.googlecode.pymacadmin.crankd.plist </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
-</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;dict&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;key&gt;</span>SystemConfiguration<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;dict&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;key&gt;</span>State:/Network/Global/IPv4<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;dict&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;key&gt;</span>method<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;array&gt;</span>
-</span><span class='line'>                        <span class="nt">&lt;string&gt;</span>CrankTools<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>                        <span class="nt">&lt;string&gt;</span>OnNetworkLoad<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;/array&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/dict&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/dict&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/dict&gt;</span>
-</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>One last step until we can build our package is the Launch Daemon &ndash; we&rsquo;re going to use the one that&rsquo;s included in the repository, as 99% of people won&rsquo;t need to change it.</p>
-
-<h2>Prepare the build!</h2>
-
-<p>Our package needs to have the version number of 2.1 and we&rsquo;re going to set the package&rsquo;s identifier to com.example.crankd</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/src/buildCrankPkg
-</span><span class='line'>sudo ./buildCrankPkg.py  --version 2.1 --identifier com.example.crankd
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Your package will be in <code>~/src/buildCrankPkg</code> waiting for you.</p>
 ]]></content>
   </entry>
   

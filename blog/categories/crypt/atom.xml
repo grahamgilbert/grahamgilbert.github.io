@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Crypt | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/crypt/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-07-12T11:49:20-04:00</updated>
+  <updated>2014-07-26T16:32:57+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Crypt 0.5 released]]></title>
     <link href="http://grahamgilbert.com/blog/2013/11/19/crypt-0-dot-5-released/"/>
-    <updated>2013-11-19T11:29:00-05:00</updated>
+    <updated>2013-11-19T11:29:00+00:00</updated>
     <id>http://grahamgilbert.com/blog/2013/11/19/crypt-0-dot-5-released</id>
     <content type="html"><![CDATA[<p>I just pushed up version 0.5 of Crypt &ndash; the <a href="https://github.com/grahamgilbert/Crypt/releases/tag/0.5">release details are over at GitHub</a>. This is the last version that will be compatibile with the current version of <a href="https://github.com/grahamgilbert/Crypt-server">Crypt-Server</a> &ndash; which has also been updated to be compatible with Django 1.5.</p>
 

@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="At pebble.it, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a &hellip;">
+  <meta name="description" content="Writing a plugin for Sal isn&rsquo;t hard. In fact, I&rsquo;d go so far as to say it&rsquo;s easy. We&rsquo;re going to make a plugin that will flag &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,189 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/">Writing Plugins for Sal: Part 1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-26T10:01:26+00:00" pubdate data-updated="true">Jan 26<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Writing a plugin for Sal isn&rsquo;t hard. In fact, I&rsquo;d go so far as to say it&rsquo;s easy. We&rsquo;re going to make a plugin that will flag up any machines that aren&rsquo;t compatible with Mavericks, by using <a href="https://github.com/timsutton/munki-conditions/blob/master/supported_major_os_upgrades">Tim Sutton&rsquo;s script</a>. To start off with, you&rsquo;re going to need to get that script onto your Macs at <code>/usr/local/munki/conditions</code>. I&rsquo;d personally use Puppet for that, but if you&rsquo;re a purely Munki shop, you&rsquo;ll be using a package. <a href="https://github.com/grahamgilbert/macscripts/raw/master/Munki/Condtion%20Packages/supported_major_os_upgrades/supported_major_os_upgrades.pkg">And handily, I&rsquo;ve made one</a>.</p>
+
+<p><img class="center" src="/images/posts/2014-01-26/mavcompatibility.png" width="297" height="131"></p>
+
+<p>The convention I&rsquo;d like everyone to follow is to drop your plugins into the <code>plugins</code> directory, in a subdirectory named after yourself &ndash; mine are going in <code>plugins/grahamgilbert</code>. The plugin we&rsquo;re making today is going in <code>plugins/grahamgilbert/mavcompatibility</code>.</p>
+
+<h2>Metadata</h2>
+
+<p>The first piece you&rsquo;ll need is a <code>.yapsy-plugin</code> file. This contains the metadata for your plugin. It&rsquo;s all pretty self explanatory. This is <code>plugins/grahamgilbert/mavcompatibility/mavcompatibility.yapsy-plugin</code>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[Core]
+</span><span class='line'>Name = MavCompatibility
+</span><span class='line'>Module = mavcompatibility
+</span><span class='line'>
+</span><span class='line'>[Documentation]
+</span><span class='line'>Author = Graham Gilbert
+</span><span class='line'>Version = 0.1
+</span><span class='line'>Website = http://grahamgilbert.com
+</span><span class='line'>Description = Displays macs that aren't compatible with 10.9.</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Now for the meat</h2>
+
+<p>Onto the actual plugin. Your plugin is going to be sent at least two pieces of information, possibly three.</p>
+
+<ul>
+<li><code>page</code>: This will be the page the plugin is going to be shown on. This will either be <code>front</code>, <code>bu_dashboard</code> or <code>group_dashboard</code>. You will need this information later on.</li>
+<li><code>machines</code>: This a collection of machines you are going to need to work on. Depending on the page, this might be all of them, or just a subset from a Business Unit or Machine Group.</li>
+<li><code>theid</code>: If you are displaying your plugin on either a Business Unit page or a Machine Group page, this is the unique ID of that Business Unit or Machine Group.</li>
+</ul>
+
+
+<p>And in return, your plugin is expected to return two things:</p>
+
+<ul>
+<li>Some HTML: You plugin needs to return it&rsquo;s output.</li>
+<li>The width of the output: Sal uses <a href="http://getbootstrap.com/2.3.2/">Bootstrap</a>, and it uses a grid system. So Sal can wrap lines properly, you need to tell Sal how many columns your plugin needs. This should be an integer.</li>
+</ul>
+
+
+<p>That&rsquo;s the 50,000 ft view of a Sal plugin, let&rsquo;s make one. The main thing to remember is that Sal is written in Django, so if you have any problems, looking at <a href="https://docs.djangoproject.com/en/1.5/">their documentation</a> will help. You can also enable debug logging on your Sal install by uncommenting lines 24 and 25 in <code>server/views.py</code> (turn it off when you&rsquo;re done though, it is VERY verbose).</p>
+
+<p>First off, a little about how Sal stores the data you send it. Sal stores Munki&rsquo;s conditions in the Condition table, and for each one, the name and it&rsquo;s data is stored (this is the same for Facts). Munki&rsquo;s conditions can consist of a variety of data types (strings, dates, arrays), so Sal will flatten any arrays it is given into a comma separated list. Each machine will have multiple Conditions and Facts associated with it.</p>
+
+<p>When displaying the plugin, Sal will look for a function called show_widget, passing the information mentioned previously. Don&rsquo;t worry too much about the templates, we&rsquo;ll cover them later.</p>
+
+<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/mavcompatibility.py </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
+</span><span class='line'>            <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
+</span><span class='line'>        <span class="p">})</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="mi">3</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Skip to line 20 &ndash; this is where the real work starts. All we&rsquo;re doing is taking the machines we were passed and first off finding the machines that have the condition we&rsquo;re looking for. We then want to remove those that contain 10.9 in that data.</p>
+
+<h2>Templates</h2>
+
+<p>Then it&rsquo;s just a case of passing those variables to our template. As we aren&rsquo;t linking our buttons to anything for now, both of our templates will be the same, but we will still make two separate ones as we&rsquo;re going to need them next time.</p>
+
+<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/front.html </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            Not Compatible
+</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Make a file in <code>templates</code> called <code>id.html</code> with the same content for now &ndash; we&rsquo;ll make them different in part two.</p>
+
+<p>We return our plugin on line 28 of <code>mavcompatibility.py</code>. First we render the appropriate template, passing it our data, and we return how wide our plugin is &ndash; in this case it will take up three columns.</p>
+
+<p>That&rsquo;s it for a basic plugin &ndash; we&rsquo;ve taken a bunch of machines, filtered them based on a Munki condition, and we&rsquo;ve returned the data. But this obviously is lacking &ndash; the button doesn&rsquo;t do anything and we still see a big fat zero when all of our machines are 10.9 capable. Anyway, you can get the code so far in my <a href="https://github.com/grahamgilbert/sal-plugins/tree/master/mavcompatibility">sal-plugins repository</a>.</p>
+
+<p>Tune in to part two for the thrilling conclusion!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2014/01/17/sal-the-munki-puppet/">Sal: The Munki Puppet</a></h1>
     
     
@@ -109,7 +292,7 @@
   
 
 
-<time datetime="2014-01-17T05:51:46-05:00" pubdate data-updated="true">Jan 17<span>th</span>, 2014</time>
+<time datetime="2014-01-17T10:51:46+00:00" pubdate data-updated="true">Jan 17<span>th</span>, 2014</time>
         
          | <a href="/blog/2014/01/17/sal-the-munki-puppet/#disqus_thread">Comments</a>
         
@@ -153,7 +336,7 @@
   
 
 
-<time datetime="2013-12-22T15:25:00-05:00" pubdate data-updated="true">Dec 22<span>nd</span>, 2013</time>
+<time datetime="2013-12-22T15:25:00+00:00" pubdate data-updated="true">Dec 22<span>nd</span>, 2013</time>
         
          | <a href="/blog/2013/12/22/managing-the-authorization-database-with-munki/#disqus_thread">Comments</a>
         
@@ -641,7 +824,7 @@
   
 
 
-<time datetime="2013-11-19T11:29:00-05:00" pubdate data-updated="true">Nov 19<span>th</span>, 2013</time>
+<time datetime="2013-11-19T11:29:00+00:00" pubdate data-updated="true">Nov 19<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/11/19/crypt-0-dot-5-released/#disqus_thread">Comments</a>
         
@@ -681,7 +864,7 @@
   
 
 
-<time datetime="2013-11-13T11:46:00-05:00" pubdate data-updated="true">Nov 13<span>th</span>, 2013</time>
+<time datetime="2013-11-13T11:46:00+00:00" pubdate data-updated="true">Nov 13<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/11/13/afp548-podcast-episode-4-dont-stab-yourself-in-the-leg-then/#disqus_thread">Comments</a>
         
@@ -691,77 +874,6 @@
 
 
   <div class="entry-content"><p>A couple of weeks ago, I had a chat with Ed Marczak for the AFP548 Podcast. We discussed packaging, community and convincing clients that they shouldn&rsquo;t stab themselves in the leg. <a href="https://soundcloud.com/afp548/episode-four-dont-stab-yourself-in-the-leg-then">Go listen.</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/">Setting a Desktop Picture in Mavericks</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-28T14:48:00-04:00" pubdate data-updated="true">Oct 28<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Sometimes we are asked by clients to set a default desktop picture for new users &ndash; sometimes we are deleting home directories on logout, so need to warn the users, other times the client just wants their corporate wallpaper to be the default.</p>
-
-<p>If you are lazy and don&rsquo;t want to read this post then the script that changes the desktop picture <a href="https://github.com/grahamgilbert/macscripts/tree/master/set_desktops">is on GitHub</a>.</p>
-
-<p>Whatever, here&rsquo;s what we used to do:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>/usr/bin/defaults write com.apple.desktop Background <span class="s1">&#39;{default = {ImageFilePath = &quot;/Library/Desktop Pictures/Black &amp; White/Lightning.jpg&quot;; };}&#39;</span>
-</span><span class='line'>/usr/bin/killall Dock
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Nothing earth shattering there if you&rsquo;ve managed Macs for any length of time.</p>
-
-<p>But then 10.9 changed things &ndash; this stopped working.</p>
-
-<p>I ran fs_usage to see what was happening whilst I changed the desktop picture on my machine:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo fs_usage -w | grep desktop
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Obviously there was a metic buttload of information, but this line caught my eye.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>15:25:06.884820    WrData<span class="o">[</span>A<span class="o">]</span>       <span class="nv">D</span><span class="o">=</span>0x0b2d1d90  <span class="nv">B</span><span class="o">=</span>0x1000   /dev/disk1  /Users/grahamgilbert/Library/Application Support/Dock/desktoppicture.db
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Bingo! I opened up the database in the <a href="https://addons.mozilla.org/en-US/firefox/addon/sqlite-manager/">SQLite Manager Firefox extension</a> (the only thing I use Firefox for these days) and had a peek. And then I got half a brain and googled the path of the desktoppicture.db file and found that there was a <a href="https://gist.github.com/gregneagle/6225747">gist from Greg Neagle</a>. Perfect!</p>
-
-<p>Of course, he&rsquo;d already improved upon this script and written a proof of concept to <a href="https://gist.github.com/gregneagle/6957826">set a random desktop picture using PyObjC</a>. This got me 90% of the way there, so this is my modified version of his script. The full code and usage instructions are <a href="https://github.com/grahamgilbert/macscripts/tree/master/set_desktops">over on GitHub</a>.</p>
 </div>
   
   
@@ -792,6 +904,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/26/personal-automation-part-1/">Personal Automation (Part 1)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/10/automate-yourself-out-of-a-job/">Automate Yourself Out of a Job</a>
       </li>
     
@@ -805,10 +921,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/19/deploying-sal-on-heroku/">Deploying Sal on Heroku</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/21/first-boot-pkg/">First-boot-pkg</a>
       </li>
     
   </ul>
