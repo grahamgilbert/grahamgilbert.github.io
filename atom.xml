@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-07-26T17:39:58+01:00</updated>
+  <updated>2014-07-27T12:34:22+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,86 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Personal Automation: Munki (Part 2)]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2/"/>
+    <updated>2014-07-27T11:21:37+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2</id>
+    <content type="html"><![CDATA[<p>The first step to getting any Mac set up is to get some software onto it. I&rsquo;m not going to cover how to set up <a href="https://code.google.com/p/munki/wiki/GettingStartedWithMunki">Munki</a> or <a href="https://github.com/autopkg/autopkg/wiki/Getting-Started">AutoPkg</a> &ndash; there are lots of other places for that information.</p>
+
+<p>As a sysadmin, I&rsquo;m forever testing things. Rather than destroy my own machine, I like to do this in Virtual Machines. My preferred virtualisation solution is VMware Fusion, but unfortunately it&rsquo;s not very easy to deploy out of the box. You need to do a little bit of work to get it into a package that you can import into Munki, but fortunately the process is <a href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2058680">well documented on VMware&rsquo;s site</a>.</p>
+
+<p>The next piece of &lsquo;non standard&rsquo; software I need is <a href="http://brew.sh">Homebrew</a>. The installation method listed on their site is to run a terminal command as the current user. The first part of this is obviously fine &ndash; Munki has several methods to run scripts (payload free packages, nopkg), but it runs everything as root. Fortunately, as I&rsquo;m deploying my own machine, I can make some assumptions about where Homebrew will be installed. The first assumption I can make is that there will only be one user on the machine, and the second is that I&rsquo;m going to be logged in most of the time (as my laptop is encrypted, it&rsquo;s either off or logged in).</p>
+
+<p>I&rsquo;m going to utilise a <code>nopkg</code> pkginfo file to perform the installation. The first part of our script to install Homebrew is to make sure that a user (me!) is logged in. Homebrew doesn&rsquo;t like being owned by root, so first we need to make sure that there is a user logged in.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">CURRENT_USER</span><span class="o">=</span><span class="sb">`</span>/bin/ls -l /dev/console | /usr/bin/awk <span class="s1">&#39;{ print $3 }&#39;</span><span class="sb">`</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$CURRENT_USER&quot;</span> <span class="o">==</span> <span class="s1">&#39;root&#39;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'>    <span class="c"># this can&#39;t run at the login window, we need the current user</span>
+</span><span class='line'>    <span class="nb">exit </span>1
+</span><span class='line'><span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So now we know that there&rsquo;s a user logged in, and who that user is. Time to install Homebrew as the current user.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /usr/local
+</span><span class='line'>mkdir -p /usr/local/homebrew
+</span><span class='line'>mkdir -p /usr/local/bin
+</span><span class='line'>chown <span class="nv">$CURRENT_USER</span>:_developer /usr/local/homebrew
+</span><span class='line'>chown <span class="nv">$CURRENT_USER</span>:_developer /usr/local/bin
+</span><span class='line'>
+</span><span class='line'><span class="c">#download and install homebrew</span>
+</span><span class='line'>su <span class="nv">$CURRENT_USER</span> -c <span class="s2">&quot;/bin/bash -o pipefail -c &#39;/usr/bin/curl -skSfL https://github.com/mxcl/homebrew/tarball/master | (cd /usr/local ; /usr/bin/tar xz -m --strip 1 -C homebrew; ln -s /usr/local/homebrew/bin/brew /usr/local/bin/brew)&#39;&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As we&rsquo;re using a <code>nopkg</code> with Munki rather than a payload free package, we&rsquo;ve not left any receipts, so Munki doesn&rsquo;t know if Homebrew is installed. We&rsquo;re going to use an installs array to tell Munki what to look for when determining whether Homebrew is installed or not.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>installs<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;key&gt;</span>path<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;string&gt;</span>/usr/local/bin/brew<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;key&gt;</span>type<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;string&gt;</span>file<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/array&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You might be crying &ldquo;but Homebrew needs the Xcode Command Line Tools installed!&rdquo; &ndash; and you&rsquo;d be 100% correct. You have the option of importing the downloaded package into Munki, but I have adapted <a href="https://github.com/timsutton/osx-vm-templates/blob/master/scripts/xcode-cli-tools.sh">Tim Sutton&rsquo;s script</a> into a <code>nopkg</code>. To find out what&rsquo;s installed, I ran <a href="http://www.fernlightning.com/doku.php?id=software%3afseventer%3astart">fseventer</a> and chose a random file to act as my installs array. I&rsquo;ve posted the pkginfos for both the <a href="https://github.com/grahamgilbert/macscripts/blob/master/Munki/pkginfos/Xcode/XcodeCLITools-2014.07.15.plist">Xcode CLI tools</a> and all of the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki/pkginfos/Homebrew">Homebrew installs</a> on Github.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Personal Automation (Part 1)]]></title>
@@ -2285,191 +2365,6 @@ someone else has done all of the hard work for us.</p>
 <p>So we&rsquo;re not only cutting out cruft from our Makefile for this package, but it makes future packages much faster to create, eliminating the problem between the keyboard and chair. You could (should!) even put your <code>luggage.local</code> file under source control (mine is <a href="https://github.com/grahamgilbert/luggage_local">on my Github account</a>), so your changes are tracked, and you can collaborate with your colleagues .</p>
 
 <p>You&rsquo;ll notice there is still the section for copying the .afploc. You have two choices here: maybe this is the only time you&rsquo;re ever going to install a file in this directory, in which case this is perfectly fine to leave in the Makefile. However, if you are going to be putting lots of files here, as we are with <code>/Library/Management/scriptRunner</code>, you might want to move this into your <code>luggage.local</code> file so it is available across all of your Makefiles. You homework, should you choose to accept it, is to generalise that section so it can be reused and move it to <code>luggage.local</code>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[The Luggage: An Introduction]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/"/>
-    <updated>2013-08-09T18:00:00+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction</id>
-    <content type="html"><![CDATA[<p>If you&rsquo;ve managed OS X for any amount of time, chances are you&rsquo;ve needed to deploy software. And chances also are that you&rsquo;ve come across a vendor (I&rsquo;m looking at you, Adobe) that seems to be incapable of distributing their software in a useful manner. Or maybe you&rsquo;ve got your own scripts or software that you need to get installed on the machines that you look after &ndash; either way, you&rsquo;re going to want to build a package.</p>
-
-<p>You&rsquo;ve got a few options &ndash; Iceberg, Packages, Composer, you&rsquo;ve even got Package Maker. However, my personal choice is The Luggage. It has a few advantages over the alternatives:</p>
-
-<ul>
-<li><strong>It&rsquo;s all text files:</strong> You&rsquo;re building software distributions, you should be checking the files in to build the packages into version control, such as Git. Text files are ideal for checking into version control.</li>
-<li><strong>It&rsquo;s free:</strong> if it costs nothing, there&rsquo;s no reason it can&rsquo;t be installed on everyone&rsquo;s machine.</li>
-<li><strong>It&rsquo;s (still) all text files:</strong> Want to see what will be in the package without any extra work? Crack open the Makefile and you can see straight away what will be in the package.</li>
-<li><strong>The Luggage has a metric buttload of shortcuts built in:</strong> it does the hard work, so you don&rsquo;t have to.</li>
-<li><strong>It&rsquo;s repeatable:</strong> Have you ever tried to talk someone through a series of windows and buttons to get the same result as you&rsquo;re getting? Every time you run The Luggage, you will get the same result.</li>
-<li><strong>It&rsquo;s (really, still) all text files:</strong> It&rsquo;s the most precise tool I&rsquo;ve used &ndash; you only package exactly what you need, no cruft is left behind.</li>
-<li><strong>Your workflow is limited only by your imagination:</strong> Seriously, you can do pretty much anything you can think of. We&rsquo;ll be going through more advanced workflows in future posts, but let&rsquo;s get started with using The Luggage.<!--more--></li>
-</ul>
-
-
-<h2>Getting set up</h2>
-
-<p>We&rsquo;re going to grab the current version of The Luggage from the git repository. If you don&rsquo;t have git, you can install the Command Line Tools from within <a href="https://itunes.apple.com/gb/app/xcode/id497799835?mt=12">Xcode&rsquo;s</a> preferences if you don&rsquo;t have it. If you don&rsquo;t have Xcode, and the Command Line Tools installed, very little is going to work, so go and install it. It&rsquo;s ok, I&rsquo;ll wait.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src
-</span><span class='line'><span class="nv">$ </span>git clone https://github.com/unixorn/luggage.git
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now we are going to use The Luggage to install itself (oooh, meta). You&rsquo;ll be asked for your password, as it will need to perform some tasks as root.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/luggage
-</span><span class='line'><span class="nv">$ </span>make bootstrap_files
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Your first Makefile</h2>
-
-<p>Now you&rsquo;ve got everything set up, we&rsquo;re going to write our first Makefile. We&rsquo;re going to make a package to deploy Nate Walck&rsquo;s awesome <a href="https://github.com/natewalck/Scripts/blob/master/scriptRunner.py">scriptRunner.py</a>. Everything prefaced with a <code>$</code> should be typed into your Terminal window.</p>
-
-<p>First we&rsquo;re going to grab the repository from GitHub:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src
-</span><span class='line'><span class="nv">$ </span>git clone https://github.com/natewalck/Scripts.git natewalck-scripts
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now we&rsquo;re going to make a directory to work in for our package and copy scriptRunner.py into it.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src
-</span><span class='line'><span class="nv">$ </span>mkdir -p ~/src/scriptRunnerPkg
-</span><span class='line'><span class="nv">$ </span>cp ~/src/natewalck-scripts/scriptRunner.py ~/src/scriptRunnerPkg/scriptRunner.py
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So far so good. Now for the actual Makefile. Create a file in your favourite editor (I recommend <a href="http://macromates.com/download">TextMate 2</a>), save it as Makefile in <code>~/src/scriptRunnerPkg</code> and put in the following content:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">USE_PKGBUILD</span><span class="o">=</span>1
-</span><span class='line'>include /usr/local/share/luggage/luggage.make
-</span><span class='line'><span class="nv">TITLE</span><span class="o">=</span>scriptRunnerPkg
-</span><span class='line'><span class="nv">REVERSE_DOMAIN</span><span class="o">=</span>com.grahamgilbert
-</span><span class='line'><span class="nv">PAYLOAD</span><span class="o">=</span><span class="se">\</span>
-</span><span class='line'>  pack-scriptRunner
-</span><span class='line'>
-</span><span class='line'>pack-scriptRunner: l_usr_local_bin
-</span><span class='line'>  @sudo <span class="k">${</span><span class="nv">CP</span><span class="k">}</span> ./scriptRunner.py <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/usr/local/bin/scriptRunner.py
-</span><span class='line'>  @sudo chmod 755 <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/usr/local/bin/scriptRunner.py
-</span><span class='line'>  @sudo chown root:wheel <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/usr/local/bin/scriptRunner.py
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Let&rsquo;s go through this line by line. First, we&rsquo;re overloading a default variable. Back in the day, The Luggage used Package Maker to perform the actual build of the package. This has been deprecated by Apple, replaced with pkgbuild and productbuild. We&rsquo;re just telling The Luggage to go straight ahead and use pkgbuild.</p>
-
-<p>We&rsquo;re then including the main Makefile, which contains all of the pre-built work that we can extend with our own Makefiles.</p>
-
-<p><code>TITLE</code> and <code>REVERSE_DOMAIN</code> are exactly that &ndash; the title and reverse domain of the package.</p>
-
-<p>Finally, we&rsquo;re specifying what our payload is going to consist of &ndash; in this case, just scriptRunner. Line 8 is using the foundation that The Luggage has already built &ndash; installing software into <code>/usr/local/bin</code> is pretty standard, so we don&rsquo;t need to reinvent the wheel here &ndash; we just need to tell The Luggage what to do with the one file we&rsquo;re installing, it will work out the rest.</p>
-
-<h3>An important note on Makefiles</h3>
-
-<p>Makefiles are really picky about formatting and spacing &ndash; if you get strange errors, make sure you are using tab characters rather than spaces for example. and make sure you&rsquo;ve not missed off a colon or a back-slash anywhere.</p>
-
-<h2>Prepare the build!</h2>
-
-<p>We&rsquo;re ready to build. Let&rsquo;s do it. No need to run this as sudo, The Luggage will ask for your password if it needs it.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/scriptRunnerPkg
-</span><span class='line'>make pkg
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If everything has gone well, some text will scroll into your Terminal window and you&rsquo;ll be left with a package sitting in <code>~/src/scriptRunnerPkg</code>.</p>
-
-<p>That&rsquo;s all well and good, but we need a LaunchAgent to run the script when someone logs in. Save the following in <code>~/src/scriptRunnerPkg</code> and name it <code>com.grahamgilbert.scriptrunner.plist</code>.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;?xml <span class="nv">version</span><span class="o">=</span><span class="s2">&quot;1.0&quot;</span> <span class="nv">encoding</span><span class="o">=</span><span class="s2">&quot;UTF-8&quot;</span>?&gt;
-</span><span class='line'>&lt;!DOCTYPE plist PUBLIC <span class="s2">&quot;-//Apple//DTD PLIST 1.0//EN&quot;</span> <span class="s2">&quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;</span>&gt;
-</span><span class='line'>&lt;plist <span class="nv">version</span><span class="o">=</span><span class="s2">&quot;1.0&quot;</span>&gt;
-</span><span class='line'>&lt;dict&gt;
-</span><span class='line'>  &lt;key&gt;Label&lt;/key&gt;
-</span><span class='line'>  &lt;string&gt;com.grahamgilbert.scriptrunner&lt;/string&gt;
-</span><span class='line'>  &lt;key&gt;ProgramArguments&lt;/key&gt;
-</span><span class='line'>  &lt;array&gt;
-</span><span class='line'>      &lt;string&gt;/usr/local/bin/scriptRunner.py&lt;/string&gt;
-</span><span class='line'>      &lt;string&gt;--once&lt;/string&gt;
-</span><span class='line'>      &lt;string&gt;/Library/Management/scriptRunner/once&lt;/string&gt;
-</span><span class='line'>      &lt;string&gt;--every&lt;/string&gt;
-</span><span class='line'>      &lt;string&gt;/Library/Management/scriptRunner/every&lt;/string&gt;
-</span><span class='line'>  &lt;/array&gt;
-</span><span class='line'>  &lt;key&gt;RunAtLoad&lt;/key&gt;
-</span><span class='line'>  &lt;<span class="nb">true</span>/&gt;
-</span><span class='line'>&lt;/dict&gt;
-</span><span class='line'>&lt;/plist&gt;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This will tell scriptRunner.py to run everything in <code>/Library/Management/scriptRunner/once</code> once per use and everything in <code>/Library/Management/scriptRunner/every</code> each and every single time the user logs in.</p>
-
-<p>That&rsquo;s nice, but how do we get it into our package? Change the payload section to look like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">PAYLOAD</span><span class="o">=</span><span class="se">\</span>
-</span><span class='line'>  pack-scriptRunner<span class="se">\</span>
-</span><span class='line'>  pack-Library-LaunchAgents-com.grahamgilbert.scriptrunner.plist
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And now rebuild the package:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/scriptRunnerPkg
-</span><span class='line'>make pkg
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And that&rsquo;s it! As putting a plist into <code>/Library/LaunchAgents</code> is as common as a BSOD on Vista, it&rsquo;s built right into The Luggage. A list of most of the available payload additions can be found on <a href="https://github.com/unixorn/luggage/wiki">the wiki</a> &ndash; this isn&rsquo;t everything though. Have a nose through <code>/usr/local/share/luggage/luggage.make</code> to see everything you can do.</p>
-
-<p>This is obviously a working solution, but there are many manual steps needed if we are sharing our code with others. We&rsquo;ll look into automating some of the steps and deploying a script that scriptRunner.py can work with.</p>
 ]]></content>
   </entry>
   

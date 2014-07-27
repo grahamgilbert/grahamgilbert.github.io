@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Updating Boxen - graham gilbert</title>
+  <title>Personal Automation: Munki (Part 2) - graham gilbert</title>
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="As you might know, I&rsquo;m a bit of a fan of Munki and Puppet for managing the Macs I look after. Around a year ago, I really wanted to be able to &hellip;">
+  <meta name="description" content="The first step to getting any Mac set up is to get some software onto it. I&rsquo;m not going to cover how to set up Munki or AutoPkg &ndash; there &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen">
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
@@ -90,7 +90,7 @@
   
   <header>
     
-      <h1 class="entry-title">Updating Boxen</h1>
+      <h1 class="entry-title">Personal Automation: Munki (Part 2)</h1>
     
     
       <p class="meta">
@@ -106,7 +106,7 @@
   
 
 
-<time datetime="2014-04-04T07:54:26+01:00" pubdate data-updated="true">Apr 4<span>th</span>, 2014</time>
+<time datetime="2014-07-27T11:21:37+01:00" pubdate data-updated="true">Jul 27<span>th</span>, 2014</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -115,72 +115,78 @@
   </header>
 
 
-<div class="entry-content"><p>As you might know, I&rsquo;m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn&rsquo;t on the Mac I was working on. Then there came the time when I wanted to do a clean install &ndash; that was easily a day down the drain there!</p>
+<div class="entry-content"><p>The first step to getting any Mac set up is to get some software onto it. I&rsquo;m not going to cover how to set up <a href="https://code.google.com/p/munki/wiki/GettingStartedWithMunki">Munki</a> or <a href="https://github.com/autopkg/autopkg/wiki/Getting-Started">AutoPkg</a> &ndash; there are lots of other places for that information.</p>
 
-<h2>Automate all of the things</h2>
+<p>As a sysadmin, I&rsquo;m forever testing things. Rather than destroy my own machine, I like to do this in Virtual Machines. My preferred virtualisation solution is VMware Fusion, but unfortunately it&rsquo;s not very easy to deploy out of the box. You need to do a little bit of work to get it into a package that you can import into Munki, but fortunately the process is <a href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2058680">well documented on VMware&rsquo;s site</a>.</p>
 
-<p>Then <a href="https://boxen.github.com/">Boxen</a> was released &ndash; based on Puppet, but targeted at setting up individual&rsquo;s machines. I got on board just over a year ago, and haven&rsquo;t really looked back &ndash; manually installing an app on my Mac seems very strange now. I&rsquo;m not going to cover how to get started with Boxen, as there are <a href="http://lmgtfy.com/?q=getting+started+with+Boxen">many getting started guides out there</a> (however, <a href="http://garylarizza.com/blog/2013/02/15/puppet-plus-github-equals-laptop-love/">Gary Larizza&rsquo;s</a> is rather good).</p>
+<p>The next piece of &lsquo;non standard&rsquo; software I need is <a href="http://brew.sh">Homebrew</a>. The installation method listed on their site is to run a terminal command as the current user. The first part of this is obviously fine &ndash; Munki has several methods to run scripts (payload free packages, nopkg), but it runs everything as root. Fortunately, as I&rsquo;m deploying my own machine, I can make some assumptions about where Homebrew will be installed. The first assumption I can make is that there will only be one user on the machine, and the second is that I&rsquo;m going to be logged in most of the time (as my laptop is encrypted, it&rsquo;s either off or logged in).</p>
 
-<p>There will come a time when you need to update the core part of Boxen. This happened to me when I clean installed 10.9 on my work laptop &ndash; all kinds of shit broke (somehow it managed to survive the upgrade process &ndash; go figure). I looked around, but couldn&rsquo;t really find a definitive guide, so here it is (it&rsquo;s shorter than this piece of rambling).</p>
+<p>I&rsquo;m going to utilise a <code>nopkg</code> pkginfo file to perform the installation. The first part of our script to install Homebrew is to make sure that a user (me!) is logged in. Homebrew doesn&rsquo;t like being owned by root, so first we need to make sure that there is a user logged in.</p>
 
-<h2>Ok, stop talking</h2>
-
-<p>As Boxen is made by GitHub, updating it is much like updating any other project on there that you&rsquo;ve made a fork of.  First we&rsquo;re going to add it as a remote repository:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/our-boxen
-</span><span class='line'><span class="nv">$ </span>git remote add upstream https://github.com/boxen/our-boxen.git
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">CURRENT_USER</span><span class="o">=</span><span class="sb">`</span>/bin/ls -l /dev/console | /usr/bin/awk <span class="s1">&#39;{ print $3 }&#39;</span><span class="sb">`</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$CURRENT_USER&quot;</span> <span class="o">==</span> <span class="s1">&#39;root&#39;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'>    <span class="c"># this can&#39;t run at the login window, we need the current user</span>
+</span><span class='line'>    <span class="nb">exit </span>1
+</span><span class='line'><span class="k">fi</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Then we&rsquo;re going to fetch the stuff from the upstream repository:</p>
+<p>So now we know that there&rsquo;s a user logged in, and who that user is. Time to install Homebrew as the current user.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git fetch upstream
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now we&rsquo;re going to merge the updated repository with our own:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git checkout master
-</span><span class='line'><span class="nv">$ </span>git merge upstream/master
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /usr/local
+</span><span class='line'>mkdir -p /usr/local/homebrew
+</span><span class='line'>mkdir -p /usr/local/bin
+</span><span class='line'>chown <span class="nv">$CURRENT_USER</span>:_developer /usr/local/homebrew
+</span><span class='line'>chown <span class="nv">$CURRENT_USER</span>:_developer /usr/local/bin
+</span><span class='line'>
+</span><span class='line'><span class="c">#download and install homebrew</span>
+</span><span class='line'>su <span class="nv">$CURRENT_USER</span> -c <span class="s2">&quot;/bin/bash -o pipefail -c &#39;/usr/bin/curl -skSfL https://github.com/mxcl/homebrew/tarball/master | (cd /usr/local ; /usr/bin/tar xz -m --strip 1 -C homebrew; ln -s /usr/local/homebrew/bin/brew /usr/local/bin/brew)&#39;&quot;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>If you haven&rsquo;t modified any of the core Boxen files (<code>Puppetfile</code>, <code>Gemfile</code> or <code>manifests/site.pp</code> in my case), you might get away without having to fix any conflicts (you can ignore any in <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>, we&rsquo;ll deal with those next). I had conflicts as I had previously:</p>
+<p>As we&rsquo;re using a <code>nopkg</code> with Munki rather than a payload free package, we&rsquo;ve not left any receipts, so Munki doesn&rsquo;t know if Homebrew is installed. We&rsquo;re going to use an installs array to tell Munki what to look for when determining whether Homebrew is installed or not.</p>
 
-<ul>
-<li>Been stupid and tried to update Boxen by just changing the Puppet Module and Gem versions</li>
-<li>Edited <code>site.pp</code> as I didn&rsquo;t want Nginx or node.js installed</li>
-<li>Been dumb and put my custom Puppet modules in the wrong place in my <code>Puppetfile</code></li>
-</ul>
-
-
-<p>None of these were particularly arduous to fix, but annoying none the less. If you find you have loads, you might want to run:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git mergetool
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The next step is to update your Puppet modules and RubyGems. First delete <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>. Now go back to your trusty Terminal and:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>bundle install --without development
-</span><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>librarian-puppet install --clean
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>installs<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;key&gt;</span>path<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;string&gt;</span>/usr/local/bin/brew<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;key&gt;</span>type<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;string&gt;</span>file<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/array&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>At this point, you might want to go through the custom modules you&rsquo;ve added to your <code>Puppetfile</code> and update those, although this is by no means required &ndash; some apps I&rsquo;ve installed through Boxen don&rsquo;t have a built in updater, so Boxen is more convenient than hunting for installers on various vendor&rsquo;s websites. Once your modules are up to date in your <code>Puppetfile</code>,  you&rsquo;re done! You can now get your Mac back to how you like it by issuing the usual:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>boxen
-</span></code></pre></td></tr></table></div></figure>
-
+<p>You might be crying &ldquo;but Homebrew needs the Xcode Command Line Tools installed!&rdquo; &ndash; and you&rsquo;d be 100% correct. You have the option of importing the downloaded package into Munki, but I have adapted <a href="https://github.com/timsutton/osx-vm-templates/blob/master/scripts/xcode-cli-tools.sh">Tim Sutton&rsquo;s script</a> into a <code>nopkg</code>. To find out what&rsquo;s installed, I ran <a href="http://www.fernlightning.com/doku.php?id=software%3afseventer%3astart">fseventer</a> and chose a random file to act as my installs array. I&rsquo;ve posted the pkginfos for both the <a href="https://github.com/grahamgilbert/macscripts/blob/master/Munki/pkginfos/Xcode/XcodeCLITools-2014.07.15.plist">Xcode CLI tools</a> and all of the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki/pkginfos/Homebrew">Homebrew installs</a> on Github.</p>
 </div>
 
 
@@ -203,12 +209,12 @@
   
 
 
-<time datetime="2014-04-04T07:54:26+01:00" pubdate data-updated="true">Apr 4<span>th</span>, 2014</time>
+<time datetime="2014-07-27T11:21:37+01:00" pubdate data-updated="true">Jul 27<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/boxen/'>Boxen</a>, <a class='category' href='/blog/categories/os-x/'>OS X</a>, <a class='category' href='/blog/categories/puppet/'>Puppet</a>
+    <a class='category' href='/blog/categories/automation/'>Automation</a>, <a class='category' href='/blog/categories/munki/'>Munki</a>, <a class='category' href='/blog/categories/os-x/'>OS X</a>
   
 </span>
 
@@ -217,7 +223,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -230,10 +236,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/04/01/binding-to-active-directory-with-munki/" title="Previous Post: Binding to Active Directory with Munki">&laquo; Binding to Active Directory with Munki</a>
+        <a class="basic-alignment left" href="/blog/2014/07/26/personal-automation-part-1/" title="Previous Post: Personal Automation (Part 1)">&laquo; Personal Automation (Part 1)</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/04/21/first-boot-pkg/" title="Next Post: first-boot-pkg">first-boot-pkg &raquo;</a>
       
     </p>
   </footer>
@@ -339,8 +343,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://grahamgilbert.com/blog/2014/04/04/updating-boxen/';
-        var disqus_url = 'http://grahamgilbert.com/blog/2014/04/04/updating-boxen/';
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2/';
         var disqus_script = 'embed.js';
       
     (function () {

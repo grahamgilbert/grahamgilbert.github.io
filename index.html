@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Earlier this year, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me &hellip;">
+  <meta name="description" content="The first step to getting any Mac set up is to get some software onto it. I&rsquo;m not going to cover how to set up Munki or AutoPkg &ndash; there &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,115 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/27/personal-automation-munki-part-2/">Personal Automation: Munki (Part 2)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-27T11:21:37+01:00" pubdate data-updated="true">Jul 27<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/07/27/personal-automation-munki-part-2/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The first step to getting any Mac set up is to get some software onto it. I&rsquo;m not going to cover how to set up <a href="https://code.google.com/p/munki/wiki/GettingStartedWithMunki">Munki</a> or <a href="https://github.com/autopkg/autopkg/wiki/Getting-Started">AutoPkg</a> &ndash; there are lots of other places for that information.</p>
+
+<p>As a sysadmin, I&rsquo;m forever testing things. Rather than destroy my own machine, I like to do this in Virtual Machines. My preferred virtualisation solution is VMware Fusion, but unfortunately it&rsquo;s not very easy to deploy out of the box. You need to do a little bit of work to get it into a package that you can import into Munki, but fortunately the process is <a href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2058680">well documented on VMware&rsquo;s site</a>.</p>
+
+<p>The next piece of &lsquo;non standard&rsquo; software I need is <a href="http://brew.sh">Homebrew</a>. The installation method listed on their site is to run a terminal command as the current user. The first part of this is obviously fine &ndash; Munki has several methods to run scripts (payload free packages, nopkg), but it runs everything as root. Fortunately, as I&rsquo;m deploying my own machine, I can make some assumptions about where Homebrew will be installed. The first assumption I can make is that there will only be one user on the machine, and the second is that I&rsquo;m going to be logged in most of the time (as my laptop is encrypted, it&rsquo;s either off or logged in).</p>
+
+<p>I&rsquo;m going to utilise a <code>nopkg</code> pkginfo file to perform the installation. The first part of our script to install Homebrew is to make sure that a user (me!) is logged in. Homebrew doesn&rsquo;t like being owned by root, so first we need to make sure that there is a user logged in.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">CURRENT_USER</span><span class="o">=</span><span class="sb">`</span>/bin/ls -l /dev/console | /usr/bin/awk <span class="s1">&#39;{ print $3 }&#39;</span><span class="sb">`</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$CURRENT_USER&quot;</span> <span class="o">==</span> <span class="s1">&#39;root&#39;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'>    <span class="c"># this can&#39;t run at the login window, we need the current user</span>
+</span><span class='line'>    <span class="nb">exit </span>1
+</span><span class='line'><span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So now we know that there&rsquo;s a user logged in, and who that user is. Time to install Homebrew as the current user.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /usr/local
+</span><span class='line'>mkdir -p /usr/local/homebrew
+</span><span class='line'>mkdir -p /usr/local/bin
+</span><span class='line'>chown <span class="nv">$CURRENT_USER</span>:_developer /usr/local/homebrew
+</span><span class='line'>chown <span class="nv">$CURRENT_USER</span>:_developer /usr/local/bin
+</span><span class='line'>
+</span><span class='line'><span class="c">#download and install homebrew</span>
+</span><span class='line'>su <span class="nv">$CURRENT_USER</span> -c <span class="s2">&quot;/bin/bash -o pipefail -c &#39;/usr/bin/curl -skSfL https://github.com/mxcl/homebrew/tarball/master | (cd /usr/local ; /usr/bin/tar xz -m --strip 1 -C homebrew; ln -s /usr/local/homebrew/bin/brew /usr/local/bin/brew)&#39;&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As we&rsquo;re using a <code>nopkg</code> with Munki rather than a payload free package, we&rsquo;ve not left any receipts, so Munki doesn&rsquo;t know if Homebrew is installed. We&rsquo;re going to use an installs array to tell Munki what to look for when determining whether Homebrew is installed or not.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>installs<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;key&gt;</span>path<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;string&gt;</span>/usr/local/bin/brew<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;key&gt;</span>type<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;string&gt;</span>file<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/array&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You might be crying &ldquo;but Homebrew needs the Xcode Command Line Tools installed!&rdquo; &ndash; and you&rsquo;d be 100% correct. You have the option of importing the downloaded package into Munki, but I have adapted <a href="https://github.com/timsutton/osx-vm-templates/blob/master/scripts/xcode-cli-tools.sh">Tim Sutton&rsquo;s script</a> into a <code>nopkg</code>. To find out what&rsquo;s installed, I ran <a href="http://www.fernlightning.com/doku.php?id=software%3afseventer%3astart">fseventer</a> and chose a random file to act as my installs array. I&rsquo;ve posted the pkginfos for both the <a href="https://github.com/grahamgilbert/macscripts/blob/master/Munki/pkginfos/Xcode/XcodeCLITools-2014.07.15.plist">Xcode CLI tools</a> and all of the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki/pkginfos/Homebrew">Homebrew installs</a> on Github.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -422,120 +531,6 @@ someone else has done all of the hard work for us.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/19/deploying-sal-on-heroku/">Deploying Sal on Heroku</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-19T09:04:05+01:00" pubdate data-updated="true">May 19<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/05/19/deploying-sal-on-heroku/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Setting up everything you need for Sal can be difficult, especially if you only have an OS X server available. Thankfully, Sal is built on top of a very common Python framework, Django. And even more thankfully, you can run Django on a whole host of <a href="http://en.wikipedia.org/wiki/Platform_as_a_service">PaaS</a> providers, including <a href="https://www.heroku.com">Heroku</a>.</p>
-
-<p>Heroku has a very generous <a href="https://www.heroku.com/pricing">free tier</a> that will easily handle a small Sal installation, so let&rsquo;s get started.</p>
-
-<h2>Heroku toolbelt</h2>
-
-<p>If you&rsquo;ve never used Heroku before, you&rsquo;re going to need to head over to <a href="http://heroku.com">their site</a> and sign up for a free account. Whilst you&rsquo;re there, you&rsquo;re also going to need to install their toolbelt. <a href="http://toolbelt.herokuapp.com/">Grab the package</a> and follow their instructions for linking it to your account.</p>
-
-<h2>Configure</h2>
-
-<p>Now we need to get a copy of Sal and configure it. Assuming you keep your code in ~/src:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src
-</span><span class='line'><span class="nv">$ </span>git clone https://github.com/grahamgilbert/sal
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>sal
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now we need to make a copy of sal/example_settings.py</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>cp sal/example_settings.py sal/settings.py
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And edit sal/settings.py in your favourite editor to your liking (probably time zone at least).</p>
-
-<p>Heroku uses git for deployment, so we need to commit our changes.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git add .
-</span><span class='line'><span class="nv">$ </span>git commit -m <span class="s2">&quot;initial commit to heroku&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>We&rsquo;re nearly there! Time to create our environment on Heroku</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku create
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Of course we haven&rsquo;t pushed Sal to Heroku yet. Let&rsquo;s fix that.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git push heroku master
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You&rsquo;ll see Sal being pushed up to Heroku and Sal&rsquo;s requirements being installed. A Postgres database will also automatically be created for you. The database will be empty though, so let&rsquo;s populate it with what we need.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku run python manage.py syncdb
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>When asked, you certainly <em>do</em> want to create a super user. Use a strong username and password as this is the admin for your Sal application.</p>
-
-<p>One last command to run:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku run python manage.py migrate
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Your Sal installation is ready to use:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku open
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>As said earlier, the free version does have some limits. The most important with Sal is the number of rows you can have in the free database (10,000), so the more information you collect from each machine (Facter Facts and Munki Conditions), the larger your database is. It&rsquo;s a measley $9 a month to upgrade your database to 10 million rows, so it&rsquo;s easy to scale your database. For more information on upgrading your Heroku environment see <a href="https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups">their documentation</a>.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -557,6 +552,10 @@ someone else has done all of the hard work for us.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/27/personal-automation-munki-part-2/">Personal Automation: Munki (Part 2)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/26/personal-automation-part-1/">Personal Automation (Part 1)</a>
       </li>
     
@@ -570,10 +569,6 @@ someone else has done all of the hard work for us.</p>
     
       <li class="post">
         <a href="/blog/2014/06/30/making-packages-with-autopkg/">Making Packages With AutoPkg</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/19/deploying-sal-on-heroku/">Deploying Sal on Heroku</a>
       </li>
     
   </ul>
