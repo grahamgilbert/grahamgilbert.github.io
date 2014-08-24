@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Facter is what gives Puppet it’s brains. It collects information about the computer it is run on and then passes it to the Puppet Master for use in &hellip;">
+  <meta name="description" content="At work, we&rsquo;ve recently changed how we build our bootstrap package to having the main code that connects a Mac to our Puppet infrastructure &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,76 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/07/one-bootstrap-package-to-rule-them-all/">One Bootstrap Package to Rule Them All</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-07T15:36:00+01:00" pubdate data-updated="true">Apr 7<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/04/07/one-bootstrap-package-to-rule-them-all/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>At work, we&rsquo;ve recently changed how we build our bootstrap package to having the main code that connects a Mac to our Puppet infrastructure pulled down from GitHub when the client boots up for the first time.</p>
+
+<h2>Why?</h2>
+
+<p>This might sound like madness to you. Why would anyone want to do this? We had two main issues to solve:</p>
+
+<ul>
+<li>I got sick of rebuilding our images every time our bootstrap script changed.</li>
+<li>Our engineers got sick of downloading the latest version of our package every time they thin / no-imaged a Mac.</li>
+</ul>
+
+
+<p>Why would our script change so much? In our case, it is to install the latest versions of Puppet and Facter. This isn&rsquo;t strictly necessary, as we update Puppet and Facter with Munki, but occasionally there will be something in our Puppet config that requires a specific version &ndash; for example, when we started configuring usernames on 10.8 Macs with Puppet, the <code>salt</code> parameter was introduced. This required Puppet 3.0.2-ish or higher &ndash; which meant that any NetRestore image or old package that contained a version of Puppet lower than this would fail, and the engineer on site was in for a world of pain.</p>
+
+<h2>Ok, I&rsquo;m convinced.</h2>
+
+<p>I&rsquo;ve put an <a href="https://github.com/grahamgilbert/macscripts/tree/master/Puppet-Bootstrap">example up on GitHub</a>. This is a sanitised version of the bootstrap script we use at pebble.it. All we do in the script that gets deployed to the client is set the address of our Puppet server and then pull the rest of the script from GitHub &ndash; if you don&rsquo;t need to set any variables, you could do all of the work in the remote script.</p>
+
+<p>So this can be used with all of the deployment methods we use at pebble.it (<a href="https://code.google.com/p/instadmg/">imaging</a>, <a href="http://managingosx.wordpress.com/2012/07/25/son-of-installlion-pkg/">createOSXinstallPkg</a> and no imaging), we do the actual work in a script that is triggered by a launch daemon, so we can be sure we&rsquo;re a) performing the work in a full OS X environment (we need Python to be available for our script) and that we&rsquo;re running it on the boot volume of the client Mac (we need the serial number, and this could be installed via Target Disk Mode when no-imaging.</p>
+
+<p>So when the bootstrap script needs to be updated, rather than rebuilding the package and distributing it to engineers and baking it into images, the workflow becomes:</p>
+
+<ol>
+<li>Update script, push to GitHub.</li>
+<li>Restore image with <a href="https://github.com/grahamgilbert/macscripts/tree/master/Puppet-Bootstrap">puppet_bootstrap.pkg</a> baked in or install the package manually.</li>
+<li>Mac boots, downloads the latest version of <a href="https://github.com/grahamgilbert/macscripts/tree/master/Puppet-Install"><code>install_puppet.py</code></a>.</li>
+<li><code>install_puppet.py</code> downloads and installs the correct versions of Puppet and Facter and configures Puppet.</li>
+<li>Puppet downloads, installs and configures Munki along with all of the other configuration.</li>
+<li>PROFIT</li>
+</ol>
+
+
+<p>This clearly isn&rsquo;t required or suitable for all types of script &ndash; but if you have a package that is frequently updated and you have staff installing it by hand, this is a relatively simple way to make sure they&rsquo;ve got the latest version at all times.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -480,57 +550,6 @@ vagrant up
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">Getting Started With Puppet on OS X (Part 2)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-27T09:30:00+00:00" pubdate data-updated="true">Jan 27<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Before reading this post, you really need to read <a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">part 1</a> &ndash; none of this will make sense without it!</p>
-
-<p>Still with me? Let&rsquo;s do finally do something with Puppet. SSH into your Puppet Master (if it&rsquo;s IP has changed since you first did the setup, make sure you reflect this change in the Mac client&rsquo;s /etc/hosts file) and navigate to /etc/puppet and list the directory&rsquo;s contents:</p>
-
-<pre><code>cd /etc/puppet
-ls -la
-</code></pre>
-
-<p>You&rsquo;ll see a few directories here &ndash; we&rsquo;re interested in two today &ndash; manifests and modules. Manifests will be where you describe your nodes, and the modules are the functional Puppet code.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">Continue reading &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -554,6 +573,10 @@ ls -la
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/08/24/london-apple-admins/">London Apple Admins</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/27/personal-automation-munki-part-2/">Personal Automation: Munki (Part 2)</a>
       </li>
     
@@ -567,10 +590,6 @@ ls -la
     
       <li class="post">
         <a href="/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/">Multi Tenanted Munki With Puppet and Sal</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/06/30/making-packages-with-autopkg/">Making Packages With AutoPkg</a>
       </li>
     
   </ul>
