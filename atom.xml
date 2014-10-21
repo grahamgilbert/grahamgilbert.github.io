@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-08-24T17:24:31+01:00</updated>
+  <updated>2014-10-21T09:14:08+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,17 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[first-boot-pkg updated for Yosemite]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/"/>
+    <updated>2014-10-21T11:50:28+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/10/21/first-boot-pkg-updated-for-yosemite</id>
+    <content type="html"><![CDATA[<p>It seems like Yosemite introduced an <a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">undocumented change</a> that requires any packages that are added an OS X installer (e.g. Netinstall or createOSXinstallPkg) be distribution style packages, or you get a nasty failure acompanied by one of the most unhelpful error messages ever.</p>
+
+<p>To fix this, <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> now builds distribution style packages.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[London Apple Admins]]></title>
@@ -1962,192 +1973,6 @@ someone else has done all of the hard work for us.</p>
 <p>Configuring each IRC client is different, but for Textual (my prefered client), it&rsquo;s pretty straightforward. Go to the Server menu and choose Add Server. Make the settings look like below, obviously replaing the hostname and password with the ones you chose.</p>
 
 <p><img class="center" src="http://grahamgilbert.com/images/posts/2013-10-13/textual_settings.png"></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Creating an OS X base box for Vagrant with Packer]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/"/>
-    <updated>2013-08-23T11:30:00+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer</id>
-    <content type="html"><![CDATA[<p>A while ago, the chaps over at the <a href="http://www.vagrantup.com/">Vagrant</a> project have recently released a <a href="http://www.vagrantup.com/vmware">plugin to let Vagrant work with VMWare Fusion</a> &ndash; this means we can finally use Vagrant to provision OS X VMs.</p>
-
-<p>Why is this a good thing? Do you NetBoot VMWare to test your builds? Or maybe you still have that test Mac on your desk to test your builds. Either way, it&rsquo;s going to be several minutes to restore an image, even if you&rsquo;re thin imaging. With the VM already on your machine, you&rsquo;re ready to go in seconds. Another bonus is that Vagrant isn&rsquo;t only limited to OS X virtual machines &ndash; for example, I have a Vagrant configuration that spins up an Ubuntu box configured as a Munki server, with a copy of my repository on an external drive. This allows me to test deployments from anywhere, with everything local to my Mac (have you ever tried testing a Final Cut Studio package from home? 48GB takes a while to download.). I&rsquo;ll go into more detail on this setup in a future post, but for now here&rsquo;s how to get a Mac base box into Vagrant.<!--more--></p>
-
-<h2>Pre-requisites</h2>
-
-<ul>
-<li><a href="https://itunes.apple.com/gb/app/os-x-mountain-lion/id537386512?mt=12">Install OS X Mountain Lion.app from the App Store</a></li>
-<li><a href="http://www.vmware.com/products/fusion/overview.html">VMWare Fusion</a></li>
-<li><a href="http://downloads.vagrantup.com/">Vagrant</a> (this was written using Vagrant 1.2.7)</li>
-<li><a href="http://www.vagrantup.com/vmware">Vagrant VMWare plugin</a></li>
-<li><a href="http://www.packer.io/downloads.html">Packer</a> (I&rsquo;m using Packer 0.3.1)</li>
-<li>Git (Install the Command Line Tools from within <a href="https://itunes.apple.com/gb/app/xcode/id497799835?mt=12">Xcode&rsquo;s</a> preferences if you don&rsquo;t have it).</li>
-</ul>
-
-
-<h2>Get set up with Packer</h2>
-
-<p>Before we install Packer, you&rsquo;re going to need to download it. No, really, you need it.</p>
-
-<p>Assuming you&rsquo;ve downloaded it to <code>~/Downloads</code>, extract the zip file so you will be left with something like this: <code>~/Downloads/0.3.1_darwin_amd</code>. Everything prefaced with a <code>$</code> should be entered in your terminal.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo mv ~/Downloads/0.3.1_darwin_amd64 /usr/local/packer
-</span><span class='line'><span class="nv">$ </span>sudo chown <span class="nv">$USER</span> /usr/local/packer
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You now have a choice: you can refer to the <code>packer</code> binary by it&rsquo;s full path every time (<code>/usr/local/packer/packer</code>), or you can modify your path. The next step is entirely optional, but I highly recommend it. You need to edit <code>~/.profile</code>.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>nano ~/.profile
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And add this line to the file, then save it (<code>CTRL-O</code> then <code>CTRL-X</code>):</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/usr/local/packer:$PATH&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And then quit and re-open Terminal.app.</p>
-
-<h2>Templates</h2>
-
-<p>Packer uses template files to define how it should build the VM for you. Fortunately, <a href="http://macops.ca">Tim Sutton</a> has created a template file that can be used with Packer.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># I keep other people&#39;s code in ~/src/Others</span>
-</span><span class='line'><span class="nv">$ </span>git clone https://github.com/timsutton/osx-vm-templates.git ~/src/Others
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>There are a couple of prep steps we need to do before we can instruct Packer to make our box. First off it&rsquo;s going to need installation media. There is a script that will prepare the Install OS X Mountain Lion.app so it can be used with Packer.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/Others/osx-vm-templates
-</span><span class='line'><span class="nv">$ </span>sudo prepare_iso/prepare_iso.sh <span class="s2">&quot;/Applications/Install OS X Mountain Lion.app&quot;</span> out
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You&rsquo;ll see some activity in your terminal, and then you&rsquo;ll be given the filename of your installation DMG and the checksum. You&rsquo;ll need these in the next step.</p>
-
-<p>Open up <code>packer/template.json</code> in your favourite editor. Paste in the checksum you were given in the last step (yours will probably be different from mine), and specify the path to your installation DMG (obviously use the path to your home directory, not mine!). You can also edit the size of the disk, the memory etc in this file.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="s2">&quot;iso_checksum&quot;</span><span class="err">:</span> <span class="s2">&quot;14cd20f75c7c0405198fa98006a4442e&quot;</span><span class="err">,</span>
-</span><span class='line'><span class="s2">&quot;iso_url&quot;</span><span class="err">:</span> <span class="s2">&quot;file:///Users/grahamgilbert/src/Others/osx-vm-templates/out/OSX_InstallESD_10.8.4_12E55.dmg&quot;</span><span class="err">,</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Prepare the build!</h2>
-
-<p>You&rsquo;re ready to go. This next step will take <strong>AGES</strong> so go and make a cup of coffee (or tea), as this is going to install OS X, run through the scripts to install the bits Vagrant needs (like Puppet), then make a Vagrant base box.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Make sure we&#39;re in the right directory</span>
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/Others/osx-vm-templates/packer
-</span><span class='line'><span class="nv">$ </span>packer build template.json
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>After you hit return, VMware will open up and OS X will start installing. Once everything is done, and Packer tells you it&rsquo;s done in your terminal window, you just need to add it to Vagrant and then you&rsquo;re ready to use it.</p>
-
-<h2>Adding the VM to Vagrant</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>vagrant box add osx ~/src/Others/osx-vm-templates/packer/packer_vmware_vmware.box
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Using the VM in Vagrant</h2>
-
-<p>We&rsquo;re going to make a quick Vagrant configuration using your newly built box.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mkdir -p ~/Desktop/osx_test
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/Desktop/osx_test
-</span><span class='line'><span class="nv">$ </span>vagrant init osx
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You&rsquo;re probaly going to want a GUI when it boots, so open up <code>~/Desktop/osx_test/Vagrantfile</code> in your text editor of choice and find the next section.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># config.vm.provider :virtualbox do |vb|</span>
-</span><span class='line'><span class="c1">#   # Don&#39;t boot with headless mode</span>
-</span><span class='line'><span class="c1">#   vb.gui = true</span>
-</span><span class='line'><span class="c1">#</span>
-</span><span class='line'><span class="c1">#   # Use VBoxManage to customize the VM. For example to change memory:</span>
-</span><span class='line'><span class="c1">#   vb.customize [&quot;modifyvm&quot;, :id, &quot;--memory&quot;, &quot;1024&quot;]</span>
-</span><span class='line'><span class="c1"># end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>  And change it to read</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:vmware_fusion</span> <span class="k">do</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span>
-</span><span class='line'><span class="c1">#   # Don&#39;t boot with headless mode</span>
-</span><span class='line'>   <span class="n">v</span><span class="o">.</span><span class="n">gui</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'><span class="c1">#</span>
-</span><span class='line'><span class="c1">#   # Use VBoxManage to customize the VM. For example to change memory:</span>
-</span><span class='line'><span class="c1">#   vb.customize [&quot;modifyvm&quot;, :id, &quot;--memory&quot;, &quot;1024&quot;]</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Unfortunately there isn&rsquo;t any support for OS X in the official Vagrant release (yet), but good old Tim Sutton has sorted that out for us. We&rsquo;re going to clone his repository, switch to the branch with his changes and copy the needed files into the main Vagrant installation. Hopefully his changes will be merged into a future of Vagrant, but for now:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/Others
-</span><span class='line'><span class="nv">$ </span>git clone https://github.com/timsutton/vagrant.git timsutton-vagrant
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/Others/timsutton-vagrant
-</span><span class='line'><span class="nv">$ </span>git checkout guest-plugin-osx
-</span><span class='line'><span class="nv">$ </span>sudo cp -R ~/src/Others/timsutton-vagrant/plugins/guests/osx /Applications/Vagrant/embedded/gems/gems/vagrant-1.2.7/plugins/guests/osx
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>We&rsquo;re ready to boot the thing now &ndash; make it so, number one.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/Desktop/osx_test
-</span><span class='line'><span class="nv">$ </span>vagrant up --provider vmware_fusion
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You should see VMWare Fusion open if it&rsquo;s not already running and your VM boot after a little while.</p>
-
-<h2>What&rsquo;s next?</h2>
-
-<p>You can configure this box with a script, or using Puppet or Chef (can you guess which I&rsquo;d do?)?</p>
 ]]></content>
   </entry>
   

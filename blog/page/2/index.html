@@ -9,8 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Over the past few weeks, I&rsquo;ve had the same conversation over and over:
-people telling me that once they get started using Munki, their next &hellip;">
+  <meta name="description" content="Thanks for everyone that came to my talk today, it was fun to finally show off what I&rsquo;ve been working on for the last year or so. I&rsquo;m &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -88,6 +87,44 @@ people telling me that once they get started using Munki, their next &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/">Multi Tenanted Munki With Puppet and Sal</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-09T20:27:25+01:00" pubdate data-updated="true">Jul 9<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thanks for everyone that came to my talk today, it was fun to finally show off what I&rsquo;ve been working on for the last year or so. I&rsquo;m sure the video will be up soon, but in the meantime, <a href="http://grahamgilbert.com/images/posts/2014-07-09/Multi_site_Munki.pdf">here are the slides from the talk</a>.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -555,57 +592,6 @@ someone else has done all of the hard work for us.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/01/binding-to-active-directory-with-munki/">Binding to Active Directory With Munki</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-01T20:15:39+01:00" pubdate data-updated="true">Apr 1<span>st</span>, 2014</time>
-        
-         | <a href="/blog/2014/04/01/binding-to-active-directory-with-munki/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It&rsquo;s quite  a straightforward process to automate this with Munki, although you do have a few options to consider.</p>
-
-<p>First off, how are you going to deliver the actual bind script? You have the option of a <a href="https://code.google.com/p/munki/wiki/ManagingPrintersWithMunki#Alternate_Method_Using_nopkg">no-pkg pkginfo</a> file, with the script directly in the pkginfo plist. Whilst the script is now easily editable in the pkginfo, it does pose a security issue in that the catalog is kept in /Library/Managed Installs/catalogs, which will contain your script. Along with your AD bind account&rsquo;s details. Whoops!</p>
-
-<h2>Prepare the Bind!</h2>
-
-<p>My preferred way of deploying the bind script is with a payload-free package made with The Luggage. My bind script is nothing special, it was originally borrowed from DeployStudio. You can find the <a href="https://github.com/grahamgilbert/macscripts/blob/master/AD%20Bind/postinstall">script</a> and the <a href="https://github.com/grahamgilbert/macscripts/blob/master/AD%20Bind/Makefile">Makefile</a> on my <a href="https://github.com/grahamgilbert/macscripts/tree/master/AD%20Bind">macscripts repo</a>. If you need a primer on The Luggage, <a href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/">I wrote about it in August 2013</a>. You just need to edit the variables at the top of the script to suit your environment and build the package.</p>
-
-<p>So you&rsquo;ve got the machine bound to AD. Great. What happens if the binding doesn&rsquo;t go to plan? Or a well meaning tech manages to unbind the machine, but can&rsquo;t manage to re-bind it? Or even worse, the user manages to unbind it themselves? We need to make Munki check that the Mac is still bound to AD.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/04/01/binding-to-active-directory-with-munki/">Continue reading &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -629,6 +615,10 @@ someone else has done all of the hard work for us.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/">First-boot-pkg Updated for Yosemite</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/08/24/london-apple-admins/">London Apple Admins</a>
       </li>
     
@@ -642,10 +632,6 @@ someone else has done all of the hard work for us.</p>
     
       <li class="post">
         <a href="/blog/2014/07/10/automate-yourself-out-of-a-job/">Automate Yourself Out of a Job</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/">Multi Tenanted Munki With Puppet and Sal</a>
       </li>
     
   </ul>
