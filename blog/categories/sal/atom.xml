@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Sal | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/sal/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-10-21T09:14:08+01:00</updated>
+  <updated>2014-11-06T16:59:29-08:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Deploying Sal on Heroku]]></title>
     <link href="http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku/"/>
-    <updated>2014-05-19T09:04:05+01:00</updated>
+    <updated>2014-05-19T01:04:05-07:00</updated>
     <id>http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku</id>
     <content type="html"><![CDATA[<p>Setting up everything you need for Sal can be difficult, especially if you only have an OS X server available. Thankfully, Sal is built on top of a very common Python framework, Django. And even more thankfully, you can run Django on a whole host of <a href="http://en.wikipedia.org/wiki/Platform_as_a_service">PaaS</a> providers, including <a href="https://www.heroku.com">Heroku</a>.</p>
 
@@ -90,7 +90,7 @@ $ heroku open
   <entry>
     <title type="html"><![CDATA[Writing Plugins for Sal: Part 3]]></title>
     <link href="http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3/"/>
-    <updated>2014-02-17T21:12:36+00:00</updated>
+    <updated>2014-02-17T13:12:36-08:00</updated>
     <id>http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3</id>
     <content type="html"><![CDATA[<p>We&rsquo;ve already got a fairly decent plugin &ndash; it shows us how many machines we have that aren&rsquo;t able to run 10.9. However, quite a few people won&rsquo;t have any machines that fall into this category, and just want to know when one manages to sneak under the radar, so let&rsquo;s hide the plugin if we don&rsquo;t need to see it.</p>
 
@@ -235,7 +235,7 @@ $ heroku open
   <entry>
     <title type="html"><![CDATA[Writing Plugins for Sal: Part 2]]></title>
     <link href="http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2/"/>
-    <updated>2014-02-07T11:34:24+00:00</updated>
+    <updated>2014-02-07T03:34:24-08:00</updated>
     <id>http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2</id>
     <content type="html"><![CDATA[<p>And now, time for the shocking second part of our series on how to write plugins for Sal.</p>
 
@@ -405,7 +405,7 @@ $ heroku open
   <entry>
     <title type="html"><![CDATA[Writing plugins for Sal: Part 1]]></title>
     <link href="http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1/"/>
-    <updated>2014-01-26T10:01:26+00:00</updated>
+    <updated>2014-01-26T02:01:26-08:00</updated>
     <id>http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1</id>
     <content type="html"><![CDATA[<p>Writing a plugin for Sal isn&rsquo;t hard. In fact, I&rsquo;d go so far as to say it&rsquo;s easy. We&rsquo;re going to make a plugin that will flag up any machines that aren&rsquo;t compatible with Mavericks, by using <a href="https://github.com/timsutton/munki-conditions/blob/master/supported_major_os_upgrades">Tim Sutton&rsquo;s script</a>. To start off with, you&rsquo;re going to need to get that script onto your Macs at <code>/usr/local/munki/conditions</code>. I&rsquo;d personally use Puppet for that, but if you&rsquo;re a purely Munki shop, you&rsquo;ll be using a package. <a href="https://github.com/grahamgilbert/macscripts/raw/master/Munki/Condtion%20Packages/supported_major_os_upgrades/supported_major_os_upgrades.pkg">And handily, I&rsquo;ve made one</a>.</p>
 
