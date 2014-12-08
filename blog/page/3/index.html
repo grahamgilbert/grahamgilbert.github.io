@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="As you might know, I&rsquo;m a bit of a fan of Munki and Puppet for managing the Macs I look after. Around a year ago, I really wanted to be able to &hellip;">
+  <meta name="description" content="There are some packages that can&rsquo;t be deployed to an unbooted OS, such as when building an image with AutoDMG. If you are using Greg Neagle& &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,7 +93,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/04/03/updating-boxen/">Updating Boxen</a></h1>
+      <h1 class="entry-title"><a href="/blog/2014/04/21/first-boot-pkg/">First-boot-pkg</a></h1>
     
     
       <p class="meta">
@@ -109,9 +109,62 @@
   
 
 
-<time datetime="2014-04-03T23:54:26-07:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2014</time>
+<time datetime="2014-04-21T09:01:24+01:00" pubdate data-updated="true">Apr 21<span>st</span>, 2014</time>
         
-         | <a href="/blog/2014/04/03/updating-boxen/#disqus_thread">Comments</a>
+         | <a href="/blog/2014/04/21/first-boot-pkg/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There are some packages that can&rsquo;t be deployed to an unbooted OS, such as when building an image with AutoDMG. If you are using Greg Neagle&rsquo;s <a href="http://managingosx.wordpress.com/2012/07/25/son-of-installlion-pkg/">createOSXinstallPkg</a>, the OS X installer environment doesn&rsquo;t have everything a full OS X install has. For times like this, you need to install the packages at first boot. For a long time, I&rsquo;ve used Rich Trouton&rsquo;s <a href="http://derflounder.wordpress.com/2014/04/17/first-boot-package-install-revisited/">First Boot Package Install</a>, however I found myself repeating things quite a bit and having a folder full of first boot packages.</p>
+
+<p>So, I made my own. The main features of <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> are:</p>
+
+<ul>
+<li>It is designed with scripting and automation in mind, with options able to be configured with a configuration plist or via options on the command line (or a mixture of both)</li>
+<li>It will re-try failed packages a specified number of times (in case of Active Directory not being available, for example)</li>
+<li>Will wait for the network to be available before installing (optional, can be disabled if desired just in case your package is going to let the Mac get onto the network)</li>
+</ul>
+
+
+<p><a href="/images/posts/2014-04-21/first-boot-pkg.png"><img class="center" src="/images/posts/2014-04-21/first-boot-pkg.png" width="578" height="433"></a></p>
+
+<p>If you&rsquo;re happy with using Git, I&rsquo;d recommend just making a clone of the repository and doing a <code>git pull</code> to keep the script updated. If the thought of all those gits and pulls makes you run away, you can <a href="https://github.com/grahamgilbert/first-boot-pkg/archive/master.zip">download a zip</a> of the project.</p>
+
+<p>This script makes use of Per Olofsson&rsquo;s <a href="https://github.com/MagerValp/LoginLog">LoginLog</a> for displaying the log file whilst the script is running, so massive thanks to him for releasing it.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/04/updating-boxen/">Updating Boxen</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-04T07:54:26+01:00" pubdate data-updated="true">Apr 4<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/04/04/updating-boxen/#disqus_thread">Comments</a>
         
       </p>
     
@@ -212,7 +265,7 @@
   
 
 
-<time datetime="2014-04-01T12:15:39-07:00" pubdate data-updated="true">Apr 1<span>st</span>, 2014</time>
+<time datetime="2014-04-01T20:15:39+01:00" pubdate data-updated="true">Apr 1<span>st</span>, 2014</time>
         
          | <a href="/blog/2014/04/01/binding-to-active-directory-with-munki/#disqus_thread">Comments</a>
         
@@ -263,7 +316,7 @@
   
 
 
-<time datetime="2014-02-17T13:12:36-08:00" pubdate data-updated="true">Feb 17<span>th</span>, 2014</time>
+<time datetime="2014-02-17T21:12:36+00:00" pubdate data-updated="true">Feb 17<span>th</span>, 2014</time>
         
          | <a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/#disqus_thread">Comments</a>
         
@@ -425,7 +478,7 @@
   
 
 
-<time datetime="2014-02-07T03:34:24-08:00" pubdate data-updated="true">Feb 7<span>th</span>, 2014</time>
+<time datetime="2014-02-07T11:34:24+00:00" pubdate data-updated="true">Feb 7<span>th</span>, 2014</time>
         
          | <a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/#disqus_thread">Comments</a>
         
@@ -578,189 +631,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/">Writing Plugins for Sal: Part 1</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-26T02:01:26-08:00" pubdate data-updated="true">Jan 26<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Writing a plugin for Sal isn&rsquo;t hard. In fact, I&rsquo;d go so far as to say it&rsquo;s easy. We&rsquo;re going to make a plugin that will flag up any machines that aren&rsquo;t compatible with Mavericks, by using <a href="https://github.com/timsutton/munki-conditions/blob/master/supported_major_os_upgrades">Tim Sutton&rsquo;s script</a>. To start off with, you&rsquo;re going to need to get that script onto your Macs at <code>/usr/local/munki/conditions</code>. I&rsquo;d personally use Puppet for that, but if you&rsquo;re a purely Munki shop, you&rsquo;ll be using a package. <a href="https://github.com/grahamgilbert/macscripts/raw/master/Munki/Condtion%20Packages/supported_major_os_upgrades/supported_major_os_upgrades.pkg">And handily, I&rsquo;ve made one</a>.</p>
-
-<p><img class="center" src="/images/posts/2014-01-26/mavcompatibility.png" width="297" height="131"></p>
-
-<p>The convention I&rsquo;d like everyone to follow is to drop your plugins into the <code>plugins</code> directory, in a subdirectory named after yourself &ndash; mine are going in <code>plugins/grahamgilbert</code>. The plugin we&rsquo;re making today is going in <code>plugins/grahamgilbert/mavcompatibility</code>.</p>
-
-<h2>Metadata</h2>
-
-<p>The first piece you&rsquo;ll need is a <code>.yapsy-plugin</code> file. This contains the metadata for your plugin. It&rsquo;s all pretty self explanatory. This is <code>plugins/grahamgilbert/mavcompatibility/mavcompatibility.yapsy-plugin</code>.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[Core]
-</span><span class='line'>Name = MavCompatibility
-</span><span class='line'>Module = mavcompatibility
-</span><span class='line'>
-</span><span class='line'>[Documentation]
-</span><span class='line'>Author = Graham Gilbert
-</span><span class='line'>Version = 0.1
-</span><span class='line'>Website = http://grahamgilbert.com
-</span><span class='line'>Description = Displays macs that aren't compatible with 10.9.</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Now for the meat</h2>
-
-<p>Onto the actual plugin. Your plugin is going to be sent at least two pieces of information, possibly three.</p>
-
-<ul>
-<li><code>page</code>: This will be the page the plugin is going to be shown on. This will either be <code>front</code>, <code>bu_dashboard</code> or <code>group_dashboard</code>. You will need this information later on.</li>
-<li><code>machines</code>: This a collection of machines you are going to need to work on. Depending on the page, this might be all of them, or just a subset from a Business Unit or Machine Group.</li>
-<li><code>theid</code>: If you are displaying your plugin on either a Business Unit page or a Machine Group page, this is the unique ID of that Business Unit or Machine Group.</li>
-</ul>
-
-
-<p>And in return, your plugin is expected to return two things:</p>
-
-<ul>
-<li>Some HTML: You plugin needs to return it&rsquo;s output.</li>
-<li>The width of the output: Sal uses <a href="http://getbootstrap.com/2.3.2/">Bootstrap</a>, and it uses a grid system. So Sal can wrap lines properly, you need to tell Sal how many columns your plugin needs. This should be an integer.</li>
-</ul>
-
-
-<p>That&rsquo;s the 50,000 ft view of a Sal plugin, let&rsquo;s make one. The main thing to remember is that Sal is written in Django, so if you have any problems, looking at <a href="https://docs.djangoproject.com/en/1.5/">their documentation</a> will help. You can also enable debug logging on your Sal install by uncommenting lines 24 and 25 in <code>server/views.py</code> (turn it off when you&rsquo;re done though, it is VERY verbose).</p>
-
-<p>First off, a little about how Sal stores the data you send it. Sal stores Munki&rsquo;s conditions in the Condition table, and for each one, the name and it&rsquo;s data is stored (this is the same for Facts). Munki&rsquo;s conditions can consist of a variety of data types (strings, dates, arrays), so Sal will flatten any arrays it is given into a comma separated list. Each machine will have multiple Conditions and Facts associated with it.</p>
-
-<p>When displaying the plugin, Sal will look for a function called show_widget, passing the information mentioned previously. Don&rsquo;t worry too much about the templates, we&rsquo;ll cover them later.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/mavcompatibility.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
-</span><span class='line'>            <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
-</span><span class='line'>        <span class="p">})</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="mi">3</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Skip to line 20 &ndash; this is where the real work starts. All we&rsquo;re doing is taking the machines we were passed and first off finding the machines that have the condition we&rsquo;re looking for. We then want to remove those that contain 10.9 in that data.</p>
-
-<h2>Templates</h2>
-
-<p>Then it&rsquo;s just a case of passing those variables to our template. As we aren&rsquo;t linking our buttons to anything for now, both of our templates will be the same, but we will still make two separate ones as we&rsquo;re going to need them next time.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/front.html </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            Not Compatible
-</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Make a file in <code>templates</code> called <code>id.html</code> with the same content for now &ndash; we&rsquo;ll make them different in part two.</p>
-
-<p>We return our plugin on line 28 of <code>mavcompatibility.py</code>. First we render the appropriate template, passing it our data, and we return how wide our plugin is &ndash; in this case it will take up three columns.</p>
-
-<p>That&rsquo;s it for a basic plugin &ndash; we&rsquo;ve taken a bunch of machines, filtered them based on a Munki condition, and we&rsquo;ve returned the data. But this obviously is lacking &ndash; the button doesn&rsquo;t do anything and we still see a big fat zero when all of our machines are 10.9 capable. Anyway, you can get the code so far in my <a href="https://github.com/grahamgilbert/sal-plugins/tree/master/mavcompatibility">sal-plugins repository</a>.</p>
-
-<p>Tune in to part two for the thrilling conclusion!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -784,7 +654,11 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/11/06/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
+        <a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
       </li>
     
       <li class="post">
@@ -797,10 +671,6 @@
     
       <li class="post">
         <a href="/blog/2014/07/27/personal-automation-munki-part-2/">Personal Automation: Munki (Part 2)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/07/26/personal-automation-part-1/">Personal Automation (Part 1)</a>
       </li>
     
   </ul>

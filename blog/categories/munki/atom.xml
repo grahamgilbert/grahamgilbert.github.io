@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Munki | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/munki/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-11-06T16:59:29-08:00</updated>
+  <updated>2014-12-08T17:55:27+00:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Slides and notes from Twisting Munki]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/11/06/slides-and-notes-from-twisting-munki/"/>
-    <updated>2014-11-06T16:51:33-08:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/11/06/slides-and-notes-from-twisting-munki</id>
+    <link href="http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki/"/>
+    <updated>2014-11-07T00:51:33+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki</id>
     <content type="html"><![CDATA[<p>Firstly, thanks if you came to my talk and putting up with me! You can get my slides and code from the <a href="https://github.com/grahamgilbert/mactech_2014">GitHub repository</a>.</p>
 ]]></content>
   </entry>
@@ -25,7 +25,7 @@
   <entry>
     <title type="html"><![CDATA[Personal Automation: Munki (Part 2)]]></title>
     <link href="http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2/"/>
-    <updated>2014-07-27T03:21:37-07:00</updated>
+    <updated>2014-07-27T11:21:37+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2</id>
     <content type="html"><![CDATA[<p>The first step to getting any Mac set up is to get some software onto it. I&rsquo;m not going to cover how to set up <a href="https://code.google.com/p/munki/wiki/GettingStartedWithMunki">Munki</a> or <a href="https://github.com/autopkg/autopkg/wiki/Getting-Started">AutoPkg</a> &ndash; there are lots of other places for that information.</p>
 
@@ -122,7 +122,7 @@
   <entry>
     <title type="html"><![CDATA[Personal Automation (Part 1)]]></title>
     <link href="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/"/>
-    <updated>2014-07-26T03:27:00-07:00</updated>
+    <updated>2014-07-26T11:27:00+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1</id>
     <content type="html"><![CDATA[<p><a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">Earlier this year</a>, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was designed for internal use at Github, it set some things up how they liked them &ndash; which wasn&rsquo;t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.</p>
 
@@ -155,7 +155,7 @@
   <entry>
     <title type="html"><![CDATA[Binding to Active Directory with Munki]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki/"/>
-    <updated>2014-04-01T12:15:39-07:00</updated>
+    <updated>2014-04-01T20:15:39+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki</id>
     <content type="html"><![CDATA[<p>Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It&rsquo;s quite  a straightforward process to automate this with Munki, although you do have a few options to consider.</p>
 
@@ -283,7 +283,7 @@ $ /usr/local/munki/munkiimport ad-bind.pkg --installcheck_script=installcheck_sc
   <entry>
     <title type="html"><![CDATA[Writing Plugins for Sal: Part 3]]></title>
     <link href="http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3/"/>
-    <updated>2014-02-17T13:12:36-08:00</updated>
+    <updated>2014-02-17T21:12:36+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3</id>
     <content type="html"><![CDATA[<p>We&rsquo;ve already got a fairly decent plugin &ndash; it shows us how many machines we have that aren&rsquo;t able to run 10.9. However, quite a few people won&rsquo;t have any machines that fall into this category, and just want to know when one manages to sneak under the radar, so let&rsquo;s hide the plugin if we don&rsquo;t need to see it.</p>
 

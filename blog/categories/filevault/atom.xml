@@ -4,7 +4,7 @@
   <title><![CDATA[Category: FIleVault | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/filevault/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-11-06T16:59:29-08:00</updated>
+  <updated>2014-12-08T17:55:27+00:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Crypt: A FileVault 2 escrow solution]]></title>
     <link href="http://grahamgilbert.com/blog/2013/01/18/crypt-a-filevault-2-escrow-solution/"/>
-    <updated>2013-01-18T08:05:00-08:00</updated>
+    <updated>2013-01-18T08:05:00+00:00</updated>
     <id>http://grahamgilbert.com/blog/2013/01/18/crypt-a-filevault-2-escrow-solution</id>
     <content type="html"><![CDATA[<p>Although it&rsquo;s been blogged about over at <a href="http://afp548.com/2013/01/02/crypt-a-client-and-web-app-for-filevault-2-encryption-and-escrow/">afp548</a> and <a href="http://derflounder.wordpress.com/2012/12/31/first-look-at-crypt/">Rich Trouton&rsquo;s blog</a>, I&rsquo;d like to introduce you all to <a href="https://github.com/grahamgilbert/Crypt">Crypt</a>.</p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Packer | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/packer/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-11-06T16:59:29-08:00</updated>
+  <updated>2014-12-08T17:55:27+00:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Creating an OS X base box for Vagrant with Packer]]></title>
     <link href="http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/"/>
-    <updated>2013-08-23T11:30:00-07:00</updated>
+    <updated>2013-08-23T11:30:00+01:00</updated>
     <id>http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer</id>
     <content type="html"><![CDATA[<p>A while ago, the chaps over at the <a href="http://www.vagrantup.com/">Vagrant</a> project have recently released a <a href="http://www.vagrantup.com/vmware">plugin to let Vagrant work with VMWare Fusion</a> &ndash; this means we can finally use Vagrant to provision OS X VMs.</p>
 

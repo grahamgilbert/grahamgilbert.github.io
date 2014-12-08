@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mavericks | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/mavericks/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-11-06T16:59:29-08:00</updated>
+  <updated>2014-12-08T17:55:27+00:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Setting a desktop picture in Mavericks]]></title>
     <link href="http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/"/>
-    <updated>2013-10-28T14:48:00-07:00</updated>
+    <updated>2013-10-28T14:48:00+00:00</updated>
     <id>http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks</id>
     <content type="html"><![CDATA[<p>Sometimes we are asked by clients to set a default desktop picture for new users &ndash; sometimes we are deleting home directories on logout, so need to warn the users, other times the client just wants their corporate wallpaper to be the default.</p>
 

@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Next up in the battle of Casper vs the rest of the Mac admin toolset looking to reign supreme in the contest of software installation is Munki. Setup &hellip;">
+  <meta name="description" content="Although it&rsquo;s been blogged about over at afp548 and Rich Trouton&rsquo;s blog, I&rsquo;d like to introduce you all to Crypt. Crypt is a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,52 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/01/18/crypt-a-filevault-2-escrow-solution/">Crypt: A FileVault 2 Escrow Solution</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-18T08:05:00+00:00" pubdate data-updated="true">Jan 18<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/01/18/crypt-a-filevault-2-escrow-solution/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Although it&rsquo;s been blogged about over at <a href="http://afp548.com/2013/01/02/crypt-a-client-and-web-app-for-filevault-2-encryption-and-escrow/">afp548</a> and <a href="http://derflounder.wordpress.com/2012/12/31/first-look-at-crypt/">Rich Trouton&rsquo;s blog</a>, I&rsquo;d like to introduce you all to <a href="https://github.com/grahamgilbert/Crypt">Crypt</a>.</p>
+
+<p><img class="center" src="/images/posts/2013-01-18/Crypt-Screenshot.png"></p>
+
+<p>Crypt is a solution for enabling FileVault 2 on Macs running either 10.7 or 10.8 and securely storing those keys, using no outside infrastructure like other solutions do (Cauliflower Vest&rsquo;s requirement of Google App Engine). It&rsquo;s only requirement is a web server that can run a Django app (which is pretty much anything &ndash; the example setup uses Apache on Ubuntu 12, but you can use anything you want).</p>
+
+<p>Crypt is made up of two parts: A <a href="https://github.com/grahamgilbert/Crypt-Server">web app</a>, which stores the recovery keys and a <a href="https://github.com/grahamgilbert/Crypt">client app</a> for enabling FileVault 2 on a Mac which then sends the recovery key to the server. The server has two user levels, so access to keys can be restricted, and all key access is logged for auditing.</p>
+
+<p>We&rsquo;ve been using it at <a href="http://pebbleit.com">pebble.it</a> for a few weeks now and haven&rsquo;t found any issues during use, but please be aware that this is what I&rsquo;d call &ldquo;beta&rdquo; software. You might be happy using beta software in production, but that&rsquo;s up to you! I&rsquo;d welcome all feedback, both good and bad. Planned features include AD authentication and emails to admins when new requests come in. Please file bugs and feature requests over at <a href="https://github.com/grahamgilbert/Crypt">GitHub</a> so I can keep track of them all.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/01/13/casper-vs-munki/">Casper vs Munki</a></h1>
     
     
@@ -109,7 +155,7 @@
   
 
 
-<time datetime="2013-01-13T21:34:00-08:00" pubdate data-updated="true">Jan 13<span>th</span>, 2013</time>
+<time datetime="2013-01-13T21:34:00+00:00" pubdate data-updated="true">Jan 13<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/01/13/casper-vs-munki/#disqus_thread">Comments</a>
         
@@ -216,7 +262,7 @@ Some might be, others won&rsquo;t for one reason or another.</p>
   
 
 
-<time datetime="2013-01-07T11:54:00-08:00" pubdate data-updated="true">Jan 7<span>th</span>, 2013</time>
+<time datetime="2013-01-07T11:54:00+00:00" pubdate data-updated="true">Jan 7<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/01/07/updating-instadmg-based-netrestore-images/#disqus_thread">Comments</a>
         
@@ -284,7 +330,7 @@ Some might be, others won&rsquo;t for one reason or another.</p>
   
 
 
-<time datetime="2013-01-05T14:35:00-08:00" pubdate data-updated="true">Jan 5<span>th</span>, 2013</time>
+<time datetime="2013-01-05T14:35:00+00:00" pubdate data-updated="true">Jan 5<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/01/05/instadmg-tips/#disqus_thread">Comments</a>
         
@@ -334,7 +380,7 @@ Some might be, others won&rsquo;t for one reason or another.</p>
   
 
 
-<time datetime="2013-01-01T16:12:00-08:00" pubdate data-updated="true">Jan 1<span>st</span>, 2013</time>
+<time datetime="2013-01-01T16:12:00+00:00" pubdate data-updated="true">Jan 1<span>st</span>, 2013</time>
         
          | <a href="/blog/2013/01/01/macscripts/#disqus_thread">Comments</a>
         
@@ -346,66 +392,6 @@ Some might be, others won&rsquo;t for one reason or another.</p>
   <div class="entry-content"><p>I&rsquo;ve had my Mac scripts dotted around my Macs over the years, so after spending twenty minutes looking for my script to add a login item to a user, I decided to put them all in one place on GitHub. Hopefully someone will find them useful, I&rsquo;ll be adding the rest as soon as I work out where I put them.</p>
 
 <p><a href="https://github.com/grahamgilbert/macscripts">MacScripts on GitHub</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/12/15/casper-versus-deploystudio/">Casper Versus DeployStudio</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-15T13:00:00-08:00" pubdate data-updated="true">Dec 15<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/12/15/casper-versus-deploystudio/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ll preface this with one thing &ndash; I&rsquo;m not a Casper Suite expert. I don&rsquo;t use it reguarly, and at what it costs, I probably won&rsquo;t! It&rsquo;s this price that gave me high expectations for this last install. Unfortunately they were unfounded.</p>
-
-<p>I&rsquo;m hoping to write a series of articles comparing the various aspects of Casper against the free tools I use every day. First up is DeployStudio.</p>
-
-<h2>Workflow creation</h2>
-
-<p>Both Casper Imaging and DeployStudio have a nice GUI for creating the workflow. It&rsquo;s just a drag and drop to place the tasks you need. The DeployStudio interface feels a bit more polished, but that&rsquo;s probably just my bias showing though. The only real differentiator here are the package groups that DeployStudio offers. If you had a standard group of packages that you deploy over several different workflows, DeployStudio makes it easy to maintain &ndash; yes, this should probably be done elsewhere, but it can be handy to install a certain set of applications at imaging time. I couldn&rsquo;t see a direct replacement for this in Casper Imaging.</p>
-
-<p><strong>Winner: Draw (just! if pushed, I&rsquo;d say DeployStudio just edged it)</strong></p>
-
-<h2>NetBoot</h2>
-
-<p>This is where DeployStudio really starts to poop on Casper Imaging from a great height. With Casper, the chap doing the jump start told me that I had to manually build up a NetBoot image with Casper Imaging set up. Hilarious. Surely he was joking, right? No. DeployStudio, a <em>free product</em>, has a wizard for making a customised NetBoot set that offers an iTunes like interface that is so simple, I&rsquo;ve regularly taken an office manager through imaging a Mac. I dread to think how that same person would cope with the random UI elements that have been thrown at the screen when making the casper imaging app.</p>
-
-<p><strong>Winner: DeployStudio, hands down. Casper didn&rsquo;t even turn up</strong></p>
-
-<h2>Imaging process</h2>
-
-<p>So, you&rsquo;ve managed to get past the lovely Casper Imaging interface, and now you&rsquo;re installing a package that&rsquo;s best installed when running from the target system &ndash; like an Adobe CS package. One that is likely to be the biggest package you&rsquo;re installing. With DeployStudio, you at least get some indication that <em>something</em> is happening &ndash; you have the log scrolling by in the background. With Casper Imaging you get nothing other than a back window, and the nice Casper logo. No idea if it&rsquo;s going to take five minutes or two hours.</p>
-
-<p><strong>Winner: DeployStudio</strong></p>
-
-<p>I&rsquo;ll finish this post with an admission: I don&rsquo;t use DeployStudio either. I&rsquo;ve been trying to get rid of OS X in my server rooms, so as I mentioned in my last post, we&rsquo;re using JAMF&rsquo;s NetSUS appliance (dear JAMF, why can you make an awesome free product like NetSUS, but your flagship product be so poor?) and NetRestore with a InstaDMG made image with just an OS and a package to hook it into Puppet. I chose to compare Casper Imaging with DeployStudio as they&rsquo;re closer competitors than the one trick pony of NetRestore.</p>
 </div>
   
   
@@ -436,7 +422,11 @@ Some might be, others won&rsquo;t for one reason or another.</p>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/11/06/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
+        <a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
       </li>
     
       <li class="post">
@@ -449,10 +439,6 @@ Some might be, others won&rsquo;t for one reason or another.</p>
     
       <li class="post">
         <a href="/blog/2014/07/27/personal-automation-munki-part-2/">Personal Automation: Munki (Part 2)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/07/26/personal-automation-part-1/">Personal Automation (Part 1)</a>
       </li>
     
   </ul>
