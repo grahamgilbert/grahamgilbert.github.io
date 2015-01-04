@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2014-12-08T17:56:31+00:00</updated>
+  <updated>2015-01-04T15:14:50+00:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,31 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Migrating scriptRunner to Outset]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/"/>
+    <updated>2015-01-04T11:40:41+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset</id>
+    <content type="html"><![CDATA[<p>A while back, Nate Walck wrote <a href="https://github.com/natewalck/Scripts/blob/master/scriptRunner.py">scriptRunner</a>. It&rsquo;s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released <a href="https://github.com/chilcote/outset">Outset</a>. It has all of the functionality of scriptRunner, but it can also install packages at the Mac&rsquo;s first boot, and run scripts as root at either the first boot or every boot. This comes into it&rsquo;s own when you&rsquo;re trying to do things like skipping the iCloud screens on 10.10 using <a href="https://derflounder.wordpress.com/2014/10/16/disabling-the-icloud-and-diagnostics-pop-up-windows-in-yosemite/">Rich Trouton&rsquo;s script</a> &ndash; this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.</p>
+
+<p>If you&rsquo;ve been using scriptRunner and want to move to Outset, you have two options:</p>
+
+<ul>
+<li>Just move your scripts into the appropriate Outset directories and hope your users don&rsquo;t mind the &lsquo;once&rsquo; scripts running a second time.</li>
+<li>Or, you could pre-populate Outset&rsquo;s &lsquo;once&rsquo; plist so it won&rsquo;t try to run a script previously run by scriptRunner again.</li>
+</ul>
+
+
+<p>The first option isn&rsquo;t acceptable to me, so I wrote a script that will populate Outset&rsquo;s plist. It&rsquo;s <a href="https://github.com/grahamgilbert/macscripts/tree/master/scriptRunnerToOutset">up on my Github</a>. One caveat is that Outset requires that your scripts end <code>.sh</code>, <code>.rb</code> or <code>.py</code>. scriptRunner didn&rsquo;t care about this. When you&rsquo;re moving your scripts into the Outset directory, you will need to ensure your scripts have the correct extension. This script will read the first line and try to work out what kind of script it is if the file doesn&rsquo;t have the right extension &ndash; if it can&rsquo;t work it out, it will append <code>.sh</code> to the filename.</p>
+
+<p>scriptRunner had a few options you could configure. The first is where your actual scripts live &ndash; you will need to edit line 8 of the script to where you put your scriptRunner scripts. Secondly, you might have changed the name of the plist scriptRunner uses &ndash; edit line 11 if you did this.</p>
+
+<p>Now all that remains is to put this script into <code>/usr/local/outset/login-once</code>. A <a href="https://github.com/unixorn/luggage">Luggage</a> Makefile that will make a package that will do this is included in the repository.</p>
+
+<p>I&rsquo;ve assumed that you can move your scripts into the new Outset directories using your configuration management tool (Munki, Puppet, Capser, whatever), but if you need a tool that can do this for you (with the previously stated caveat about the file extensions of the scripts), you&rsquo;ll find a script that can be dropped into Outset&rsquo;s firstboot directory.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Creating Business Units and Groups in Sal using a CSV]]></title>
@@ -1694,15 +1719,6 @@ someone else has done all of the hard work for us.</p>
     <content type="html"><![CDATA[<p>I just pushed up version 0.5 of Crypt &ndash; the <a href="https://github.com/grahamgilbert/Crypt/releases/tag/0.5">release details are over at GitHub</a>. This is the last version that will be compatibile with the current version of <a href="https://github.com/grahamgilbert/Crypt-server">Crypt-Server</a> &ndash; which has also been updated to be compatible with Django 1.5.</p>
 
 <p>This is fully tested (in my environment!) with Mavericks, so go forth and escrow FileVault keys.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[AFP548 Podcast Episode 4: Don't Stab Yourself in the Leg, Then]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/11/13/afp548-podcast-episode-4-dont-stab-yourself-in-the-leg-then/"/>
-    <updated>2013-11-13T11:46:00+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/11/13/afp548-podcast-episode-4-dont-stab-yourself-in-the-leg-then</id>
-    <content type="html"><![CDATA[<p>A couple of weeks ago, I had a chat with Ed Marczak for the AFP548 Podcast. We discussed packaging, community and convincing clients that they shouldn&rsquo;t stab themselves in the leg. <a href="https://soundcloud.com/afp548/episode-four-dont-stab-yourself-in-the-leg-then">Go listen.</a></p>
 ]]></content>
   </entry>
   
