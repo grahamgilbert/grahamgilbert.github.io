@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Mavericks | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/mavericks/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2015-02-11T12:44:38+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Setting a desktop picture in Mavericks]]></title>
+    <link href="http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/"/>
+    <updated>2013-10-28T14:48:00+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks</id>
+    <content type="html"><![CDATA[<p>Sometimes we are asked by clients to set a default desktop picture for new users &ndash; sometimes we are deleting home directories on logout, so need to warn the users, other times the client just wants their corporate wallpaper to be the default.</p>
+
+<p>If you are lazy and don&rsquo;t want to read this post then the script that changes the desktop picture <a href="https://github.com/grahamgilbert/macscripts/tree/master/set_desktops">is on GitHub</a>.</p>
+
+<p>Whatever, here&rsquo;s what we used to do:</p>
+
+<p><code>bash
+/usr/bin/defaults write com.apple.desktop Background '{default = {ImageFilePath = "/Library/Desktop Pictures/Black &amp; White/Lightning.jpg"; };}'
+/usr/bin/killall Dock
+</code></p>
+
+<p>Nothing earth shattering there if you&rsquo;ve managed Macs for any length of time.</p>
+
+<p>But then 10.9 changed things &ndash; this stopped working.</p>
+
+<p>I ran fs_usage to see what was happening whilst I changed the desktop picture on my machine:</p>
+
+<p><code>bash
+$ sudo fs_usage -w | grep desktop
+</code></p>
+
+<p>Obviously there was a metic buttload of information, but this line caught my eye.</p>
+
+<p><code>
+15:25:06.884820    WrData[A]       D=0x0b2d1d90  B=0x1000   /dev/disk1  /Users/grahamgilbert/Library/Application Support/Dock/desktoppicture.db
+</code></p>
+
+<p>Bingo! I opened up the database in the <a href="https://addons.mozilla.org/en-US/firefox/addon/sqlite-manager/">SQLite Manager Firefox extension</a> (the only thing I use Firefox for these days) and had a peek. And then I got half a brain and googled the path of the desktoppicture.db file and found that there was a <a href="https://gist.github.com/gregneagle/6225747">gist from Greg Neagle</a>. Perfect!</p>
+
+<p>Of course, he&rsquo;d already improved upon this script and written a proof of concept to <a href="https://gist.github.com/gregneagle/6957826">set a random desktop picture using PyObjC</a>. This got me 90% of the way there, so this is my modified version of his script. The full code and usage instructions are <a href="https://github.com/grahamgilbert/macscripts/tree/master/set_desktops">over on GitHub</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

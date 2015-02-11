@@ -1,0 +1,422 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Getting started with Puppet on OS X (part 2) - graham gilbert</title>
+  <meta name="author" content="Graham Gilbert">
+
+  
+  <meta name="description" content="Before reading this post, you really need to read part 1 &ndash; none of this will make sense without it! Still with me? Let&rsquo;s do finally do &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@grahamgilbert">
+<meta name="twitter:creator" content="@grahamgilbert">
+<meta name="twitter:description" content="Mac administration and assorted nerdity">
+<meta name="twitter:title" content="grahamgilbert.com">
+<meta name="twitter:url" content="http://grahamgilbert.com">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27233739-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">graham gilbert</a></h1>
+  
+    <h2>Mac administration and assorted nerdity</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:grahamgilbert.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/talks">Talks</a></li>
+  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Getting Started With Puppet on OS X (Part 2)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-27T09:30:00+00:00" pubdate data-updated="true">Jan 27<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Before reading this post, you really need to read <a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">part 1</a> &ndash; none of this will make sense without it!</p>
+
+<p>Still with me? Let&rsquo;s do finally do something with Puppet. SSH into your Puppet Master (if it&rsquo;s IP has changed since you first did the setup, make sure you reflect this change in the Mac client&rsquo;s /etc/hosts file) and navigate to /etc/puppet and list the directory&rsquo;s contents:</p>
+
+<pre><code>cd /etc/puppet
+ls -la
+</code></pre>
+
+<p>You&rsquo;ll see a few directories here &ndash; we&rsquo;re interested in two today &ndash; manifests and modules. Manifests will be where you describe your nodes, and the modules are the functional Puppet code.</p>
+
+<!-- more -->
+
+
+<p>Inside the manifests directory is site.pp &ndash; we&rsquo;re going to describe our node within this file. It&rsquo;s considered bad practice to keep everything in the site.pp file, but it will work for us. So, open up the site.pp file in your favourite editor (nano, pico, whatever), scroll down to the bottom and put in the following:</p>
+
+<figure class='code'><figcaption><span>site.pp </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">node</span> <span class="n">puppetclient</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">file</span> <span class="p">{</span><span class="s1">&#39;puppettest&#39;</span><span class="p">:</span>
+</span><span class='line'>      <span class="n">path</span>    <span class="o">=&gt;</span> <span class="s1">&#39;/tmp/puppettest&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="k">ensure</span>  <span class="o">=&gt;</span> <span class="n">present</span><span class="p">,</span>
+</span><span class='line'>      <span class="n">mode</span>    <span class="o">=&gt;</span> <span class="mo">0640</span><span class="p">,</span>
+</span><span class='line'>      <span class="n">content</span> <span class="o">=&gt;</span> <span class="s2">&quot;I&#39;m a test file.&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then on your client Mac:</p>
+
+<pre><code>sudo puppet agent --test --group 0
+</code></pre>
+
+<p>And then magic happens!</p>
+
+<pre><code>sudo less /tmp/puppettest
+</code></pre>
+
+<p>Your file has appeared! Ok, admittedly this isn&rsquo;t particularly useful at the moment, but the same principle can be used to configure LaunchDaemons or distribute the company wallpaper for example.</p>
+
+<p>You will get some moaning that Darwin isn&rsquo;t supported on Puppet Enterprise after Puppet has finished running. Don&rsquo;t worry about this, as I said in the first part, we&rsquo;re only using Puppet Enterprise as it&rsquo;s pre-built.</p>
+
+<p>Making a file isn&rsquo;t overly impressive. Any package installer or even ARD could do that. Puppet&rsquo;s magic lies in it&rsquo;s ability to maintain the system in the state you describe.</p>
+
+<pre><code>sudo rm /tmp/puppettest
+ls -la /tmp
+</code></pre>
+
+<p>Now you&rsquo;ve made sure the file isn&rsquo;t there, run Puppet again:</p>
+
+<pre><code>sudo puppet agent --test --group 0
+</code></pre>
+
+<p>You&rsquo;ll see Puppet telling you that it&rsquo;s creating the file again:</p>
+
+<pre><code>Notice: /Stage[main]//Node[puppetclient]/File[puppettest]/ensure: created
+Notice: Finished catalog run in 0.07 seconds
+</code></pre>
+
+<p>Now what happens if you change the content of the file on the client Mac? Enter <code>sudo nano /tmp/puppettest</code> into a terminal window on the client and change the contents of the file to something else like</p>
+
+<pre><code>I won't have my strings pulled!
+</code></pre>
+
+<p>And then invoke Puppet again:</p>
+
+<pre><code>sudo puppet agent --test --group 0
+</code></pre>
+
+<p>You now see Puppet correcting the file back to what we&rsquo;ve described in the node&rsquo;s definition. (Once again, ignore the errors, they&rsquo;re down to using the pre-built VM again.)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Notice: /Stage[main]//Node[puppetclient]/File[puppettest]/content: 
+</span><span class='line'>--- /tmp/puppettest   2013-01-27 10:51:43.000000000 +0000
+</span><span class='line'>+++ /var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/T/puppet-file20130127-2683-19sd0ps-0   2013-01-27 10:51:50.000000000 +0000
+</span><span class='line'>@@ -1 +1 @@
+</span><span class='line'>-I won't have my strings pulled!
+</span><span class='line'>+I'm a test file.
+</span><span class='line'>\ No newline at end of file</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Victory! In the next part we&rsquo;ll make our admin user and ensure that it stays on the machine. In the mean time, have a play with changing the file through the Puppet Master &ndash; try changing it&rsquo;s mode or contents &ndash; or you could remove it by setting the <code>ensure =&gt; present</code> to <code>ensure =&gt; absent</code>.</p>
+
+<p><a href="/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3/">Onwards to part 3!</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Graham Gilbert</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-27T09:30:00+00:00" pubdate data-updated="true">Jan 27<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/os-x/'>OS X</a>, <a class='category' href='/blog/categories/puppet/'>Puppet</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/01/25/getting-started-with-puppet-part-1/" title="Previous Post: Getting started with Puppet on OS X (part 1)">&laquo; Getting started with Puppet on OS X (part 1)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/02/13/building-a-test-puppet-master-with-vagrant/" title="Next Post: Building a test Puppet Master with Vagrant">Building a test Puppet Master with Vagrant &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
+
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer or clients.</small></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/">Managing Munki Catalogs With Trello</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/04/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/03/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'grahamgilbert',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+<section>
+  <h1>Twitter</h1>
+<a class="twitter-timeline" href="https://twitter.com/grahamgilbert" data-widget-id="483550747481489408">Tweets by @grahamgilbert</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Graham Gilbert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'grahamgilbert';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

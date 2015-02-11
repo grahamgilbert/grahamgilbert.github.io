@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Python | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/python/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2015-02-11T12:44:38+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Managing Munki catalogs with Trello]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/"/>
+    <updated>2015-02-11T12:11:30+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello</id>
+    <content type="html"><![CDATA[<p>Over the past few months, I&rsquo;ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage it. We&rsquo;ve got <a href="https://github.com/autopkg/autopkg">AutoPkg</a> populating our <a href="https://github.com/munki/munki">Munki</a> repositories without any manual intervention, but we still need to edit pkgsinfo files to move items through development to testing to production catalogs. Sure, there are existing tools  like <a href="https://github.com/munki/munkiwebadmin">MunkiWebAdmin</a> or <a href="https://github.com/hjuutilainen/munkiadmin">MunkiAdmin</a>, but they either still require knowledge of how Munki works or full access to the repository via a file share of some sort. And we obviously already have a tool for assigning software to machines in Sal+ &ndash; we needed something that can speed this incredibly common task.</p>
+
+<p>Then I cast my mind back to a conversation I had with Pepijn Bruienne at PSU last year about his workflow using <a href="https://trello.com">Trello</a> to promote items in his Munki repository. So, after pestering him for some information, I devised a workflow that matched how we worked.</p>
+
+<h2>&ldquo;So how does it work&rdquo;, I hear you cry</h2>
+
+<p>We have five lists on our &ldquo;Munki Package Management&rdquo; Trello board. Essentially when the script runs, it inspects the items in our Munki catalog and if they&rsquo;re not already in the Trello board, it adds them to the correct list (we ignore anything that&rsquo;s already in production. All promotions to production are done using this tool now).</p>
+
+<p><img class="center" src="/images/posts/2015-02-11/to_testing.gif" width="427" height="240"></p>
+
+<p>We also have lists called &ldquo;To Development&rdquo;, &ldquo;To Testing&rdquo; and &ldquo;To Production&rdquo;. Moving items into these lists will be caught by the script next time it runs, and moved to the appropriate catalog.</p>
+
+<p><img class="center" src="/images/posts/2015-02-11/testing.gif" width="427" height="240"></p>
+
+<p>When items finally make it to Production, we add them to a dated Production list. This allows us to have a full history of when things are added to Production and who has moved it through each stage. We&rsquo;re also big users of Slack, so we hooked up it&rsquo;s Tello integration to post a message to our notficiations channel to let our team know when items are added into Munki.</p>
+
+<p>You can grab the script from <a href="https://github.com/pebbleit/munki-trello">pebble.it&rsquo;s GitHub account</a>, or if you&rsquo;re Docker inclined there&rsquo;s a <a href="https://registry.hub.docker.com/u/pebbleit/munki-trello/">container that has everything you need</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Migrating scriptRunner to Outset]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/"/>
+    <updated>2015-01-04T11:40:41+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset</id>
+    <content type="html"><![CDATA[<p>A while back, Nate Walck wrote <a href="https://github.com/natewalck/Scripts/blob/master/scriptRunner.py">scriptRunner</a>. It&rsquo;s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released <a href="https://github.com/chilcote/outset">Outset</a>. It has all of the functionality of scriptRunner, but it can also install packages at the Mac&rsquo;s first boot, and run scripts as root at either the first boot or every boot. This comes into it&rsquo;s own when you&rsquo;re trying to do things like skipping the iCloud screens on 10.10 using <a href="https://derflounder.wordpress.com/2014/10/16/disabling-the-icloud-and-diagnostics-pop-up-windows-in-yosemite/">Rich Trouton&rsquo;s script</a> &ndash; this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.</p>
+
+<p>If you&rsquo;ve been using scriptRunner and want to move to Outset, you have two options:</p>
+
+<ul>
+<li>Just move your scripts into the appropriate Outset directories and hope your users don&rsquo;t mind the &lsquo;once&rsquo; scripts running a second time.</li>
+<li>Or, you could pre-populate Outset&rsquo;s &lsquo;once&rsquo; plist so it won&rsquo;t try to run a script previously run by scriptRunner again.</li>
+</ul>
+
+
+<p>The first option isn&rsquo;t acceptable to me, so I wrote a script that will populate Outset&rsquo;s plist. It&rsquo;s <a href="https://github.com/grahamgilbert/macscripts/tree/master/scriptRunnerToOutset">up on my Github</a>. One caveat is that Outset requires that your scripts end <code>.sh</code>, <code>.rb</code> or <code>.py</code>. scriptRunner didn&rsquo;t care about this. When you&rsquo;re moving your scripts into the Outset directory, you will need to ensure your scripts have the correct extension. This script will read the first line and try to work out what kind of script it is if the file doesn&rsquo;t have the right extension &ndash; if it can&rsquo;t work it out, it will append <code>.sh</code> to the filename.</p>
+
+<p>scriptRunner had a few options you could configure. The first is where your actual scripts live &ndash; you will need to edit line 8 of the script to where you put your scriptRunner scripts. Secondly, you might have changed the name of the plist scriptRunner uses &ndash; edit line 11 if you did this.</p>
+
+<p>Now all that remains is to put this script into <code>/usr/local/outset/login-once</code>. A <a href="https://github.com/unixorn/luggage">Luggage</a> Makefile that will make a package that will do this is included in the repository.</p>
+
+<p>I&rsquo;ve assumed that you can move your scripts into the new Outset directories using your configuration management tool (Munki, Puppet, Capser, whatever), but if you need a tool that can do this for you (with the previously stated caveat about the file extensions of the scripts), you&rsquo;ll find a script that can be dropped into Outset&rsquo;s firstboot directory.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Migrating scriptRunner to Outset]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/01/03/migrating-scriptrunner-to-outset/"/>
+    <updated>2015-01-03T11:40:41+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/01/03/migrating-scriptrunner-to-outset</id>
+    <content type="html"><![CDATA[<p>A while back, Nate Walck wrote <a href="https://github.com/natewalck/Scripts/blob/master/scriptRunner.py">scriptRunner</a>. It&rsquo;s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released <a href="https://github.com/chilcote/outset">Outset</a>. It has all of the functionality of scriptRunner, but it can also install packages at the Mac&rsquo;s first boot, and run scripts as root at either the first boot or every boot. This comes into it&rsquo;s own when you&rsquo;re trying to do things like skipping the iCloud screens on 10.10 using <a href="https://derflounder.wordpress.com/2014/10/16/disabling-the-icloud-and-diagnostics-pop-up-windows-in-yosemite/">Rich Trouton&rsquo;s script</a> &ndash; this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.</p>
+
+<p>If you&rsquo;ve been using scriptRunner and want to move to Outset, you have two options:</p>
+
+<ul>
+<li>Just move your scripts into the appropriate Outset directories and hope your users don&rsquo;t mind the &lsquo;once&rsquo; scripts running a second time.</li>
+<li>Or pre-populate Outset&rsquo;s &lsquo;once&rsquo; plist so it won&rsquo;t try to run the script it&rsquo;s already run again.</li>
+</ul>
+
+
+<p>The first option isn&rsquo;t acceptable to me, so this is a script that will populate Outset&rsquo;s plist. One caveat is that Outset requires that your scripts end <code>.sh</code>, <code>.rb</code> or <code>.py</code>. scriptRunner didn&rsquo;t care about this. When you&rsquo;re moving your scripts into the Outset directory, you will need to ensure your scripts have the correct extension. This script will read the first line and try to work out what kind of script it is if the file doesn&rsquo;t have the right extension.</p>
+
+<p>scriptRunner had a few options you could configure. The first is where your actual scripts live &ndash; you will need to edit line 8 of the script to where you put your scriptRunner scripts. Secondly, you might have changed the name of the plist scriptRunner uses &ndash; edit line 11 if you did this.</p>
+
+<p>Now all that remains is to put this script into <code>/usr/local/outset/login-once</code>. A <a href="https://github.com/unixorn/luggage">Luggage</a> Makefile that will do this for you is included in the repository.</p>
+
+<p>I&rsquo;ve assumed that you can move your scripts into the new Outset directories using your configuration management tool (Munki, Puppet, Capser, whatever), but if you need a tool that can do this for you (with the previously stated caveat about the file extensions of the scripts), you&rsquo;ll find a script that can be dropped into Outset&rsquo;s firstboot directory.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating Business Units and Groups in Sal using a CSV]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/"/>
+    <updated>2014-12-08T07:52:21+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv</id>
+    <content type="html"><![CDATA[<p>Obviously I&rsquo;m a little biased, but I love Sal. But, it can be a little tedious to get everything set up the first time if you have hundreds of Business Units and Machine Groups. I&rsquo;ve quietly ignored the problem for a while, but then I saw this tweet pop up in my feed:</p>
+
+<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/hunty1er">@hunty1er</a> Pretty sure you could automate BU/MG creation through the DB backend. What say you <a href="https://twitter.com/grahamgilbert">@grahamgilbert</a> ?</p>&mdash; Pepijn Bruienne (@bruienne) <a href="https://twitter.com/bruienne/status/541811445512830976">December 8, 2014</a></blockquote>
+
+
+<script async src="http://grahamgilbert.com//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>What say I Mr Bruienne? Like the <a href="https://www.youtube.com/watch?v=mjB9Chw_6FE">man from Del Monte</a>, I say YES!</p>
+
+<h2>The plan</h2>
+
+<p>We&rsquo;re going to use a few of the parts that make Django and Docker awesome. We will:</p>
+
+<ul>
+<li>Make a custom management command that will read in a CSV</li>
+<li>The command will make the Business Units and Groups if they don&rsquo;t exist</li>
+<li>We&rsquo;re than going to run it in a temporary Docker container when we&rsquo;re ready to do the actual import. This is one of the strengths of Docker &ndash; we can spin up a linked container that will operate on the main database, but won&rsquo;t interfere with your container serving the app.</li>
+</ul>
+
+
+<!--more-->
+
+
+<h2>Let&rsquo;s do this thing</h2>
+
+<p>Custom management commands are where you can add your own command to be available under <code>./manage.py my_command</code> &ndash; and they&rsquo;re pretty easy to make. I&rsquo;ve made a quick and dirty one (that works, but there will probbaly be edge cases where it doesn&rsquo;t).</p>
+
+<p>I&rsquo;m assuming you&rsquo;re running Sal in the recommended way using Docker. If you&rsquo;re not, you can drop the management repo in <code>/path/to/sal/server/management</code>.</p>
+
+<p>To use it, first you&rsquo;re going to need to clone the repository somewhere on your disk. I&rsquo;m going to assume you&rsquo;re working out of <code>/usr/local/docker</code>. There&rsquo;s an example CSV included in the repo.</p>
+
+<p><code>bash
+$ cd /usr/local/docker
+$ git clone https://github.com/grahamgilbert/sal-import-example
+</code></p>
+
+<p>Next we&rsquo;re going to run a temporary Docker container on the same host that our existing Sal container is running on. This container will run the import, and when it&rsquo;s done it will delete itself (<code>--rm</code>). We&rsquo;ve linked in the import data and the additional management command. So we can see the output, we&rsquo;re running it in the foreground as well (<code>-i</code>). Finally, we run the custom management command and point it to the CSV.</p>
+
+<p><code>bash
+$ docker run -t -i -v /vagrant/sal/settings.py:/home/docker/sal/sal/settings.py \
+  -e ADMIN_PASS=pass \
+  -e DB_NAME=sal \
+  -e DB_USER=admin \
+  -e DB_PASS=password \
+  --link postgres-sal:db \
+  --rm \
+  -v /vagrant/sal/management:/home/docker/sal/server/management \
+  -v /vagrant/sal/data.csv:/data.csv \
+  macadmins/sal \
+  python /home/docker/sal/manage.py loadcsv /data.csv
+</code></p>
+
+<p>And you&rsquo;ll get the output reporting that your CSV did it&rsquo;s job:</p>
+
+<p><code>bash
+Omni Mega Corp didn't exist and has been created.
+Machine Group 1 didn't exist and has been created.
+Omni Mega Corp already exists.
+Machine Group 2 didn't exist and has been created.
+Honest Bob's Burgers didn't exist and has been created.
+Machine Group 3 didn't exist and has been created.
+</code></p>
+
+<p>There it is &ndash; a simple management command to automate tasks with Sal and running it in a temporary Docker container. You can use the temporary container technique for many tasks &ndash; performing a <code>repo_sync</code> on a <a href="https://registry.hub.docker.com/u/macadmins/reposado/">Reposado container</a> is a good example.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Slides and notes from Twisting Munki]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki/"/>
+    <updated>2014-11-07T00:51:33+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki</id>
+    <content type="html"><![CDATA[<p>Firstly, thanks if you came to my talk and putting up with me! You can get my slides and code from the <a href="https://github.com/grahamgilbert/mactech_2014">GitHub repository</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

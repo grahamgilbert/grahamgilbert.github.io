@@ -1,0 +1,626 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Using crankd to react to network events - graham gilbert</title>
+  <meta name="author" content="Graham Gilbert">
+
+  
+  <meta name="description" content="Updated 14/7/2013: After Alister&rsquo;s suggestion, the script now loops over network interfaces up to en19 (hopefully that&rsquo;s enough!). So, &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@grahamgilbert">
+<meta name="twitter:creator" content="@grahamgilbert">
+<meta name="twitter:description" content="Mac administration and assorted nerdity">
+<meta name="twitter:title" content="grahamgilbert.com">
+<meta name="twitter:url" content="http://grahamgilbert.com">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27233739-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">graham gilbert</a></h1>
+  
+    <h2>Mac administration and assorted nerdity</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:grahamgilbert.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/talks">Talks</a></li>
+  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Using Crankd to React to Network Events</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-12T14:04:00+01:00" pubdate data-updated="true">Jul 12<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Updated 14/7/2013: After <a href="https://twitter.com/Sacrilicious/status/355756510535614464">Alister&rsquo;s suggestion</a>, the script now loops over network interfaces up to en19 (hopefully that&rsquo;s enough!).</p>
+
+<p>So, you&rsquo;ve heard of this crankd thing, maybe even had a look at it, but have no idea how to get it going? You&rsquo;re in the right place. I&rsquo;m by no means an expert on it, having only been playing with it for less than a week, but I already have it running in production running the simple script below. My initial work, and therefore this post was inspired by Gary Larizza&rsquo;s <a href="http://web.archive.org/web/20120111031339/http://glarizza.posterous.com/using-crankd-to-react-to-network-events">two</a> <a href="http://garylarizza.com/blog/2011/12/31/using-the-google-macops-crankd-and-facter-code/">articles</a> on the subject.</p>
+
+<h2>What is crankd?</h2>
+
+<p>It&rsquo;s part of the <a href="https://github.com/acdha/pymacadmin">PyMacAdmin</a> set of tools that <a href="http://chris.improbable.org/">Chris Adams</a> and <a href="http://explanatorygap.net">Nigel Kersten</a> released a while ago. In a nutshell, it runs in the background via a LaunchDaemon and reacts to events on the Mac by running a script or a Python function, class or method. It has loads of events it knows about (application launches, power events, network events etc), but in this case I wanted to run something when there was a network change. Some of our machines never get turned off (and for some reason the Puppet Launch Daemon has crapped out), or aren&rsquo;t turned on long enough for Puppet or Munki to run. I wanted a script that would run every time the machine came back onto the network, checking if there was an active connection and run Puppet and Munki.</p>
+
+<h2>What do I need to do?</h2>
+
+<p>There are a few parts that we need to bring together to make this work:</p>
+
+<ul>
+<li>The crankd.py executable and the supporting files</li>
+<li>A Launch Daemon to start the thing</li>
+<li>A preferences file to tell crankd what to do</li>
+<li>And finally, our custom code</li>
+</ul>
+
+
+<!--more-->
+
+
+<h2>Get and install crankd</h2>
+
+<p>First off, you need to grab the current code from GitHub.</p>
+
+<p><code>
+git clone https://github.com/acdha/pymacadmin.git
+</code></p>
+
+<p>Then <code>cd</code> into the pymacadmin directory you just cloned and run <code>install-crankd.sh</code>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/src/pymacadmin
+</span><span class='line'>sudo ./install-crankd.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That will install the crankd.py executable and it&rsquo;s supporting files, now for the Launch Daemon to make it start at boot. You&rsquo;ll need to put the following into a file at <code>/Library/LaunchDaemons/com.googlecode.pymacadmin.crankd.plist</code>.</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+    &lt;key&gt;KeepAlive&lt;/key&gt;
+    &lt;true/&gt;
+    &lt;key&gt;Label&lt;/key&gt;
+    &lt;string&gt;com.googlecode.pymacadmin.crankd&lt;/string&gt;
+    &lt;key&gt;ProgramArguments&lt;/key&gt;
+    &lt;array&gt;
+        &lt;string&gt;/usr/local/sbin/crankd.py&lt;/string&gt;
+    &lt;/array&gt;
+    &lt;key&gt;RunAtLoad&lt;/key&gt;
+    &lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+
+<p>And set the right ownership and permissions on the plist</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo chmod 644 /Library/LaunchDaemons/com.googlecode.pymacadmin.crankd.plist
+</span><span class='line'>sudo chown root:wheel /Library/LaunchDaemons/com.googlecode.pymacadmin.crankd.plist
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So that&rsquo;s the basics. Now we need to tell crankd what events it should listen to and what it should do.</p>
+
+<p>As we want to call the CrankTools class and the OnNetworkLoad method every time the network changes state, we need to do the following in <code>/Library/Preferences/com.googlecode.pymacadmin.crankd.plist</code>. To see what other events you can use with crankd, head on over to the <a href="https://github.com/acdha/pymacadmin/tree/master/examples/crankd/sample-of-events">GitHub repo</a>.</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+    &lt;dict&gt;
+        &lt;key&gt;SystemConfiguration&lt;/key&gt;
+        &lt;dict&gt;
+            &lt;key&gt;State:/Network/Global/IPv4&lt;/key&gt;
+            &lt;dict&gt;
+                &lt;key&gt;method&lt;/key&gt;
+                    &lt;array&gt;
+                        &lt;string&gt;CrankTools&lt;/string&gt;
+                        &lt;string&gt;OnNetworkLoad&lt;/string&gt;
+                    &lt;/array&gt;
+            &lt;/dict&gt;
+        &lt;/dict&gt;
+    &lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+
+<p>Now for the actual Python code. This is very heavily inspired by <a href="http://garylarizza.com">Gary Larizza&rsquo;s</a> work. We&rsquo;re checking if either en0 or en1 has a valid network connection (as this event is for any network change &ndash; both connecting and disconnecting), and if there is a valid connection, run Puppet and then run Munki. This code could easily be modified to run anything you wanted to at the command line (for example a Casper policy). Put the following script in <code>/Library/Application Support/crankd/CrankTools.py</code>.</p>
+
+<figure class='code'><figcaption><span>title:CrankTools.py </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c">#    CrankTools.py</span>
+</span><span class='line'><span class="c">#        The OnNetworkLoad method is called from crankd on a network state change, all other</span>
+</span><span class='line'><span class="c">#            methods assist it. Modified from Gary Larizza&#39;s script (https://gist.github.com/glarizza/626169).</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c">#    Last Revised - 10/07/2013</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Graham Gilbert (graham@grahamgilbert.com)&#39;</span>
+</span><span class='line'><span class="n">__version__</span> <span class="o">=</span> <span class="s">&#39;0.6&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">syslog</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">syslog</span><span class="o">.</span><span class="n">openlog</span><span class="p">(</span><span class="s">&quot;CrankD&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">CrankTools</span><span class="p">():</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;The main CrankTools class needed for our crankd config plist&quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">puppetRun</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot;Checks for an active network connection and calls puppet if it finds one.</span>
+</span><span class='line'><span class="sd">            If the network is NOT active, it logs an error and exits</span>
+</span><span class='line'><span class="sd">        ---</span>
+</span><span class='line'><span class="sd">        Arguments: None</span>
+</span><span class='line'><span class="sd">        Returns:  Nothing</span>
+</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
+</span><span class='line'>        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/puppet&#39;</span><span class="p">,</span><span class="s">&#39;agent&#39;</span><span class="p">,</span><span class="s">&#39;-t&#39;</span><span class="p">]</span>
+</span><span class='line'>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LinkState</span><span class="p">():</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">callCmd</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">syslog</span><span class="o">.</span><span class="n">syslog</span><span class="p">(</span><span class="n">syslog</span><span class="o">.</span><span class="n">LOG_ALERT</span><span class="p">,</span> <span class="s">&quot;Internet Connection Not Found, Puppet Run Exiting...&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">munkiRun</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot;Checks for an active network connection and calls Munki if it finds one.</span>
+</span><span class='line'><span class="sd">            If the network is NOT active, it logs an error and exits</span>
+</span><span class='line'><span class="sd">        ---</span>
+</span><span class='line'><span class="sd">        Arguments: None</span>
+</span><span class='line'><span class="sd">        Returns:  Nothing</span>
+</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
+</span><span class='line'>        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/local/munki/managedsoftwareupdate&#39;</span><span class="p">,</span><span class="s">&#39;--auto&#39;</span><span class="p">]</span>
+</span><span class='line'>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LinkState</span><span class="p">():</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">callCmd</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">syslog</span><span class="o">.</span><span class="n">syslog</span><span class="p">(</span><span class="n">syslog</span><span class="o">.</span><span class="n">LOG_ALERT</span><span class="p">,</span> <span class="s">&quot;Internet Connection Not Found, Munki Run Exiting...&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">callCmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot;Simple utility function that calls a command via subprocess</span>
+</span><span class='line'><span class="sd">        ---</span>
+</span><span class='line'><span class="sd">        Arguments: command - A list of arguments for the command</span>
+</span><span class='line'><span class="sd">        Returns: Nothing</span>
+</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
+</span><span class='line'>        <span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">LinkState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot;This utility returns the status of the passed interface.</span>
+</span><span class='line'><span class="sd">        ---</span>
+</span><span class='line'><span class="sd">        Arguments:</span>
+</span><span class='line'><span class="sd">            None</span>
+</span><span class='line'><span class="sd">        Returns:</span>
+</span><span class='line'><span class="sd">            status - The return code of the subprocess call</span>
+</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">theState</span> <span class="o">=</span> <span class="bp">False</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
+</span><span class='line'>            <span class="n">interface</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">interface</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">adapter</span> <span class="o">=</span> <span class="s">&#39;en&#39;</span> <span class="o">+</span> <span class="n">interface</span>
+</span><span class='line'>            <span class="k">print</span> <span class="s">&#39;checking adapter &#39;</span><span class="o">+</span><span class="n">adapter</span>
+</span><span class='line'>            <span class="k">if</span> <span class="ow">not</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&quot;ipconfig&quot;</span><span class="p">,</span> <span class="s">&quot;getifaddr&quot;</span><span class="p">,</span> <span class="n">adapter</span><span class="p">]):</span>
+</span><span class='line'>                <span class="n">theState</span> <span class="o">=</span> <span class="bp">True</span>
+</span><span class='line'>                <span class="k">break</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">theState</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">OnNetworkLoad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot;Called from crankd directly on a Network State Change. We sleep for 10 seconds to ensure that</span>
+</span><span class='line'><span class="sd">            an IP address has been cleared or attained, and then perform a Puppet run and a Munki run.</span>
+</span><span class='line'><span class="sd">        ---</span>
+</span><span class='line'><span class="sd">        Arguments:</span>
+</span><span class='line'><span class="sd">            *args and **kwargs - Catchall arguments coming from crankd</span>
+</span><span class='line'><span class="sd">        Returns:  Nothing</span>
+</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
+</span><span class='line'>        <span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">puppetRun</span><span class="p">()</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">munkiRun</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span><span class='line'>    <span class="n">crank</span> <span class="o">=</span> <span class="n">CrankTools</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">crank</span><span class="o">.</span><span class="n">OnNetworkLoad</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">main</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s ok, we&rsquo;re nearly there! You just need to set the right owner on <code>CrankTools.py</code> , load the Launch Daemon and we can get testing.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo chown root:wheel /Library/Application Support/crankd/CrankTools.py
+</span><span class='line'>sudo launchctl load /Library/LaunchDaemons/com.googlecode.pymacadmin.crankd.plist`</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;re all set. Disconnect your network connection and re-connect. Put your Mac to sleep and wake it up. Each time, there should be a 10 second delay, then a Puppet run followed by a Munki run will happen.</p>
+
+<p>If you&rsquo;ve modified <code>CrankTools.py</code>, you can test the changes by running the script directly.</p>
+
+<h2>What&rsquo;s next?</h2>
+
+<p>Obviously this is not a good way of deploying crankd &ndash; I&rsquo;ve got a method in the works that will build a package to install this (I currently deploy this with Puppet &ndash; I&rsquo;ll put in a pull request on <a href="https://github.com/glarizza/puppetlabs-crankd">Gary&rsquo;s module</a> with my changes when I get chance). I&rsquo;m also going to be doing more with crankd &ndash; possibly some application use monitoring, almost certainly some scripts fired off when a machine wakes and sleeps.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Graham Gilbert</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-12T14:04:00+01:00" pubdate data-updated="true">Jul 12<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/os-x/'>OS X</a>, <a class='category' href='/blog/categories/python/'>Python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013/" title="Previous Post: Managing Macs with Puppet at PSU 2013">&laquo; Managing Macs with Puppet at PSU 2013</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/07/17/buildcrankpkg/" title="Next Post: buildCrankPkg">buildCrankPkg &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
+
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer or clients.</small></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/">Managing Munki Catalogs With Trello</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/04/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/03/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'grahamgilbert',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+<section>
+  <h1>Twitter</h1>
+<a class="twitter-timeline" href="https://twitter.com/grahamgilbert" data-widget-id="483550747481489408">Tweets by @grahamgilbert</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Graham Gilbert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'grahamgilbert';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

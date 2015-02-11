@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: DeployStudio | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/deploystudio/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2015-02-11T12:44:38+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Casper versus DeployStudio]]></title>
+    <link href="http://grahamgilbert.com/blog/2012/12/15/casper-versus-deploystudio/"/>
+    <updated>2012-12-15T13:00:00+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2012/12/15/casper-versus-deploystudio</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ll preface this with one thing &ndash; I&rsquo;m not a Casper Suite expert. I don&rsquo;t use it reguarly, and at what it costs, I probably won&rsquo;t! It&rsquo;s this price that gave me high expectations for this last install. Unfortunately they were unfounded.</p>
+
+<p>I&rsquo;m hoping to write a series of articles comparing the various aspects of Casper against the free tools I use every day. First up is DeployStudio.</p>
+
+<h2>Workflow creation</h2>
+
+<p>Both Casper Imaging and DeployStudio have a nice GUI for creating the workflow. It&rsquo;s just a drag and drop to place the tasks you need. The DeployStudio interface feels a bit more polished, but that&rsquo;s probably just my bias showing though. The only real differentiator here are the package groups that DeployStudio offers. If you had a standard group of packages that you deploy over several different workflows, DeployStudio makes it easy to maintain &ndash; yes, this should probably be done elsewhere, but it can be handy to install a certain set of applications at imaging time. I couldn&rsquo;t see a direct replacement for this in Casper Imaging.</p>
+
+<p><strong>Winner: Draw (just! if pushed, I&rsquo;d say DeployStudio just edged it)</strong></p>
+
+<h2>NetBoot</h2>
+
+<p>This is where DeployStudio really starts to poop on Casper Imaging from a great height. With Casper, the chap doing the jump start told me that I had to manually build up a NetBoot image with Casper Imaging set up. Hilarious. Surely he was joking, right? No. DeployStudio, a <em>free product</em>, has a wizard for making a customised NetBoot set that offers an iTunes like interface that is so simple, I&rsquo;ve regularly taken an office manager through imaging a Mac. I dread to think how that same person would cope with the random UI elements that have been thrown at the screen when making the casper imaging app.</p>
+
+<p><strong>Winner: DeployStudio, hands down. Casper didn&rsquo;t even turn up</strong></p>
+
+<h2>Imaging process</h2>
+
+<p>So, you&rsquo;ve managed to get past the lovely Casper Imaging interface, and now you&rsquo;re installing a package that&rsquo;s best installed when running from the target system &ndash; like an Adobe CS package. One that is likely to be the biggest package you&rsquo;re installing. With DeployStudio, you at least get some indication that <em>something</em> is happening &ndash; you have the log scrolling by in the background. With Casper Imaging you get nothing other than a back window, and the nice Casper logo. No idea if it&rsquo;s going to take five minutes or two hours.</p>
+
+<p><strong>Winner: DeployStudio</strong></p>
+
+<p>I&rsquo;ll finish this post with an admission: I don&rsquo;t use DeployStudio either. I&rsquo;ve been trying to get rid of OS X in my server rooms, so as I mentioned in my last post, we&rsquo;re using JAMF&rsquo;s NetSUS appliance (dear JAMF, why can you make an awesome free product like NetSUS, but your flagship product be so poor?) and NetRestore with a InstaDMG made image with just an OS and a package to hook it into Puppet. I chose to compare Casper Imaging with DeployStudio as they&rsquo;re closer competitors than the one trick pony of NetRestore.</p>
+]]></content>
+  </entry>
+  
+</feed>

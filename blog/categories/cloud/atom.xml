@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Cloud | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/cloud/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2015-02-11T12:44:38+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Meraki Systems Manager]]></title>
+    <link href="http://grahamgilbert.com/blog/2012/11/12/meraki-systems-manager/"/>
+    <updated>2012-11-12T16:07:00+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2012/11/12/meraki-systems-manager</id>
+    <content type="html"><![CDATA[<p>Maintaining visibility over your fleet of machines is always difficult. It&rsquo;s even more difficult when you&rsquo;ve got Macs. It gets nearly impossible when you decide you&rsquo;d like something hosted in the cloud.</p>
+
+<p>We&rsquo;ve been looking for a good solution for ages now &ndash; we even resorted to using <a href="http://www.ocsinventory-ng.org/en/">OCS Inventory</a> for a while. We then discovered <a href="http://www.meraki.com/products/systems-manager/">Meraki&rsquo;s Systems Manager</a>.</p>
+
+<p>This isn&rsquo;t going to be one of those fancy review type things &ndash; you can go and look at it&rsquo;s features yourself. This is more an overview of the factors that came into our decision:</p>
+
+<h2>Pros</h2>
+
+<ul>
+<li>It&rsquo;s cloud based! No servers for us to deploy, no VPNs between sites for clients to communicate over</li>
+<li>It does basic iOS MDM. It&rsquo;s not the best in the world, but it does a lot of what we wanted (basically configuring email and Wi-Fi settings)</li>
+<li>It has SSH over the Internet. If all else fails, we have a way into a machine, no matter where it is.</li>
+<li>It&rsquo;s free! It&rsquo;s hard to argue with a price like that!</li>
+</ul>
+
+
+<h2>Cons</h2>
+
+<ul>
+<li>It&rsquo;s free! If you&rsquo;re not paying for something, you have no SLA, no guarantee it will be working tomorrow</li>
+<li>It&rsquo;s location services suck in the UK. My home network is in Sheffield apparently. We supposedly have clients in Bath (we don&rsquo;t).</li>
+<li>It&rsquo;s not particuarly customisable. With Puppet, Facter, Puppet Dashboard and the inventory service configured, you can pull out practically any information you require (for example, we have a Fact that tells us if there are any admin users on a Mac other than our own).</li>
+</ul>
+
+
+<h2>Summary</h2>
+
+<p>For what it does, Meraki Systems Manager is hard to beat. If you need more than basic system information, or something that runs on Linux, you&rsquo;re going to need to look elsewhere. It&rsquo;s a great compliment to Puppet Inventory, but it&rsquo;s not a total replacement.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Google Directory?]]></title>
+    <link href="http://grahamgilbert.com/blog/2012/07/01/google-directory/"/>
+    <updated>2012-07-01T20:11:00+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2012/07/01/google-directory</id>
+    <content type="html"><![CDATA[<p>Last week at work we were discussing where we were headed. Our email is now firmly in the cloud with Google providing a better infrastructure than we ever could. They&rsquo;ve also got word processing and spreadsheets solved for most people with the hard to beat price of free.</p>
+
+<p>So, what else could we do better with the cloud? <!--more--></p>
+
+<p>Despite what Dropbox and Google Drive promise, we&rsquo;re some way off moving our file servers into the cloud (just try saving your 11Gb Photoshop file up to the cloud with the average business grade Internet connection, let alone a normal home connection).</p>
+
+<p>Our configuration system (Puppet) works quite happily from the datacentre on a VM, so there&rsquo;s not really much to worry about with that one. Web and FTP have long since been such a quick race to the bottom that it&rsquo;s practically free to have those in the cloud with services like CloudApp and WeTransfer.</p>
+
+<p>But what about our directory server? Sure, we can sync Google Apps with our Open Directory or Active Directory, but why should we need one? All of our user information is already in Google Apps, why can&rsquo;t we use that for user authentication? Just think of it, never having to worry about whether the user was at one of your sites or hooked up to a VPN when their password expires and needs to be changed, no more setting up flaky OD replicas, no more Windows Server CALs &ndash; maybe they could even add in some basic MDM like they have for iOS &ndash; remote wipes and the like.</p>
+
+<p>Make it happen Google, you can have that idea for free.</p>
+]]></content>
+  </entry>
+  
+</feed>

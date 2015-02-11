@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: git | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2015-02-11T12:44:38+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[MacScripts]]></title>
+    <link href="http://grahamgilbert.com/blog/2013/01/01/macscripts/"/>
+    <updated>2013-01-01T16:12:00+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2013/01/01/macscripts</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve had my Mac scripts dotted around my Macs over the years, so after spending twenty minutes looking for my script to add a login item to a user, I decided to put them all in one place on GitHub. Hopefully someone will find them useful, I&rsquo;ll be adding the rest as soon as I work out where I put them.</p>
+
+<p><a href="https://github.com/grahamgilbert/macscripts">MacScripts on GitHub</a></p>
+]]></content>
+  </entry>
+  
+</feed>

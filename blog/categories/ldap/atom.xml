@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: LDAP | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/ldap/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2015-02-11T12:44:38+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Google Directory?]]></title>
+    <link href="http://grahamgilbert.com/blog/2012/07/01/google-directory/"/>
+    <updated>2012-07-01T20:11:00+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2012/07/01/google-directory</id>
+    <content type="html"><![CDATA[<p>Last week at work we were discussing where we were headed. Our email is now firmly in the cloud with Google providing a better infrastructure than we ever could. They&rsquo;ve also got word processing and spreadsheets solved for most people with the hard to beat price of free.</p>
+
+<p>So, what else could we do better with the cloud? <!--more--></p>
+
+<p>Despite what Dropbox and Google Drive promise, we&rsquo;re some way off moving our file servers into the cloud (just try saving your 11Gb Photoshop file up to the cloud with the average business grade Internet connection, let alone a normal home connection).</p>
+
+<p>Our configuration system (Puppet) works quite happily from the datacentre on a VM, so there&rsquo;s not really much to worry about with that one. Web and FTP have long since been such a quick race to the bottom that it&rsquo;s practically free to have those in the cloud with services like CloudApp and WeTransfer.</p>
+
+<p>But what about our directory server? Sure, we can sync Google Apps with our Open Directory or Active Directory, but why should we need one? All of our user information is already in Google Apps, why can&rsquo;t we use that for user authentication? Just think of it, never having to worry about whether the user was at one of your sites or hooked up to a VPN when their password expires and needs to be changed, no more setting up flaky OD replicas, no more Windows Server CALs &ndash; maybe they could even add in some basic MDM like they have for iOS &ndash; remote wipes and the like.</p>
+
+<p>Make it happen Google, you can have that idea for free.</p>
+]]></content>
+  </entry>
+  
+</feed>

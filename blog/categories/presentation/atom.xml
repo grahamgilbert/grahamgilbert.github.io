@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Presentation | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/presentation/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2015-02-11T12:44:38+00:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Automate yourself out of a job]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/07/10/automate-yourself-out-of-a-job/"/>
+    <updated>2014-07-10T20:39:33+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/07/10/automate-yourself-out-of-a-job</id>
+    <content type="html"><![CDATA[<p>A massive thanks to everyone who came to my talk today, and thanks to everyone who helped out with the Q&amp;A at the end. All of the code I used in the talk is <a href="https://github.com/grahamgilbert/automate_psu_2014">up on GitHub</a> and <a href="http://grahamgilbert.com/images/posts/2014-07-10/Automate_yourself_out_of_a_job.pdf">here are the slides</a>. Hopefully the video will convey how much fun it actually was &ndash; it could have been a disaster, so I&rsquo;m hugely grateful to everyone who contributed to the discussion at the end.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Multi tenanted Munki with Puppet and Sal]]></title>
+    <link href="http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/"/>
+    <updated>2014-07-09T20:27:25+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal</id>
+    <content type="html"><![CDATA[<p>Thanks for everyone that came to my talk today, it was fun to finally show off what I&rsquo;ve been working on for the last year or so. I&rsquo;m sure the video will be up soon, but in the meantime, <a href="http://grahamgilbert.com/images/posts/2014-07-09/Multi_site_Munki.pdf">here are the slides from the talk</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

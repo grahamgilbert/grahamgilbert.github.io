@@ -1,0 +1,503 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>graham gilbert</title>
+  <meta name="author" content="Graham Gilbert">
+
+  
+  <meta name="description" content="Munki is great. It keeps your macs up to date &ndash; well it does most of the time. Sometimes you get a user that just refuses to click on &ldquo; &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://grahamgilbert.com/blog/page/11">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@grahamgilbert">
+<meta name="twitter:creator" content="@grahamgilbert">
+<meta name="twitter:description" content="Mac administration and assorted nerdity">
+<meta name="twitter:title" content="grahamgilbert.com">
+<meta name="twitter:url" content="http://grahamgilbert.com">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27233739-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">graham gilbert</a></h1>
+  
+    <h2>Mac administration and assorted nerdity</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:grahamgilbert.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/talks">Talks</a></li>
+  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/07/run-munki-at-boot/">Run Munki at Boot</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-07T09:19:00+01:00" pubdate data-updated="true">May 7<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/05/07/run-munki-at-boot/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Munki is great. It keeps your macs up to date &ndash; well it does most of the time. Sometimes you get a user that just refuses to click on &ldquo;Update&rdquo; now matter how many times it pops up. Now you have a tool to defeat them &ndash; install this package over ARD and munki will install everything that&rsquo;s available, including Apple software updates (it will reboot the mac if needed and carry on where it left off).</p>
+
+<p>I wish I could take credit for all this <a href="http://code.google.com/p/munki/wiki/BootstrappingWithMunki">amazingness</a>, but I just wrapped it up into a package. The source is over at <a href="https://github.com/grahamgilbert/Munki-Bootstrap">GitHub</a>, and there&rsquo;s <a href="https://github.com/downloads/grahamgilbert/Munki-Bootstrap/Munki_Bootstrap.pkg.zip">a pre built package</a> as well.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/21/headless-virtualbox/">Headless VirtualBox</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-21T22:06:00+01:00" pubdate data-updated="true">Apr 21<span>st</span>, 2012</time>
+        
+         | <a href="/blog/2012/04/21/headless-virtualbox/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I recently had a requirement to run an Ununtu machine, but the client had only mac servers, and no budget for additional hardware. The solution turned out to be VirtualBox &ndash; we could run it headless and have it start when the mac booted.</p>
+
+<p>First, get your VM set up how you like it and shut it down. I like to move my VMs out of the boot drive, so move the entire ~/VirtualBox VMs directory onto your storage device.</p>
+
+<p>VirtualBox needs to know where the vm lives now, so remove the original vm you made, then double click the moved vbox file.</p>
+
+<p>One last step &ndash; the launchd item to control the vm.</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+&lt;key&gt;Label&lt;/key&gt;
+  &lt;string&gt;com.yourcompany.mysupervm.plist&lt;/string&gt;
+  &lt;key&gt;ProgramArguments&lt;/key&gt;
+  &lt;array&gt;
+    &lt;string&gt;/usr/bin/VBoxHeadless&lt;/string&gt;
+    &lt;string&gt;-startvm&lt;/string&gt;
+    &lt;string&gt;The name of your VM&lt;/string&gt;
+  &lt;/array&gt;
+&lt;key&gt;KeepAlive&lt;/key&gt;
+&lt;true/&gt;
+  &lt;key&gt;UserName&lt;/key&gt;
+  &lt;string&gt;admin&lt;/string&gt;
+  &lt;key&gt;WorkingDirectory&lt;/key&gt;
+  &lt;string&gt;/Volumes/Storage&lt;/string&gt;
+  &lt;key&gt;RunAtLoad&lt;/key&gt;
+  &lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+
+<p>Change some &ldquo;The name of your VM&rdquo; to what your vm is actually called, change UserName to the admin username on the server, and finally change the WorkingDirectory path to match the location of your VirtualBox VMs directory.</p>
+
+<p>Save the plist into /Library/LaunchDaemons/ as com.yourcompany.mysupervm.plist (or whatever you want) and chown it to root:wheel</p>
+
+<p>To start the vm, crack open terminal and issue</p>
+
+<pre><code>sudo launchctl load /Library/LaunchDaemons/com.yourcompany.mysupervm.plist
+</code></pre>
+
+<p>And to stop:</p>
+
+<pre><code>sudo launchctl unload /Library/LaunchDaemons/com.yourcompany.mysupervm.plist
+</code></pre>
+
+<p>The vm will start at boot, and will continue to run, so to stop it, you need to unload the plist.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/06/profile-manager-enrollment-package/">Profile Manager Enrollment Package</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-06T10:38:00+01:00" pubdate data-updated="true">Apr 6<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/04/06/profile-manager-enrollment-package/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Over the past week or so, we had a need to enroll macs automagically with a Lion Profile Manager server. My first plan was to do what Charles Edge did in his recent <a href="http://krypted.com/mac-os-x/automating-profile-manager-enrollment-through-deploystudio/">blog post</a> and use DeployStudio. Then I remembered another post by Charles on <a href="http://krypted.com/iphone/profile-manager-and-profiles/">/usr/bin/profiles</a> and wondered if I could make a workflow that can be used throughout our deployment and system maintenance process &ndash; yup, the humble pkg, that can be popped into Munki for existing macs, installed with DeployStudio for imaging and pushed out with ARD if need be.</p>
+
+<p><a href="https://github.com/grahamgilbert/Profile-Manager-Enrollment">Get the code from GitHub</a></p>
+
+<p>Assuming you&rsquo;ve got <a href="https://github.com/unixorn/luggage">The Luggage</a> set up, first off you&rsquo;ll need your enrollment and trust profiles:</p>
+
+<ol>
+<li>Create a new enrollment profile</li>
+<li>Give your enrollement profile a name</li>
+<li>Download the trust profile</li>
+<li>Download the enrollment profile</li>
+</ol>
+
+
+<p><a href="/images/posts/2012-04-06/profile_enrollment_and_trust-full.jpg"><img class="center" src="/images/posts/2012-04-06/profile_enrollment_and_trust-thumb.jpg"></a></p>
+
+<p>If your attachments auto open, click cancel when you&rsquo;re asked if you want to install the profiles so they stay in ~/Downloads. Rename them to enroll.mobileconfig and trust.mobileconfig and pop them into the directory you cloned from GitHub. A quick <code>make pkg</code> and you&rsquo;ve got your package.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/03/hello-octopress/">Hello Octopress</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-03T12:49:00+01:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2012</time>
+        
+         | <a href="/blog/2012/04/03/hello-octopress/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Inspired by some of the <a href="http://mattgemmell.com/2011/09/12/blogging-with-octopress/">cool kids</a>, I&rsquo;ve spent the last couple of evenings migrating my blog over to <a href="http://octopress.org">Octopress</a>.  The main motivators were my desire to put my posts under version control (we&rsquo;ve been going a bit nuts for Git at Pebble towers recently), and that I wanted to use the excellent Byword app to compose my posts (I just need to work out how I&rsquo;m going to be able to use the iOS app to publish on the go &ndash; probably some Dropbox trickery).</p>
+
+<p>Plus, using Ruby scripts and Rsync to publish the blog really appealed to my (not so) inner geek.</p>
+
+<p>Anyway, normal mac-type sysadmin-y posts will resume shortly.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/24/the-agony-and-ecstasy-of-100meg-broadband/">The Agony and Ecstasy of 100meg Broadband</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-24T13:09:19+00:00" pubdate data-updated="true">Mar 24<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/03/24/the-agony-and-ecstasy-of-100meg-broadband/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Before I descend into a massive rant, let me preface this post with this: I hate BT. I always have, and I probably always will. They are generally the most incompetent, uncooperative company on the planet.</p>
+
+<p>Let me take you back to October 2011. I was perusing the BT website looking for BT Infinity &ndash; their brand name for up to 40meg VDSL. I popped in my postcode and was told that I was in a trial area for <a href="http://en.wikipedia.org/wiki/Fiber_to_the_x#Fiber_to_the_premises">FTTP</a> at a stonking 100meg. Obviously I thought about the pain I was letting myself in for, having to deal with BT, but I was sure that I could cope with it if I was getting such insanely fast Internet at the end of it.</p>
+
+<p>If only I knew how painful it was going to be. </div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/24/the-agony-and-ecstasy-of-100meg-broadband/">Continue reading &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/12/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/10/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
+
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer or clients.</small></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/">Managing Munki Catalogs With Trello</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/04/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/03/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'grahamgilbert',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+<section>
+  <h1>Twitter</h1>
+<a class="twitter-timeline" href="https://twitter.com/grahamgilbert" data-widget-id="483550747481489408">Tweets by @grahamgilbert</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Graham Gilbert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'grahamgilbert';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

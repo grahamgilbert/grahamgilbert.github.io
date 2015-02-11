@@ -1,0 +1,545 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>The Luggage: Further automation - graham gilbert</title>
+  <meta name="author" content="Graham Gilbert">
+
+  
+  <meta name="description" content="As promised in my previous post, today we&rsquo;re going to look at how we can further refine our workflow, with the aim of cutting out as many &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@grahamgilbert">
+<meta name="twitter:creator" content="@grahamgilbert">
+<meta name="twitter:description" content="Mac administration and assorted nerdity">
+<meta name="twitter:title" content="grahamgilbert.com">
+<meta name="twitter:url" content="http://grahamgilbert.com">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27233739-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">graham gilbert</a></h1>
+  
+    <h2>Mac administration and assorted nerdity</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:grahamgilbert.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/talks">Talks</a></li>
+  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">The Luggage: Further Automation</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-19T11:33:00+01:00" pubdate data-updated="true">Aug 19<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>As promised in my previous post, today we&rsquo;re going to look at how we can further refine our workflow, with the aim of cutting out as many manual steps as possible (every IT person knows it&rsquo;s not computer that make mistakes, it&rsquo;s the idiots in front of them) and making as much of our code re-usable in other packages.</p>
+
+<p>If you&rsquo;ve not read the <a href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/">previous article</a>, you will need to before carrying on with this, unless you&rsquo;re already familiar with The Luggage. If you get stuck, all of the code from this post is <a href="https://github.com/grahamgilbert/the-luggage-post-201308">up on Github</a>.<!--more--></p>
+
+<h2>Getting scriptRunner</h2>
+
+<p>Anyone who uses our Makefile will need a copy of scriptRunner before they can build the script, so we&rsquo;ll cut out that step. Our Makefile becomes:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>USE_PKGBUILD=1
+</span><span class='line'>include /usr/local/share/luggage/luggage.make
+</span><span class='line'>TITLE=scriptRunnerPkg
+</span><span class='line'>REVERSE_DOMAIN=com.grahamgilbert
+</span><span class='line'>PAYLOAD=\
+</span><span class='line'>  pack-scriptRunner\
+</span><span class='line'>  pack-Library-LaunchAgents-com.grahamgilbert.scriptrunner.plist
+</span><span class='line'>
+</span><span class='line'>REPO_URL=https://github.com/natewalck/Scripts.git
+</span><span class='line'>
+</span><span class='line'>pack-scriptRunner: l_usr_local_bin
+</span><span class='line'>  @sudo git clone ${REPO_URL} natewalck-scripts
+</span><span class='line'>  @sudo ${CP} natewalck-scripts/scriptRunner.py ${WORK_D}/usr/local/bin/scriptRunner.py
+</span><span class='line'>  @sudo chmod 755 ${WORK_D}/usr/local/bin/scriptRunner.py
+</span><span class='line'>  @sudo chown root:wheel ${WORK_D}/usr/local/bin/scriptRunner.py
+</span><span class='line'>  @sudo rm -rf natewalck-scripts</span></code></pre></td></tr></table></div></figure>
+
+
+<p>All we&rsquo;ve done is moved the manual <code>git clone</code> we were performing on the command line into our Makefile, as this is a step that is required for our package to build successfully. Our aim is to be able to give someone else our code and for them to be able to run <code>make pkg</code> and get the package out of the other end.</p>
+
+<h2>The real work</h2>
+
+<p>Whilst we are now successfully installing <code>scriptRunner.py</code>, it&rsquo;s not actually going to do anything. <code>scriptRunner.py</code> is passed the paths of two directories &ndash; one of scripts it runs every time a user logs in, and another of scripts that it runs once for each user. We specified those directories in the Launch Agent: <code>/Library/Management/scriptRunner/once</code> and <code>/Library/Management/scriptRunner/every</code>.</p>
+
+<p>This time we&rsquo;re going to build a package that will drop a shortcut to a file server (an <code>.afploc</code>) on each person&rsquo;s desktop as they log in, but do it once only (so they can delete it if they wish). We could do this by modifying the default user template, but this would only affect new users, if there are existing users on the machine they won&rsquo;t get our lovely shortcut. Our package will do the following:</p>
+
+<ul>
+<li>Install our .afploc file to <code>/Library/Management/Desktop_Icons</code></li>
+<li>Install our script to copy the .afploc to <code>~/Desktop</code> when the user logs in</li>
+</ul>
+
+
+<p>Our Makefile should look like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>USE_PKGBUILD=1
+</span><span class='line'>include /usr/local/share/luggage/luggage.make
+</span><span class='line'>
+</span><span class='line'>TITLE=Desktop_Icons
+</span><span class='line'>PACKAGE_NAME=Desktop_Icons
+</span><span class='line'>REVERSE_DOMAIN=com.grahamgilbert
+</span><span class='line'>PAYLOAD=\
+</span><span class='line'>  pack-server\
+</span><span class='line'>  pack-script
+</span><span class='line'>  
+</span><span class='line'>pack-server:
+</span><span class='line'>  @sudo mkdir -p ${WORK_D}/Library/Management/Desktop_Icons
+</span><span class='line'>  @sudo ${CP} forpeople\ Server.afploc ${WORK_D}/Library/Management/Desktop_Icons/File\ Server.afploc
+</span><span class='line'>  @sudo chown -R root:wheel ${WORK_D}/Library/Management/Desktop_Icons
+</span><span class='line'>  @sudo chmod -R 755 ${WORK_D}/Library/Management/Desktop_Icons
+</span><span class='line'>  
+</span><span class='line'>pack-script:
+</span><span class='line'>  @sudo mkdir -p ${WORK_D}/Library/Management/scriptRunner/once
+</span><span class='line'>  @sudo ${CP} forpeople_Desktop_Icons_20130729 ${WORK_D}/Library/Management/scriptRunner/once/Desktop_Icons_201308
+</span><span class='line'>  @sudo chown root:wheel ${WORK_D}/Library/Management/scriptRunner/once/Desktop_Icons_201308
+</span><span class='line'>  @sudo chmod 755 ${WORK_D}/Library/Management/scriptRunner/once/Desktop_Icons_201308</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And the script that does the work (<code>Desktop_Icons_201308</code>) will look like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> -e ~/Desktop/File<span class="se">\ </span>Server.afploc <span class="o">]</span>
+</span><span class='line'>    <span class="k">then</span>
+</span><span class='line'><span class="k">    </span>rm -f ~/Desktop/File<span class="se">\ </span>Server.afploc
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>cp /Library/Management/Desktop_Icons/File<span class="se">\ </span>Server.afploc ~/Desktop/File<span class="se">\ </span>Server.afploc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The script is pretty simple &ndash; if the shortcut already exists (maybe they&rsquo;ve got a previous version pointing to an old server) it gets removed, and then a new one is copied onto the desktop. I&rsquo;ve dated the script as scriptRunner only stores the name of the script to know what it&rsquo;s run &ndash; if you replace the script with an updated version but keep the same name, it won&rsquo;t run again (obviously this only applies to scripts that are in the &lsquo;once&rsquo; directory).</p>
+
+<p>Great, it works. But what happens if you want to put another script on the machine to run with scriptRunner? Or maybe you want some more icons &ndash; you&rsquo;re about to do a lot of copying and pasting. Wouldn&rsquo;t it be great if we could store the parts that are creating directories and performing common operations in a shared place so multiple Makefiles could use them?</p>
+
+<p>Enter <code>/usr/local/share/luggage/luggage.local</code> .</p>
+
+<p>When you run <code>make pkg</code>, The Luggage will check for the existence of <code>/usr/local/share/luggage/luggage.local</code>, and use any additions you&rsquo;ve put in there. We&rsquo;re definitely going to be putting scripts into <code>/Library/Management/scriptRunner/once</code> and <code>/Library/Management/scriptRunner/every</code>quite often, so we should automate this.</p>
+
+<p>Here&rsquo;s what my <code>luggage.local</code> file looks like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>l_Library_Management: l_Library
+</span><span class='line'>  @sudo mkdir -p <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management
+</span><span class='line'>  @sudo chown root:wheel <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management
+</span><span class='line'>  @sudo chmod 755 <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management
+</span><span class='line'>
+</span><span class='line'>l_Library_Management_scriptRunner: l_Library_Management
+</span><span class='line'>  @sudo mkdir -p <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/scriptRunner
+</span><span class='line'>  @sudo chown root:wheel <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/scriptRunner
+</span><span class='line'>  @sudo chmod 755 <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/scriptRunner
+</span><span class='line'>
+</span><span class='line'>l_Library_Management_scriptRunner_once: l_Library_Management_scriptRunner
+</span><span class='line'>  @sudo mkdir -p <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/scriptRunner/once
+</span><span class='line'>  @sudo chown root:wheel <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/scriptRunner/once
+</span><span class='line'>  @sudo chmod 755 <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/scriptRunner/once
+</span><span class='line'>  
+</span><span class='line'>l_Library_Management_scriptRunner_every: l_Library_Management_scriptRunner
+</span><span class='line'>  @sudo mkdir -p <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/scriptRunner/every
+</span><span class='line'>  @sudo chown root:wheel <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/scriptRunner/every
+</span><span class='line'>  @sudo chmod 755 <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/scriptRunner/every
+</span><span class='line'>
+</span><span class='line'>pack-Library-Management-scriptRunner-once-%: % l_Library_Management_scriptRunner_once
+</span><span class='line'>  @sudo <span class="k">${</span><span class="nv">INSTALL</span><span class="k">}</span> -m 755 -g wheel -o root <span class="s2">&quot;${&lt;}&quot;</span> <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/scriptRunner/once
+</span><span class='line'>  
+</span><span class='line'>pack-Library-Management-scriptRunner-every-%: % l_Library_Management_scriptRunner_every
+</span><span class='line'>  @sudo <span class="k">${</span><span class="nv">INSTALL</span><span class="k">}</span> -m 755 -g wheel -o root <span class="s2">&quot;${&lt;}&quot;</span> <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/scriptRunner/every
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The first few parts should be pretty obvious to you &ndash; we&rsquo;re just making some directories and setting ownership and permissions. The last two sections are of more interest. We&rsquo;re using the <code>INSTALL</code> variable, which is set to <code>/usr/bin/install</code> in <code>luggage.make</code> to move a file and set ownership and permissions. We&rsquo;re using the same technique as we used last time to install the Launch Agent. This means that our Makefile can become:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">USE_PKGBUILD</span><span class="o">=</span>1
+</span><span class='line'>include /usr/local/share/luggage/luggage.make
+</span><span class='line'>
+</span><span class='line'><span class="nv">TITLE</span><span class="o">=</span>Desktop_Icons
+</span><span class='line'><span class="nv">PACKAGE_NAME</span><span class="o">=</span>Desktop_Icons
+</span><span class='line'><span class="nv">REVERSE_DOMAIN</span><span class="o">=</span>com.grahamgilbert
+</span><span class='line'><span class="nv">PAYLOAD</span><span class="o">=</span><span class="se">\</span>
+</span><span class='line'>  pack-server<span class="se">\</span>
+</span><span class='line'>  pack-Library-Management-scriptRunner-once-Desktop_Icons_201308
+</span><span class='line'>  
+</span><span class='line'>pack-server:
+</span><span class='line'>  @sudo mkdir -p <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/Desktop_Icons
+</span><span class='line'>  @sudo <span class="k">${</span><span class="nv">CP</span><span class="k">}</span> File<span class="se">\ </span>Server.afploc <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/Desktop_Icons/File<span class="se">\ </span>Server.afploc
+</span><span class='line'>  @sudo chown root:wheel <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/Desktop_Icons/File<span class="se">\ </span>Server.afploc
+</span><span class='line'>  @sudo chmod 644 <span class="k">${</span><span class="nv">WORK_D</span><span class="k">}</span>/Library/Management/Desktop_Icons/File<span class="se">\ </span>Server.afploc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So we&rsquo;re not only cutting out cruft from our Makefile for this package, but it makes future packages much faster to create, eliminating the problem between the keyboard and chair. You could (should!) even put your <code>luggage.local</code> file under source control (mine is <a href="https://github.com/grahamgilbert/luggage_local">on my Github account</a>), so your changes are tracked, and you can collaborate with your colleagues .</p>
+
+<p>You&rsquo;ll notice there is still the section for copying the .afploc. You have two choices here: maybe this is the only time you&rsquo;re ever going to install a file in this directory, in which case this is perfectly fine to leave in the Makefile. However, if you are going to be putting lots of files here, as we are with <code>/Library/Management/scriptRunner</code>, you might want to move this into your <code>luggage.local</code> file so it is available across all of your Makefiles. You homework, should you choose to accept it, is to generalise that section so it can be reused and move it to <code>luggage.local</code>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Graham Gilbert</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-19T11:33:00+01:00" pubdate data-updated="true">Aug 19<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/os-x/'>OS X</a>, <a class='category' href='/blog/categories/deployment/'>deployment</a>, <a class='category' href='/blog/categories/packaging/'>packaging</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/08/09/the-luggage-an-introduction/" title="Previous Post: The Luggage: An Introduction">&laquo; The Luggage: An Introduction</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/" title="Next Post: Creating an OS X base box for Vagrant with Packer">Creating an OS X base box for Vagrant with Packer &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
+
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer or clients.</small></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/">Managing Munki Catalogs With Trello</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/04/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/03/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'grahamgilbert',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+<section>
+  <h1>Twitter</h1>
+<a class="twitter-timeline" href="https://twitter.com/grahamgilbert" data-widget-id="483550747481489408">Tweets by @grahamgilbert</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Graham Gilbert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'grahamgilbert';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
