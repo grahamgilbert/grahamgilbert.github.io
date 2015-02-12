@@ -201,60 +201,6 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/01/03/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-01-03T11:40:41+00:00" pubdate data-updated="true">Jan 3<span>rd</span>, 2015</time>
-        
-         | <a href="/blog/2015/01/03/migrating-scriptrunner-to-outset/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>A while back, Nate Walck wrote <a href="https://github.com/natewalck/Scripts/blob/master/scriptRunner.py">scriptRunner</a>. It&rsquo;s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released <a href="https://github.com/chilcote/outset">Outset</a>. It has all of the functionality of scriptRunner, but it can also install packages at the Mac&rsquo;s first boot, and run scripts as root at either the first boot or every boot. This comes into it&rsquo;s own when you&rsquo;re trying to do things like skipping the iCloud screens on 10.10 using <a href="https://derflounder.wordpress.com/2014/10/16/disabling-the-icloud-and-diagnostics-pop-up-windows-in-yosemite/">Rich Trouton&rsquo;s script</a> &ndash; this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.</p>
-
-<p>If you&rsquo;ve been using scriptRunner and want to move to Outset, you have two options:</p>
-
-<ul>
-<li>Just move your scripts into the appropriate Outset directories and hope your users don&rsquo;t mind the &lsquo;once&rsquo; scripts running a second time.</li>
-<li>Or pre-populate Outset&rsquo;s &lsquo;once&rsquo; plist so it won&rsquo;t try to run the script it&rsquo;s already run again.</li>
-</ul>
-
-
-<p>The first option isn&rsquo;t acceptable to me, so this is a script that will populate Outset&rsquo;s plist. One caveat is that Outset requires that your scripts end <code>.sh</code>, <code>.rb</code> or <code>.py</code>. scriptRunner didn&rsquo;t care about this. When you&rsquo;re moving your scripts into the Outset directory, you will need to ensure your scripts have the correct extension. This script will read the first line and try to work out what kind of script it is if the file doesn&rsquo;t have the right extension.</p>
-
-<p>scriptRunner had a few options you could configure. The first is where your actual scripts live &ndash; you will need to edit line 8 of the script to where you put your scriptRunner scripts. Secondly, you might have changed the name of the plist scriptRunner uses &ndash; edit line 11 if you did this.</p>
-
-<p>Now all that remains is to put this script into <code>/usr/local/outset/login-once</code>. A <a href="https://github.com/unixorn/luggage">Luggage</a> Makefile that will do this for you is included in the repository.</p>
-
-<p>I&rsquo;ve assumed that you can move your scripts into the new Outset directories using your configuration management tool (Munki, Puppet, Capser, whatever), but if you need a tool that can do this for you (with the previously stated caveat about the file extensions of the scripts), you&rsquo;ll find a script that can be dropped into Outset&rsquo;s firstboot directory.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
       <h1 class="entry-title"><a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a></h1>
     
     
@@ -350,6 +296,46 @@
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/">First-boot-pkg Updated for Yosemite</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-10-21T11:50:28+01:00" pubdate data-updated="true">Oct 21<span>st</span>, 2014</time>
+        
+         | <a href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It seems like Yosemite introduced an <a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">undocumented change</a> that requires any packages that are added an OS X installer (e.g. Netinstall or createOSXinstallPkg) be distribution style packages, or you get a nasty failure acompanied by one of the most unhelpful error messages ever.</p>
+
+<p>To fix this, <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> now builds distribution style packages.</p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -379,15 +365,15 @@
       </li>
     
       <li class="post">
-        <a href="/blog/2015/01/03/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
-      </li>
-    
-      <li class="post">
         <a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a>
       </li>
     
       <li class="post">
         <a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/">First-boot-pkg Updated for Yosemite</a>
       </li>
     
   </ul>
