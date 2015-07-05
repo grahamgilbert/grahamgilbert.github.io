@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="I recently had a requirement to run an Ununtu machine, but the client had only mac servers, and no budget for additional hardware. The solution &hellip;">
+  <meta name="description" content="I&rsquo;ve had my Mac scripts dotted around my Macs over the years, so after spending twenty minutes looking for my script to add a login item to a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,7 +93,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2012/04/21/headless-virtualbox/">Headless VirtualBox</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/01/01/macscripts/">MacScripts</a></h1>
     
     
       <p class="meta">
@@ -109,62 +109,18 @@
   
 
 
-<time datetime="2012-04-21T22:06:00+01:00" pubdate data-updated="true">Apr 21<span>st</span>, 2012</time>
+<time datetime="2013-01-01T16:12:00+00:00" pubdate data-updated="true">Jan 1<span>st</span>, 2013</time>
         
-         | <a href="/blog/2012/04/21/headless-virtualbox/#disqus_thread">Comments</a>
+         | <a href="/blog/2013/01/01/macscripts/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>I recently had a requirement to run an Ununtu machine, but the client had only mac servers, and no budget for additional hardware. The solution turned out to be VirtualBox &ndash; we could run it headless and have it start when the mac booted.</p>
+  <div class="entry-content"><p>I&rsquo;ve had my Mac scripts dotted around my Macs over the years, so after spending twenty minutes looking for my script to add a login item to a user, I decided to put them all in one place on GitHub. Hopefully someone will find them useful, I&rsquo;ll be adding the rest as soon as I work out where I put them.</p>
 
-<p>First, get your VM set up how you like it and shut it down. I like to move my VMs out of the boot drive, so move the entire ~/VirtualBox VMs directory onto your storage device.</p>
-
-<p>VirtualBox needs to know where the vm lives now, so remove the original vm you made, then double click the moved vbox file.</p>
-
-<p>One last step &ndash; the launchd item to control the vm.</p>
-
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
-&lt;plist version="1.0"&gt;
-&lt;dict&gt;
-&lt;key&gt;Label&lt;/key&gt;
-  &lt;string&gt;com.yourcompany.mysupervm.plist&lt;/string&gt;
-  &lt;key&gt;ProgramArguments&lt;/key&gt;
-  &lt;array&gt;
-    &lt;string&gt;/usr/bin/VBoxHeadless&lt;/string&gt;
-    &lt;string&gt;-startvm&lt;/string&gt;
-    &lt;string&gt;The name of your VM&lt;/string&gt;
-  &lt;/array&gt;
-&lt;key&gt;KeepAlive&lt;/key&gt;
-&lt;true/&gt;
-  &lt;key&gt;UserName&lt;/key&gt;
-  &lt;string&gt;admin&lt;/string&gt;
-  &lt;key&gt;WorkingDirectory&lt;/key&gt;
-  &lt;string&gt;/Volumes/Storage&lt;/string&gt;
-  &lt;key&gt;RunAtLoad&lt;/key&gt;
-  &lt;true/&gt;
-&lt;/dict&gt;
-&lt;/plist&gt;
-</code></pre>
-
-<p>Change some &ldquo;The name of your VM&rdquo; to what your vm is actually called, change UserName to the admin username on the server, and finally change the WorkingDirectory path to match the location of your VirtualBox VMs directory.</p>
-
-<p>Save the plist into /Library/LaunchDaemons/ as com.yourcompany.mysupervm.plist (or whatever you want) and chown it to root:wheel</p>
-
-<p>To start the vm, crack open terminal and issue</p>
-
-<pre><code>sudo launchctl load /Library/LaunchDaemons/com.yourcompany.mysupervm.plist
-</code></pre>
-
-<p>And to stop:</p>
-
-<pre><code>sudo launchctl unload /Library/LaunchDaemons/com.yourcompany.mysupervm.plist
-</code></pre>
-
-<p>The vm will start at boot, and will continue to run, so to stop it, you need to unload the plist.</p>
+<p><a href="https://github.com/grahamgilbert/macscripts">MacScripts on GitHub</a></p>
 </div>
   
   
@@ -177,7 +133,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2012/04/06/profile-manager-enrollment-package/">Profile Manager Enrollment Package</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/12/15/casper-versus-deploystudio/">Casper Versus DeployStudio</a></h1>
     
     
       <p class="meta">
@@ -193,157 +149,194 @@
   
 
 
-<time datetime="2012-04-06T10:38:00+01:00" pubdate data-updated="true">Apr 6<span>th</span>, 2012</time>
+<time datetime="2012-12-15T13:00:00+00:00" pubdate data-updated="true">Dec 15<span>th</span>, 2012</time>
         
-         | <a href="/blog/2012/04/06/profile-manager-enrollment-package/#disqus_thread">Comments</a>
+         | <a href="/blog/2012/12/15/casper-versus-deploystudio/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Over the past week or so, we had a need to enroll macs automagically with a Lion Profile Manager server. My first plan was to do what Charles Edge did in his recent <a href="http://krypted.com/mac-os-x/automating-profile-manager-enrollment-through-deploystudio/">blog post</a> and use DeployStudio. Then I remembered another post by Charles on <a href="http://krypted.com/iphone/profile-manager-and-profiles/">/usr/bin/profiles</a> and wondered if I could make a workflow that can be used throughout our deployment and system maintenance process &ndash; yup, the humble pkg, that can be popped into Munki for existing macs, installed with DeployStudio for imaging and pushed out with ARD if need be.</p>
+  <div class="entry-content"><p>I&rsquo;ll preface this with one thing &ndash; I&rsquo;m not a Casper Suite expert. I don&rsquo;t use it reguarly, and at what it costs, I probably won&rsquo;t! It&rsquo;s this price that gave me high expectations for this last install. Unfortunately they were unfounded.</p>
 
-<p><a href="https://github.com/grahamgilbert/Profile-Manager-Enrollment">Get the code from GitHub</a></p>
+<p>I&rsquo;m hoping to write a series of articles comparing the various aspects of Casper against the free tools I use every day. First up is DeployStudio.</p>
 
-<p>Assuming you&rsquo;ve got <a href="https://github.com/unixorn/luggage">The Luggage</a> set up, first off you&rsquo;ll need your enrollment and trust profiles:</p>
+<h2>Workflow creation</h2>
+
+<p>Both Casper Imaging and DeployStudio have a nice GUI for creating the workflow. It&rsquo;s just a drag and drop to place the tasks you need. The DeployStudio interface feels a bit more polished, but that&rsquo;s probably just my bias showing though. The only real differentiator here are the package groups that DeployStudio offers. If you had a standard group of packages that you deploy over several different workflows, DeployStudio makes it easy to maintain &ndash; yes, this should probably be done elsewhere, but it can be handy to install a certain set of applications at imaging time. I couldn&rsquo;t see a direct replacement for this in Casper Imaging.</p>
+
+<p><strong>Winner: Draw (just! if pushed, I&rsquo;d say DeployStudio just edged it)</strong></p>
+
+<h2>NetBoot</h2>
+
+<p>This is where DeployStudio really starts to poop on Casper Imaging from a great height. With Casper, the chap doing the jump start told me that I had to manually build up a NetBoot image with Casper Imaging set up. Hilarious. Surely he was joking, right? No. DeployStudio, a <em>free product</em>, has a wizard for making a customised NetBoot set that offers an iTunes like interface that is so simple, I&rsquo;ve regularly taken an office manager through imaging a Mac. I dread to think how that same person would cope with the random UI elements that have been thrown at the screen when making the casper imaging app.</p>
+
+<p><strong>Winner: DeployStudio, hands down. Casper didn&rsquo;t even turn up</strong></p>
+
+<h2>Imaging process</h2>
+
+<p>So, you&rsquo;ve managed to get past the lovely Casper Imaging interface, and now you&rsquo;re installing a package that&rsquo;s best installed when running from the target system &ndash; like an Adobe CS package. One that is likely to be the biggest package you&rsquo;re installing. With DeployStudio, you at least get some indication that <em>something</em> is happening &ndash; you have the log scrolling by in the background. With Casper Imaging you get nothing other than a back window, and the nice Casper logo. No idea if it&rsquo;s going to take five minutes or two hours.</p>
+
+<p><strong>Winner: DeployStudio</strong></p>
+
+<p>I&rsquo;ll finish this post with an admission: I don&rsquo;t use DeployStudio either. I&rsquo;ve been trying to get rid of OS X in my server rooms, so as I mentioned in my last post, we&rsquo;re using JAMF&rsquo;s NetSUS appliance (dear JAMF, why can you make an awesome free product like NetSUS, but your flagship product be so poor?) and NetRestore with a InstaDMG made image with just an OS and a package to hook it into Puppet. I chose to compare Casper Imaging with DeployStudio as they&rsquo;re closer competitors than the one trick pony of NetRestore.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/12/macnamer/">MacNamer</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-12T11:05:00+00:00" pubdate data-updated="true">Dec 12<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/12/12/macnamer/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A few months ago, we decided to move away from DeployStudio for imaging our Macs to reduce the OS X footprint in the server room (a plain old NetRestore can be run from <a href="https://jamfnation.jamfsoftware.com/viewProduct.html?id=180&amp;view=info">NetSUS</a>). This left us with a problem &ndash; how are we going to name our Macs now (a task previously performed by DeployStudio)?</p>
+
+<p>Enter <a href="https://github.com/grahamgilbert/macnamer">MacNamer</a>. It&rsquo;s usage and installation is detailled in the Readme file, please fork, try to break, file pull requests. This has been in production for several months at work, but I&rsquo;m sure someone will manage to make it break!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/12/meraki-systems-manager/">Meraki Systems Manager</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-12T16:07:00+00:00" pubdate data-updated="true">Nov 12<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/11/12/meraki-systems-manager/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Maintaining visibility over your fleet of machines is always difficult. It&rsquo;s even more difficult when you&rsquo;ve got Macs. It gets nearly impossible when you decide you&rsquo;d like something hosted in the cloud.</p>
+
+<p>We&rsquo;ve been looking for a good solution for ages now &ndash; we even resorted to using <a href="http://www.ocsinventory-ng.org/en/">OCS Inventory</a> for a while. We then discovered <a href="http://www.meraki.com/products/systems-manager/">Meraki&rsquo;s Systems Manager</a>.</p>
+
+<p>This isn&rsquo;t going to be one of those fancy review type things &ndash; you can go and look at it&rsquo;s features yourself. This is more an overview of the factors that came into our decision:</p>
+
+<h2>Pros</h2>
+
+<ul>
+<li>It&rsquo;s cloud based! No servers for us to deploy, no VPNs between sites for clients to communicate over</li>
+<li>It does basic iOS MDM. It&rsquo;s not the best in the world, but it does a lot of what we wanted (basically configuring email and Wi-Fi settings)</li>
+<li>It has SSH over the Internet. If all else fails, we have a way into a machine, no matter where it is.</li>
+<li>It&rsquo;s free! It&rsquo;s hard to argue with a price like that!</li>
+</ul>
+
+
+<h2>Cons</h2>
+
+<ul>
+<li>It&rsquo;s free! If you&rsquo;re not paying for something, you have no SLA, no guarantee it will be working tomorrow</li>
+<li>It&rsquo;s location services suck in the UK. My home network is in Sheffield apparently. We supposedly have clients in Bath (we don&rsquo;t).</li>
+<li>It&rsquo;s not particuarly customisable. With Puppet, Facter, Puppet Dashboard and the inventory service configured, you can pull out practically any information you require (for example, we have a Fact that tells us if there are any admin users on a Mac other than our own).</li>
+</ul>
+
+
+<h2>Summary</h2>
+
+<p>For what it does, Meraki Systems Manager is hard to beat. If you need more than basic system information, or something that runs on Linux, you&rsquo;re going to need to look elsewhere. It&rsquo;s a great compliment to Puppet Inventory, but it&rsquo;s not a total replacement.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/21/five-reasons-sysadmins-should-use-git/">Five Reasons Sysadmins Should Use Git</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-21T07:28:00+01:00" pubdate data-updated="true">Sep 21<span>st</span>, 2012</time>
+        
+         | <a href="/blog/2012/09/21/five-reasons-sysadmins-should-use-git/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This post could also be called &ldquo;Things we could learn from our developer brethren, but I digress, to the list! (Lists are awesome, aren&rsquo;t they?)</p>
+
+<p>I&rsquo;m not going to try and tell you how to get started with Git (<a href="http://glarizza.posterous.com/using-git-for-mac-sysadmins-part-1">go here instead for that</a>), I&rsquo;m merely going to get on my soapbox.</p>
 
 <ol>
-<li>Create a new enrollment profile</li>
-<li>Give your enrollement profile a name</li>
-<li>Download the trust profile</li>
-<li>Download the enrollment profile</li>
+<li><strong>Branches</strong> &ndash; need to test something? No need to spend all day making a test setup, just make a branch and clone it to the test server. If it turns out that I wasn&rsquo;t mad and my changes were a good idea, they can be merged back into the main branch just as easily.</li>
+<li><strong>Accountability</strong> &ndash; who made that strange config change? A quick look at the commit history is all you need.</li>
+<li><strong>Diff</strong> &ndash; what actually changed? It&rsquo;s easy to see the exact changes</li>
+<li><strong>Change history</strong> &ndash; why was that random change even made? Hopefully it&rsquo;s in the commit message! (Your commit messages are useful, aren&rsquo;t they?!)</li>
+<li><strong>You can be a nice sysadmin</strong> &ndash; if you use GitHub it&rsquo;s simple to take your repo public and share your awesomeness.</li>
 </ol>
 
 
-<p><a href="/images/posts/2012-04-06/profile_enrollment_and_trust-full.jpg"><img class="center" src="/images/posts/2012-04-06/profile_enrollment_and_trust-thumb.jpg"></a></p>
-
-<p>If your attachments auto open, click cancel when you&rsquo;re asked if you want to install the profiles so they stay in ~/Downloads. Rename them to enroll.mobileconfig and trust.mobileconfig and pop them into the directory you cloned from GitHub. A quick <code>make pkg</code> and you&rsquo;ve got your package.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/04/03/hello-octopress/">Hello Octopress</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-03T12:49:00+01:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2012</time>
-        
-         | <a href="/blog/2012/04/03/hello-octopress/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Inspired by some of the <a href="http://mattgemmell.com/2011/09/12/blogging-with-octopress/">cool kids</a>, I&rsquo;ve spent the last couple of evenings migrating my blog over to <a href="http://octopress.org">Octopress</a>.  The main motivators were my desire to put my posts under version control (we&rsquo;ve been going a bit nuts for Git at Pebble towers recently), and that I wanted to use the excellent Byword app to compose my posts (I just need to work out how I&rsquo;m going to be able to use the iOS app to publish on the go &ndash; probably some Dropbox trickery).</p>
-
-<p>Plus, using Ruby scripts and Rsync to publish the blog really appealed to my (not so) inner geek.</p>
-
-<p>Anyway, normal mac-type sysadmin-y posts will resume shortly.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/24/the-agony-and-ecstasy-of-100meg-broadband/">The Agony and Ecstasy of 100meg Broadband</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-24T13:09:19+00:00" pubdate data-updated="true">Mar 24<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/24/the-agony-and-ecstasy-of-100meg-broadband/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Before I descend into a massive rant, let me preface this post with this: I hate BT. I always have, and I probably always will. They are generally the most incompetent, uncooperative company on the planet.</p>
-
-<p>Let me take you back to October 2011. I was perusing the BT website looking for BT Infinity &ndash; their brand name for up to 40meg VDSL. I popped in my postcode and was told that I was in a trial area for <a href="http://en.wikipedia.org/wiki/Fiber_to_the_x#Fiber_to_the_premises">FTTP</a> at a stonking 100meg. Obviously I thought about the pain I was letting myself in for, having to deal with BT, but I was sure that I could cope with it if I was getting such insanely fast Internet at the end of it.</p>
-
-<p>If only I knew how painful it was going to be. </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/24/the-agony-and-ecstasy-of-100meg-broadband/">Continue reading &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/23/making-a-lion-recovery-hd-revisited/">Making a Lion Recovery HD Revisited</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-23T11:55:29+00:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
-        
-         | <a href="/blog/2012/02/23/making-a-lion-recovery-hd-revisited/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve pushed some updates to this script, mainly switching to using <a href="https://github.com/unixorn/luggage">The Luggage</a> for making the package. As ever, it&rsquo;s up on <a href="https://github.com/grahamgilbert/Make-Recovery-HD">Github</a>.</p>
+<p>So there you go &ndash; I hope this goes some way to answering the question &ldquo;why shuold I be using Git?&rdquo;</p>
 </div>
   
   
@@ -367,30 +360,30 @@
   <h1>About</h1>
   <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
 
-<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer or clients.</small></p>
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer.</small></p>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/">Managing Munki Catalogs With Trello</a>
+        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2015/01/04/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
+        <a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Running Puppet Server in Docker Part 2: R10k</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a>
+        <a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
+        <a href="/blog/2015/06/16/using-munki-trello-with-git/">Using Munki-trello With Git</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/">First-boot-pkg Updated for Yosemite</a>
+        <a href="/blog/2015/05/08/introducing-imagr/">Introducing Imagr</a>
       </li>
     
   </ul>

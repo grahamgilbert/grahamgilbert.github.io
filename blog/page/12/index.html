@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="So you&rsquo;ve lovingly crafted your never booted image in InstaDMG. It&rsquo;s fully up to date and lovely. And then you try to enable FileVault 2 &hellip;">
+  <meta name="description" content="This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,7 +93,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2012/02/01/making-a-lion-recovery-hd/">Making a Lion Recovery HD</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/08/18/location-based-printers-with-puppet/">Location Based Printers With Puppet</a></h1>
     
     
       <p class="meta">
@@ -109,18 +109,51 @@
   
 
 
-<time datetime="2012-02-01T17:30:35+00:00" pubdate data-updated="true">Feb 1<span>st</span>, 2012</time>
+<time datetime="2012-08-18T21:08:00+01:00" pubdate data-updated="true">Aug 18<span>th</span>, 2012</time>
         
-         | <a href="/blog/2012/02/01/making-a-lion-recovery-hd/#disqus_thread">Comments</a>
+         | <a href="/blog/2012/08/18/location-based-printers-with-puppet/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>So you&rsquo;ve lovingly crafted your never booted image in InstaDMG. It&rsquo;s fully up to date and lovely. And then you try to enable FileVault 2. As you have no Recovery HD, it&rsquo;s not going to happen.</p>
+  <div class="entry-content"><p>This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn&rsquo;t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything &ndash; they go to the other site, and they automatically get the right printers set up &ndash; so after a little thought,  came up with this. I&rsquo;ve made use of the excellent <a href="https://github.com/mosen/puppet-cups">mosen-puppet-cups</a> module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).</p>
 
-<p>I&rsquo;ve tried several methods to get around this, including taking an image of an existing Recovery HD. It worked (ish), but didn&rsquo;t feel right. Then I found this post on <a href="https://plus.google.com/113021614344742332063/posts/8D8FJjps5C6">google +</a>. I&rsquo;ve lovingly ripped off the method and put it into a package for deployment with DeployStudio, ARD, or anything else that can take normal packages. <a href="https://github.com/grahamgilbert/Make-Recovery-HD">You can download everything from my GitHub</a>, usage instructions are in the readme.</p>
+<div><script src='https://gist.github.com/3389457.js'></script>
+<noscript><pre><code>case $operatingsystem{
+    Darwin:{
+        ##London is on the 10.30.2.0 and 10.30.3.0 Subnets
+        if ($network_en0 == &#39;10.30.2.0&#39;) or ($network_en1 == &#39;10.30.2.0&#39;) or ($network_en0 == &#39;10.30.3.0&#39;) or ($network_en1 == &#39;10.30.3.0&#39;){
+                printer { &quot;Sharp_ARM316&quot;:
+                    ensure      =&gt; present,
+            uri         =&gt; &quot;lpd://sharparm316.ldn.example.com&quot;,
+            description =&gt; &quot;Sharp ARM316&quot;,
+            shared      =&gt; false,
+            ppd         =&gt; &quot;/Library/Printers/PPDs/Contents/Resources/SHARP AR-M316.PPD.gz&quot;, # PPD file will be autorequired
+            }
+        printer { &quot;Xerox_WorkCentre_7120&quot;:
+            ensure      =&gt; present,
+            uri         =&gt; &quot;lpd://xeroxwc7120.ldn.example.com&quot;,
+            description =&gt; &quot;Xerox WorkCentre 7120&quot;,
+            shared      =&gt; false,
+            ppd         =&gt; &quot;/Library/Printers/PPDs/Contents/Resources/Xerox WorkCentre 7120.gz&quot;, # PPD file will be autorequired
+            }
+        }
+            
+        ##San Francisco is on the 10.30.10.0 Subnet
+        if ($network_en0 == &#39;10.30.10.0&#39;) or ($network_en1 == &#39;10.30.10.0&#39;){
+        printer { &quot;Xerox_550&quot;:
+            ensure      =&gt; present,
+            uri         =&gt; &quot;lpd://xerox550.sf.example.com&quot;,
+            description =&gt; &quot;Xerox 550&quot;,
+            shared      =&gt; false,
+            ppd         =&gt; &quot;/Library/Printers/PPDs/Contents/Resources/en.lproj/Xerox 550-560 Integrated Fiery&quot;, # PPD file will be autorequired
+            }
+        }
+    }
+}</code></pre></noscript></div>
+
 </div>
   
   
@@ -133,7 +166,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2012/01/01/web-server-on-linode-part-1/">Web Server on Linode Part 1</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/07/28/making-a-mountain-lion-recovery-hd/">Making a Mountain Lion Recovery HD</a></h1>
     
     
       <p class="meta">
@@ -149,32 +182,34 @@
   
 
 
-<time datetime="2012-01-01T20:23:03+00:00" pubdate data-updated="true">Jan 1<span>st</span>, 2012</time>
+<time datetime="2012-07-28T06:48:00+01:00" pubdate data-updated="true">Jul 28<span>th</span>, 2012</time>
         
-         | <a href="/blog/2012/01/01/web-server-on-linode-part-1/#disqus_thread">Comments</a>
+         | <a href="/blog/2012/07/28/making-a-mountain-lion-recovery-hd/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Recently, I was tasked with moving a client&rsquo;s web server from a box in their office, to something a little more robust when they put something up there that caused the server to go nuts (30 mb/s nuts!).</p>
+  <div class="entry-content"><p><strong>Update:</strong> There&rsquo;s a better method over at <a href="http://afp548.com/2012/08/15/creating-a-10-8-recovery-hd-package-with-luggage/">afp548</a> that does this better. Use that!</p>
 
-<p>The main goals were:</p>
+<p>A few months ago I made a package to create a Recovery HD on a freshly deployed Lion Mac. It&rsquo;s time to do the same for <a href="https://twitter.com/fordy/status/228218744177033216">Mountain Goat</a>.</p>
+
+<p>In true Blue Peter style, you will need:</p>
 
 <ul>
-<li>Fast, scalable web server</li>
-<li>Multiple FTP users for the client&rsquo;s web team to modify the site</li>
-<li>Integrates with their existing CrashPlan PROe backup system.</li>
-<li>Use GUI&rsquo;s as much as possible for admin so lower level techs could make changes on the server.</li>
+<li><a href="https://github.com/unixorn/luggage">The Luggage</a> (If you&rsquo;re having problems getting The Luggage working with the latest version of Xcode, please see <a href="https://groups.google.com/forum/#!topic/macenterprise/v4qRFnCutS4/discussion">this post on macenterprise</a></li>
+<li>The <a href="https://github.com/grahamgilbert/recovery-hd-mountain-lion">GitHub Repo</a></li>
+<li>A read only DMG of a never booted 10.8 Recovery HD</li>
+<li>The <a href="http://support.apple.com/kb/DL1464">Lion Recovovery HD Update</a></li>
 </ul>
 
 
-<p>After considering several options, we decided to go with Linode. I&rsquo;ve had great success hosting my own site with them, and as we had full access to the box, we could install anything we wanted &ndash; including CrashPlan.</div>
+</div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2012/01/01/web-server-on-linode-part-1/">Continue reading &rarr;</a>
+      <a rel="full-article" href="/blog/2012/07/28/making-a-mountain-lion-recovery-hd/">Continue reading &rarr;</a>
     </footer>
   
 
@@ -186,7 +221,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2011/12/10/thoughts-on-profile-manager/">Thoughts on Profile Manager</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/07/01/google-directory/">Google Directory?</a></h1>
     
     
       <p class="meta">
@@ -202,24 +237,61 @@
   
 
 
-<time datetime="2011-12-10T20:45:29+00:00" pubdate data-updated="true">Dec 10<span>th</span>, 2011</time>
+<time datetime="2012-07-01T20:11:00+01:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
         
-         | <a href="/blog/2011/12/10/thoughts-on-profile-manager/#disqus_thread">Comments</a>
+         | <a href="/blog/2012/07/01/google-directory/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>We&rsquo;ve been using a 10.7 Server in the office since Lion was released, but it is only now that I&rsquo;m about to install an all Lion office, so will get the chance to use Profile Manager in a real install. Over the last few months, I&rsquo;ve noticed a couple of things:</p>
+  <div class="entry-content"><p>Last week at work we were discussing where we were headed. Our email is now firmly in the cloud with Google providing a better infrastructure than we ever could. They&rsquo;ve also got word processing and spreadsheets solved for most people with the hard to beat price of free.</p>
 
-<ul>
-<li><p>Don&rsquo;t bother using a self signed SSL certificate. Preferences will fail to push seemingly at random without a proper certificate. For what they cost, get over to Godaddy and buy yourself a cheap certificate and save yourself hours of head scratching.</p></li>
-<li><p>On first glance, Profile Manager seems to be lacking load of options that we had in Workgroup Manager. Remember that your can upload your own plists, so we can still set all of the options that we could before.</p></li>
-<li><p>I&rsquo;ve not been able to set Mobility preferences using Profile Manager, so have had to fall back to MCX for this as the client mac steadfastly refuses to use the settings I&rsquo;ve set in Profile Manager. If anyone has any ideas about this, I&rsquo;d love to hear them.</p></li>
-<li><p>If you&rsquo;re using DeployStudio, your can cut out a load of post imaging faffing about with enrolling the mac by using an Enrolment Profile and then using the workflow item in DS to get the client talking to your server.</p></li>
-</ul>
+<p>So, what else could we do better with the cloud? </div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/01/google-directory/">Continue reading &rarr;</a>
+    </footer>
+  
 
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/07/run-munki-at-boot/">Run Munki at Boot</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-07T09:19:00+01:00" pubdate data-updated="true">May 7<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/05/07/run-munki-at-boot/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Munki is great. It keeps your macs up to date &ndash; well it does most of the time. Sometimes you get a user that just refuses to click on &ldquo;Update&rdquo; now matter how many times it pops up. Now you have a tool to defeat them &ndash; install this package over ARD and munki will install everything that&rsquo;s available, including Apple software updates (it will reboot the mac if needed and carry on where it left off).</p>
+
+<p>I wish I could take credit for all this <a href="http://code.google.com/p/munki/wiki/BootstrappingWithMunki">amazingness</a>, but I just wrapped it up into a package. The source is over at <a href="https://github.com/grahamgilbert/Munki-Bootstrap">GitHub</a>, and there&rsquo;s <a href="https://github.com/downloads/grahamgilbert/Munki-Bootstrap/Munki_Bootstrap.pkg.zip">a pre built package</a> as well.</p>
 </div>
   
   
@@ -232,7 +304,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2011/11/29/backing-up-postres-in-lion-server/">Backing Up Postres in Lion Server</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/04/21/headless-virtualbox/">Headless VirtualBox</a></h1>
     
     
       <p class="meta">
@@ -248,111 +320,62 @@
   
 
 
-<time datetime="2011-11-29T16:10:37+00:00" pubdate data-updated="true">Nov 29<span>th</span>, 2011</time>
+<time datetime="2012-04-21T22:06:00+01:00" pubdate data-updated="true">Apr 21<span>st</span>, 2012</time>
         
-         | <a href="/blog/2011/11/29/backing-up-postres-in-lion-server/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Starting with Lion Server, a fair bit of data is now stored in Postgres databases. If you use Time Machine, you&rsquo;ll get this backed up properly for you. If you use a proper backup solution (I prefer CrashPlan), you won&rsquo;t get automated dumps. This script rectifies this, by dumping all of your Postgres data, and keeping 7 days worth.</p>
-
-<p>You can grab the code, along with a pre-built pkg installer from <a href="https://github.com/grahamgilbert/Postgres-Backup-for-Lion-Server">GitHub</a>.</p>
-
-<h3>Configuration</h3>
-
-<p>By default, the script puts it&rsquo;s backups in /Backups/Postgres &ndash; if you wish to change it, you will need to edit line 3 of /usr/local/pgbackup/pgbackup.sh</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>/usr/local/pgbackup/pgbackup.sh
-</span><span class='line'><span class="nv">FINAL_BACKUP_DIR</span><span class="o">=</span>/path/where/you/want/things/kept
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The LaunchDaemon will trigger the script every night at 21:00. If you wish to change this, you will need to edit the CalendarStartInterval part of com.grahamgilbert.pgbackup.plist</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/11/22/kerio-connect-vs-web-services-in-lion-server/">Kerio Connect vs Web Services in Lion Server</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-11-22T21:17:27+00:00" pubdate data-updated="true">Nov 22<span>nd</span>, 2011</time>
-        
-         | <a href="/blog/2011/11/22/kerio-connect-vs-web-services-in-lion-server/#disqus_thread">Comments</a>
+         | <a href="/blog/2012/04/21/headless-virtualbox/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><h3>The problem</h3>
+  <div class="entry-content"><p>I recently had a requirement to run an Ununtu machine, but the client had only mac servers, and no budget for additional hardware. The solution turned out to be VirtualBox &ndash; we could run it headless and have it start when the mac booted.</p>
 
-<p>Lion Server takes over every ethernet interface when you enable any web services (Web, Wiki, Profile Manager, basically anything!). This leaves us with two options: putting Kerio on a non-standard port and getting the users to type that in every time, or completely disabling apache and not using any of the good stuff that came with Lion Server. Or, we could work out a way to redirect users to the right port number when they hit mail.example.com</p>
+<p>First, get your VM set up how you like it and shut it down. I like to move my VMs out of the boot drive, so move the entire ~/VirtualBox VMs directory onto your storage device.</p>
 
-<p>Enter Reverse Proxy. This takes the request for the mail.example.com virtual host, and redirects it to our custom HTTPS port (8843).</p>
+<p>VirtualBox needs to know where the vm lives now, so remove the original vm you made, then double click the moved vbox file.</p>
 
-<h3>How to do it</h3>
+<p>One last step &ndash; the launchd item to control the vm.</p>
 
-<p>The files you need are on my <a href="https://github.com/grahamgilbert/Lion_Kerio">GitHub</a>. Replace mail.example.com with the FQDN of your mail server.</p>
-
-<ol>
-<li>Set up your lion server first. Configure SSL certificates, OD and web services the way you like it.</li>
-<li>Export your private key for the signed SSL certificate from the keychain.</li>
-<li>Install Kerio Connect. Import the private key and your signed certificate.</li>
-<li>Set Kerio to use only port 8800 for HTTP and 8843 for HTTP and HTTPS, respectively.</li>
-<li>Set Kerio to bind it&rsquo;s services to All Interfaces rather than a specific IP address. (I&rsquo;ve found that services won&rsquo;t start when it&rsquo;s listening on all IPs, but will when it can listen to all &ndash; don&rsquo;t ask me why!)</li>
-<li>In Server.app, configure mail.example.com in Web. Set it to use port 443, set the root folder to whatever you want (it won&rsquo;t be used).</li>
-<li>In Hardware, set the virtual host you just created to use the right ssl cert.</li>
-<li>In terminal: <code>cd /path/to/the/files/you/downloaded</code></li>
-<li>In terminal again: <code>sudo cp httpd_kerio.conf /etc/apache2/httpd_kerio.conf</code></li>
-<li>And again: <code>sudo cp webapps/com.grahamglbert.kerio.plist /etc/apache2/webapps/com.grahamglbert.kerio.plist</code></li>
-<li>One last time: <code>sudo webappctl start com.grahamgilbert.kerio mail.example.com</code></li>
-</ol>
-
-
-<h3>What&rsquo;s happening</h3>
-
-<p>By default, when you specify a vhost to use ssl in lion server, any requests to port 80 are redirected to 443. Once it&rsquo;s wrapped in ssl, it&rsquo;s redirected transparently to 8843, so the user is sent to the webmail login.
-The plist file is the core of the webapp mechanism that was introduced with lion server. Within that all we&rsquo;re doing is importing the httpd_kerio.conf file (which just has a standard apache reverse proxy directive) and telling the app to always use ssl. The webappctl command is simply telling the webapp mechanism to load our plist and start it on the mail.example.com vhost.</p>
-
-<h3>Known Issues</h3>
-
-<h4>Entourage</h4>
-
-<p>Entourage accounts will need to be reconfigured with the Kerio setup tool. They don&rsquo;t seem to like communicating with the server over port 443 when the reverse proxy is running &ndash; they will have issues sending email.</p>
-
-<h4>Kerio Services</h4>
-
-<p>The services in Kerio Admin will need to be set to run on All Interfaces rather than a set IP address, as they won&rsquo;t start on a specific address (it is unknown whether this is because of the reverse proxy / webapp process or if this is a general Lion issue). If the service has stopped, the webapp will need to be restarted:</p>
-
-<pre><code>sudo webappctl stop com.grahamgilbert.kerio mail.example.com
-sudo webappctl start com.grahamgilbert.kerio mail.example.com
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+&lt;key&gt;Label&lt;/key&gt;
+  &lt;string&gt;com.yourcompany.mysupervm.plist&lt;/string&gt;
+  &lt;key&gt;ProgramArguments&lt;/key&gt;
+  &lt;array&gt;
+    &lt;string&gt;/usr/bin/VBoxHeadless&lt;/string&gt;
+    &lt;string&gt;-startvm&lt;/string&gt;
+    &lt;string&gt;The name of your VM&lt;/string&gt;
+  &lt;/array&gt;
+&lt;key&gt;KeepAlive&lt;/key&gt;
+&lt;true/&gt;
+  &lt;key&gt;UserName&lt;/key&gt;
+  &lt;string&gt;admin&lt;/string&gt;
+  &lt;key&gt;WorkingDirectory&lt;/key&gt;
+  &lt;string&gt;/Volumes/Storage&lt;/string&gt;
+  &lt;key&gt;RunAtLoad&lt;/key&gt;
+  &lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
 </code></pre>
+
+<p>Change some &ldquo;The name of your VM&rdquo; to what your vm is actually called, change UserName to the admin username on the server, and finally change the WorkingDirectory path to match the location of your VirtualBox VMs directory.</p>
+
+<p>Save the plist into /Library/LaunchDaemons/ as com.yourcompany.mysupervm.plist (or whatever you want) and chown it to root:wheel</p>
+
+<p>To start the vm, crack open terminal and issue</p>
+
+<pre><code>sudo launchctl load /Library/LaunchDaemons/com.yourcompany.mysupervm.plist
+</code></pre>
+
+<p>And to stop:</p>
+
+<pre><code>sudo launchctl unload /Library/LaunchDaemons/com.yourcompany.mysupervm.plist
+</code></pre>
+
+<p>The vm will start at boot, and will continue to run, so to stop it, you need to unload the plist.</p>
 </div>
   
   
@@ -361,6 +384,8 @@ sudo webappctl start com.grahamgilbert.kerio mail.example.com
     </article>
   
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/13/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -374,30 +399,30 @@ sudo webappctl start com.grahamgilbert.kerio mail.example.com
   <h1>About</h1>
   <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
 
-<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer or clients.</small></p>
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer.</small></p>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/">Managing Munki Catalogs With Trello</a>
+        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2015/01/04/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
+        <a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Running Puppet Server in Docker Part 2: R10k</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a>
+        <a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
+        <a href="/blog/2015/06/16/using-munki-trello-with-git/">Using Munki-trello With Git</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/">First-boot-pkg Updated for Yosemite</a>
+        <a href="/blog/2015/05/08/introducing-imagr/">Introducing Imagr</a>
       </li>
     
   </ul>

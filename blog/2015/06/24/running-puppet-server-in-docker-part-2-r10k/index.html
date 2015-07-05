@@ -1,0 +1,465 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Running Puppet Server in Docker Part 2: r10k - graham gilbert</title>
+  <meta name="author" content="Graham Gilbert">
+
+  
+  <meta name="description" content="Last time we got our Puppet Server up and running &ndash; now we need to put some Puppet modules on it so we can use it. To do that, we&rsquo;re &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@grahamgilbert">
+<meta name="twitter:creator" content="@grahamgilbert">
+<meta name="twitter:description" content="Mac administration and assorted nerdity">
+<meta name="twitter:title" content="grahamgilbert.com">
+<meta name="twitter:url" content="http://grahamgilbert.com">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27233739-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">graham gilbert</a></h1>
+  
+    <h2>Mac administration and assorted nerdity</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:grahamgilbert.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/talks">Talks</a></li>
+  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Running Puppet Server in Docker Part 2: R10k</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-24T14:49:31+01:00" pubdate data-updated="true">Jun 24<span>th</span>, 2015</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Last time we got our Puppet Server up and running &ndash; now we need to put some Puppet modules on it so we can use it.</p>
+
+<p>To do that, we&rsquo;re going to use r10k. It&rsquo;s a tool that uses a control git repository that contains something called a puppetfile- a file that lists all of the puppet modules you want to use, either from the puppet forge or from git repositories. You may want to keep this module private by using a paid account on GitHub if your configuration contains secrets, but  it doesn&rsquo;t have to be &ndash; mine doesn&rsquo;t have anything particularly sensitive in, so here it is: <a href="https://github.com/grahamgilbert/personal-puppet">grahamgilbert/personal-puppet</a>. <!--more--></p>
+
+<h2>The Control module</h2>
+
+<p>Puppet recommends the use of environments &ndash; a way of separating your clients into groups &ndash; usually this is test and production groups. r10k uses git branches to determine which environments you have, so we&rsquo;re going to set up our repository. The default branch is called <code>master</code>, but we want ours to be called <code>production</code> &ndash; Github has some excellent <a href="https://help.github.com/articles/setting-the-default-branch/">documentation</a> on the subject. I recommend accepting GitHub&rsquo;s suggestion of putting a README in your repository so you can clone it right away.</p>
+
+<h2>The Puppetfile</h2>
+
+<p>Now we&rsquo;ve got our control repo set up, we can clone it so we can work on it.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git clone https://github.com/yourusername/yourcontolrepo</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you&rsquo;re familiar with Puppet, this will be familiar &ndash; an environment is what you would have once put at <code>/etc/puppet</code> &ndash; the only change is that you can override options on a per-environment basis by using <code>environment.conf</code>. In my control repo, I have a default manifest at the top of the environment rather than in <code>manifests</code> for example. (<a href="https://docs.puppetlabs.com/puppet/latest/reference/config_file_environment.html">more information</a>)</p>
+
+<p>At its simplest, a Puppetfile is just a list of modules we want to use. As we&rsquo;re just starting off, we can use pre-built ones from GitHub and the forge. We&rsquo;re going to get Munki installed on a client, so we&rsquo;ll use my MacAdmin module. One thing to note is that r10k won&rsquo;t resolve dependencies for you, so be sure to specify any modules the module you need. A simple Puppetfile is below:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mod</span> <span class="s1">&#39;mac_admin&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/grahamgilbert/puppet-mac_admin&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mod</span> <span class="s1">&#39;mac_profiles_handler&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/ryanycoleman/rcoleman-mac_profiles_handler&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mod</span> <span class="s1">&#39;mac_facts&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/grahamgilbert/grahamgilbert-mac_facts.git&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mod</span> <span class="s1">&#39;repository&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/boxen/puppet-repository&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mod</span> <span class="s1">&#39;outset&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/grahamgilbert/puppet-outset&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mod</span> <span class="s1">&#39;stdlib&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/puppetlabs/puppetlabs-stdlib&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Configuring r10k</h2>
+
+<p>The next piece of the puzzle is to set up r10k to download our repository. I&rsquo;m running r10k directly on my Docker host, but this could easily be (and probably should be) put into a Docker container. First off, let&rsquo;s get r10k installed:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>gem install r10k
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>r10k get&rsquo;s in configuration from <code>/etc/r1ok.yaml</code>, so let&rsquo;s create that:</p>
+
+<figure class='code'><figcaption><span>/etc/r10k.yaml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="c1"># The location to use for storing cached Git repos</span>
+</span><span class='line'><span class="l-Scalar-Plain">:cachedir</span><span class="p-Indicator">:</span> <span class="s">&#39;/var/cache/r10k&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># A list of git repositories to create</span>
+</span><span class='line'><span class="l-Scalar-Plain">:sources</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="c1"># This will clone the git repository and instantiate an environment per</span>
+</span><span class='line'>  <span class="c1"># branch in /etc/puppet/environments</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:personal-puppet</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">remote</span><span class="p-Indicator">:</span> <span class="s">&#39;https://github.com/yourusername/yourcontrolrepo&#39;</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">basedir</span><span class="p-Indicator">:</span> <span class="s">&#39;/usr/local/docker/puppetserver/puppet/environments&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Puppet Conf</h2>
+
+<p>The final piece of configuration for today will be to set our Puppet Server to use environments. Add the following to <code>/usr/local/docker/puppetserver/puppet/puppet.conf</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="k">[main]</span>
+</span><span class='line'><span class="na">logdir</span><span class="o">=</span><span class="s">/var/log/puppet</span>
+</span><span class='line'><span class="na">vardir</span><span class="o">=</span><span class="s">/var/lib/puppet</span>
+</span><span class='line'><span class="na">ssldir</span><span class="o">=</span><span class="s">/var/lib/puppet/ssl</span>
+</span><span class='line'><span class="na">rundir</span><span class="o">=</span><span class="s">/var/run/puppet</span>
+</span><span class='line'><span class="na">factpath</span><span class="o">=</span><span class="s">$vardir/lib/facter</span>
+</span><span class='line'><span class="na">environmentpath</span><span class="o">=</span><span class="s">$confdir/environments</span>
+</span><span class='line'><span class="na">pluginsync</span><span class="o">=</span><span class="s">true</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">[master]</span>
+</span><span class='line'><span class="c1"># These are needed when the puppetmaster is run by passenger</span>
+</span><span class='line'><span class="c1"># and can safely be removed if webrick is used.</span>
+</span><span class='line'><span class="na">ssl_client_header</span> <span class="o">=</span> <span class="s">SSL_CLIENT_S_DN</span>
+</span><span class='line'><span class="na">ssl_client_verify_header</span> <span class="o">=</span> <span class="s">SSL_CLIENT_VERIFY</span>
+</span><span class='line'><span class="na">autosign</span> <span class="o">=</span> <span class="s">true</span>
+</span><span class='line'><span class="na">environmentpath</span> <span class="o">=</span> <span class="s">$confdir/environments</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Gimmie some modules</h2>
+
+<p>We&rsquo;re ready to get some modules installed on the Puppet Server:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>r10k deploy environment -pv
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll see all of the modules you specified in your Puppetfile download theselves to the right place. But of course, we&rsquo;re not quite ready to use this for applying configuration to our Macs yet &ndash; we have modules, but we&rsquo;ve not applied the config to specific machines. In the next post we&rsquo;ll cover how we use Hiera to do this.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Graham Gilbert</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-24T14:49:31+01:00" pubdate data-updated="true">Jun 24<span>th</span>, 2015</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/docker/'>Docker</a>, <a class='category' href='/blog/categories/puppet/'>Puppet</a>, <a class='category' href='/blog/categories/r10k/'>r10k</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/06/22/running-puppet-server-in-docker/" title="Previous Post: Running Puppet Server in Docker">&laquo; Running Puppet Server in Docker</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/06/26/the-future-of-sal/" title="Next Post: The future of Sal">The future of Sal &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
+
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer.</small></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Running Puppet Server in Docker Part 2: R10k</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/06/16/using-munki-trello-with-git/">Using Munki-trello With Git</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/05/08/introducing-imagr/">Introducing Imagr</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'grahamgilbert',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+<section>
+  <h1>Twitter</h1>
+<a class="twitter-timeline" href="https://twitter.com/grahamgilbert" data-widget-id="483550747481489408">Tweets by @grahamgilbert</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Graham Gilbert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'grahamgilbert';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

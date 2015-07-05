@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Running Puppet Server in Docker - graham gilbert</title>
+  <meta name="author" content="Graham Gilbert">
+
+  
+  <meta name="description" content="Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@grahamgilbert">
+<meta name="twitter:creator" content="@grahamgilbert">
+<meta name="twitter:description" content="Mac administration and assorted nerdity">
+<meta name="twitter:title" content="grahamgilbert.com">
+<meta name="twitter:url" content="http://grahamgilbert.com">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27233739-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">graham gilbert</a></h1>
+  
+    <h2>Mac administration and assorted nerdity</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:grahamgilbert.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/talks">Talks</a></li>
+  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Running Puppet Server in Docker</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-22T12:29:55+01:00" pubdate data-updated="true">Jun 22<span>nd</span>, 2015</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively &ndash; it&rsquo;s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
+
+<p>Over the next few posts, I&rsquo;ll take you through setting up the Puppet Server (running on Docker, naturally!), using r10k and git for managing your modules and using Hiera to configure your Macs &ndash; we&rsquo;ll apply some configuration to a Mac without writing a single line of Puppet code .</p>
+
+<h1>Why?</h1>
+
+<p>You might well be thinking &ldquo;why would I want to use Puppet?&rdquo; After all, you&rsquo;ve already got Munki. There are two main reasons I&rsquo;ve chosen to go back to using a Puppet Server in conjunction with Munki.</p>
+
+<ol>
+<li>It&rsquo;s nice to have a fallback. If I manage to do something stupid and nuke my Munki install, or my customers manage to do the same, I&rsquo;ve got some way of getting the machines back under control.</li>
+<li>&ldquo;Free&rdquo; SSL certs &ndash; this might not be a priority now, but it gives you an easy to to secure your Munki repository later on (which we may cover in a later post).<!--more--></li>
+</ol>
+
+
+<h1>Let&rsquo;s get started</h1>
+
+<p>First off, you&rsquo;re going to need a Linux server with Docker installed. Installing it is beyond the scope of this post, but I do recommend you head over to <a href="http://www.digitalocean.com/?refcode=ce1e0f3880e1">Digital Ocean</a> (disclaimer: referral link). They will get you up and running with a server with Docker pre-installed in under a minute for not much money.  I run mine on Ubuntu 14, but you can choose whichever flavour of Linux you prefer.</p>
+
+<p>You will also need a DNS entry that points to your server&rsquo;s IP address. Whilst you could get away with fudging it by editing /etc/hosts, it&rsquo;s a lot of <a href="http://www.oxforddictionaries.com/definition/english/faff">faff</a>.</p>
+
+<h1>Dockers, images and containers</h1>
+
+<p>I&rsquo;ve already made a Docker image that has Puppet Server in it. Let&rsquo;s pull it down:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker pull grahamgilbert/puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And fire it up:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker run -d --name<span class="o">=</span>puppetserver <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">PUPPETSERVER_JAVA_ARGS</span><span class="o">=</span><span class="s2">&quot;-Xms384m -Xmx384m -XX:MaxPermSize=256m&quot;</span> <span class="se">\</span>
+</span><span class='line'>-p 0.0.0.0:8140:8140 <span class="se">\</span>
+</span><span class='line'>-h puppet.yourdomain.com <span class="se">\</span>
+</span><span class='line'>grahamgilbert/puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You will need to change the amount of memory assigned to the puppet server depending on how much memory is in your actual server before going to production but for now, 384mb will be fine as we&rsquo;re just setting things up.</p>
+
+<p>BUT there are a few things that we need to persist otherwise our server won&rsquo;t be very useful. First off, let&rsquo;s attach to the container so we can have a look around:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker <span class="nb">exec</span> -t -i puppetserver bash
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll be looking at a bash prompt now. First off, check that <code>/etc/puppet</code> and <code>/etc/puppetserver</code> have <em>stuff</em> in them. What&rsquo;s in there isn&rsquo;t important at this stage. We also need to run the Puppet client on the server to move some supporting files in place. We first need to enable auto signing of certificates in <code>/etc/puppet/puppet.conf</code> (we&rsquo;ll cover this more later):</p>
+
+<figure class='code'><figcaption><span>/etc/puppet/puppet.conf</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>main<span class="o">]</span>
+</span><span class='line'><span class="nv">logdir</span><span class="o">=</span>/var/log/puppet
+</span><span class='line'><span class="nv">vardir</span><span class="o">=</span>/var/lib/puppet
+</span><span class='line'><span class="nv">ssldir</span><span class="o">=</span>/var/lib/puppet/ssl
+</span><span class='line'><span class="nv">rundir</span><span class="o">=</span>/var/run/puppet
+</span><span class='line'><span class="nv">factpath</span><span class="o">=</span><span class="nv">$vardir</span>/lib/facter
+</span><span class='line'><span class="nv">templatedir</span><span class="o">=</span><span class="nv">$confdir</span>/templates
+</span><span class='line'>
+</span><span class='line'><span class="o">[</span>master<span class="o">]</span>
+</span><span class='line'><span class="c"># These are needed when the puppetmaster is run by passenger</span>
+</span><span class='line'><span class="c"># and can safely be removed if webrick is used.</span>
+</span><span class='line'><span class="nv">ssl_client_header</span> <span class="o">=</span> SSL_CLIENT_S_DN
+</span><span class='line'><span class="nv">ssl_client_verify_header</span> <span class="o">=</span> SSL_CLIENT_VERIFY
+</span><span class='line'><span class="nv">autosign</span> <span class="o">=</span> <span class="nb">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And then exit the container, stop it and start it up again:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">exit</span>
+</span><span class='line'><span class="nv">$ </span>docker stop puppetserver
+</span><span class='line'><span class="nv">$ </span>docker start puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Take a look at the container&rsquo;s logs &ndash; Puppet Server can take a few seconds to be ready, so look for the line that says it&rsquo;s ready to accept connections:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker logs puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When it&rsquo;s ready, enter the container again and run the puppet agent.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker <span class="nb">exec</span> -t -i puppetserver bash
+</span><span class='line'><span class="nv">$ </span>puppet agent -t
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Provided that ran with no errors, we can exit out of the container.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">exit</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We&rsquo;re now going to copy the parts we need to persist to the file system of the host machine &ndash; I like to keep my docker related things in <code>/usr/local/docker</code> but it&rsquo;s up to you.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mkdir -p /usr/local/docker/puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We&rsquo;re going to use <code>docker cp</code> to copy out of our container and onto our host filesystem. We want the configuration directories, any custom gems we install (required if we want to use modules such as <a href="https://github.com/dayglojesus/managedmac">managedmac</a>), as well as the SSL certificates and some other supporting files (these aren&rsquo;t technically required, but will save having to run <code>puppet agent -t</code> after the container starts every time we update).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker cp puppetserver:/etc/puppetserver /usr/local/docker/puppetserver/
+</span><span class='line'><span class="nv">$ </span>docker cp puppetserver:/etc/puppet /usr/local/docker/puppetserver/
+</span><span class='line'><span class="nv">$ </span>docker cp puppetserver:/var/lib/puppet/ssl /usr/local/docker/puppetserver/lib/
+</span><span class='line'><span class="nv">$ </span>docker cp puppetserver:/var/lib/puppet/lib /usr/local/docker/puppetserver/lib/
+</span><span class='line'><span class="nv">$ </span>docker cp puppetserver:/var/lib/puppet/jruby-gems /usr/local/docker/puppetserver/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we&rsquo;re ready to run for real. Just a small piece of configuration to make our lives easier whilst we&rsquo;re testing &ndash; enabling auto signing of certificates. By default you will need to sign a certificate for each client that tries to connect to your puppet master. Eventually we will want to sign certificates using some sort of external inventory service (I like Sal, but there are also connectors for Web Help Desk), but for now we&rsquo;ll leave our configuration that tells Puppet to sign every certificate unconditionally.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>nano /usr/local/docker/puppetserver/puppet/puppet.conf
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And make sure your <code>puppet.conf</code> looks like:</p>
+
+<figure class='code'><figcaption><span>/usr/local/docker/puppetserver/puppet/puppet.conf</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>main<span class="o">]</span>
+</span><span class='line'><span class="nv">logdir</span><span class="o">=</span>/var/log/puppet
+</span><span class='line'><span class="nv">vardir</span><span class="o">=</span>/var/lib/puppet
+</span><span class='line'><span class="nv">ssldir</span><span class="o">=</span>/var/lib/puppet/ssl
+</span><span class='line'><span class="nv">rundir</span><span class="o">=</span>/var/run/puppet
+</span><span class='line'><span class="nv">factpath</span><span class="o">=</span><span class="nv">$vardir</span>/lib/facter
+</span><span class='line'><span class="nv">pluginsync</span><span class="o">=</span><span class="nb">true</span>
+</span><span class='line'><span class="o">[</span>master<span class="o">]</span>
+</span><span class='line'><span class="c"># These are needed when the puppetmaster is run by passenger</span>
+</span><span class='line'><span class="c"># and can safely be removed if webrick is used.</span>
+</span><span class='line'><span class="nv">ssl_client_header</span> <span class="o">=</span> SSL_CLIENT_S_DN
+</span><span class='line'><span class="nv">ssl_client_verify_header</span> <span class="o">=</span> SSL_CLIENT_VERIFY
+</span><span class='line'><span class="nv">autosign</span> <span class="o">=</span> <span class="nb">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now all that remains is to fire up our final container and then we can hook up a client.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># remove our old container</span>
+</span><span class='line'><span class="nv">$ </span>docker rm -f puppetserver
+</span><span class='line'><span class="nv">$ </span>docker run -d <span class="se">\</span>
+</span><span class='line'>  --name<span class="o">=</span><span class="s2">&quot;puppetserver&quot;</span> <span class="se">\</span>
+</span><span class='line'>  --restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/puppetserver/puppet:/etc/puppet <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/puppetserver/puppetserver:/etc/puppetserver <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/puppetserver/lib/ssl:/var/lib/puppet/ssl <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/puppetserver/jruby-gems:/var/lib/puppet/jruby-gems <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/puppetserver/lib/lib:/var/lib/puppet/lib <span class="se">\</span>
+</span><span class='line'>  -p 0.0.0.0:8140:8140 <span class="se">\</span>
+</span><span class='line'>  -e <span class="nv">PUPPETSERVER_JAVA_ARGS</span><span class="o">=</span><span class="s2">&quot;-Xms384m -Xmx384m -XX:MaxPermSize=256m&quot;</span> <span class="se">\</span>
+</span><span class='line'>  -h puppet.yourdomain.com <span class="se">\</span>
+</span><span class='line'>  grahamgilbert/puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let&rsquo;s make sure it&rsquo;s finished starting up.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker logs -f puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This works like tail would. Hit ctrl-c to exit once it says it&rsquo;s ready to go.</p>
+
+<h1>Hook up a client</h1>
+
+<p>You&rsquo;re going to need Puppet, Facter and Hiera on your client Mac. Head over <a href="http://downloads.puppetlabs.com/mac">http://downloads.puppetlabs.com/mac</a> and download and install the latest version of Puppet, Facter and Hiera.</p>
+
+<p>If we just ran Puppet now, it would use the Mac&rsquo;s hostname as the certificate name (the unique identifier for the machine). If you have reliable hostnames, that will probably do you. I prefer to use the machine&rsquo;s serial number (lower case, because that&rsquo;s what Puppet likes). We&rsquo;ll automate this in a later post, but for now we can do it by hand:</p>
+
+<figure class='code'><figcaption><span>/etc/puppet/puppet.conf</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>main<span class="o">]</span>
+</span><span class='line'><span class="nv">server</span><span class="o">=</span>puppet.yourdomain.com
+</span><span class='line'><span class="nv">certname</span><span class="o">=</span>abc123
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>All that&rsquo;s left now is to run puppet on the client:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>puppet agent -t --waitforcert 20
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In a later post, we will look at how we can use r10k to manage our modules and use Hiera to configure our clients without touching a line of Puppet code.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Graham Gilbert</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-22T12:29:55+01:00" pubdate data-updated="true">Jun 22<span>nd</span>, 2015</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/docker/'>Docker</a>, <a class='category' href='/blog/categories/puppet/'>Puppet</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/06/16/using-munki-trello-with-git/" title="Previous Post: Using munki-trello with Git">&laquo; Using munki-trello with Git</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/" title="Next Post: Running Puppet Server in Docker Part 2: r10k">Running Puppet Server in Docker Part 2: r10k &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
+
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer.</small></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Running Puppet Server in Docker Part 2: R10k</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/06/16/using-munki-trello-with-git/">Using Munki-trello With Git</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/05/08/introducing-imagr/">Introducing Imagr</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'grahamgilbert',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+<section>
+  <h1>Twitter</h1>
+<a class="twitter-timeline" href="https://twitter.com/grahamgilbert" data-widget-id="483550747481489408">Tweets by @grahamgilbert</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Graham Gilbert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'grahamgilbert';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

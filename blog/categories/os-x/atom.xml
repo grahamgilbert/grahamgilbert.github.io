@@ -4,7 +4,7 @@
   <title><![CDATA[Category: OS X | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/os-x/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-02-12T07:45:49+00:00</updated>
+  <updated>2015-07-05T15:46:59+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,225 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Testing BSDPy in Vagrant]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/"/>
+    <updated>2015-04-28T16:10:07+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant</id>
+    <content type="html"><![CDATA[<p>Last time, we looked at how to spin up a Docker host and run BSDPy on it. That&rsquo;s great for production, but might be a bit of a faff to do every time you want to test your NBI at home.</p>
+
+<p>Inspired by <a href="https://grpugh.wordpress.com/2015/04/28/a-test-docker-bsdpy-environment/">Dr Graham R Pugh</a>, here&rsquo;s my Vagrant setup for this.</p>
+
+<p>You will need:</p>
+
+<ul>
+<li><a href="https://www.vagrantup.com/">Vagrant</a></li>
+<li>Either <a href="https://www.virtualbox.org/">VirtualBox</a> or <a href="http://www.vmware.com/uk/products/fusion">VMware Fusion</a> (if you use Fusion with Vagrant, you will need to purchase the <a href="http://www.vagrantup.com/vmware">VMware plugin</a> &ndash; this will allow you to create OS X Vagrantboxes as well as enjoy the much greater performance of VMware, but that&rsquo;s another post)</li>
+<li>Xcode, or at the very least the command line tools from Xcode so you have git available.</li>
+<li>Something to NetBoot &ndash; either a physical Mac or a VM in VMware Fusion. A VM configured as per <a href="https://derflounder.wordpress.com/2013/01/23/building-mac-test-environments-with-vmware-fusion-netboot-and-deploystudio/">Rich Trouton&rsquo;s post</a> will do nicely.</li>
+</ul>
+
+
+<p>Get all of that installed and you&rsquo;re ready to go. Next we need to get the Vagrantfile:</p>
+
+<p><code>bash
+$ git clone https://github.com/grahamgilbert/docker-vagrant.git
+</code></p>
+
+<p>You will obviously need an NBI &ndash; I&rsquo;ve <a href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/">covered how to use AutoNBI before</a>, or you could use an existing one. Just make sure you&rsquo;ve edited <code>NBImageInfo.plist</code> to make <code>enabled</code> be <code>true</code> and that the Mac (or VM) you&rsquo;re NetBooting isn&rsquo;t in <code>DisabledSystemIdentifiers</code> (I leave this as an empty <code>&lt;array /&gt;</code>). Put your NBI in the <code>nbi</code> directory.</p>
+
+<p>Now there&rsquo;s one thing left to do:</p>
+
+<p><code>bash
+$ cd docker-vagrant
+$ vagrant up
+</code></p>
+
+<p>Give it 20 seconds to finish booting and you will see your NBI in the startup pane of your Mac.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Getting started with BSDPy on Docker]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/"/>
+    <updated>2015-04-22T07:07:23+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker</id>
+    <content type="html"><![CDATA[<p>Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you&rsquo;re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we&rsquo;re using that. Your Ubuntu box will also need a real IP address &ndash; if you are using VMware Fusion, this will be a Bridged Network Adapter &ndash; adjust the terminology if you&rsquo;re using a different virtualization tool. You don&rsquo;t need to worry about giving your machine a static IP unless you want to &ndash; Macs will NetBoot just fine when they&rsquo;re on the same subnet. <!--more--></p>
+
+<h2>Baby Steps</h2>
+
+<p>Our first job is to install Docker. I&rsquo;ve been as guilty as many with glossing over this step, so here&rsquo;s the massively long and difficult method to install the latest version of Docker on Ubuntu 14. First we make sure <code>wget</code> is installed:</p>
+
+<p><code>bash
+$ which wget
+</code></p>
+
+<p>And if that returns nothing then we need to install <code>wget</code>:</p>
+
+<p><code>bash
+$ sudo apt-get update
+$ sudo apt-get install wget
+</code></p>
+
+<p>And now we can install Docker:</p>
+
+<p><code>bash
+wget -qO- https://get.docker.com/ | sh
+</code></p>
+
+<p>Pop your password in when you&rsquo;re asked and you&rsquo;re done.</p>
+
+<h2>A long time ago on a server far away</h2>
+
+<p>Whilst you&rsquo;re still recovering from the trauma of that difficult install, I&rsquo;m going to cover a bit of background. I&rsquo;ve been using Docker for just under a year now, and I&rsquo;ve developed a method of working with containers that suits me. I&rsquo;m not for one second suggesting this is the best way of working, but it works nicely for me.</p>
+
+<p>On each of my Docker hosts, there is a directory at <code>/usr/local/docker</code> which is where all of my persistent data lives along with a script called <code>startup.sh</code>. All of my Docker related work happens in this script, and it follows this basic pattern:</p>
+
+<ul>
+<li>Pull the latest version of the images I&rsquo;m using from the Docker Hub (or my private registry, but that&rsquo;s beyond the scope of this post)</li>
+<li>Delete all of the existing containers</li>
+<li>Start up the required containers</li>
+</ul>
+
+
+<h2>Why?</h2>
+
+<p>The main reason I do this is that starting up a new container is often no slower than re-starting an existing one, and by using the order of pull &ndash;> delete &ndash;> relaunch, I can be sure that I&rsquo;m always using the latest version of those containers. I&rsquo;m also not having to type out <strong>LOOOOONNNNGGG</strong> <code>docker run</code> commands every time I want to update a container.</p>
+
+<p>The first part of our startup script will be to pull in the images we need. In addition to BSDPy, we need a TFTP server and a basic web server &ndash; fortunately Pepjin has you covered with Images for these already in the <a href="https://registry.hub.docker.com/repos/macadmins/">macadmins organisation</a>.</p>
+
+<p>If you&rsquo;re not made it already, we need to make the directory we&rsquo;ll store our permanent bits:</p>
+
+<p><code>bash
+$ sudo -i
+$ mkdir -p /usr/local/docker/nbi
+</code></p>
+
+<p>And fire up your favourite editor and put in the first part of our script:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>/usr/local/docker/startup.sh </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;docker pull macadmins/tftpd
+</span><span class='line'>docker pull macadmins/netboot-httpd
+</span><span class='line'>docker pull bruienne/bsdpy:1.0
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Now we just need to make it executable and we can run it:</p>
+
+<p><code>bash
+$ chmod 755 /usr/local/docker/startup.sh
+$ /usr/local/docker/startup.sh
+</code></p>
+
+<p>If all goes well Docker will start pulling down the images you need.</p>
+
+<h2>Cleaning up after ourselves</h2>
+
+<p>Pop this little snippet after the last <code>docker pull</code> command &ndash; it will stop and remove any existing containers:</p>
+
+<p>``` bash /usr/local/docker/startup.sh</p>
+
+<h1>Other stuff is above here</h1>
+
+<p>docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+```</p>
+
+<h2>Linked containers</h2>
+
+<p>As previously alluded to, our NetBoot solution will comprise of three components. Add the following to the end of <code>/usr/local/docker/startup.sh</code> (if your server has more than one ethernet adapter, replace <code>eth0</code> with the name of the adapter you want to use for NetBoot):</p>
+
+<p>``` bash /usr/local/docker/startup.sh</p>
+
+<h1>Other stuff is above here</h1>
+
+<p>chmod -R 777 /usr/local/docker/nbi
+IP=<code>ifconfig eth0 2&gt;/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'</code>
+echo $IP</p>
+
+<p>docker run -d \
+  -v /usr/local/docker/nbi:/nbi \
+  &mdash;name web \
+  &mdash;restart=always \
+  -p 0.0.0.0:80:80 \
+  macadmins/netboot-httpd</p>
+
+<p>docker run -d \
+  -p 0.0.0.0:69:69/udp \
+  -v /usr/local/docker/nbi:/nbi \
+  &mdash;name tftpd \
+  &mdash;restart=always \
+  macadmins/tftpd</p>
+
+<p>docker run -d \
+  -p 0.0.0.0:67:67/udp \
+  -v /usr/local/docker/nbi:/nbi \
+  -e BSDPY_IFACE=eth0 \
+  -e BSDPY_NBI_URL=<a href="http://$IP">http://$IP</a> \
+  -e BSDPY_IP=$IP \
+  &mdash;name bsdpy \
+  &mdash;restart=always \
+  bruienne/bsdpy:1.0
+```</p>
+
+<p>And run your startup script:</p>
+
+<p><code>bash
+$ /usr/local/docker/startup.sh
+</code></p>
+
+<p>You&rsquo;ll see your images being checked for updates, and then your containers will start. you can verify they&rsquo;re running by running:</p>
+
+<p><code>bash
+$ docker ps -a
+</code></p>
+
+<h2>Using the thing</h2>
+
+<p>Of course, your NetBoot server isn&rsquo;t going to do anything as you&rsquo;ve not uploaded anything for it to serve yet. Get yourself a NetBoot image (if you&rsquo;re using a DeployStudio NBI, delete the symlink to <code>NetInstall.dmg</code> and rename <code>NetInstall.sparseimage</code> to <code>NetInstall.dmg</code>).</p>
+
+<p>You&rsquo;re not going to have a GUI to modify the <code>NBImageInfo.plist</code> so open it up in a text editor. The important parts to change are to make sure that the Mac you&rsquo;re intending to NetBoot is either in <code>EnabledSystemIdentifiers</code> or not in <code>DisabledSystemIdentifiers</code> and that <code>IsEnabled</code> is set to <code>&lt;true/&gt;</code>. If you are going to be serving more than one image, you can set your default image in here.</p>
+
+<p>All done? Time to get that image on your Docker host. From your admin machine (or wherever your NBI currently lives):</p>
+
+<p><code>bash
+scp -r /Path/To/MyNetBoot.nbi user@dockerhost:/usr/local/docker/nbi
+</code></p>
+
+<p>All that remains is to restart the <code>bsdpy</code> container on your Docker host:</p>
+
+<p><code>bash
+$ /usr/local/docker/startup.sh
+</code></p>
+
+<p>And if you open up the <code>bsdpy</code> container&rsquo;s logs, you&rsquo;ll see it finding your NBI.</p>
+
+<p><code>bash
+$ docker logs bsdpy
+</code></p>
+
+<p>And if you want to keep the logs open whilst you&rsquo;re testing, you can use <code>-f</code>.</p>
+
+<p><code>bash
+$ docker logs -f bsdpy
+</code></p>
+
+<h2>Conclusion</h2>
+
+<p>If you&rsquo;ve made it all the way down here, congratulations! You&rsquo;ve now managed to move another service off that silly little Mac Mini and onto Linux &ndash; and hopefully you now see how easy it is to get things up and running with Docker.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[first-boot-pkg updated for Yosemite]]></title>
@@ -151,24 +370,6 @@
 
 
 <p>Over the next few posts, I&rsquo;ll go over the different parts of this solution, how I put it together and how you might be able to use this.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Automate yourself out of a job]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/07/10/automate-yourself-out-of-a-job/"/>
-    <updated>2014-07-10T20:39:33+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/07/10/automate-yourself-out-of-a-job</id>
-    <content type="html"><![CDATA[<p>A massive thanks to everyone who came to my talk today, and thanks to everyone who helped out with the Q&amp;A at the end. All of the code I used in the talk is <a href="https://github.com/grahamgilbert/automate_psu_2014">up on GitHub</a> and <a href="http://grahamgilbert.com/images/posts/2014-07-10/Automate_yourself_out_of_a_job.pdf">here are the slides</a>. Hopefully the video will convey how much fun it actually was &ndash; it could have been a disaster, so I&rsquo;m hugely grateful to everyone who contributed to the discussion at the end.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Multi tenanted Munki with Puppet and Sal]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/"/>
-    <updated>2014-07-09T20:27:25+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal</id>
-    <content type="html"><![CDATA[<p>Thanks for everyone that came to my talk today, it was fun to finally show off what I&rsquo;ve been working on for the last year or so. I&rsquo;m sure the video will be up soon, but in the meantime, <a href="http://grahamgilbert.com/images/posts/2014-07-09/Multi_site_Munki.pdf">here are the slides from the talk</a>.</p>
 ]]></content>
   </entry>
   

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: r10k | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/r10k/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2015-07-05T15:46:59+01:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Running Puppet Server in Docker Part 2: r10k]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/"/>
+    <updated>2015-06-24T14:49:31+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k</id>
+    <content type="html"><![CDATA[<p>Last time we got our Puppet Server up and running &ndash; now we need to put some Puppet modules on it so we can use it.</p>
+
+<p>To do that, we&rsquo;re going to use r10k. It&rsquo;s a tool that uses a control git repository that contains something called a puppetfile- a file that lists all of the puppet modules you want to use, either from the puppet forge or from git repositories. You may want to keep this module private by using a paid account on GitHub if your configuration contains secrets, but  it doesn&rsquo;t have to be &ndash; mine doesn&rsquo;t have anything particularly sensitive in, so here it is: <a href="https://github.com/grahamgilbert/personal-puppet">grahamgilbert/personal-puppet</a>. <!--more--></p>
+
+<h2>The Control module</h2>
+
+<p>Puppet recommends the use of environments &ndash; a way of separating your clients into groups &ndash; usually this is test and production groups. r10k uses git branches to determine which environments you have, so we&rsquo;re going to set up our repository. The default branch is called <code>master</code>, but we want ours to be called <code>production</code> &ndash; Github has some excellent <a href="https://help.github.com/articles/setting-the-default-branch/">documentation</a> on the subject. I recommend accepting GitHub&rsquo;s suggestion of putting a README in your repository so you can clone it right away.</p>
+
+<h2>The Puppetfile</h2>
+
+<p>Now we&rsquo;ve got our control repo set up, we can clone it so we can work on it.</p>
+
+<p><code>
+$ git clone https://github.com/yourusername/yourcontolrepo
+</code></p>
+
+<p>If you&rsquo;re familiar with Puppet, this will be familiar &ndash; an environment is what you would have once put at <code>/etc/puppet</code> &ndash; the only change is that you can override options on a per-environment basis by using <code>environment.conf</code>. In my control repo, I have a default manifest at the top of the environment rather than in <code>manifests</code> for example. (<a href="https://docs.puppetlabs.com/puppet/latest/reference/config_file_environment.html">more information</a>)</p>
+
+<p>At its simplest, a Puppetfile is just a list of modules we want to use. As we&rsquo;re just starting off, we can use pre-built ones from GitHub and the forge. We&rsquo;re going to get Munki installed on a client, so we&rsquo;ll use my MacAdmin module. One thing to note is that r10k won&rsquo;t resolve dependencies for you, so be sure to specify any modules the module you need. A simple Puppetfile is below:</p>
+
+<p>``` ruby
+mod &lsquo;mac_admin&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/grahamgilbert/puppet-mac_admin'
+</code></pre>
+
+<p>mod &lsquo;mac_profiles_handler&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/ryanycoleman/rcoleman-mac_profiles_handler'
+</code></pre>
+
+<p>mod &lsquo;mac_facts&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/grahamgilbert/grahamgilbert-mac_facts.git'
+</code></pre>
+
+<p>mod &lsquo;repository&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/boxen/puppet-repository'
+</code></pre>
+
+<p>mod &lsquo;outset&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/grahamgilbert/puppet-outset'
+</code></pre>
+
+<p>mod &lsquo;stdlib&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/puppetlabs/puppetlabs-stdlib'
+</code></pre>
+
+<p>```</p>
+
+<h2>Configuring r10k</h2>
+
+<p>The next piece of the puzzle is to set up r10k to download our repository. I&rsquo;m running r10k directly on my Docker host, but this could easily be (and probably should be) put into a Docker container. First off, let&rsquo;s get r10k installed:</p>
+
+<p><code>bash
+$ gem install r10k
+</code></p>
+
+<p>r10k get&rsquo;s in configuration from <code>/etc/r1ok.yaml</code>, so let&rsquo;s create that:</p>
+
+<p>``` yaml /etc/r10k.yaml</p>
+
+<h1>The location to use for storing cached Git repos</h1>
+
+<p>:cachedir: &lsquo;/var/cache/r10k&rsquo;</p>
+
+<h1>A list of git repositories to create</h1>
+
+<p>:sources:
+  # This will clone the git repository and instantiate an environment per
+  # branch in /etc/puppet/environments
+  :personal-puppet:</p>
+
+<pre><code>remote: 'https://github.com/yourusername/yourcontrolrepo'
+basedir: '/usr/local/docker/puppetserver/puppet/environments'
+</code></pre>
+
+<p>```</p>
+
+<h2>Puppet Conf</h2>
+
+<p>The final piece of configuration for today will be to set our Puppet Server to use environments. Add the following to <code>/usr/local/docker/puppetserver/puppet/puppet.conf</code>:</p>
+
+<p>``` ini
+[main]
+logdir=/var/log/puppet
+vardir=/var/lib/puppet
+ssldir=/var/lib/puppet/ssl
+rundir=/var/run/puppet
+factpath=$vardir/lib/facter
+environmentpath=$confdir/environments
+pluginsync=true</p>
+
+<p>[master]</p>
+
+<h1>These are needed when the puppetmaster is run by passenger</h1>
+
+<h1>and can safely be removed if webrick is used.</h1>
+
+<p>ssl_client_header = SSL_CLIENT_S_DN
+ssl_client_verify_header = SSL_CLIENT_VERIFY
+autosign = true
+environmentpath = $confdir/environments</p>
+
+<p>```</p>
+
+<h2>Gimmie some modules</h2>
+
+<p>We&rsquo;re ready to get some modules installed on the Puppet Server:</p>
+
+<p><code>bash
+$ r10k deploy environment -pv
+</code></p>
+
+<p>You&rsquo;ll see all of the modules you specified in your Puppetfile download theselves to the right place. But of course, we&rsquo;re not quite ready to use this for applying configuration to our Macs yet &ndash; we have modules, but we&rsquo;ve not applied the config to specific machines. In the next post we&rsquo;ll cover how we use Hiera to do this.</p>
+]]></content>
+  </entry>
+  
+</feed>

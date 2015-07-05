@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Over the past few months, I&rsquo;ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage &hellip;">
+  <meta name="description" content="As some of you may know, yesterday was my last day at pebble.it. Since I announced I was leaving, I’ve been getting asked this pretty regularly, so I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,7 +93,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/">Managing Munki Catalogs With Trello</a></h1>
+      <h1 class="entry-title"><a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a></h1>
     
     
       <p class="meta">
@@ -109,32 +109,22 @@
   
 
 
-<time datetime="2015-02-11T12:11:30+00:00" pubdate data-updated="true">Feb 11<span>th</span>, 2015</time>
+<time datetime="2015-06-26T09:40:31+01:00" pubdate data-updated="true">Jun 26<span>th</span>, 2015</time>
         
-         | <a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/#disqus_thread">Comments</a>
+         | <a href="/blog/2015/06/26/the-future-of-sal/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Over the past few months, I&rsquo;ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage it. We&rsquo;ve got <a href="https://github.com/autopkg/autopkg">AutoPkg</a> populating our <a href="https://github.com/munki/munki">Munki</a> repositories without any manual intervention, but we still need to edit pkgsinfo files to move items through development to testing to production catalogs. Sure, there are existing tools  like <a href="https://github.com/munki/munkiwebadmin">MunkiWebAdmin</a> or <a href="https://github.com/hjuutilainen/munkiadmin">MunkiAdmin</a>, but they either still require knowledge of how Munki works or full access to the repository via a file share of some sort. And we obviously already have a tool for assigning software to machines in Sal+ &ndash; we needed something that can speed this incredibly common task.</p>
+  <div class="entry-content"><p>As some of you may know, yesterday was my last day at pebble.it. Since I announced I was leaving, I’ve been getting asked this pretty regularly, so I thought I’d answer it here.</p>
 
-<p>Then I cast my mind back to a conversation I had with <a href="https://twitter.com/bruienne">Pepijn Bruienne</a> at PSU last year about his workflow using <a href="https://trello.com">Trello</a> to promote items in his Munki repository. So, after pestering him for some information, I devised a workflow that matched how we worked.</p>
+<p>My new job uses Munki extensively, and I expect to be using Sal there. As such, development of Sal will continue. I no longer have commit access to the Sal Software organisation, so I’ve forked the project and have set up <a href="https://github.com/salopensource">Sal Open Source</a> as an organisation on GitHub &ndash; hopefully this will be the last time anything needs to change. I’ll be moving the preference domain in version 0.4.0 of the client side scripts to <code>com.github.salopensource.sal</code> &ndash; once again, this should be the last time things need to change.</p>
 
-<h2>&ldquo;So how does it work&rdquo;, I hear you cry</h2>
+<p>So, what else can you expect from Sal in the near future? The next release will have a GUI for managing your plugins, and I’ve started work on a basic API, which should make it easier for people to extend Sal in any language you like. For example, I’ve been working on a way to sign Puppet certificates based on whether it’s a known machine in Sal, with the machine being created via the API if it doesn’t already exist at imaging time (using Imagr, naturally).</p>
 
-<p>We have five lists on our &ldquo;Munki Package Management&rdquo; Trello board. Essentially when the script runs, it inspects the items in our Munki catalog and if they&rsquo;re not already in the Trello board, it adds them to the correct list (we ignore anything that&rsquo;s already in production. All promotions to production are done using this tool now).</p>
-
-<p><img class="center" src="/images/posts/2015-02-11/to_testing.gif" width="427" height="240"></p>
-
-<p>We also have lists called &ldquo;To Development&rdquo;, &ldquo;To Testing&rdquo; and &ldquo;To Production&rdquo;. Moving items into these lists will be caught by the script next time it runs, and moved to the appropriate catalog.</p>
-
-<p><img class="center" src="/images/posts/2015-02-11/testing.gif" width="427" height="240"></p>
-
-<p>When items finally make it to Production, we add them to a dated Production list. This allows us to have a full history of when things are added to Production and who has moved it through each stage. We&rsquo;re also big users of Slack, so we hooked up it&rsquo;s Tello integration to post a message to our notficiations channel to let our team know when items are added into Munki.</p>
-
-<p>You can grab the script from <a href="https://github.com/pebbleit/munki-trello">pebble.it&rsquo;s GitHub account</a>, or if you&rsquo;re Docker inclined there&rsquo;s a <a href="https://registry.hub.docker.com/u/pebbleit/munki-trello/">container that has everything you need</a>.</p>
+<p>It’s exciting times for users of all the projects I’m working on &ndash; in addition to these changes, I have some changes planned for <a href="https://github.com/grahamgilbert/Crypt">Crypt</a>, and of course <a href="https://github.com/grahamgilbert/imagr">Imagr</a> is still on the development rollercoaster.</p>
 </div>
   
   
@@ -147,7 +137,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/01/04/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a></h1>
+      <h1 class="entry-title"><a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Running Puppet Server in Docker Part 2: R10k</a></h1>
     
     
       <p class="meta">
@@ -163,95 +153,22 @@
   
 
 
-<time datetime="2015-01-04T11:40:41+00:00" pubdate data-updated="true">Jan 4<span>th</span>, 2015</time>
+<time datetime="2015-06-24T14:49:31+01:00" pubdate data-updated="true">Jun 24<span>th</span>, 2015</time>
         
-         | <a href="/blog/2015/01/04/migrating-scriptrunner-to-outset/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>A while back, Nate Walck wrote <a href="https://github.com/natewalck/Scripts/blob/master/scriptRunner.py">scriptRunner</a>. It&rsquo;s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released <a href="https://github.com/chilcote/outset">Outset</a>. It has all of the functionality of scriptRunner, but it can also install packages at the Mac&rsquo;s first boot, and run scripts as root at either the first boot or every boot. This comes into it&rsquo;s own when you&rsquo;re trying to do things like skipping the iCloud screens on 10.10 using <a href="https://derflounder.wordpress.com/2014/10/16/disabling-the-icloud-and-diagnostics-pop-up-windows-in-yosemite/">Rich Trouton&rsquo;s script</a> &ndash; this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.</p>
-
-<p>If you&rsquo;ve been using scriptRunner and want to move to Outset, you have two options:</p>
-
-<ul>
-<li>Just move your scripts into the appropriate Outset directories and hope your users don&rsquo;t mind the &lsquo;once&rsquo; scripts running a second time.</li>
-<li>Or, you could pre-populate Outset&rsquo;s &lsquo;once&rsquo; plist so it won&rsquo;t try to run a script previously run by scriptRunner again.</li>
-</ul>
-
-
-<p>The first option isn&rsquo;t acceptable to me, so I wrote a script that will populate Outset&rsquo;s plist. It&rsquo;s <a href="https://github.com/grahamgilbert/macscripts/tree/master/scriptRunnerToOutset">up on my Github</a>. One caveat is that Outset requires that your scripts end <code>.sh</code>, <code>.rb</code> or <code>.py</code>. scriptRunner didn&rsquo;t care about this. When you&rsquo;re moving your scripts into the Outset directory, you will need to ensure your scripts have the correct extension. This script will read the first line and try to work out what kind of script it is if the file doesn&rsquo;t have the right extension &ndash; if it can&rsquo;t work it out, it will append <code>.sh</code> to the filename.</p>
-
-<p>scriptRunner had a few options you could configure. The first is where your actual scripts live &ndash; you will need to edit line 8 of the script to where you put your scriptRunner scripts. Secondly, you might have changed the name of the plist scriptRunner uses &ndash; edit line 11 if you did this.</p>
-
-<p>Now all that remains is to put this script into <code>/usr/local/outset/login-once</code>. A <a href="https://github.com/unixorn/luggage">Luggage</a> Makefile that will make a package that will do this is included in the repository.</p>
-
-<p>I&rsquo;ve assumed that you can move your scripts into the new Outset directories using your configuration management tool (Munki, Puppet, Capser, whatever), but if you need a tool that can do this for you (with the previously stated caveat about the file extensions of the scripts), you&rsquo;ll find a script that can be dropped into Outset&rsquo;s firstboot directory.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-12-08T07:52:21+00:00" pubdate data-updated="true">Dec 8<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/#disqus_thread">Comments</a>
+         | <a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Obviously I&rsquo;m a little biased, but I love Sal. But, it can be a little tedious to get everything set up the first time if you have hundreds of Business Units and Machine Groups. I&rsquo;ve quietly ignored the problem for a while, but then I saw this tweet pop up in my feed:</p>
+  <div class="entry-content"><p>Last time we got our Puppet Server up and running &ndash; now we need to put some Puppet modules on it so we can use it.</p>
 
-<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/hunty1er">@hunty1er</a> Pretty sure you could automate BU/MG creation through the DB backend. What say you <a href="https://twitter.com/grahamgilbert">@grahamgilbert</a> ?</p>&mdash; Pepijn Bruienne (@bruienne) <a href="https://twitter.com/bruienne/status/541811445512830976">December 8, 2014</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>What say I Mr Bruienne? Like the <a href="https://www.youtube.com/watch?v=mjB9Chw_6FE">man from Del Monte</a>, I say YES!</p>
-
-<h2>The plan</h2>
-
-<p>We&rsquo;re going to use a few of the parts that make Django and Docker awesome. We will:</p>
-
-<ul>
-<li>Make a custom management command that will read in a CSV</li>
-<li>The command will make the Business Units and Groups if they don&rsquo;t exist</li>
-<li>We&rsquo;re than going to run it in a temporary Docker container when we&rsquo;re ready to do the actual import. This is one of the strengths of Docker &ndash; we can spin up a linked container that will operate on the main database, but won&rsquo;t interfere with your container serving the app.</li>
-</ul>
-
-
-</div>
+<p>To do that, we&rsquo;re going to use r10k. It&rsquo;s a tool that uses a control git repository that contains something called a puppetfile- a file that lists all of the puppet modules you want to use, either from the puppet forge or from git repositories. You may want to keep this module private by using a paid account on GitHub if your configuration contains secrets, but  it doesn&rsquo;t have to be &ndash; mine doesn&rsquo;t have anything particularly sensitive in, so here it is: <a href="https://github.com/grahamgilbert/personal-puppet">grahamgilbert/personal-puppet</a>. </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Continue reading &rarr;</a>
+      <a rel="full-article" href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Continue reading &rarr;</a>
     </footer>
   
 
@@ -263,7 +180,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a></h1>
+      <h1 class="entry-title"><a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a></h1>
     
     
       <p class="meta">
@@ -279,16 +196,132 @@
   
 
 
-<time datetime="2014-11-07T00:51:33+00:00" pubdate data-updated="true">Nov 7<span>th</span>, 2014</time>
+<time datetime="2015-06-22T12:29:55+01:00" pubdate data-updated="true">Jun 22<span>nd</span>, 2015</time>
         
-         | <a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/#disqus_thread">Comments</a>
+         | <a href="/blog/2015/06/22/running-puppet-server-in-docker/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Firstly, thanks if you came to my talk and putting up with me! You can get my slides and code from the <a href="https://github.com/grahamgilbert/mactech_2014">GitHub repository</a>.</p>
+  <div class="entry-content"><p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively &ndash; it&rsquo;s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
+
+<p>Over the next few posts, I&rsquo;ll take you through setting up the Puppet Server (running on Docker, naturally!), using r10k and git for managing your modules and using Hiera to configure your Macs &ndash; we&rsquo;ll apply some configuration to a Mac without writing a single line of Puppet code .</p>
+
+<h1>Why?</h1>
+
+<p>You might well be thinking &ldquo;why would I want to use Puppet?&rdquo; After all, you&rsquo;ve already got Munki. There are two main reasons I&rsquo;ve chosen to go back to using a Puppet Server in conjunction with Munki.</p>
+
+<ol>
+<li>It&rsquo;s nice to have a fallback. If I manage to do something stupid and nuke my Munki install, or my customers manage to do the same, I&rsquo;ve got some way of getting the machines back under control.</li>
+<li>&ldquo;Free&rdquo; SSL certs &ndash; this might not be a priority now, but it gives you an easy to to secure your Munki repository later on (which we may cover in a later post).</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/22/running-puppet-server-in-docker/">Continue reading &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/16/using-munki-trello-with-git/">Using Munki-trello With Git</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-16T11:21:58+01:00" pubdate data-updated="true">Jun 16<span>th</span>, 2015</time>
+        
+         | <a href="/blog/2015/06/16/using-munki-trello-with-git/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>So you&rsquo;re managing your catalogs with <a href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/">munki-trello</a>, but you also want to use git and <a href="https://www.afp548.com/2014/12/01/git-fat-intro-part-two-setup-and-migration/">git-fat</a> to track the changes &ndash; what do you do?</p>
+
+<p>If you were using the script that I posted previously, your changes would be mangled when you pull in changes  &ndash; it turned out the solution was simple. I&rsquo;m going to assume your Munki server has commit access to your Munki git repository. We&rsquo;re pulling down the latest version of the git repo before performing any work, and then we&rsquo;re git adding just the <code>catalogs</code> and <code>pkgsinfo</code> directories &ndash; the only directories munki-trello will modify. And if there aren&rsquo;t any changes, git won&rsquo;t commit anything, so we can just run <code>git commit</code> and <code>git push</code> without worrying about it.</p>
+
+<p>If we schedule the below script to happen regularly (via cron), we also get our git changes deployed automagically.</p>
+
+<figure class='code'><figcaption><span>/usr/local/bin/munki-trello.sh</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Change this to wherever your Munki repository is on disk</span>
+</span><span class='line'><span class="nb">cd</span> /usr/local/docker/munki
+</span><span class='line'>
+</span><span class='line'><span class="c"># Pull down changes</span>
+</span><span class='line'>git pull
+</span><span class='line'>
+</span><span class='line'><span class="c"># and the &#39;fat&#39; files</span>
+</span><span class='line'>git fat pull
+</span><span class='line'>
+</span><span class='line'>docker pull pebbleit/munki-trello
+</span><span class='line'>
+</span><span class='line'>docker run --rm -v /usr/local/docker/munki:/munki_repo <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DOCKER_TRELLO_KEY</span><span class="o">=</span>mytrellokey <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DOCKER_TRELLO_TOKEN</span><span class="o">=</span>mytrellotoken <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DOCKER_TRELLO_BOARDID</span><span class="o">=</span>myboardid <span class="se">\</span>
+</span><span class='line'>pebbleit/munki-trello
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>git add catalogs
+</span><span class='line'>git add manifests
+</span><span class='line'>git add pkgsinfo
+</span><span class='line'>
+</span><span class='line'><span class="c"># Change the following line if you want to change the git commit message</span>
+</span><span class='line'><span class="nv">now</span><span class="o">=</span><span class="s2">&quot;$(date)&quot;</span>
+</span><span class='line'>git commit -m <span class="s2">&quot;Munki Trello commit $now&quot;</span>
+</span><span class='line'>
+</span><span class='line'>git push
+</span></code></pre></td></tr></table></div></figure>
+
 </div>
   
   
@@ -301,7 +334,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/">First-boot-pkg Updated for Yosemite</a></h1>
+      <h1 class="entry-title"><a href="/blog/2015/05/08/introducing-imagr/">Introducing Imagr</a></h1>
     
     
       <p class="meta">
@@ -317,18 +350,22 @@
   
 
 
-<time datetime="2014-10-21T11:50:28+01:00" pubdate data-updated="true">Oct 21<span>st</span>, 2014</time>
+<time datetime="2015-05-08T14:41:37+01:00" pubdate data-updated="true">May 8<span>th</span>, 2015</time>
         
-         | <a href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/#disqus_thread">Comments</a>
+         | <a href="/blog/2015/05/08/introducing-imagr/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>It seems like Yosemite introduced an <a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">undocumented change</a> that requires any packages that are added an OS X installer (e.g. Netinstall or createOSXinstallPkg) be distribution style packages, or you get a nasty failure acompanied by one of the most unhelpful error messages ever.</p>
+  <div class="entry-content"><p>For the past few weeks, I&rsquo;ve been working with some other Mac admins on a new application that can aid with the deployment of Macs &ndash; say hi to <a href="https://github.com/grahamgilbert/imagr">Imagr</a>.</p>
 
-<p>To fix this, <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> now builds distribution style packages.</p>
+<p><img src="/images/posts/2015-05-08/Imagr.png"></p>
+
+<p>It&rsquo;s not intended to be a full replacement for Deploystudio, but it&rsquo;s now got all of the features I need to use Imagr full time. If you&rsquo;d like to get started with Imagr, head on over to the <a href="https://github.com/grahamgilbert/imagr/wiki/Getting-Started">Wiki</a> &ndash; the only requirement is a web server, so the barrier to entry is pretty low (if you followed my guide on how to set up <a href="/blog/2015/04/22/getting-started-with-bsdpy-on-docker/">BSDPy</a>, you can use that web server).</p>
+
+<p>I hope you&rsquo;ll give it a go and maybe, just maybe, we can get rid of those little Mac Minis for good!</p>
 </div>
   
   
@@ -350,30 +387,30 @@
   <h1>About</h1>
   <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
 
-<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer or clients.</small></p>
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer.</small></p>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/">Managing Munki Catalogs With Trello</a>
+        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2015/01/04/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
+        <a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Running Puppet Server in Docker Part 2: R10k</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a>
+        <a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
+        <a href="/blog/2015/06/16/using-munki-trello-with-git/">Using Munki-trello With Git</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/">First-boot-pkg Updated for Yosemite</a>
+        <a href="/blog/2015/05/08/introducing-imagr/">Introducing Imagr</a>
       </li>
     
   </ul>

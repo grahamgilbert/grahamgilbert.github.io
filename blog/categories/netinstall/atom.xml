@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: NetInstall | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/netinstall/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2015-07-05T15:46:59+01:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[More fun with AutoNBI]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/"/>
+    <updated>2015-04-13T08:05:53+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi</id>
+    <content type="html"><![CDATA[<p>Last time we saw our heroes, there was the unfuffilled promise of making small NetInstall sets. Now is the time to deliver on that promise. We&rsquo;re going to make a small NetInstall that will open up Terminal.app.</p>
+
+<p>If you&rsquo;ve not read the <a href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/">previous post</a> (and have got AutoNBI), go and do it now. I&rsquo;ll wait. All done? <!--more--></p>
+
+<h2>Previously on 24</h2>
+
+<p><img src="/images/posts/2015-04-13/jack.gif"></p>
+
+<p>As mentioned in the previous post, we&rsquo;re aiming to have a small NetInstall set. Once you&rsquo;ve made your NetInstall, open up <code>NetInstall.dmg</code> &ndash; you&rsquo;ll see a <code>Packages</code> directory. This is where the majority of the bulk in a NetInstall lives &ndash; the packages it actually installs. There is also a hidden <code>BaseSystem.dmg</code> which is what will load when your NetBoot the machine.</p>
+
+<h2>I&rsquo;m bored, can we make something please?</h2>
+
+<p>As I mentioned above, we&rsquo;re going to make a simple NetInstall that will open up a Terminal window. To do that, we&rsquo;re going to leverage something that Apple kindly left in the image for us &ndash; <code>rc.imaging</code>. A bit of background &ndash; in <code>/etc</code> you&rsquo;ll find a series of <code>rc.*</code> files. One of those in a NetInstall is <code>rc.install</code>, which will look for an <code>rc.imaging</code> file in a few places &ndash; one of those is <code>/System/Installation/Packages/Extras</code> &ndash; conveniently a location that Pepijn has made AutoNBI able to work with.</p>
+
+<p>Somewhere on your Mac, make a directory called <code>Packages</code> and then inside that, make a directory called <code>Extras</code>. Inside that directory we&rsquo;re going to create a file called <code>rc.imaging</code> with the following contents:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Packages/Extras/rc.imaging </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;/sbin/reboot
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>And make sure it&rsquo;s executable:</p>
+
+<p><code>bash
+$ sudo chmod 755 Packages/Extras/rc.imaging
+$ sudo chown root:wheel Packages/Extras/rc.imaging
+</code></p>
+
+<p>And now to make the NetInstall:</p>
+
+<p><code>bash
+$ sudo ./AutoNBI.py -s /Applications/Install\ OS\ X\ Yosemite.app -f Packages -d ~/Desktop -n MyNetInstall -e
+</code></p>
+
+<p>The only change from last time is the <code>-f</code> option &ndash; this is the path to your <code>Packages</code> directory. I created my Packages directory in the same directory as AutoNBI.py &ndash; adjust the path if you made yours somewhere else.</p>
+
+<p><img src="/images/posts/2015-04-13/netboot.png"></p>
+
+<p>You should now be able to boot off your tiny NBI (mine was 574MB) and have a bit of an explore. You&rsquo;ll notice that quite a bit is missing to achieve this tiny size &ndash; fortunately Pepijn has been working on getting Ruby and Python included in BaseSystem.dmg, so you have more scripting options when booted.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Building custom NetInstalls with AutoNBI]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/"/>
+    <updated>2015-04-12T20:33:28+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi</id>
+    <content type="html"><![CDATA[<p>Another day, another tool made by <a href="http://enterprisemac.bruienne.com">Mr Bruienne</a>! A while back, Pepijn released <a href="https://bitbucket.org/bruienne/autonbi">AutoNBI</a> &ndash; a tool for automating the creation of NetInstall sets. At the time, it was filled away in the &ldquo;this is cool, but isn&rsquo;t this what System Image Utility does?&rdquo; section. Then I saw his NetInstall running at MacTech (are you seeing a theme here?). It had this really simple DeployStudio like imagaing app &ndash; it was really cool. And suddently it made sense why you can replace the <code>Packages</code> directory with AutoNBI &ndash; a NetInstall is a really stripped down OS X environment, so it it much easier to distribute and use &ndash; we&rsquo;re looking at around 1.8GB for my current NetInstall vs 5-6GB for a normal NetBoot.</p>
+
+<p>This time we&rsquo;ll take a look at how to use AutoNBI to make a standard NetInstall &ndash; in a future post we&rsquo;ll look at some of the more cool things you can do with AutoNBI.</p>
+
+<h2>Ok, stop talking, let&rsquo;s do this.</h2>
+
+<p>We&rsquo;re going to need AutoNBI to start off with. Open up your Terminal and:</p>
+
+<p><code>bash
+$ git clone https://bitbucket.org/bruienne/autonbi.git
+$ cd autonbi
+</code></p>
+
+<h2>Prepare the build!</h2>
+
+<p>We&rsquo;re ready to go (assuming you&rsquo;ve got an OS X installer &ndash; you do, right?). Still in your terminal:</p>
+
+<p><code>bash
+$ sudo ./AutoNBI.py -s /Applications/Install\ OS\ X\ Yosemite.app -d ~/Desktop -n MyNetInstall -e
+</code></p>
+
+<p>What did we just do? The <code>-s</code> option is simply pointing at our Install OS X Yosemite.app &ndash; if you have it somewhere else, point AutoNBI there. <code>-d</code> is our destination directory and <code>-n</code> is the name of our NetInstall. <code>-e</code> is telling AutoNBI to make the NetInstall enabled.</p>
+
+<p>So the next time there&rsquo;s a new OS X Installer, you can have an updated NetInstall in seconds, not minutes.</p>
+]]></content>
+  </entry>
+  
+</feed>

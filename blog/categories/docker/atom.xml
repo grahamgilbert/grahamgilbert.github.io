@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Docker | graham gilbert]]></title>
+  <link href="http://grahamgilbert.com/blog/categories/docker/atom.xml" rel="self"/>
+  <link href="http://grahamgilbert.com/"/>
+  <updated>2015-07-05T15:46:59+01:00</updated>
+  <id>http://grahamgilbert.com/</id>
+  <author>
+    <name><![CDATA[Graham Gilbert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Running Puppet Server in Docker Part 2: r10k]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/"/>
+    <updated>2015-06-24T14:49:31+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k</id>
+    <content type="html"><![CDATA[<p>Last time we got our Puppet Server up and running &ndash; now we need to put some Puppet modules on it so we can use it.</p>
+
+<p>To do that, we&rsquo;re going to use r10k. It&rsquo;s a tool that uses a control git repository that contains something called a puppetfile- a file that lists all of the puppet modules you want to use, either from the puppet forge or from git repositories. You may want to keep this module private by using a paid account on GitHub if your configuration contains secrets, but  it doesn&rsquo;t have to be &ndash; mine doesn&rsquo;t have anything particularly sensitive in, so here it is: <a href="https://github.com/grahamgilbert/personal-puppet">grahamgilbert/personal-puppet</a>. <!--more--></p>
+
+<h2>The Control module</h2>
+
+<p>Puppet recommends the use of environments &ndash; a way of separating your clients into groups &ndash; usually this is test and production groups. r10k uses git branches to determine which environments you have, so we&rsquo;re going to set up our repository. The default branch is called <code>master</code>, but we want ours to be called <code>production</code> &ndash; Github has some excellent <a href="https://help.github.com/articles/setting-the-default-branch/">documentation</a> on the subject. I recommend accepting GitHub&rsquo;s suggestion of putting a README in your repository so you can clone it right away.</p>
+
+<h2>The Puppetfile</h2>
+
+<p>Now we&rsquo;ve got our control repo set up, we can clone it so we can work on it.</p>
+
+<p><code>
+$ git clone https://github.com/yourusername/yourcontolrepo
+</code></p>
+
+<p>If you&rsquo;re familiar with Puppet, this will be familiar &ndash; an environment is what you would have once put at <code>/etc/puppet</code> &ndash; the only change is that you can override options on a per-environment basis by using <code>environment.conf</code>. In my control repo, I have a default manifest at the top of the environment rather than in <code>manifests</code> for example. (<a href="https://docs.puppetlabs.com/puppet/latest/reference/config_file_environment.html">more information</a>)</p>
+
+<p>At its simplest, a Puppetfile is just a list of modules we want to use. As we&rsquo;re just starting off, we can use pre-built ones from GitHub and the forge. We&rsquo;re going to get Munki installed on a client, so we&rsquo;ll use my MacAdmin module. One thing to note is that r10k won&rsquo;t resolve dependencies for you, so be sure to specify any modules the module you need. A simple Puppetfile is below:</p>
+
+<p>``` ruby
+mod &lsquo;mac_admin&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/grahamgilbert/puppet-mac_admin'
+</code></pre>
+
+<p>mod &lsquo;mac_profiles_handler&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/ryanycoleman/rcoleman-mac_profiles_handler'
+</code></pre>
+
+<p>mod &lsquo;mac_facts&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/grahamgilbert/grahamgilbert-mac_facts.git'
+</code></pre>
+
+<p>mod &lsquo;repository&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/boxen/puppet-repository'
+</code></pre>
+
+<p>mod &lsquo;outset&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/grahamgilbert/puppet-outset'
+</code></pre>
+
+<p>mod &lsquo;stdlib&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/puppetlabs/puppetlabs-stdlib'
+</code></pre>
+
+<p>```</p>
+
+<h2>Configuring r10k</h2>
+
+<p>The next piece of the puzzle is to set up r10k to download our repository. I&rsquo;m running r10k directly on my Docker host, but this could easily be (and probably should be) put into a Docker container. First off, let&rsquo;s get r10k installed:</p>
+
+<p><code>bash
+$ gem install r10k
+</code></p>
+
+<p>r10k get&rsquo;s in configuration from <code>/etc/r1ok.yaml</code>, so let&rsquo;s create that:</p>
+
+<p>``` yaml /etc/r10k.yaml</p>
+
+<h1>The location to use for storing cached Git repos</h1>
+
+<p>:cachedir: &lsquo;/var/cache/r10k&rsquo;</p>
+
+<h1>A list of git repositories to create</h1>
+
+<p>:sources:
+  # This will clone the git repository and instantiate an environment per
+  # branch in /etc/puppet/environments
+  :personal-puppet:</p>
+
+<pre><code>remote: 'https://github.com/yourusername/yourcontrolrepo'
+basedir: '/usr/local/docker/puppetserver/puppet/environments'
+</code></pre>
+
+<p>```</p>
+
+<h2>Puppet Conf</h2>
+
+<p>The final piece of configuration for today will be to set our Puppet Server to use environments. Add the following to <code>/usr/local/docker/puppetserver/puppet/puppet.conf</code>:</p>
+
+<p>``` ini
+[main]
+logdir=/var/log/puppet
+vardir=/var/lib/puppet
+ssldir=/var/lib/puppet/ssl
+rundir=/var/run/puppet
+factpath=$vardir/lib/facter
+environmentpath=$confdir/environments
+pluginsync=true</p>
+
+<p>[master]</p>
+
+<h1>These are needed when the puppetmaster is run by passenger</h1>
+
+<h1>and can safely be removed if webrick is used.</h1>
+
+<p>ssl_client_header = SSL_CLIENT_S_DN
+ssl_client_verify_header = SSL_CLIENT_VERIFY
+autosign = true
+environmentpath = $confdir/environments</p>
+
+<p>```</p>
+
+<h2>Gimmie some modules</h2>
+
+<p>We&rsquo;re ready to get some modules installed on the Puppet Server:</p>
+
+<p><code>bash
+$ r10k deploy environment -pv
+</code></p>
+
+<p>You&rsquo;ll see all of the modules you specified in your Puppetfile download theselves to the right place. But of course, we&rsquo;re not quite ready to use this for applying configuration to our Macs yet &ndash; we have modules, but we&rsquo;ve not applied the config to specific machines. In the next post we&rsquo;ll cover how we use Hiera to do this.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Running Puppet Server in Docker]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/"/>
+    <updated>2015-06-22T12:29:55+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker</id>
+    <content type="html"><![CDATA[<p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively &ndash; it&rsquo;s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
+
+<p>Over the next few posts, I&rsquo;ll take you through setting up the Puppet Server (running on Docker, naturally!), using r10k and git for managing your modules and using Hiera to configure your Macs &ndash; we&rsquo;ll apply some configuration to a Mac without writing a single line of Puppet code .</p>
+
+<h1>Why?</h1>
+
+<p>You might well be thinking &ldquo;why would I want to use Puppet?&rdquo; After all, you&rsquo;ve already got Munki. There are two main reasons I&rsquo;ve chosen to go back to using a Puppet Server in conjunction with Munki.</p>
+
+<ol>
+<li>It&rsquo;s nice to have a fallback. If I manage to do something stupid and nuke my Munki install, or my customers manage to do the same, I&rsquo;ve got some way of getting the machines back under control.</li>
+<li>&ldquo;Free&rdquo; SSL certs &ndash; this might not be a priority now, but it gives you an easy to to secure your Munki repository later on (which we may cover in a later post).<!--more--></li>
+</ol>
+
+
+<h1>Let&rsquo;s get started</h1>
+
+<p>First off, you&rsquo;re going to need a Linux server with Docker installed. Installing it is beyond the scope of this post, but I do recommend you head over to <a href="http://www.digitalocean.com/?refcode=ce1e0f3880e1">Digital Ocean</a> (disclaimer: referral link). They will get you up and running with a server with Docker pre-installed in under a minute for not much money.  I run mine on Ubuntu 14, but you can choose whichever flavour of Linux you prefer.</p>
+
+<p>You will also need a DNS entry that points to your server&rsquo;s IP address. Whilst you could get away with fudging it by editing /etc/hosts, it&rsquo;s a lot of <a href="http://www.oxforddictionaries.com/definition/english/faff">faff</a>.</p>
+
+<h1>Dockers, images and containers</h1>
+
+<p>I&rsquo;ve already made a Docker image that has Puppet Server in it. Let&rsquo;s pull it down:</p>
+
+<p><code>bash
+$ docker pull grahamgilbert/puppetserver
+</code></p>
+
+<p>And fire it up:</p>
+
+<p><code>
+$ docker run -d --name=puppetserver \
+-e PUPPETSERVER_JAVA_ARGS="-Xms384m -Xmx384m -XX:MaxPermSize=256m" \
+-p 0.0.0.0:8140:8140 \
+-h puppet.yourdomain.com \
+grahamgilbert/puppetserver
+</code></p>
+
+<p>You will need to change the amount of memory assigned to the puppet server depending on how much memory is in your actual server before going to production but for now, 384mb will be fine as we&rsquo;re just setting things up.</p>
+
+<p>BUT there are a few things that we need to persist otherwise our server won&rsquo;t be very useful. First off, let&rsquo;s attach to the container so we can have a look around:</p>
+
+<p><code>
+$ docker exec -t -i puppetserver bash
+</code></p>
+
+<p>You&rsquo;ll be looking at a bash prompt now. First off, check that <code>/etc/puppet</code> and <code>/etc/puppetserver</code> have <em>stuff</em> in them. What&rsquo;s in there isn&rsquo;t important at this stage. We also need to run the Puppet client on the server to move some supporting files in place. We first need to enable auto signing of certificates in <code>/etc/puppet/puppet.conf</code> (we&rsquo;ll cover this more later):</p>
+
+<p>``` bash /etc/puppet/puppet.conf
+[main]
+logdir=/var/log/puppet
+vardir=/var/lib/puppet
+ssldir=/var/lib/puppet/ssl
+rundir=/var/run/puppet
+factpath=$vardir/lib/facter
+templatedir=$confdir/templates</p>
+
+<p>[master]</p>
+
+<h1>These are needed when the puppetmaster is run by passenger</h1>
+
+<h1>and can safely be removed if webrick is used.</h1>
+
+<p>ssl_client_header = SSL_CLIENT_S_DN
+ssl_client_verify_header = SSL_CLIENT_VERIFY
+autosign = true
+```</p>
+
+<p>And then exit the container, stop it and start it up again:</p>
+
+<p><code>bash
+$ exit
+$ docker stop puppetserver
+$ docker start puppetserver
+</code></p>
+
+<p>Take a look at the container&rsquo;s logs &ndash; Puppet Server can take a few seconds to be ready, so look for the line that says it&rsquo;s ready to accept connections:</p>
+
+<p><code>bash
+$ docker logs puppetserver
+</code></p>
+
+<p>When it&rsquo;s ready, enter the container again and run the puppet agent.</p>
+
+<p><code>bash
+$ docker exec -t -i puppetserver bash
+$ puppet agent -t
+</code></p>
+
+<p>Provided that ran with no errors, we can exit out of the container.</p>
+
+<p><code>bash
+$ exit
+</code></p>
+
+<p>We&rsquo;re now going to copy the parts we need to persist to the file system of the host machine &ndash; I like to keep my docker related things in <code>/usr/local/docker</code> but it&rsquo;s up to you.</p>
+
+<p><code>
+$ mkdir -p /usr/local/docker/puppetserver
+</code></p>
+
+<p>We&rsquo;re going to use <code>docker cp</code> to copy out of our container and onto our host filesystem. We want the configuration directories, any custom gems we install (required if we want to use modules such as <a href="https://github.com/dayglojesus/managedmac">managedmac</a>), as well as the SSL certificates and some other supporting files (these aren&rsquo;t technically required, but will save having to run <code>puppet agent -t</code> after the container starts every time we update).</p>
+
+<p><code>bash
+$ docker cp puppetserver:/etc/puppetserver /usr/local/docker/puppetserver/
+$ docker cp puppetserver:/etc/puppet /usr/local/docker/puppetserver/
+$ docker cp puppetserver:/var/lib/puppet/ssl /usr/local/docker/puppetserver/lib/
+$ docker cp puppetserver:/var/lib/puppet/lib /usr/local/docker/puppetserver/lib/
+$ docker cp puppetserver:/var/lib/puppet/jruby-gems /usr/local/docker/puppetserver/
+</code></p>
+
+<p>Now we&rsquo;re ready to run for real. Just a small piece of configuration to make our lives easier whilst we&rsquo;re testing &ndash; enabling auto signing of certificates. By default you will need to sign a certificate for each client that tries to connect to your puppet master. Eventually we will want to sign certificates using some sort of external inventory service (I like Sal, but there are also connectors for Web Help Desk), but for now we&rsquo;ll leave our configuration that tells Puppet to sign every certificate unconditionally.</p>
+
+<p><code>bash
+$ nano /usr/local/docker/puppetserver/puppet/puppet.conf
+</code></p>
+
+<p>And make sure your <code>puppet.conf</code> looks like:</p>
+
+<p>``` bash /usr/local/docker/puppetserver/puppet/puppet.conf
+[main]
+logdir=/var/log/puppet
+vardir=/var/lib/puppet
+ssldir=/var/lib/puppet/ssl
+rundir=/var/run/puppet
+factpath=$vardir/lib/facter
+pluginsync=true
+[master]</p>
+
+<h1>These are needed when the puppetmaster is run by passenger</h1>
+
+<h1>and can safely be removed if webrick is used.</h1>
+
+<p>ssl_client_header = SSL_CLIENT_S_DN
+ssl_client_verify_header = SSL_CLIENT_VERIFY
+autosign = true
+```</p>
+
+<p>Now all that remains is to fire up our final container and then we can hook up a client.</p>
+
+<p>``` bash</p>
+
+<h1>remove our old container</h1>
+
+<p>$ docker rm -f puppetserver
+$ docker run -d \
+  &mdash;name=&ldquo;puppetserver&rdquo; \
+  &mdash;restart=&ldquo;always&rdquo; \
+  -v /usr/local/docker/puppetserver/puppet:/etc/puppet \
+  -v /usr/local/docker/puppetserver/puppetserver:/etc/puppetserver \
+  -v /usr/local/docker/puppetserver/lib/ssl:/var/lib/puppet/ssl \
+  -v /usr/local/docker/puppetserver/jruby-gems:/var/lib/puppet/jruby-gems \
+  -v /usr/local/docker/puppetserver/lib/lib:/var/lib/puppet/lib \
+  -p 0.0.0.0:8140:8140 \
+  -e PUPPETSERVER_JAVA_ARGS=&ldquo;-Xms384m -Xmx384m -XX:MaxPermSize=256m&rdquo; \
+  -h puppet.yourdomain.com \
+  grahamgilbert/puppetserver
+```</p>
+
+<p>Let&rsquo;s make sure it&rsquo;s finished starting up.</p>
+
+<p><code>bash
+$ docker logs -f puppetserver
+</code></p>
+
+<p>This works like tail would. Hit ctrl-c to exit once it says it&rsquo;s ready to go.</p>
+
+<h1>Hook up a client</h1>
+
+<p>You&rsquo;re going to need Puppet, Facter and Hiera on your client Mac. Head over <a href="http://downloads.puppetlabs.com/mac">http://downloads.puppetlabs.com/mac</a> and download and install the latest version of Puppet, Facter and Hiera.</p>
+
+<p>If we just ran Puppet now, it would use the Mac&rsquo;s hostname as the certificate name (the unique identifier for the machine). If you have reliable hostnames, that will probably do you. I prefer to use the machine&rsquo;s serial number (lower case, because that&rsquo;s what Puppet likes). We&rsquo;ll automate this in a later post, but for now we can do it by hand:</p>
+
+<p><code>bash /etc/puppet/puppet.conf
+[main]
+server=puppet.yourdomain.com
+certname=abc123
+</code></p>
+
+<p>All that&rsquo;s left now is to run puppet on the client:</p>
+
+<p><code>bash
+$ puppet agent -t --waitforcert 20
+</code></p>
+
+<p>In a later post, we will look at how we can use r10k to manage our modules and use Hiera to configure our clients without touching a line of Puppet code.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Testing BSDPy in Vagrant]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/"/>
+    <updated>2015-04-28T16:10:07+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant</id>
+    <content type="html"><![CDATA[<p>Last time, we looked at how to spin up a Docker host and run BSDPy on it. That&rsquo;s great for production, but might be a bit of a faff to do every time you want to test your NBI at home.</p>
+
+<p>Inspired by <a href="https://grpugh.wordpress.com/2015/04/28/a-test-docker-bsdpy-environment/">Dr Graham R Pugh</a>, here&rsquo;s my Vagrant setup for this.</p>
+
+<p>You will need:</p>
+
+<ul>
+<li><a href="https://www.vagrantup.com/">Vagrant</a></li>
+<li>Either <a href="https://www.virtualbox.org/">VirtualBox</a> or <a href="http://www.vmware.com/uk/products/fusion">VMware Fusion</a> (if you use Fusion with Vagrant, you will need to purchase the <a href="http://www.vagrantup.com/vmware">VMware plugin</a> &ndash; this will allow you to create OS X Vagrantboxes as well as enjoy the much greater performance of VMware, but that&rsquo;s another post)</li>
+<li>Xcode, or at the very least the command line tools from Xcode so you have git available.</li>
+<li>Something to NetBoot &ndash; either a physical Mac or a VM in VMware Fusion. A VM configured as per <a href="https://derflounder.wordpress.com/2013/01/23/building-mac-test-environments-with-vmware-fusion-netboot-and-deploystudio/">Rich Trouton&rsquo;s post</a> will do nicely.</li>
+</ul>
+
+
+<p>Get all of that installed and you&rsquo;re ready to go. Next we need to get the Vagrantfile:</p>
+
+<p><code>bash
+$ git clone https://github.com/grahamgilbert/docker-vagrant.git
+</code></p>
+
+<p>You will obviously need an NBI &ndash; I&rsquo;ve <a href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/">covered how to use AutoNBI before</a>, or you could use an existing one. Just make sure you&rsquo;ve edited <code>NBImageInfo.plist</code> to make <code>enabled</code> be <code>true</code> and that the Mac (or VM) you&rsquo;re NetBooting isn&rsquo;t in <code>DisabledSystemIdentifiers</code> (I leave this as an empty <code>&lt;array /&gt;</code>). Put your NBI in the <code>nbi</code> directory.</p>
+
+<p>Now there&rsquo;s one thing left to do:</p>
+
+<p><code>bash
+$ cd docker-vagrant
+$ vagrant up
+</code></p>
+
+<p>Give it 20 seconds to finish booting and you will see your NBI in the startup pane of your Mac.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Getting started with BSDPy on Docker]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/"/>
+    <updated>2015-04-22T07:07:23+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker</id>
+    <content type="html"><![CDATA[<p>Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you&rsquo;re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we&rsquo;re using that. Your Ubuntu box will also need a real IP address &ndash; if you are using VMware Fusion, this will be a Bridged Network Adapter &ndash; adjust the terminology if you&rsquo;re using a different virtualization tool. You don&rsquo;t need to worry about giving your machine a static IP unless you want to &ndash; Macs will NetBoot just fine when they&rsquo;re on the same subnet. <!--more--></p>
+
+<h2>Baby Steps</h2>
+
+<p>Our first job is to install Docker. I&rsquo;ve been as guilty as many with glossing over this step, so here&rsquo;s the massively long and difficult method to install the latest version of Docker on Ubuntu 14. First we make sure <code>wget</code> is installed:</p>
+
+<p><code>bash
+$ which wget
+</code></p>
+
+<p>And if that returns nothing then we need to install <code>wget</code>:</p>
+
+<p><code>bash
+$ sudo apt-get update
+$ sudo apt-get install wget
+</code></p>
+
+<p>And now we can install Docker:</p>
+
+<p><code>bash
+wget -qO- https://get.docker.com/ | sh
+</code></p>
+
+<p>Pop your password in when you&rsquo;re asked and you&rsquo;re done.</p>
+
+<h2>A long time ago on a server far away</h2>
+
+<p>Whilst you&rsquo;re still recovering from the trauma of that difficult install, I&rsquo;m going to cover a bit of background. I&rsquo;ve been using Docker for just under a year now, and I&rsquo;ve developed a method of working with containers that suits me. I&rsquo;m not for one second suggesting this is the best way of working, but it works nicely for me.</p>
+
+<p>On each of my Docker hosts, there is a directory at <code>/usr/local/docker</code> which is where all of my persistent data lives along with a script called <code>startup.sh</code>. All of my Docker related work happens in this script, and it follows this basic pattern:</p>
+
+<ul>
+<li>Pull the latest version of the images I&rsquo;m using from the Docker Hub (or my private registry, but that&rsquo;s beyond the scope of this post)</li>
+<li>Delete all of the existing containers</li>
+<li>Start up the required containers</li>
+</ul>
+
+
+<h2>Why?</h2>
+
+<p>The main reason I do this is that starting up a new container is often no slower than re-starting an existing one, and by using the order of pull &ndash;> delete &ndash;> relaunch, I can be sure that I&rsquo;m always using the latest version of those containers. I&rsquo;m also not having to type out <strong>LOOOOONNNNGGG</strong> <code>docker run</code> commands every time I want to update a container.</p>
+
+<p>The first part of our startup script will be to pull in the images we need. In addition to BSDPy, we need a TFTP server and a basic web server &ndash; fortunately Pepjin has you covered with Images for these already in the <a href="https://registry.hub.docker.com/repos/macadmins/">macadmins organisation</a>.</p>
+
+<p>If you&rsquo;re not made it already, we need to make the directory we&rsquo;ll store our permanent bits:</p>
+
+<p><code>bash
+$ sudo -i
+$ mkdir -p /usr/local/docker/nbi
+</code></p>
+
+<p>And fire up your favourite editor and put in the first part of our script:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>/usr/local/docker/startup.sh </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;docker pull macadmins/tftpd
+</span><span class='line'>docker pull macadmins/netboot-httpd
+</span><span class='line'>docker pull bruienne/bsdpy:1.0
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Now we just need to make it executable and we can run it:</p>
+
+<p><code>bash
+$ chmod 755 /usr/local/docker/startup.sh
+$ /usr/local/docker/startup.sh
+</code></p>
+
+<p>If all goes well Docker will start pulling down the images you need.</p>
+
+<h2>Cleaning up after ourselves</h2>
+
+<p>Pop this little snippet after the last <code>docker pull</code> command &ndash; it will stop and remove any existing containers:</p>
+
+<p>``` bash /usr/local/docker/startup.sh</p>
+
+<h1>Other stuff is above here</h1>
+
+<p>docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+```</p>
+
+<h2>Linked containers</h2>
+
+<p>As previously alluded to, our NetBoot solution will comprise of three components. Add the following to the end of <code>/usr/local/docker/startup.sh</code> (if your server has more than one ethernet adapter, replace <code>eth0</code> with the name of the adapter you want to use for NetBoot):</p>
+
+<p>``` bash /usr/local/docker/startup.sh</p>
+
+<h1>Other stuff is above here</h1>
+
+<p>chmod -R 777 /usr/local/docker/nbi
+IP=<code>ifconfig eth0 2&gt;/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'</code>
+echo $IP</p>
+
+<p>docker run -d \
+  -v /usr/local/docker/nbi:/nbi \
+  &mdash;name web \
+  &mdash;restart=always \
+  -p 0.0.0.0:80:80 \
+  macadmins/netboot-httpd</p>
+
+<p>docker run -d \
+  -p 0.0.0.0:69:69/udp \
+  -v /usr/local/docker/nbi:/nbi \
+  &mdash;name tftpd \
+  &mdash;restart=always \
+  macadmins/tftpd</p>
+
+<p>docker run -d \
+  -p 0.0.0.0:67:67/udp \
+  -v /usr/local/docker/nbi:/nbi \
+  -e BSDPY_IFACE=eth0 \
+  -e BSDPY_NBI_URL=<a href="http://$IP">http://$IP</a> \
+  -e BSDPY_IP=$IP \
+  &mdash;name bsdpy \
+  &mdash;restart=always \
+  bruienne/bsdpy:1.0
+```</p>
+
+<p>And run your startup script:</p>
+
+<p><code>bash
+$ /usr/local/docker/startup.sh
+</code></p>
+
+<p>You&rsquo;ll see your images being checked for updates, and then your containers will start. you can verify they&rsquo;re running by running:</p>
+
+<p><code>bash
+$ docker ps -a
+</code></p>
+
+<h2>Using the thing</h2>
+
+<p>Of course, your NetBoot server isn&rsquo;t going to do anything as you&rsquo;ve not uploaded anything for it to serve yet. Get yourself a NetBoot image (if you&rsquo;re using a DeployStudio NBI, delete the symlink to <code>NetInstall.dmg</code> and rename <code>NetInstall.sparseimage</code> to <code>NetInstall.dmg</code>).</p>
+
+<p>You&rsquo;re not going to have a GUI to modify the <code>NBImageInfo.plist</code> so open it up in a text editor. The important parts to change are to make sure that the Mac you&rsquo;re intending to NetBoot is either in <code>EnabledSystemIdentifiers</code> or not in <code>DisabledSystemIdentifiers</code> and that <code>IsEnabled</code> is set to <code>&lt;true/&gt;</code>. If you are going to be serving more than one image, you can set your default image in here.</p>
+
+<p>All done? Time to get that image on your Docker host. From your admin machine (or wherever your NBI currently lives):</p>
+
+<p><code>bash
+scp -r /Path/To/MyNetBoot.nbi user@dockerhost:/usr/local/docker/nbi
+</code></p>
+
+<p>All that remains is to restart the <code>bsdpy</code> container on your Docker host:</p>
+
+<p><code>bash
+$ /usr/local/docker/startup.sh
+</code></p>
+
+<p>And if you open up the <code>bsdpy</code> container&rsquo;s logs, you&rsquo;ll see it finding your NBI.</p>
+
+<p><code>bash
+$ docker logs bsdpy
+</code></p>
+
+<p>And if you want to keep the logs open whilst you&rsquo;re testing, you can use <code>-f</code>.</p>
+
+<p><code>bash
+$ docker logs -f bsdpy
+</code></p>
+
+<h2>Conclusion</h2>
+
+<p>If you&rsquo;ve made it all the way down here, congratulations! You&rsquo;ve now managed to move another service off that silly little Mac Mini and onto Linux &ndash; and hopefully you now see how easy it is to get things up and running with Docker.</p>
+]]></content>
+  </entry>
+  
+</feed>

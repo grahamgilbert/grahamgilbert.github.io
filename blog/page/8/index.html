@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Before reading this post, you really need to read part 1 &ndash; none of this will make sense without it! Still with me? Let&rsquo;s do finally do &hellip;">
+  <meta name="description" content="If you&rsquo;ve managed OS X for any amount of time, chances are you&rsquo;ve needed to deploy software. And chances also are that you&rsquo;ve come &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,7 +93,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">Getting Started With Puppet on OS X (Part 2)</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/08/09/the-luggage-an-introduction/">The Luggage: An Introduction</a></h1>
     
     
       <p class="meta">
@@ -109,30 +109,31 @@
   
 
 
-<time datetime="2013-01-27T09:30:00+00:00" pubdate data-updated="true">Jan 27<span>th</span>, 2013</time>
+<time datetime="2013-08-09T18:00:00+01:00" pubdate data-updated="true">Aug 9<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/#disqus_thread">Comments</a>
+         | <a href="/blog/2013/08/09/the-luggage-an-introduction/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Before reading this post, you really need to read <a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">part 1</a> &ndash; none of this will make sense without it!</p>
+  <div class="entry-content"><p>If you&rsquo;ve managed OS X for any amount of time, chances are you&rsquo;ve needed to deploy software. And chances also are that you&rsquo;ve come across a vendor (I&rsquo;m looking at you, Adobe) that seems to be incapable of distributing their software in a useful manner. Or maybe you&rsquo;ve got your own scripts or software that you need to get installed on the machines that you look after &ndash; either way, you&rsquo;re going to want to build a package.</p>
 
-<p>Still with me? Let&rsquo;s do finally do something with Puppet. SSH into your Puppet Master (if it&rsquo;s IP has changed since you first did the setup, make sure you reflect this change in the Mac client&rsquo;s /etc/hosts file) and navigate to /etc/puppet and list the directory&rsquo;s contents:</p>
+<p>You&rsquo;ve got a few options &ndash; Iceberg, Packages, Composer, you&rsquo;ve even got Package Maker. However, my personal choice is The Luggage. It has a few advantages over the alternatives:</p>
 
-<pre><code>cd /etc/puppet
-ls -la
-</code></pre>
-
-<p>You&rsquo;ll see a few directories here &ndash; we&rsquo;re interested in two today &ndash; manifests and modules. Manifests will be where you describe your nodes, and the modules are the functional Puppet code.</p>
-
-</div>
+<ul>
+<li><strong>It&rsquo;s all text files:</strong> You&rsquo;re building software distributions, you should be checking the files in to build the packages into version control, such as Git. Text files are ideal for checking into version control.</li>
+<li><strong>It&rsquo;s free:</strong> if it costs nothing, there&rsquo;s no reason it can&rsquo;t be installed on everyone&rsquo;s machine.</li>
+<li><strong>It&rsquo;s (still) all text files:</strong> Want to see what will be in the package without any extra work? Crack open the Makefile and you can see straight away what will be in the package.</li>
+<li><strong>The Luggage has a metric buttload of shortcuts built in:</strong> it does the hard work, so you don&rsquo;t have to.</li>
+<li><strong>It&rsquo;s repeatable:</strong> Have you ever tried to talk someone through a series of windows and buttons to get the same result as you&rsquo;re getting? Every time you run The Luggage, you will get the same result.</li>
+<li><strong>It&rsquo;s (really, still) all text files:</strong> It&rsquo;s the most precise tool I&rsquo;ve used &ndash; you only package exactly what you need, no cruft is left behind.</li>
+<li><strong>Your workflow is limited only by your imagination:</strong> Seriously, you can do pretty much anything you can think of. We&rsquo;ll be going through more advanced workflows in future posts, but let&rsquo;s get started with using The Luggage.</div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">Continue reading &rarr;</a>
+      <a rel="full-article" href="/blog/2013/08/09/the-luggage-an-introduction/">Continue reading &rarr;</a>
     </footer>
   
 
@@ -144,7 +145,7 @@ ls -la
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/01/25/getting-started-with-puppet-part-1/">Getting Started With Puppet on OS X (Part 1)</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/07/17/buildcrankpkg/">buildCrankPkg</a></h1>
     
     
       <p class="meta">
@@ -160,22 +161,32 @@ ls -la
   
 
 
-<time datetime="2013-01-25T21:22:00+00:00" pubdate data-updated="true">Jan 25<span>th</span>, 2013</time>
+<time datetime="2013-07-17T16:31:00+01:00" pubdate data-updated="true">Jul 17<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/01/25/getting-started-with-puppet-part-1/#disqus_thread">Comments</a>
+         | <a href="/blog/2013/07/17/buildcrankpkg/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>When I was first getting started, the first hurdle I had to get over was trying to work out how it would apply to what I do &ndash; manage Macs. There are plenty of resources on managing servers with Puppet, but precious little on using Puppet with OS X &ndash; so, here&rsquo;s how to get started with Puppet.</p>
+  <div class="entry-content"><p>In my <a href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/">last post</a> I promised a tool I&rsquo;ve been working on to automate the building of a package for crankd.</p>
 
-</div>
+<p><a href="https://github.com/grahamgilbert/buildCrankPkg">buildCrankPkg</a> is a small script that will:</p>
+
+<ul>
+<li>Pull down the latest version of crankd (or use a local or remote repository if you specify one)</li>
+<li>Build a package that includes crankd and your custom settings and scripts.</li>
+</ul>
+
+
+<p>I&rsquo;ve included two examples, one that implements calling Munki and Puppet as detailed in the last post, and one to run a Casper policy.</p>
+
+<p>If you&rsquo;re happy with what crankd does and using the command line, head on over to the <a href="https://github.com/grahamgilbert/buildCrankPkg">repository</a> and enjoy. If you need a bit more help to get started, read on.</div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2013/01/25/getting-started-with-puppet-part-1/">Continue reading &rarr;</a>
+      <a rel="full-article" href="/blog/2013/07/17/buildcrankpkg/">Continue reading &rarr;</a>
     </footer>
   
 
@@ -187,7 +198,7 @@ ls -la
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/01/18/crypt-a-filevault-2-escrow-solution/">Crypt: A FileVault 2 Escrow Solution</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/07/12/using-crankd-to-react-to-network-events/">Using Crankd to React to Network Events</a></h1>
     
     
       <p class="meta">
@@ -203,24 +214,82 @@ ls -la
   
 
 
-<time datetime="2013-01-18T08:05:00+00:00" pubdate data-updated="true">Jan 18<span>th</span>, 2013</time>
+<time datetime="2013-07-12T14:04:00+01:00" pubdate data-updated="true">Jul 12<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/01/18/crypt-a-filevault-2-escrow-solution/#disqus_thread">Comments</a>
+         | <a href="/blog/2013/07/12/using-crankd-to-react-to-network-events/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Although it&rsquo;s been blogged about over at <a href="http://afp548.com/2013/01/02/crypt-a-client-and-web-app-for-filevault-2-encryption-and-escrow/">afp548</a> and <a href="http://derflounder.wordpress.com/2012/12/31/first-look-at-crypt/">Rich Trouton&rsquo;s blog</a>, I&rsquo;d like to introduce you all to <a href="https://github.com/grahamgilbert/Crypt">Crypt</a>.</p>
+  <div class="entry-content"><p>Updated 14/7/2013: After <a href="https://twitter.com/Sacrilicious/status/355756510535614464">Alister&rsquo;s suggestion</a>, the script now loops over network interfaces up to en19 (hopefully that&rsquo;s enough!).</p>
 
-<p><img class="center" src="/images/posts/2013-01-18/Crypt-Screenshot.png"></p>
+<p>So, you&rsquo;ve heard of this crankd thing, maybe even had a look at it, but have no idea how to get it going? You&rsquo;re in the right place. I&rsquo;m by no means an expert on it, having only been playing with it for less than a week, but I already have it running in production running the simple script below. My initial work, and therefore this post was inspired by Gary Larizza&rsquo;s <a href="http://web.archive.org/web/20120111031339/http://glarizza.posterous.com/using-crankd-to-react-to-network-events">two</a> <a href="http://garylarizza.com/blog/2011/12/31/using-the-google-macops-crankd-and-facter-code/">articles</a> on the subject.</p>
 
-<p>Crypt is a solution for enabling FileVault 2 on Macs running either 10.7 or 10.8 and securely storing those keys, using no outside infrastructure like other solutions do (Cauliflower Vest&rsquo;s requirement of Google App Engine). It&rsquo;s only requirement is a web server that can run a Django app (which is pretty much anything &ndash; the example setup uses Apache on Ubuntu 12, but you can use anything you want).</p>
+<h2>What is crankd?</h2>
 
-<p>Crypt is made up of two parts: A <a href="https://github.com/grahamgilbert/Crypt-Server">web app</a>, which stores the recovery keys and a <a href="https://github.com/grahamgilbert/Crypt">client app</a> for enabling FileVault 2 on a Mac which then sends the recovery key to the server. The server has two user levels, so access to keys can be restricted, and all key access is logged for auditing.</p>
+<p>It&rsquo;s part of the <a href="https://github.com/acdha/pymacadmin">PyMacAdmin</a> set of tools that <a href="http://chris.improbable.org/">Chris Adams</a> and <a href="http://explanatorygap.net">Nigel Kersten</a> released a while ago. In a nutshell, it runs in the background via a LaunchDaemon and reacts to events on the Mac by running a script or a Python function, class or method. It has loads of events it knows about (application launches, power events, network events etc), but in this case I wanted to run something when there was a network change. Some of our machines never get turned off (and for some reason the Puppet Launch Daemon has crapped out), or aren&rsquo;t turned on long enough for Puppet or Munki to run. I wanted a script that would run every time the machine came back onto the network, checking if there was an active connection and run Puppet and Munki.</p>
 
-<p>We&rsquo;ve been using it at <a href="http://pebbleit.com">pebble.it</a> for a few weeks now and haven&rsquo;t found any issues during use, but please be aware that this is what I&rsquo;d call &ldquo;beta&rdquo; software. You might be happy using beta software in production, but that&rsquo;s up to you! I&rsquo;d welcome all feedback, both good and bad. Planned features include AD authentication and emails to admins when new requests come in. Please file bugs and feature requests over at <a href="https://github.com/grahamgilbert/Crypt">GitHub</a> so I can keep track of them all.</p>
+<h2>What do I need to do?</h2>
+
+<p>There are a few parts that we need to bring together to make this work:</p>
+
+<ul>
+<li>The crankd.py executable and the supporting files</li>
+<li>A Launch Daemon to start the thing</li>
+<li>A preferences file to tell crankd what to do</li>
+<li>And finally, our custom code</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/12/using-crankd-to-react-to-network-events/">Continue reading &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013/">Managing Macs With Puppet at PSU 2013</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-24T13:56:00+01:00" pubdate data-updated="true">May 24<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For those of you who attended my talk yesterday at PSU MacAdmins on Managing Macs with Puppet, here are are my <a href="/images/posts/2013-05-24/Managing_Macs_with_Puppet.pdf">slides</a> and all of the code and servers used are up on <a href="https://github.com/grahamgilbert/puppet_psu_2013">grahamgilbert/puppet_psu_2013 on GitHub</a>. Please comment, <a href="/about">email me</a> or catch me on the <a href="http://twitter.com/grahamgilbert">twitter</a> if you have any questions about any of this. Hopefully the video will be up soon, so those of you who weren&rsquo;t there to laugh at the guy with the funny accent can see me dealing with internet fails and my obscure British sit-com references.</p>
+
+<p><strong>Update:</strong> the video has now been posted.</p>
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/GqerWmKU1Js" frameborder="0" allowfullscreen></iframe>
+
 </div>
   
   
@@ -233,7 +302,7 @@ ls -la
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/01/13/casper-vs-munki/">Casper vs Munki</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/04/07/one-bootstrap-package-to-rule-them-all/">One Bootstrap Package to Rule Them All</a></h1>
     
     
       <p class="meta">
@@ -249,153 +318,48 @@ ls -la
   
 
 
-<time datetime="2013-01-13T21:34:00+00:00" pubdate data-updated="true">Jan 13<span>th</span>, 2013</time>
+<time datetime="2013-04-07T15:36:00+01:00" pubdate data-updated="true">Apr 7<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/01/13/casper-vs-munki/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Next up in the battle of Casper vs the rest of the Mac admin toolset looking to reign supreme in the contest of software installation is Munki.</p>
-
-<h2>Setup</h2>
-
-<p>The setup process for a Munki server can seem to be very daunting at first if you&rsquo;ve not configured a web server before. If you are happy setting one up, it&rsquo;s the easiest server install you&rsquo;ll ever do! Munki&rsquo;s requirement of just a basic web server means it can run on literally anything (although Casper will also run on anything you&rsquo;re likely to use &ndash; I&rsquo;ve had both running on Windows boxes for example).</p>
-
-<p>The setup of a Casper server can be quite involved, but chances are if you don&rsquo;t know what you&rsquo;re doing, it&rsquo;s already been done for you during your jump start.</p>
-
-<p>Winner: Casper &ndash; if you&rsquo;ve paid for the Casper Suite, you&rsquo;re ready to go after your jump start (in theory!). That being said, there are people who can configure Munki for you if you need it (<a href="http://pebbleit.com">shameless plug for my employers here!</a>)</p>
-
-<h2>Getting software into the system</h2>
-
-<p>A streamlined workflow for Munki takes a little setup. Our Munki repository lives on an Ubuntu box, with the actual repo being shared out via SMB. This could just as easily be configured on a Windows server or an OS X server if you still have them in your server room.</p>
-
-<p>With the sharepoint set up, I can just mount the repo and then run munkiimport to get the software into Munki. Yes, a lot of people will be put off with having to use a command line interface &ndash; thats something all Mac admins will need to get over at some point in their career, it might as well be now!</p>
-
-<p>Casper&rsquo;s method of getting software into the system is simple, but incredibly long winded. You seem to be expected to repackage nearly everything, which is a major pain in the ass. Your JAMF rep will point you towards the pre-made templates in Composer &ndash; ironically, most of the apps listed in there, shouldn&rsquo;t need repackaging in the first place as they&rsquo;re either distributed in reasonable packages (like Office) or have tools available to make a package (like Creative Suite).  Once you&rsquo;ve got the package, it&rsquo;s super simple to get the package into Casper &ndash; crack open Casper Admin and drag the package into it. You need to then make a policy which somehow installs the software (more on that in the next section).</p>
-
-<p>Winner: Draw. Munki is more work up front, and doesn&rsquo;t have a GUI which will be an issue for some. Casper is really easy to use, but a complete faff every time you need to get new software onto your macs. You shouldn&rsquo;t need to repackage. Ever. Especially for drag and drop app installations.</p>
-
-<h2>Configuration options</h2>
-
-<p>The two systems are fairly feature comparable (pre and post flight scripts, ways to limit who gets what software etc), but it&rsquo;s how they present those options to the admin that differentiates them.</p>
-
-<p>Let&rsquo;s take a common example: installing an Office 2011 update. We have the 14.2.5 update that requires the installation to be at 14.2.3 to start off with.
-Some might be, others won&rsquo;t for one reason or another.</p>
-
-<p>We&rsquo;ve already got the packages in our respective systems &ndash; let&rsquo;s start off with Casper. We need to differentiate the macs that need the update first &ndash; we&rsquo;ll do this with a smart group. We make a smart group that has Word at version 14.2.3 and apply the policy to that- great, done right? But what about those users that slipped through the net and only have 14.2?  So at that point you need to refine your smart group to target a range of versions. You also need to change this <em>every time there&rsquo;s an update</em>. If you only have Office to worry about this might not be too much of a problem, but as soon as you get a few more packages to look after, this rapidly becomes tedious.</p>
-
-<p>Lets look at the same scenario Munki. I just need to mark the update as being an update for Office 2011 (this direct relationship between software and delta updates doesn&rsquo;t exist within Casper) and that the update requires a particular version of Office to be installed within it&rsquo;s pkginfo file &ndash; two minutes work in a text editor at worst once you know the syntax.</p>
-
-<p>Winner: Munki &ndash; the direct relationship between updates and their parent package is invaluable. As ever, Munki is a lot more work up front, but it pays off in a much easier workflow after that.</p>
-
-<h2>Installing software on client machines</h2>
-
-<p>By default, this is what a client sees when Munki wants to install something:</p>
-
-<p><img src="/images/posts/2013-01-13/Munki.png"></p>
-
-<p>And this is what you see with Casper.</p>
-
-<p><img src="/images/posts/2013-01-13/Blank_Desktop.png"></p>
-
-<p>No, I&rsquo;ve not made a mistake. No warning, no option to delay to a more convenient time, nothing. Nada. Zilch. And you better hope that the app isn&rsquo;t running! It&rsquo;s crash time otherwise.</p>
-
-<p>Munki will warn the user when apps you want to update are running, will warn them when a forced install is coming (several times), will let the user know that a reboot will be needed <em>before</em> the software gets installed.</p>
-
-<p>I know that these things can be done with Casper, I had a demo from a nice chap from JAMF during the week showing me all of this (as a side note, kudos to JAMF for reaching out to me following my last post in this). The issue is, I don&rsquo;t particularly want to write a bash script ever time I deploy software to check if the app is running, warn the user etc etc. We spend on average an hour a week updating our Munki repo &ndash; I dread to think how long it would take if I had to do that level of scripting for each package.</p>
-
-<p>The one place Casper does excel on the client side is Self Service. The pretty icons and familiar app store look are much easier for end users to use than Munki&rsquo;s optional installs &ndash; that being said, optional installs with Munki aren&rsquo;t exactly hard to use.</p>
-
-<p>Winner: Munki &ndash; someone at JAMF told me their goal is to make administrators lives easier. Unfortunately my goal is to make my client&rsquo;s mac experience as awesome as possible, and random reboots with only five minute warnings aren&rsquo;t exactly awesome in my book.</p>
-
-<h2>Reporting</h2>
-
-<p>This is the area where Casper excels. Out of the box, the reporting is fantastic. You know who has installed what, when, how many licenses you have left, pretty much anything you need to now is there out of the box.</p>
-
-<p>Munki does have MunkiWebAdmin, but it&rsquo;s an extra install, and can be quite tricky if you&rsquo;re not used to configuring a Django app. It does provide a fair bit of info on what&rsquo;s happening with your Munki-d macs, but nowhere near what you&rsquo;d get out of Casper. The stats you can get out of Casper are truly immense.</p>
-
-<h2>Auditing Admin actions</h2>
-
-<p>This should really come with the post when Casper goes head to head with Puppet, but it affected me in real life a couple of weeks ago, so it can come in today. I came to a Casper install and noticed that the policy that was due to install an Office update had been deleted. Had this happened with our Munki setup, we would just look at the Git history (you are using Git to track your Munki config, right?), see who made the change, find out why, and roll it back if needed.</p>
-
-<p>In this particular instance, I had no idea if it had been done by mistake or on purpose by their internal IT team. I raised this is JAMF this week, and was shown the database log. Whilst this is better than nothing at all, it&rsquo;s still woefully inadequate for a solution that is marketed at the enterprise.</p>
-
-<p>Winner &ndash; Munki (or any solution that can have its history tracked effectively)</p>
-
-<p>So for those who stopped keeping count, Munki pips it. On the face of it, depending on your priorities, it&rsquo;s quite a close thing. But as my clients pay my wages, the user experience is of paramount importance to me, so personally, Munki is a clear winner. If my users aren&rsquo;t able to work, they can&rsquo;t earn money. If they can&rsquo;t earn money, they can&rsquo;t pay their IT bill.</p>
-
-<p>Munki offers the greatest flexibility between letting users carry on with their work when there&rsquo;s a not so important update until it&rsquo;s convenient for them to stop and forcing the update (but still warning them appropriately) when it&rsquo;s critical.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/07/updating-instadmg-based-netrestore-images/">Updating InstaDMG Based NetRestore Images</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-07T11:54:00+00:00" pubdate data-updated="true">Jan 7<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/01/07/updating-instadmg-based-netrestore-images/#disqus_thread">Comments</a>
+         | <a href="/blog/2013/04/07/one-bootstrap-package-to-rule-them-all/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>This probably isn&rsquo;t news to anyone else, but I made a discovery last week that will save me a fair bit of time.</p>
+  <div class="entry-content"><p>At work, we&rsquo;ve recently changed how we build our bootstrap package to having the main code that connects a Mac to our Puppet infrastructure pulled down from GitHub when the client boots up for the first time.</p>
 
-<p>Whilst staring at System Image Utility after yet another change to the build, I thought that there must be a better way of doing this, bearing in mind that the basic InstaDMG process is:</p>
+<h2>Why?</h2>
+
+<p>This might sound like madness to you. Why would anyone want to do this? We had two main issues to solve:</p>
 
 <ul>
-<li>Install the OS</li>
-<li>Install Packages</li>
-<li><strong>Make a read-only DMG</strong></li>
-<li><strong>Prep the DMG for ASR</strong></li>
+<li>I got sick of rebuilding our images every time our bootstrap script changed.</li>
+<li>Our engineers got sick of downloading the latest version of our package every time they thin / no-imaged a Mac.</li>
 </ul>
 
 
-<p>And SIU&rsquo;s process is:</p>
+<p>Why would our script change so much? In our case, it is to install the latest versions of Puppet and Facter. This isn&rsquo;t strictly necessary, as we update Puppet and Facter with Munki, but occasionally there will be something in our Puppet config that requires a specific version &ndash; for example, when we started configuring usernames on 10.8 Macs with Puppet, the <code>salt</code> parameter was introduced. This required Puppet 3.0.2-ish or higher &ndash; which meant that any NetRestore image or old package that contained a version of Puppet lower than this would fail, and the engineer on site was in for a world of pain.</p>
 
-<ul>
-<li><strong>Make a read-only DMG</strong></li>
-<li><strong>Prep the DMG for ASR</strong></li>
-<li>Copy it into a writable disk image with a stripped down OS to restore the image.</li>
-</ul>
+<h2>Ok, I&rsquo;m convinced.</h2>
+
+<p>I&rsquo;ve put an <a href="https://github.com/grahamgilbert/macscripts/tree/master/Puppet-Bootstrap">example up on GitHub</a>. This is a sanitised version of the bootstrap script we use at pebble.it. All we do in the script that gets deployed to the client is set the address of our Puppet server and then pull the rest of the script from GitHub &ndash; if you don&rsquo;t need to set any variables, you could do all of the work in the remote script.</p>
+
+<p>So this can be used with all of the deployment methods we use at pebble.it (<a href="https://code.google.com/p/instadmg/">imaging</a>, <a href="http://managingosx.wordpress.com/2012/07/25/son-of-installlion-pkg/">createOSXinstallPkg</a> and no imaging), we do the actual work in a script that is triggered by a launch daemon, so we can be sure we&rsquo;re a) performing the work in a full OS X environment (we need Python to be available for our script) and that we&rsquo;re running it on the boot volume of the client Mac (we need the serial number, and this could be installed via Target Disk Mode when no-imaging.</p>
+
+<p>So when the bootstrap script needs to be updated, rather than rebuilding the package and distributing it to engineers and baking it into images, the workflow becomes:</p>
+
+<ol>
+<li>Update script, push to GitHub.</li>
+<li>Restore image with <a href="https://github.com/grahamgilbert/macscripts/tree/master/Puppet-Bootstrap">puppet_bootstrap.pkg</a> baked in or install the package manually.</li>
+<li>Mac boots, downloads the latest version of <a href="https://github.com/grahamgilbert/macscripts/tree/master/Puppet-Install"><code>install_puppet.py</code></a>.</li>
+<li><code>install_puppet.py</code> downloads and installs the correct versions of Puppet and Facter and configures Puppet.</li>
+<li>Puppet downloads, installs and configures Munki along with all of the other configuration.</li>
+<li>PROFIT</li>
+</ol>
 
 
-<p>So, two steps are duplicated. This inefficiency must be stopped!</p>
-
-<p>After a 30 second hunt in the NetInstall.dmg file that SIU spits out, I saw a file called System.dmg in the Packages folder &ndash; sure enough, it was my InstaDMG image. I replaced it with my new build, and it worked flawlessly.</p>
-
-<p>If your new image is larger than the one you&rsquo;re replacing, you just need to expand the NetInstall.dmg image to a size large enough to accomodate the new image.</p>
-
-<pre><code>hdiutil resize -growonly -size 15g /path/to/your/NetRestore.nbi/NetInstall.dmg
-</code></pre>
-
-<p>Replace the 15g with whatever size you want, 15 GB was plenty to accomodate my updated image.</p>
+<p>This clearly isn&rsquo;t required or suitable for all types of script &ndash; but if you have a package that is frequently updated and you have staff installing it by hand, this is a relatively simple way to make sure they&rsquo;ve got the latest version at all times.</p>
 </div>
   
   
@@ -419,30 +383,30 @@ Some might be, others won&rsquo;t for one reason or another.</p>
   <h1>About</h1>
   <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
 
-<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer or clients.</small></p>
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer.</small></p>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/">Managing Munki Catalogs With Trello</a>
+        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2015/01/04/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
+        <a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Running Puppet Server in Docker Part 2: R10k</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a>
+        <a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
+        <a href="/blog/2015/06/16/using-munki-trello-with-git/">Using Munki-trello With Git</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/">First-boot-pkg Updated for Yosemite</a>
+        <a href="/blog/2015/05/08/introducing-imagr/">Introducing Imagr</a>
       </li>
     
   </ul>

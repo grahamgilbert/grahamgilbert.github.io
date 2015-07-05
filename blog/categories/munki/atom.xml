@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Munki | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/munki/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-02-12T07:45:49+00:00</updated>
+  <updated>2015-07-05T15:46:59+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,55 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Using munki-trello with Git]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git/"/>
+    <updated>2015-06-16T11:21:58+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git</id>
+    <content type="html"><![CDATA[<p>So you&rsquo;re managing your catalogs with <a href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/">munki-trello</a>, but you also want to use git and <a href="https://www.afp548.com/2014/12/01/git-fat-intro-part-two-setup-and-migration/">git-fat</a> to track the changes &ndash; what do you do?</p>
+
+<p>If you were using the script that I posted previously, your changes would be mangled when you pull in changes  &ndash; it turned out the solution was simple. I&rsquo;m going to assume your Munki server has commit access to your Munki git repository. We&rsquo;re pulling down the latest version of the git repo before performing any work, and then we&rsquo;re git adding just the <code>catalogs</code> and <code>pkgsinfo</code> directories &ndash; the only directories munki-trello will modify. And if there aren&rsquo;t any changes, git won&rsquo;t commit anything, so we can just run <code>git commit</code> and <code>git push</code> without worrying about it.</p>
+
+<p>If we schedule the below script to happen regularly (via cron), we also get our git changes deployed automagically.</p>
+
+<p>``` bash /usr/local/bin/munki-trello.sh</p>
+
+<h1>!/bin/bash</h1>
+
+<h1>Change this to wherever your Munki repository is on disk</h1>
+
+<p>cd /usr/local/docker/munki</p>
+
+<h1>Pull down changes</h1>
+
+<p>git pull</p>
+
+<h1>and the &lsquo;fat&rsquo; files</h1>
+
+<p>git fat pull</p>
+
+<p>docker pull pebbleit/munki-trello</p>
+
+<p>docker run &mdash;rm -v /usr/local/docker/munki:/munki_repo \
+-e DOCKER_TRELLO_KEY=mytrellokey \
+-e DOCKER_TRELLO_TOKEN=mytrellotoken \
+-e DOCKER_TRELLO_BOARDID=myboardid \
+pebbleit/munki-trello</p>
+
+<p>git add catalogs
+git add manifests
+git add pkgsinfo</p>
+
+<h1>Change the following line if you want to change the git commit message</h1>
+
+<p>now=&ldquo;$(date)&rdquo;
+git commit -m &ldquo;Munki Trello commit $now&rdquo;</p>
+
+<p>git push
+```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Managing Munki catalogs with Trello]]></title>
@@ -174,134 +223,6 @@
 
 
 <p>Over the next few posts, I&rsquo;ll go over the different parts of this solution, how I put it together and how you might be able to use this.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Binding to Active Directory with Munki]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki/"/>
-    <updated>2014-04-01T20:15:39+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki</id>
-    <content type="html"><![CDATA[<p>Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It&rsquo;s quite  a straightforward process to automate this with Munki, although you do have a few options to consider.</p>
-
-<p>First off, how are you going to deliver the actual bind script? You have the option of a <a href="https://code.google.com/p/munki/wiki/ManagingPrintersWithMunki#Alternate_Method_Using_nopkg">no-pkg pkginfo</a> file, with the script directly in the pkginfo plist. Whilst the script is now easily editable in the pkginfo, it does pose a security issue in that the catalog is kept in /Library/Managed Installs/catalogs, which will contain your script. Along with your AD bind account&rsquo;s details. Whoops!</p>
-
-<h2>Prepare the Bind!</h2>
-
-<p>My preferred way of deploying the bind script is with a payload-free package made with The Luggage. My bind script is nothing special, it was originally borrowed from DeployStudio. You can find the <a href="https://github.com/grahamgilbert/macscripts/blob/master/AD%20Bind/postinstall">script</a> and the <a href="https://github.com/grahamgilbert/macscripts/blob/master/AD%20Bind/Makefile">Makefile</a> on my <a href="https://github.com/grahamgilbert/macscripts/tree/master/AD%20Bind">macscripts repo</a>. If you need a primer on The Luggage, <a href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/">I wrote about it in August 2013</a>. You just need to edit the variables at the top of the script to suit your environment and build the package.</p>
-
-<p>So you&rsquo;ve got the machine bound to AD. Great. What happens if the binding doesn&rsquo;t go to plan? Or a well meaning tech manages to unbind the machine, but can&rsquo;t manage to re-bind it? Or even worse, the user manages to unbind it themselves? We need to make Munki check that the Mac is still bound to AD.</p>
-
-<!--more-->
-
-
-<h2>installcheck_script.sh</h2>
-
-<p>``` bash</p>
-
-<h1>!/bin/sh</h1>
-
-<h1>You need to change this.</h1>
-
-<h1>The Domain we&rsquo;re supposed to be on</h1>
-
-<p>DOMAIN=&ldquo;ad.company.com&rdquo;</p>
-
-<h2>STOP EDITING</h2>
-
-<h1>The version from dsconfigad</h1>
-
-<p>ACTUAL_DOMAIN=<code>/usr/sbin/dsconfigad -show | /usr/bin/grep -i "Active Directory Domain" | /usr/bin/sed -n 's/[^.]*= //p'</code></p>
-
-<p>if [ &ldquo;$ACTUAL_DOMAIN&rdquo; = &ldquo;$DOMAIN&rdquo; ]</p>
-
-<pre><code>then
-# We're on the right domain, no need to install
-exit 1
-</code></pre>
-
-<p>else</p>
-
-<pre><code># Domain isn't being returned from dsconfigad, need to install
-exit 0
-</code></pre>
-
-<p>fi
-```</p>
-
-<p>You should save this as install <code>check_script.sh</code> in the same directory as your binding package. This script is querying the Active Directory domain the Mac is on and checking it&rsquo;s the one you want.</p>
-
-<p>Simple.</p>
-
-<p>Job done.</p>
-
-<p>Right&hellip;?</p>
-
-<h2>Not quite finished</h2>
-
-<p>The main issue with using an <code>installcheck_script</code> is that we&rsquo;re bypassing every other mechanism that Munki uses to check if an item needs to be installed, which means that if we ever need to update our AD bind package and install it, or if the Mac was previously bound to AD, Munki will cheerfully ignore the package because as far as it&rsquo;s concerned, if it passes the installcheck_script, everything&rsquo;s fine and dandy.</p>
-
-<h2>installcheck_script.sh take 2</h2>
-
-<p>``` bash</p>
-
-<h1>!/bin/sh</h1>
-
-<h1>You need to change these.</h1>
-
-<h1>The Domain we&rsquo;re supposed to be on</h1>
-
-<p>DOMAIN=&ldquo;ad.company.com&rdquo;</p>
-
-<h1>The version of the package (today&rsquo;s date if created using the usual Luggage Makefile)</h1>
-
-<p>PKG_VERSION=&ldquo;20140401&rdquo;</p>
-
-<h1>The identifier of the package</h1>
-
-<p>PKG_ID=&ldquo;com.grahamgilbert.ad-bind&rdquo;</p>
-
-<h2>STOP EDITING</h2>
-
-<h1>The version from dsconfigad</h1>
-
-<p>ACTUAL_DOMAIN=<code>/usr/sbin/dsconfigad -show | /usr/bin/grep -i "Active Directory Domain" | /usr/bin/sed -n 's/[^.]*= //p'</code></p>
-
-<h1>The version installed from pkgutil</h1>
-
-<p>VERSION_INSTALLED=<code>/usr/sbin/pkgutil --pkg-info ${PKG_ID} | /usr/bin/grep version | /usr/bin/sed 's/^[^:]*: //'</code>
-if [ &ldquo;$ACTUAL_DOMAIN&rdquo; = &ldquo;$DOMAIN&rdquo; ]</p>
-
-<pre><code>then
-# We're on the right domain, make sure we've got the right version of the package
-if [ "$VERSION_INSTALLED" = "$PKG_VERSION" ]
-then
-    # Everything's ok, no need to install
-    exit 1
-else
-    # Package is out of date, need to install
-    exit 0
-fi
-</code></pre>
-
-<p>else</p>
-
-<pre><code># Domain isn't being returned from dsconfigad, need to install
-exit 0
-</code></pre>
-
-<p>fi
-```</p>
-
-<p>This is a little more complicated, but not much. First off we&rsquo;re doing the same check as before, making sure we&rsquo;re actually bound to the domain. If we aren&rsquo;t, we obviously need to install the package, so that&rsquo;s the end of that. If we are bound, we next need to check which version of the package we have. As previously mentioned, Munki would usually do this for us, but by using the installcheck_script, we&rsquo;ve engaged the &ldquo;leave me alone, I know what the fuck I&rsquo;m doing&rdquo; mode in Munki, so we&rsquo;re implementing that check ourselves. If the version or package identifier don&rsquo;t match, we want our bind script installed, screw those other guys with their not-as-good-as-our-way of binding.</p>
-
-<p>All that&rsquo;s left now is to <code>munkiimport</code> your package with your script as an <code>installcheck_script</code>:</p>
-
-<p><code>bash
-$ /usr/local/munki/munkiimport ad-bind.pkg --installcheck_script=installcheck_script.sh
-</code></p>
-
-<p>There you have it, how to keep a Mac bound to AD with Munki. You may wish to change some other settings later on (particularly if you have to do battle with a .local domain), but this will get you going with a basic AD bind.</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-02-12T07:45:49+00:00</updated>
+  <updated>2015-07-05T15:46:59+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,865 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The future of Sal]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/06/26/the-future-of-sal/"/>
+    <updated>2015-06-26T09:40:31+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/06/26/the-future-of-sal</id>
+    <content type="html"><![CDATA[<p>As some of you may know, yesterday was my last day at pebble.it. Since I announced I was leaving, I’ve been getting asked this pretty regularly, so I thought I’d answer it here.</p>
+
+<p>My new job uses Munki extensively, and I expect to be using Sal there. As such, development of Sal will continue. I no longer have commit access to the Sal Software organisation, so I’ve forked the project and have set up <a href="https://github.com/salopensource">Sal Open Source</a> as an organisation on GitHub &ndash; hopefully this will be the last time anything needs to change. I’ll be moving the preference domain in version 0.4.0 of the client side scripts to <code>com.github.salopensource.sal</code> &ndash; once again, this should be the last time things need to change.</p>
+
+<p>So, what else can you expect from Sal in the near future? The next release will have a GUI for managing your plugins, and I’ve started work on a basic API, which should make it easier for people to extend Sal in any language you like. For example, I’ve been working on a way to sign Puppet certificates based on whether it’s a known machine in Sal, with the machine being created via the API if it doesn’t already exist at imaging time (using Imagr, naturally).</p>
+
+<p>It’s exciting times for users of all the projects I’m working on &ndash; in addition to these changes, I have some changes planned for <a href="https://github.com/grahamgilbert/Crypt">Crypt</a>, and of course <a href="https://github.com/grahamgilbert/imagr">Imagr</a> is still on the development rollercoaster.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Running Puppet Server in Docker Part 2: r10k]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/"/>
+    <updated>2015-06-24T14:49:31+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k</id>
+    <content type="html"><![CDATA[<p>Last time we got our Puppet Server up and running &ndash; now we need to put some Puppet modules on it so we can use it.</p>
+
+<p>To do that, we&rsquo;re going to use r10k. It&rsquo;s a tool that uses a control git repository that contains something called a puppetfile- a file that lists all of the puppet modules you want to use, either from the puppet forge or from git repositories. You may want to keep this module private by using a paid account on GitHub if your configuration contains secrets, but  it doesn&rsquo;t have to be &ndash; mine doesn&rsquo;t have anything particularly sensitive in, so here it is: <a href="https://github.com/grahamgilbert/personal-puppet">grahamgilbert/personal-puppet</a>. <!--more--></p>
+
+<h2>The Control module</h2>
+
+<p>Puppet recommends the use of environments &ndash; a way of separating your clients into groups &ndash; usually this is test and production groups. r10k uses git branches to determine which environments you have, so we&rsquo;re going to set up our repository. The default branch is called <code>master</code>, but we want ours to be called <code>production</code> &ndash; Github has some excellent <a href="https://help.github.com/articles/setting-the-default-branch/">documentation</a> on the subject. I recommend accepting GitHub&rsquo;s suggestion of putting a README in your repository so you can clone it right away.</p>
+
+<h2>The Puppetfile</h2>
+
+<p>Now we&rsquo;ve got our control repo set up, we can clone it so we can work on it.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git clone https://github.com/yourusername/yourcontolrepo</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you&rsquo;re familiar with Puppet, this will be familiar &ndash; an environment is what you would have once put at <code>/etc/puppet</code> &ndash; the only change is that you can override options on a per-environment basis by using <code>environment.conf</code>. In my control repo, I have a default manifest at the top of the environment rather than in <code>manifests</code> for example. (<a href="https://docs.puppetlabs.com/puppet/latest/reference/config_file_environment.html">more information</a>)</p>
+
+<p>At its simplest, a Puppetfile is just a list of modules we want to use. As we&rsquo;re just starting off, we can use pre-built ones from GitHub and the forge. We&rsquo;re going to get Munki installed on a client, so we&rsquo;ll use my MacAdmin module. One thing to note is that r10k won&rsquo;t resolve dependencies for you, so be sure to specify any modules the module you need. A simple Puppetfile is below:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mod</span> <span class="s1">&#39;mac_admin&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/grahamgilbert/puppet-mac_admin&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mod</span> <span class="s1">&#39;mac_profiles_handler&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/ryanycoleman/rcoleman-mac_profiles_handler&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mod</span> <span class="s1">&#39;mac_facts&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/grahamgilbert/grahamgilbert-mac_facts.git&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mod</span> <span class="s1">&#39;repository&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/boxen/puppet-repository&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mod</span> <span class="s1">&#39;outset&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/grahamgilbert/puppet-outset&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mod</span> <span class="s1">&#39;stdlib&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/puppetlabs/puppetlabs-stdlib&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Configuring r10k</h2>
+
+<p>The next piece of the puzzle is to set up r10k to download our repository. I&rsquo;m running r10k directly on my Docker host, but this could easily be (and probably should be) put into a Docker container. First off, let&rsquo;s get r10k installed:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>gem install r10k
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>r10k get&rsquo;s in configuration from <code>/etc/r1ok.yaml</code>, so let&rsquo;s create that:</p>
+
+<figure class='code'><figcaption><span>/etc/r10k.yaml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="c1"># The location to use for storing cached Git repos</span>
+</span><span class='line'><span class="l-Scalar-Plain">:cachedir</span><span class="p-Indicator">:</span> <span class="s">&#39;/var/cache/r10k&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># A list of git repositories to create</span>
+</span><span class='line'><span class="l-Scalar-Plain">:sources</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="c1"># This will clone the git repository and instantiate an environment per</span>
+</span><span class='line'>  <span class="c1"># branch in /etc/puppet/environments</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:personal-puppet</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">remote</span><span class="p-Indicator">:</span> <span class="s">&#39;https://github.com/yourusername/yourcontrolrepo&#39;</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">basedir</span><span class="p-Indicator">:</span> <span class="s">&#39;/usr/local/docker/puppetserver/puppet/environments&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Puppet Conf</h2>
+
+<p>The final piece of configuration for today will be to set our Puppet Server to use environments. Add the following to <code>/usr/local/docker/puppetserver/puppet/puppet.conf</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="k">[main]</span>
+</span><span class='line'><span class="na">logdir</span><span class="o">=</span><span class="s">/var/log/puppet</span>
+</span><span class='line'><span class="na">vardir</span><span class="o">=</span><span class="s">/var/lib/puppet</span>
+</span><span class='line'><span class="na">ssldir</span><span class="o">=</span><span class="s">/var/lib/puppet/ssl</span>
+</span><span class='line'><span class="na">rundir</span><span class="o">=</span><span class="s">/var/run/puppet</span>
+</span><span class='line'><span class="na">factpath</span><span class="o">=</span><span class="s">$vardir/lib/facter</span>
+</span><span class='line'><span class="na">environmentpath</span><span class="o">=</span><span class="s">$confdir/environments</span>
+</span><span class='line'><span class="na">pluginsync</span><span class="o">=</span><span class="s">true</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">[master]</span>
+</span><span class='line'><span class="c1"># These are needed when the puppetmaster is run by passenger</span>
+</span><span class='line'><span class="c1"># and can safely be removed if webrick is used.</span>
+</span><span class='line'><span class="na">ssl_client_header</span> <span class="o">=</span> <span class="s">SSL_CLIENT_S_DN</span>
+</span><span class='line'><span class="na">ssl_client_verify_header</span> <span class="o">=</span> <span class="s">SSL_CLIENT_VERIFY</span>
+</span><span class='line'><span class="na">autosign</span> <span class="o">=</span> <span class="s">true</span>
+</span><span class='line'><span class="na">environmentpath</span> <span class="o">=</span> <span class="s">$confdir/environments</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Gimmie some modules</h2>
+
+<p>We&rsquo;re ready to get some modules installed on the Puppet Server:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>r10k deploy environment -pv
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll see all of the modules you specified in your Puppetfile download theselves to the right place. But of course, we&rsquo;re not quite ready to use this for applying configuration to our Macs yet &ndash; we have modules, but we&rsquo;ve not applied the config to specific machines. In the next post we&rsquo;ll cover how we use Hiera to do this.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Running Puppet Server in Docker]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/"/>
+    <updated>2015-06-22T12:29:55+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker</id>
+    <content type="html"><![CDATA[<p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively &ndash; it&rsquo;s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
+
+<p>Over the next few posts, I&rsquo;ll take you through setting up the Puppet Server (running on Docker, naturally!), using r10k and git for managing your modules and using Hiera to configure your Macs &ndash; we&rsquo;ll apply some configuration to a Mac without writing a single line of Puppet code .</p>
+
+<h1>Why?</h1>
+
+<p>You might well be thinking &ldquo;why would I want to use Puppet?&rdquo; After all, you&rsquo;ve already got Munki. There are two main reasons I&rsquo;ve chosen to go back to using a Puppet Server in conjunction with Munki.</p>
+
+<ol>
+<li>It&rsquo;s nice to have a fallback. If I manage to do something stupid and nuke my Munki install, or my customers manage to do the same, I&rsquo;ve got some way of getting the machines back under control.</li>
+<li>&ldquo;Free&rdquo; SSL certs &ndash; this might not be a priority now, but it gives you an easy to to secure your Munki repository later on (which we may cover in a later post).<!--more--></li>
+</ol>
+
+
+<h1>Let&rsquo;s get started</h1>
+
+<p>First off, you&rsquo;re going to need a Linux server with Docker installed. Installing it is beyond the scope of this post, but I do recommend you head over to <a href="http://www.digitalocean.com/?refcode=ce1e0f3880e1">Digital Ocean</a> (disclaimer: referral link). They will get you up and running with a server with Docker pre-installed in under a minute for not much money.  I run mine on Ubuntu 14, but you can choose whichever flavour of Linux you prefer.</p>
+
+<p>You will also need a DNS entry that points to your server&rsquo;s IP address. Whilst you could get away with fudging it by editing /etc/hosts, it&rsquo;s a lot of <a href="http://www.oxforddictionaries.com/definition/english/faff">faff</a>.</p>
+
+<h1>Dockers, images and containers</h1>
+
+<p>I&rsquo;ve already made a Docker image that has Puppet Server in it. Let&rsquo;s pull it down:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker pull grahamgilbert/puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And fire it up:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker run -d --name<span class="o">=</span>puppetserver <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">PUPPETSERVER_JAVA_ARGS</span><span class="o">=</span><span class="s2">&quot;-Xms384m -Xmx384m -XX:MaxPermSize=256m&quot;</span> <span class="se">\</span>
+</span><span class='line'>-p 0.0.0.0:8140:8140 <span class="se">\</span>
+</span><span class='line'>-h puppet.yourdomain.com <span class="se">\</span>
+</span><span class='line'>grahamgilbert/puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You will need to change the amount of memory assigned to the puppet server depending on how much memory is in your actual server before going to production but for now, 384mb will be fine as we&rsquo;re just setting things up.</p>
+
+<p>BUT there are a few things that we need to persist otherwise our server won&rsquo;t be very useful. First off, let&rsquo;s attach to the container so we can have a look around:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker <span class="nb">exec</span> -t -i puppetserver bash
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll be looking at a bash prompt now. First off, check that <code>/etc/puppet</code> and <code>/etc/puppetserver</code> have <em>stuff</em> in them. What&rsquo;s in there isn&rsquo;t important at this stage. We also need to run the Puppet client on the server to move some supporting files in place. We first need to enable auto signing of certificates in <code>/etc/puppet/puppet.conf</code> (we&rsquo;ll cover this more later):</p>
+
+<figure class='code'><figcaption><span>/etc/puppet/puppet.conf</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>main<span class="o">]</span>
+</span><span class='line'><span class="nv">logdir</span><span class="o">=</span>/var/log/puppet
+</span><span class='line'><span class="nv">vardir</span><span class="o">=</span>/var/lib/puppet
+</span><span class='line'><span class="nv">ssldir</span><span class="o">=</span>/var/lib/puppet/ssl
+</span><span class='line'><span class="nv">rundir</span><span class="o">=</span>/var/run/puppet
+</span><span class='line'><span class="nv">factpath</span><span class="o">=</span><span class="nv">$vardir</span>/lib/facter
+</span><span class='line'><span class="nv">templatedir</span><span class="o">=</span><span class="nv">$confdir</span>/templates
+</span><span class='line'>
+</span><span class='line'><span class="o">[</span>master<span class="o">]</span>
+</span><span class='line'><span class="c"># These are needed when the puppetmaster is run by passenger</span>
+</span><span class='line'><span class="c"># and can safely be removed if webrick is used.</span>
+</span><span class='line'><span class="nv">ssl_client_header</span> <span class="o">=</span> SSL_CLIENT_S_DN
+</span><span class='line'><span class="nv">ssl_client_verify_header</span> <span class="o">=</span> SSL_CLIENT_VERIFY
+</span><span class='line'><span class="nv">autosign</span> <span class="o">=</span> <span class="nb">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And then exit the container, stop it and start it up again:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">exit</span>
+</span><span class='line'><span class="nv">$ </span>docker stop puppetserver
+</span><span class='line'><span class="nv">$ </span>docker start puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Take a look at the container&rsquo;s logs &ndash; Puppet Server can take a few seconds to be ready, so look for the line that says it&rsquo;s ready to accept connections:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker logs puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When it&rsquo;s ready, enter the container again and run the puppet agent.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker <span class="nb">exec</span> -t -i puppetserver bash
+</span><span class='line'><span class="nv">$ </span>puppet agent -t
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Provided that ran with no errors, we can exit out of the container.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">exit</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We&rsquo;re now going to copy the parts we need to persist to the file system of the host machine &ndash; I like to keep my docker related things in <code>/usr/local/docker</code> but it&rsquo;s up to you.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mkdir -p /usr/local/docker/puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We&rsquo;re going to use <code>docker cp</code> to copy out of our container and onto our host filesystem. We want the configuration directories, any custom gems we install (required if we want to use modules such as <a href="https://github.com/dayglojesus/managedmac">managedmac</a>), as well as the SSL certificates and some other supporting files (these aren&rsquo;t technically required, but will save having to run <code>puppet agent -t</code> after the container starts every time we update).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker cp puppetserver:/etc/puppetserver /usr/local/docker/puppetserver/
+</span><span class='line'><span class="nv">$ </span>docker cp puppetserver:/etc/puppet /usr/local/docker/puppetserver/
+</span><span class='line'><span class="nv">$ </span>docker cp puppetserver:/var/lib/puppet/ssl /usr/local/docker/puppetserver/lib/
+</span><span class='line'><span class="nv">$ </span>docker cp puppetserver:/var/lib/puppet/lib /usr/local/docker/puppetserver/lib/
+</span><span class='line'><span class="nv">$ </span>docker cp puppetserver:/var/lib/puppet/jruby-gems /usr/local/docker/puppetserver/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we&rsquo;re ready to run for real. Just a small piece of configuration to make our lives easier whilst we&rsquo;re testing &ndash; enabling auto signing of certificates. By default you will need to sign a certificate for each client that tries to connect to your puppet master. Eventually we will want to sign certificates using some sort of external inventory service (I like Sal, but there are also connectors for Web Help Desk), but for now we&rsquo;ll leave our configuration that tells Puppet to sign every certificate unconditionally.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>nano /usr/local/docker/puppetserver/puppet/puppet.conf
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And make sure your <code>puppet.conf</code> looks like:</p>
+
+<figure class='code'><figcaption><span>/usr/local/docker/puppetserver/puppet/puppet.conf</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>main<span class="o">]</span>
+</span><span class='line'><span class="nv">logdir</span><span class="o">=</span>/var/log/puppet
+</span><span class='line'><span class="nv">vardir</span><span class="o">=</span>/var/lib/puppet
+</span><span class='line'><span class="nv">ssldir</span><span class="o">=</span>/var/lib/puppet/ssl
+</span><span class='line'><span class="nv">rundir</span><span class="o">=</span>/var/run/puppet
+</span><span class='line'><span class="nv">factpath</span><span class="o">=</span><span class="nv">$vardir</span>/lib/facter
+</span><span class='line'><span class="nv">pluginsync</span><span class="o">=</span><span class="nb">true</span>
+</span><span class='line'><span class="o">[</span>master<span class="o">]</span>
+</span><span class='line'><span class="c"># These are needed when the puppetmaster is run by passenger</span>
+</span><span class='line'><span class="c"># and can safely be removed if webrick is used.</span>
+</span><span class='line'><span class="nv">ssl_client_header</span> <span class="o">=</span> SSL_CLIENT_S_DN
+</span><span class='line'><span class="nv">ssl_client_verify_header</span> <span class="o">=</span> SSL_CLIENT_VERIFY
+</span><span class='line'><span class="nv">autosign</span> <span class="o">=</span> <span class="nb">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now all that remains is to fire up our final container and then we can hook up a client.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># remove our old container</span>
+</span><span class='line'><span class="nv">$ </span>docker rm -f puppetserver
+</span><span class='line'><span class="nv">$ </span>docker run -d <span class="se">\</span>
+</span><span class='line'>  --name<span class="o">=</span><span class="s2">&quot;puppetserver&quot;</span> <span class="se">\</span>
+</span><span class='line'>  --restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/puppetserver/puppet:/etc/puppet <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/puppetserver/puppetserver:/etc/puppetserver <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/puppetserver/lib/ssl:/var/lib/puppet/ssl <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/puppetserver/jruby-gems:/var/lib/puppet/jruby-gems <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/puppetserver/lib/lib:/var/lib/puppet/lib <span class="se">\</span>
+</span><span class='line'>  -p 0.0.0.0:8140:8140 <span class="se">\</span>
+</span><span class='line'>  -e <span class="nv">PUPPETSERVER_JAVA_ARGS</span><span class="o">=</span><span class="s2">&quot;-Xms384m -Xmx384m -XX:MaxPermSize=256m&quot;</span> <span class="se">\</span>
+</span><span class='line'>  -h puppet.yourdomain.com <span class="se">\</span>
+</span><span class='line'>  grahamgilbert/puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let&rsquo;s make sure it&rsquo;s finished starting up.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker logs -f puppetserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This works like tail would. Hit ctrl-c to exit once it says it&rsquo;s ready to go.</p>
+
+<h1>Hook up a client</h1>
+
+<p>You&rsquo;re going to need Puppet, Facter and Hiera on your client Mac. Head over <a href="http://downloads.puppetlabs.com/mac">http://downloads.puppetlabs.com/mac</a> and download and install the latest version of Puppet, Facter and Hiera.</p>
+
+<p>If we just ran Puppet now, it would use the Mac&rsquo;s hostname as the certificate name (the unique identifier for the machine). If you have reliable hostnames, that will probably do you. I prefer to use the machine&rsquo;s serial number (lower case, because that&rsquo;s what Puppet likes). We&rsquo;ll automate this in a later post, but for now we can do it by hand:</p>
+
+<figure class='code'><figcaption><span>/etc/puppet/puppet.conf</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>main<span class="o">]</span>
+</span><span class='line'><span class="nv">server</span><span class="o">=</span>puppet.yourdomain.com
+</span><span class='line'><span class="nv">certname</span><span class="o">=</span>abc123
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>All that&rsquo;s left now is to run puppet on the client:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>puppet agent -t --waitforcert 20
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In a later post, we will look at how we can use r10k to manage our modules and use Hiera to configure our clients without touching a line of Puppet code.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using munki-trello with Git]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git/"/>
+    <updated>2015-06-16T11:21:58+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git</id>
+    <content type="html"><![CDATA[<p>So you&rsquo;re managing your catalogs with <a href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/">munki-trello</a>, but you also want to use git and <a href="https://www.afp548.com/2014/12/01/git-fat-intro-part-two-setup-and-migration/">git-fat</a> to track the changes &ndash; what do you do?</p>
+
+<p>If you were using the script that I posted previously, your changes would be mangled when you pull in changes  &ndash; it turned out the solution was simple. I&rsquo;m going to assume your Munki server has commit access to your Munki git repository. We&rsquo;re pulling down the latest version of the git repo before performing any work, and then we&rsquo;re git adding just the <code>catalogs</code> and <code>pkgsinfo</code> directories &ndash; the only directories munki-trello will modify. And if there aren&rsquo;t any changes, git won&rsquo;t commit anything, so we can just run <code>git commit</code> and <code>git push</code> without worrying about it.</p>
+
+<p>If we schedule the below script to happen regularly (via cron), we also get our git changes deployed automagically.</p>
+
+<figure class='code'><figcaption><span>/usr/local/bin/munki-trello.sh</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Change this to wherever your Munki repository is on disk</span>
+</span><span class='line'><span class="nb">cd</span> /usr/local/docker/munki
+</span><span class='line'>
+</span><span class='line'><span class="c"># Pull down changes</span>
+</span><span class='line'>git pull
+</span><span class='line'>
+</span><span class='line'><span class="c"># and the &#39;fat&#39; files</span>
+</span><span class='line'>git fat pull
+</span><span class='line'>
+</span><span class='line'>docker pull pebbleit/munki-trello
+</span><span class='line'>
+</span><span class='line'>docker run --rm -v /usr/local/docker/munki:/munki_repo <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DOCKER_TRELLO_KEY</span><span class="o">=</span>mytrellokey <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DOCKER_TRELLO_TOKEN</span><span class="o">=</span>mytrellotoken <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DOCKER_TRELLO_BOARDID</span><span class="o">=</span>myboardid <span class="se">\</span>
+</span><span class='line'>pebbleit/munki-trello
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>git add catalogs
+</span><span class='line'>git add manifests
+</span><span class='line'>git add pkgsinfo
+</span><span class='line'>
+</span><span class='line'><span class="c"># Change the following line if you want to change the git commit message</span>
+</span><span class='line'><span class="nv">now</span><span class="o">=</span><span class="s2">&quot;$(date)&quot;</span>
+</span><span class='line'>git commit -m <span class="s2">&quot;Munki Trello commit $now&quot;</span>
+</span><span class='line'>
+</span><span class='line'>git push
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Introducing Imagr]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/05/08/introducing-imagr/"/>
+    <updated>2015-05-08T14:41:37+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/05/08/introducing-imagr</id>
+    <content type="html"><![CDATA[<p>For the past few weeks, I&rsquo;ve been working with some other Mac admins on a new application that can aid with the deployment of Macs &ndash; say hi to <a href="https://github.com/grahamgilbert/imagr">Imagr</a>.</p>
+
+<p><img src="http://grahamgilbert.com/images/posts/2015-05-08/Imagr.png"></p>
+
+<p>It&rsquo;s not intended to be a full replacement for Deploystudio, but it&rsquo;s now got all of the features I need to use Imagr full time. If you&rsquo;d like to get started with Imagr, head on over to the <a href="https://github.com/grahamgilbert/imagr/wiki/Getting-Started">Wiki</a> &ndash; the only requirement is a web server, so the barrier to entry is pretty low (if you followed my guide on how to set up <a href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/">BSDPy</a>, you can use that web server).</p>
+
+<p>I hope you&rsquo;ll give it a go and maybe, just maybe, we can get rid of those little Mac Minis for good!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Testing BSDPy in Vagrant]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/"/>
+    <updated>2015-04-28T16:10:07+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant</id>
+    <content type="html"><![CDATA[<p>Last time, we looked at how to spin up a Docker host and run BSDPy on it. That&rsquo;s great for production, but might be a bit of a faff to do every time you want to test your NBI at home.</p>
+
+<p>Inspired by <a href="https://grpugh.wordpress.com/2015/04/28/a-test-docker-bsdpy-environment/">Dr Graham R Pugh</a>, here&rsquo;s my Vagrant setup for this.</p>
+
+<p>You will need:</p>
+
+<ul>
+<li><a href="https://www.vagrantup.com/">Vagrant</a></li>
+<li>Either <a href="https://www.virtualbox.org/">VirtualBox</a> or <a href="http://www.vmware.com/uk/products/fusion">VMware Fusion</a> (if you use Fusion with Vagrant, you will need to purchase the <a href="http://www.vagrantup.com/vmware">VMware plugin</a> &ndash; this will allow you to create OS X Vagrantboxes as well as enjoy the much greater performance of VMware, but that&rsquo;s another post)</li>
+<li>Xcode, or at the very least the command line tools from Xcode so you have git available.</li>
+<li>Something to NetBoot &ndash; either a physical Mac or a VM in VMware Fusion. A VM configured as per <a href="https://derflounder.wordpress.com/2013/01/23/building-mac-test-environments-with-vmware-fusion-netboot-and-deploystudio/">Rich Trouton&rsquo;s post</a> will do nicely.</li>
+</ul>
+
+
+<p>Get all of that installed and you&rsquo;re ready to go. Next we need to get the Vagrantfile:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git clone https://github.com/grahamgilbert/docker-vagrant.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You will obviously need an NBI &ndash; I&rsquo;ve <a href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/">covered how to use AutoNBI before</a>, or you could use an existing one. Just make sure you&rsquo;ve edited <code>NBImageInfo.plist</code> to make <code>enabled</code> be <code>true</code> and that the Mac (or VM) you&rsquo;re NetBooting isn&rsquo;t in <code>DisabledSystemIdentifiers</code> (I leave this as an empty <code>&lt;array /&gt;</code>). Put your NBI in the <code>nbi</code> directory.</p>
+
+<p>Now there&rsquo;s one thing left to do:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>docker-vagrant
+</span><span class='line'><span class="nv">$ </span>vagrant up
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Give it 20 seconds to finish booting and you will see your NBI in the startup pane of your Mac.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Getting started with BSDPy on Docker]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/"/>
+    <updated>2015-04-22T07:07:23+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker</id>
+    <content type="html"><![CDATA[<p>Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you&rsquo;re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we&rsquo;re using that. Your Ubuntu box will also need a real IP address &ndash; if you are using VMware Fusion, this will be a Bridged Network Adapter &ndash; adjust the terminology if you&rsquo;re using a different virtualization tool. You don&rsquo;t need to worry about giving your machine a static IP unless you want to &ndash; Macs will NetBoot just fine when they&rsquo;re on the same subnet. <!--more--></p>
+
+<h2>Baby Steps</h2>
+
+<p>Our first job is to install Docker. I&rsquo;ve been as guilty as many with glossing over this step, so here&rsquo;s the massively long and difficult method to install the latest version of Docker on Ubuntu 14. First we make sure <code>wget</code> is installed:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>which wget
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And if that returns nothing then we need to install <code>wget</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo apt-get update
+</span><span class='line'><span class="nv">$ </span>sudo apt-get install wget
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now we can install Docker:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>wget -qO- https://get.docker.com/ | sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pop your password in when you&rsquo;re asked and you&rsquo;re done.</p>
+
+<h2>A long time ago on a server far away</h2>
+
+<p>Whilst you&rsquo;re still recovering from the trauma of that difficult install, I&rsquo;m going to cover a bit of background. I&rsquo;ve been using Docker for just under a year now, and I&rsquo;ve developed a method of working with containers that suits me. I&rsquo;m not for one second suggesting this is the best way of working, but it works nicely for me.</p>
+
+<p>On each of my Docker hosts, there is a directory at <code>/usr/local/docker</code> which is where all of my persistent data lives along with a script called <code>startup.sh</code>. All of my Docker related work happens in this script, and it follows this basic pattern:</p>
+
+<ul>
+<li>Pull the latest version of the images I&rsquo;m using from the Docker Hub (or my private registry, but that&rsquo;s beyond the scope of this post)</li>
+<li>Delete all of the existing containers</li>
+<li>Start up the required containers</li>
+</ul>
+
+
+<h2>Why?</h2>
+
+<p>The main reason I do this is that starting up a new container is often no slower than re-starting an existing one, and by using the order of pull &ndash;> delete &ndash;> relaunch, I can be sure that I&rsquo;m always using the latest version of those containers. I&rsquo;m also not having to type out <strong>LOOOOONNNNGGG</strong> <code>docker run</code> commands every time I want to update a container.</p>
+
+<p>The first part of our startup script will be to pull in the images we need. In addition to BSDPy, we need a TFTP server and a basic web server &ndash; fortunately Pepjin has you covered with Images for these already in the <a href="https://registry.hub.docker.com/repos/macadmins/">macadmins organisation</a>.</p>
+
+<p>If you&rsquo;re not made it already, we need to make the directory we&rsquo;ll store our permanent bits:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo -i
+</span><span class='line'><span class="nv">$ </span>mkdir -p /usr/local/docker/nbi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And fire up your favourite editor and put in the first part of our script:</p>
+
+<figure class='code'><figcaption><span>/usr/local/docker/startup.sh </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'>docker pull macadmins/tftpd
+</span><span class='line'>docker pull macadmins/netboot-httpd
+</span><span class='line'>docker pull bruienne/bsdpy:1.0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we just need to make it executable and we can run it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>chmod 755 /usr/local/docker/startup.sh
+</span><span class='line'><span class="nv">$ </span>/usr/local/docker/startup.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If all goes well Docker will start pulling down the images you need.</p>
+
+<h2>Cleaning up after ourselves</h2>
+
+<p>Pop this little snippet after the last <code>docker pull</code> command &ndash; it will stop and remove any existing containers:</p>
+
+<figure class='code'><figcaption><span>/usr/local/docker/startup.sh</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Other stuff is above here</span>
+</span><span class='line'>docker stop <span class="k">$(</span>docker ps -a -q<span class="k">)</span>
+</span><span class='line'>docker rm <span class="k">$(</span>docker ps -a -q<span class="k">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Linked containers</h2>
+
+<p>As previously alluded to, our NetBoot solution will comprise of three components. Add the following to the end of <code>/usr/local/docker/startup.sh</code> (if your server has more than one ethernet adapter, replace <code>eth0</code> with the name of the adapter you want to use for NetBoot):</p>
+
+<figure class='code'><figcaption><span>/usr/local/docker/startup.sh</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Other stuff is above here</span>
+</span><span class='line'>chmod -R 777 /usr/local/docker/nbi
+</span><span class='line'><span class="nv">IP</span><span class="o">=</span><span class="sb">`</span>ifconfig eth0 2&gt;/dev/null|awk <span class="s1">&#39;/inet addr:/ {print $2}&#39;</span>|sed <span class="s1">&#39;s/addr://&#39;</span><span class="sb">`</span>
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$IP</span>
+</span><span class='line'>
+</span><span class='line'>docker run -d <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/nbi:/nbi <span class="se">\</span>
+</span><span class='line'>  --name web <span class="se">\</span>
+</span><span class='line'>  --restart<span class="o">=</span>always <span class="se">\</span>
+</span><span class='line'>  -p 0.0.0.0:80:80 <span class="se">\</span>
+</span><span class='line'>  macadmins/netboot-httpd
+</span><span class='line'>
+</span><span class='line'>docker run -d <span class="se">\</span>
+</span><span class='line'>  -p 0.0.0.0:69:69/udp <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/nbi:/nbi <span class="se">\</span>
+</span><span class='line'>  --name tftpd <span class="se">\</span>
+</span><span class='line'>  --restart<span class="o">=</span>always <span class="se">\</span>
+</span><span class='line'>  macadmins/tftpd
+</span><span class='line'>
+</span><span class='line'>docker run -d <span class="se">\</span>
+</span><span class='line'>  -p 0.0.0.0:67:67/udp <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/nbi:/nbi <span class="se">\</span>
+</span><span class='line'>  -e <span class="nv">BSDPY_IFACE</span><span class="o">=</span>eth0 <span class="se">\</span>
+</span><span class='line'>  -e <span class="nv">BSDPY_NBI_URL</span><span class="o">=</span>http://<span class="nv">$IP</span> <span class="se">\</span>
+</span><span class='line'>  -e <span class="nv">BSDPY_IP</span><span class="o">=</span><span class="nv">$IP</span> <span class="se">\</span>
+</span><span class='line'>  --name bsdpy <span class="se">\</span>
+</span><span class='line'>  --restart<span class="o">=</span>always <span class="se">\</span>
+</span><span class='line'>  bruienne/bsdpy:1.0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And run your startup script:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>/usr/local/docker/startup.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll see your images being checked for updates, and then your containers will start. you can verify they&rsquo;re running by running:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker ps -a
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Using the thing</h2>
+
+<p>Of course, your NetBoot server isn&rsquo;t going to do anything as you&rsquo;ve not uploaded anything for it to serve yet. Get yourself a NetBoot image (if you&rsquo;re using a DeployStudio NBI, delete the symlink to <code>NetInstall.dmg</code> and rename <code>NetInstall.sparseimage</code> to <code>NetInstall.dmg</code>).</p>
+
+<p>You&rsquo;re not going to have a GUI to modify the <code>NBImageInfo.plist</code> so open it up in a text editor. The important parts to change are to make sure that the Mac you&rsquo;re intending to NetBoot is either in <code>EnabledSystemIdentifiers</code> or not in <code>DisabledSystemIdentifiers</code> and that <code>IsEnabled</code> is set to <code>&lt;true/&gt;</code>. If you are going to be serving more than one image, you can set your default image in here.</p>
+
+<p>All done? Time to get that image on your Docker host. From your admin machine (or wherever your NBI currently lives):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>scp -r /Path/To/MyNetBoot.nbi user@dockerhost:/usr/local/docker/nbi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>All that remains is to restart the <code>bsdpy</code> container on your Docker host:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>/usr/local/docker/startup.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And if you open up the <code>bsdpy</code> container&rsquo;s logs, you&rsquo;ll see it finding your NBI.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker logs bsdpy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And if you want to keep the logs open whilst you&rsquo;re testing, you can use <code>-f</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker logs -f bsdpy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion</h2>
+
+<p>If you&rsquo;ve made it all the way down here, congratulations! You&rsquo;ve now managed to move another service off that silly little Mac Mini and onto Linux &ndash; and hopefully you now see how easy it is to get things up and running with Docker.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[More fun with AutoNBI]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/"/>
+    <updated>2015-04-13T08:05:53+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi</id>
+    <content type="html"><![CDATA[<p>Last time we saw our heroes, there was the unfuffilled promise of making small NetInstall sets. Now is the time to deliver on that promise. We&rsquo;re going to make a small NetInstall that will open up Terminal.app.</p>
+
+<p>If you&rsquo;ve not read the <a href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/">previous post</a> (and have got AutoNBI), go and do it now. I&rsquo;ll wait. All done? <!--more--></p>
+
+<h2>Previously on 24</h2>
+
+<p><img src="http://grahamgilbert.com/images/posts/2015-04-13/jack.gif"></p>
+
+<p>As mentioned in the previous post, we&rsquo;re aiming to have a small NetInstall set. Once you&rsquo;ve made your NetInstall, open up <code>NetInstall.dmg</code> &ndash; you&rsquo;ll see a <code>Packages</code> directory. This is where the majority of the bulk in a NetInstall lives &ndash; the packages it actually installs. There is also a hidden <code>BaseSystem.dmg</code> which is what will load when your NetBoot the machine.</p>
+
+<h2>I&rsquo;m bored, can we make something please?</h2>
+
+<p>As I mentioned above, we&rsquo;re going to make a simple NetInstall that will open up a Terminal window. To do that, we&rsquo;re going to leverage something that Apple kindly left in the image for us &ndash; <code>rc.imaging</code>. A bit of background &ndash; in <code>/etc</code> you&rsquo;ll find a series of <code>rc.*</code> files. One of those in a NetInstall is <code>rc.install</code>, which will look for an <code>rc.imaging</code> file in a few places &ndash; one of those is <code>/System/Installation/Packages/Extras</code> &ndash; conveniently a location that Pepijn has made AutoNBI able to work with.</p>
+
+<p>Somewhere on your Mac, make a directory called <code>Packages</code> and then inside that, make a directory called <code>Extras</code>. Inside that directory we&rsquo;re going to create a file called <code>rc.imaging</code> with the following contents:</p>
+
+<figure class='code'><figcaption><span>Packages/Extras/rc.imaging </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'>/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal
+</span><span class='line'>
+</span><span class='line'>/sbin/reboot
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And make sure it&rsquo;s executable:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo chmod 755 Packages/Extras/rc.imaging
+</span><span class='line'><span class="nv">$ </span>sudo chown root:wheel Packages/Extras/rc.imaging
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now to make the NetInstall:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo ./AutoNBI.py -s /Applications/Install<span class="se">\ </span>OS<span class="se">\ </span>X<span class="se">\ </span>Yosemite.app -f Packages -d ~/Desktop -n MyNetInstall -e
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The only change from last time is the <code>-f</code> option &ndash; this is the path to your <code>Packages</code> directory. I created my Packages directory in the same directory as AutoNBI.py &ndash; adjust the path if you made yours somewhere else.</p>
+
+<p><img src="http://grahamgilbert.com/images/posts/2015-04-13/netboot.png"></p>
+
+<p>You should now be able to boot off your tiny NBI (mine was 574MB) and have a bit of an explore. You&rsquo;ll notice that quite a bit is missing to achieve this tiny size &ndash; fortunately Pepijn has been working on getting Ruby and Python included in BaseSystem.dmg, so you have more scripting options when booted.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Building custom NetInstalls with AutoNBI]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/"/>
+    <updated>2015-04-12T20:33:28+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi</id>
+    <content type="html"><![CDATA[<p>Another day, another tool made by <a href="http://enterprisemac.bruienne.com">Mr Bruienne</a>! A while back, Pepijn released <a href="https://bitbucket.org/bruienne/autonbi">AutoNBI</a> &ndash; a tool for automating the creation of NetInstall sets. At the time, it was filled away in the &ldquo;this is cool, but isn&rsquo;t this what System Image Utility does?&rdquo; section. Then I saw his NetInstall running at MacTech (are you seeing a theme here?). It had this really simple DeployStudio like imagaing app &ndash; it was really cool. And suddently it made sense why you can replace the <code>Packages</code> directory with AutoNBI &ndash; a NetInstall is a really stripped down OS X environment, so it it much easier to distribute and use &ndash; we&rsquo;re looking at around 1.8GB for my current NetInstall vs 5-6GB for a normal NetBoot.</p>
+
+<p>This time we&rsquo;ll take a look at how to use AutoNBI to make a standard NetInstall &ndash; in a future post we&rsquo;ll look at some of the more cool things you can do with AutoNBI.</p>
+
+<h2>Ok, stop talking, let&rsquo;s do this.</h2>
+
+<p>We&rsquo;re going to need AutoNBI to start off with. Open up your Terminal and:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git clone https://bitbucket.org/bruienne/autonbi.git
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>autonbi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Prepare the build!</h2>
+
+<p>We&rsquo;re ready to go (assuming you&rsquo;ve got an OS X installer &ndash; you do, right?). Still in your terminal:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo ./AutoNBI.py -s /Applications/Install<span class="se">\ </span>OS<span class="se">\ </span>X<span class="se">\ </span>Yosemite.app -d ~/Desktop -n MyNetInstall -e
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What did we just do? The <code>-s</code> option is simply pointing at our Install OS X Yosemite.app &ndash; if you have it somewhere else, point AutoNBI there. <code>-d</code> is our destination directory and <code>-n</code> is the name of our NetInstall. <code>-e</code> is telling AutoNBI to make the NetInstall enabled.</p>
+
+<p>So the next time there&rsquo;s a new OS X Installer, you can have an updated NetInstall in seconds, not minutes.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Managing Munki catalogs with Trello]]></title>
@@ -481,1258 +1340,6 @@ to tell AutoPkg to update the installed recipes.</p>
 
 <p>And then we&rsquo;re able to build our package safe in the knowledge that
 someone else has done all of the hard work for us.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Deploying Sal on Heroku]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku/"/>
-    <updated>2014-05-19T09:04:05+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku</id>
-    <content type="html"><![CDATA[<p>Setting up everything you need for Sal can be difficult, especially if you only have an OS X server available. Thankfully, Sal is built on top of a very common Python framework, Django. And even more thankfully, you can run Django on a whole host of <a href="http://en.wikipedia.org/wiki/Platform_as_a_service">PaaS</a> providers, including <a href="https://www.heroku.com">Heroku</a>.</p>
-
-<p>Heroku has a very generous <a href="https://www.heroku.com/pricing">free tier</a> that will easily handle a small Sal installation, so let&rsquo;s get started.</p>
-
-<h2>Heroku toolbelt</h2>
-
-<p>If you&rsquo;ve never used Heroku before, you&rsquo;re going to need to head over to <a href="http://heroku.com">their site</a> and sign up for a free account. Whilst you&rsquo;re there, you&rsquo;re also going to need to install their toolbelt. <a href="http://toolbelt.herokuapp.com/">Grab the package</a> and follow their instructions for linking it to your account.</p>
-
-<h2>Configure</h2>
-
-<p>Now we need to get a copy of Sal and configure it. Assuming you keep your code in ~/src:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src
-</span><span class='line'><span class="nv">$ </span>git clone https://github.com/grahamgilbert/sal
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>sal
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now we need to make a copy of sal/example_settings.py</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>cp sal/example_settings.py sal/settings.py
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And edit sal/settings.py in your favourite editor to your liking (probably time zone at least).</p>
-
-<p>Heroku uses git for deployment, so we need to commit our changes.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git add .
-</span><span class='line'><span class="nv">$ </span>git commit -m <span class="s2">&quot;initial commit to heroku&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>We&rsquo;re nearly there! Time to create our environment on Heroku</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku create
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Of course we haven&rsquo;t pushed Sal to Heroku yet. Let&rsquo;s fix that.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git push heroku master
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You&rsquo;ll see Sal being pushed up to Heroku and Sal&rsquo;s requirements being installed. A Postgres database will also automatically be created for you. The database will be empty though, so let&rsquo;s populate it with what we need.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku run python manage.py syncdb
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>When asked, you certainly <em>do</em> want to create a super user. Use a strong username and password as this is the admin for your Sal application.</p>
-
-<p>One last command to run:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku run python manage.py migrate
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Your Sal installation is ready to use:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku open
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>As said earlier, the free version does have some limits. The most important with Sal is the number of rows you can have in the free database (10,000), so the more information you collect from each machine (Facter Facts and Munki Conditions), the larger your database is. It&rsquo;s a measley $9 a month to upgrade your database to 10 million rows, so it&rsquo;s easy to scale your database. For more information on upgrading your Heroku environment see <a href="https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups">their documentation</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[first-boot-pkg]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/04/21/first-boot-pkg/"/>
-    <updated>2014-04-21T09:01:24+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/04/21/first-boot-pkg</id>
-    <content type="html"><![CDATA[<p>There are some packages that can&rsquo;t be deployed to an unbooted OS, such as when building an image with AutoDMG. If you are using Greg Neagle&rsquo;s <a href="http://managingosx.wordpress.com/2012/07/25/son-of-installlion-pkg/">createOSXinstallPkg</a>, the OS X installer environment doesn&rsquo;t have everything a full OS X install has. For times like this, you need to install the packages at first boot. For a long time, I&rsquo;ve used Rich Trouton&rsquo;s <a href="http://derflounder.wordpress.com/2014/04/17/first-boot-package-install-revisited/">First Boot Package Install</a>, however I found myself repeating things quite a bit and having a folder full of first boot packages.</p>
-
-<p>So, I made my own. The main features of <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> are:</p>
-
-<ul>
-<li>It is designed with scripting and automation in mind, with options able to be configured with a configuration plist or via options on the command line (or a mixture of both)</li>
-<li>It will re-try failed packages a specified number of times (in case of Active Directory not being available, for example)</li>
-<li>Will wait for the network to be available before installing (optional, can be disabled if desired just in case your package is going to let the Mac get onto the network)</li>
-</ul>
-
-
-<p><a href="http://grahamgilbert.com/images/posts/2014-04-21/first-boot-pkg.png"><img class="center" src="http://grahamgilbert.com/images/posts/2014-04-21/first-boot-pkg.png" width="578" height="433"></a></p>
-
-<p>If you&rsquo;re happy with using Git, I&rsquo;d recommend just making a clone of the repository and doing a <code>git pull</code> to keep the script updated. If the thought of all those gits and pulls makes you run away, you can <a href="https://github.com/grahamgilbert/first-boot-pkg/archive/master.zip">download a zip</a> of the project.</p>
-
-<p>This script makes use of Per Olofsson&rsquo;s <a href="https://github.com/MagerValp/LoginLog">LoginLog</a> for displaying the log file whilst the script is running, so massive thanks to him for releasing it.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Updating Boxen]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/"/>
-    <updated>2014-04-04T07:54:26+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/04/04/updating-boxen</id>
-    <content type="html"><![CDATA[<p>As you might know, I&rsquo;m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn&rsquo;t on the Mac I was working on. Then there came the time when I wanted to do a clean install &ndash; that was easily a day down the drain there!</p>
-
-<h2>Automate all of the things</h2>
-
-<p>Then <a href="https://boxen.github.com/">Boxen</a> was released &ndash; based on Puppet, but targeted at setting up individual&rsquo;s machines. I got on board just over a year ago, and haven&rsquo;t really looked back &ndash; manually installing an app on my Mac seems very strange now. I&rsquo;m not going to cover how to get started with Boxen, as there are <a href="http://lmgtfy.com/?q=getting+started+with+Boxen">many getting started guides out there</a> (however, <a href="http://garylarizza.com/blog/2013/02/15/puppet-plus-github-equals-laptop-love/">Gary Larizza&rsquo;s</a> is rather good).</p>
-
-<p>There will come a time when you need to update the core part of Boxen. This happened to me when I clean installed 10.9 on my work laptop &ndash; all kinds of shit broke (somehow it managed to survive the upgrade process &ndash; go figure). I looked around, but couldn&rsquo;t really find a definitive guide, so here it is (it&rsquo;s shorter than this piece of rambling).</p>
-
-<h2>Ok, stop talking</h2>
-
-<p>As Boxen is made by GitHub, updating it is much like updating any other project on there that you&rsquo;ve made a fork of.  First we&rsquo;re going to add it as a remote repository:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/our-boxen
-</span><span class='line'><span class="nv">$ </span>git remote add upstream https://github.com/boxen/our-boxen.git
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then we&rsquo;re going to fetch the stuff from the upstream repository:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git fetch upstream
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now we&rsquo;re going to merge the updated repository with our own:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git checkout master
-</span><span class='line'><span class="nv">$ </span>git merge upstream/master
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If you haven&rsquo;t modified any of the core Boxen files (<code>Puppetfile</code>, <code>Gemfile</code> or <code>manifests/site.pp</code> in my case), you might get away without having to fix any conflicts (you can ignore any in <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>, we&rsquo;ll deal with those next). I had conflicts as I had previously:</p>
-
-<ul>
-<li>Been stupid and tried to update Boxen by just changing the Puppet Module and Gem versions</li>
-<li>Edited <code>site.pp</code> as I didn&rsquo;t want Nginx or node.js installed</li>
-<li>Been dumb and put my custom Puppet modules in the wrong place in my <code>Puppetfile</code></li>
-</ul>
-
-
-<p>None of these were particularly arduous to fix, but annoying none the less. If you find you have loads, you might want to run:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git mergetool
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The next step is to update your Puppet modules and RubyGems. First delete <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>. Now go back to your trusty Terminal and:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>bundle install --without development
-</span><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>librarian-puppet install --clean
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>At this point, you might want to go through the custom modules you&rsquo;ve added to your <code>Puppetfile</code> and update those, although this is by no means required &ndash; some apps I&rsquo;ve installed through Boxen don&rsquo;t have a built in updater, so Boxen is more convenient than hunting for installers on various vendor&rsquo;s websites. Once your modules are up to date in your <code>Puppetfile</code>,  you&rsquo;re done! You can now get your Mac back to how you like it by issuing the usual:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>boxen
-</span></code></pre></td></tr></table></div></figure>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Binding to Active Directory with Munki]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki/"/>
-    <updated>2014-04-01T20:15:39+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki</id>
-    <content type="html"><![CDATA[<p>Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It&rsquo;s quite  a straightforward process to automate this with Munki, although you do have a few options to consider.</p>
-
-<p>First off, how are you going to deliver the actual bind script? You have the option of a <a href="https://code.google.com/p/munki/wiki/ManagingPrintersWithMunki#Alternate_Method_Using_nopkg">no-pkg pkginfo</a> file, with the script directly in the pkginfo plist. Whilst the script is now easily editable in the pkginfo, it does pose a security issue in that the catalog is kept in /Library/Managed Installs/catalogs, which will contain your script. Along with your AD bind account&rsquo;s details. Whoops!</p>
-
-<h2>Prepare the Bind!</h2>
-
-<p>My preferred way of deploying the bind script is with a payload-free package made with The Luggage. My bind script is nothing special, it was originally borrowed from DeployStudio. You can find the <a href="https://github.com/grahamgilbert/macscripts/blob/master/AD%20Bind/postinstall">script</a> and the <a href="https://github.com/grahamgilbert/macscripts/blob/master/AD%20Bind/Makefile">Makefile</a> on my <a href="https://github.com/grahamgilbert/macscripts/tree/master/AD%20Bind">macscripts repo</a>. If you need a primer on The Luggage, <a href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/">I wrote about it in August 2013</a>. You just need to edit the variables at the top of the script to suit your environment and build the package.</p>
-
-<p>So you&rsquo;ve got the machine bound to AD. Great. What happens if the binding doesn&rsquo;t go to plan? Or a well meaning tech manages to unbind the machine, but can&rsquo;t manage to re-bind it? Or even worse, the user manages to unbind it themselves? We need to make Munki check that the Mac is still bound to AD.</p>
-
-<!--more-->
-
-
-<h2>installcheck_script.sh</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># You need to change this.</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># The Domain we&#39;re supposed to be on</span>
-</span><span class='line'><span class="nv">DOMAIN</span><span class="o">=</span><span class="s2">&quot;ad.company.com&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">## STOP EDITING ##</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># The version from dsconfigad</span>
-</span><span class='line'><span class="nv">ACTUAL_DOMAIN</span><span class="o">=</span><span class="sb">`</span>/usr/sbin/dsconfigad -show | /usr/bin/grep -i <span class="s2">&quot;Active Directory Domain&quot;</span> | /usr/bin/sed -n <span class="s1">&#39;s/[^.]*= //p&#39;</span><span class="sb">`</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$ACTUAL_DOMAIN&quot;</span> <span class="o">=</span> <span class="s2">&quot;$DOMAIN&quot;</span> <span class="o">]</span>
-</span><span class='line'>    <span class="k">then</span>
-</span><span class='line'>    <span class="c"># We&#39;re on the right domain, no need to install</span>
-</span><span class='line'>    <span class="nb">exit </span>1
-</span><span class='line'><span class="k">else</span>
-</span><span class='line'>    <span class="c"># Domain isn&#39;t being returned from dsconfigad, need to install</span>
-</span><span class='line'>    <span class="nb">exit </span>0
-</span><span class='line'><span class="k">fi</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You should save this as install <code>check_script.sh</code> in the same directory as your binding package. This script is querying the Active Directory domain the Mac is on and checking it&rsquo;s the one you want.</p>
-
-<p>Simple.</p>
-
-<p>Job done.</p>
-
-<p>Right&hellip;?</p>
-
-<h2>Not quite finished</h2>
-
-<p>The main issue with using an <code>installcheck_script</code> is that we&rsquo;re bypassing every other mechanism that Munki uses to check if an item needs to be installed, which means that if we ever need to update our AD bind package and install it, or if the Mac was previously bound to AD, Munki will cheerfully ignore the package because as far as it&rsquo;s concerned, if it passes the installcheck_script, everything&rsquo;s fine and dandy.</p>
-
-<h2>installcheck_script.sh take 2</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># You need to change these.</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># The Domain we&#39;re supposed to be on</span>
-</span><span class='line'><span class="nv">DOMAIN</span><span class="o">=</span><span class="s2">&quot;ad.company.com&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># The version of the package (today&#39;s date if created using the usual Luggage Makefile)</span>
-</span><span class='line'><span class="nv">PKG_VERSION</span><span class="o">=</span><span class="s2">&quot;20140401&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># The identifier of the package</span>
-</span><span class='line'><span class="nv">PKG_ID</span><span class="o">=</span><span class="s2">&quot;com.grahamgilbert.ad-bind&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">## STOP EDITING ##</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># The version from dsconfigad</span>
-</span><span class='line'><span class="nv">ACTUAL_DOMAIN</span><span class="o">=</span><span class="sb">`</span>/usr/sbin/dsconfigad -show | /usr/bin/grep -i <span class="s2">&quot;Active Directory Domain&quot;</span> | /usr/bin/sed -n <span class="s1">&#39;s/[^.]*= //p&#39;</span><span class="sb">`</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># The version installed from pkgutil</span>
-</span><span class='line'><span class="nv">VERSION_INSTALLED</span><span class="o">=</span><span class="sb">`</span>/usr/sbin/pkgutil --pkg-info <span class="k">${</span><span class="nv">PKG_ID</span><span class="k">}</span> | /usr/bin/grep version | /usr/bin/sed <span class="s1">&#39;s/^[^:]*: //&#39;</span><span class="sb">`</span>
-</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$ACTUAL_DOMAIN&quot;</span> <span class="o">=</span> <span class="s2">&quot;$DOMAIN&quot;</span> <span class="o">]</span>
-</span><span class='line'>    <span class="k">then</span>
-</span><span class='line'>    <span class="c"># We&#39;re on the right domain, make sure we&#39;ve got the right version of the package</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$VERSION_INSTALLED&quot;</span> <span class="o">=</span> <span class="s2">&quot;$PKG_VERSION&quot;</span> <span class="o">]</span>
-</span><span class='line'>    <span class="k">then</span>
-</span><span class='line'>        <span class="c"># Everything&#39;s ok, no need to install</span>
-</span><span class='line'>        <span class="nb">exit </span>1
-</span><span class='line'>    <span class="k">else</span>
-</span><span class='line'>        <span class="c"># Package is out of date, need to install</span>
-</span><span class='line'>        <span class="nb">exit </span>0
-</span><span class='line'>    <span class="k">fi</span>
-</span><span class='line'><span class="k">else</span>
-</span><span class='line'>    <span class="c"># Domain isn&#39;t being returned from dsconfigad, need to install</span>
-</span><span class='line'>    <span class="nb">exit </span>0
-</span><span class='line'><span class="k">fi</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This is a little more complicated, but not much. First off we&rsquo;re doing the same check as before, making sure we&rsquo;re actually bound to the domain. If we aren&rsquo;t, we obviously need to install the package, so that&rsquo;s the end of that. If we are bound, we next need to check which version of the package we have. As previously mentioned, Munki would usually do this for us, but by using the installcheck_script, we&rsquo;ve engaged the &ldquo;leave me alone, I know what the fuck I&rsquo;m doing&rdquo; mode in Munki, so we&rsquo;re implementing that check ourselves. If the version or package identifier don&rsquo;t match, we want our bind script installed, screw those other guys with their not-as-good-as-our-way of binding.</p>
-
-<p>All that&rsquo;s left now is to <code>munkiimport</code> your package with your script as an <code>installcheck_script</code>:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>/usr/local/munki/munkiimport ad-bind.pkg --installcheck_script<span class="o">=</span>installcheck_script.sh
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>There you have it, how to keep a Mac bound to AD with Munki. You may wish to change some other settings later on (particularly if you have to do battle with a .local domain), but this will get you going with a basic AD bind.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Writing Plugins for Sal: Part 3]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3/"/>
-    <updated>2014-02-17T21:12:36+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3</id>
-    <content type="html"><![CDATA[<p>We&rsquo;ve already got a fairly decent plugin &ndash; it shows us how many machines we have that aren&rsquo;t able to run 10.9. However, quite a few people won&rsquo;t have any machines that fall into this category, and just want to know when one manages to sneak under the radar, so let&rsquo;s hide the plugin if we don&rsquo;t need to see it.</p>
-
-<h2>Previously on Lost</h2>
-
-<p>In the first part, you might remember that we had to tell Sal how much space our plugin needed. Well, we&rsquo;re going to cover the eventuality of it not needing any space. First off, <code>mavcompatibility.py</code>.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/mavcompatibility.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">not_compatible</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">size</span> <span class="o">=</span> <span class="mi">3</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
-</span><span class='line'>            <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
-</span><span class='line'>        <span class="p">})</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">size</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">filter_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&#39;notcompatible&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">machines</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Macs not compatible with OS X 10.9&#39;</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">machines</span> <span class="o">=</span> <span class="bp">None</span>
-</span><span class='line'>            <span class="n">title</span> <span class="o">=</span> <span class="bp">None</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">return</span> <span class="n">machines</span><span class="p">,</span> <span class="n">title</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Take a look at lines 22 &ndash; 25. If we get any results from the query on line 20, we&rsquo;re going to be showing the plugin. If there aren&rsquo;t any applicable machines in our inventory, we don&rsquo;t need to show the plugin. We are returning the size to Sal on line 33.  Easy so far.</p>
-
-<p>All that&rsquo;s left to do now is make our templates not do anything if they don&rsquo;t need to.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/front.html </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="cp">{%</span> <span class="k">if</span> <span class="nv">not_compatible</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="cp">%}</span>
-</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_front&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="cp">%}</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            Not Compatible
-</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span><span class='line'><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Notice the if statement on line 1? If the number of machines is 0, we don&rsquo;t need to show anything. You&rsquo;ll need to make a similar change on <code>grahamgilbert/mavcompatibility/templates/id.html</code>.</p>
-
-<p>That&rsquo;s it &ndash; a simple plugin for Sal. You can find this completed plugin in my <a href="https://github.com/grahamgilbert/sal-plugins">sal-plugins repository</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Writing Plugins for Sal: Part 2]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2/"/>
-    <updated>2014-02-07T11:34:24+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2</id>
-    <content type="html"><![CDATA[<p>And now, time for the shocking second part of our series on how to write plugins for Sal.</p>
-
-<p>In the previous part, we got our basic widget working. This time, we&rsquo;re going to link it up so we can get lists of those pesky non-10.9 compatible Macs when we click on the button.</p>
-
-<h2>It&rsquo;s a list, Jim</h2>
-
-<p>When displaying the list of machines, Sal will call the <code>filter_machines</code> function in your plugin. I&rsquo;m sure you don&rsquo;t want to disappoint, so here&rsquo;s that function added on to the plugin we wrote last time.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/mavcompatibility.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
-</span><span class='line'>            <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
-</span><span class='line'>        <span class="p">})</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="mi">3</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">filter_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&#39;notcompatible&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">machines</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Macs not compatible with OS X 10.9&#39;</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">machines</span> <span class="o">=</span> <span class="bp">None</span>
-</span><span class='line'>            <span class="n">title</span> <span class="o">=</span> <span class="bp">None</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">return</span> <span class="n">machines</span><span class="p">,</span> <span class="n">title</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You&rsquo;ll notice that our filter on the machines is pretty much identical to what we were looking for before &ndash; that&rsquo;s because we&rsquo;re looking for the same machines. We&rsquo;re taking some input (a bunch of machines, and a string that we&rsquo;ll come back to), and giving back the machine that fit our search and a title to show at the top of the page.</p>
-
-<h2>More templating</h2>
-
-<p>So, how did we pass that string? How do we even get to the page where a list of the machines is shown?</p>
-
-<p>We need to edit the templates. First off, the template that is show on the front page of Sal:</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/front.html </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_front&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="cp">%}</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            Not Compatible
-</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The only difference here from last time is we&rsquo;ve filled out the URL. The options for the first part are <code>machine_list_front</code> or <code>machine_list_id</code> &ndash; depending on whether you are coming from the front page (all of the Business Units) or from deeper in the application (the machines are limited), then we&rsquo;re just passing the name of our plugin.</p>
-
-<p>There isn&rsquo;t a huge amount you need to change for the other template &ndash; just tell Sal what type of page you came from (group or business unit) and the ID of the page you came from.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/id.html </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_id&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="nv">page</span> <span class="nv">theid</span> <span class="cp">%}</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            Not Compatible
-</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>There you go &ndash; a simple plugin for Sal. But don&rsquo;t go away thinking we&rsquo;re done. Whilst this is functional, it certainly leaves a fair bit to be desired. In the last part of this series, we&rsquo;ll tidy everything up.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Writing plugins for Sal: Part 1]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1/"/>
-    <updated>2014-01-26T10:01:26+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1</id>
-    <content type="html"><![CDATA[<p>Writing a plugin for Sal isn&rsquo;t hard. In fact, I&rsquo;d go so far as to say it&rsquo;s easy. We&rsquo;re going to make a plugin that will flag up any machines that aren&rsquo;t compatible with Mavericks, by using <a href="https://github.com/timsutton/munki-conditions/blob/master/supported_major_os_upgrades">Tim Sutton&rsquo;s script</a>. To start off with, you&rsquo;re going to need to get that script onto your Macs at <code>/usr/local/munki/conditions</code>. I&rsquo;d personally use Puppet for that, but if you&rsquo;re a purely Munki shop, you&rsquo;ll be using a package. <a href="https://github.com/grahamgilbert/macscripts/raw/master/Munki/Condtion%20Packages/supported_major_os_upgrades/supported_major_os_upgrades.pkg">And handily, I&rsquo;ve made one</a>.</p>
-
-<p><img class="center" src="http://grahamgilbert.com/images/posts/2014-01-26/mavcompatibility.png" width="297" height="131"></p>
-
-<p>The convention I&rsquo;d like everyone to follow is to drop your plugins into the <code>plugins</code> directory, in a subdirectory named after yourself &ndash; mine are going in <code>plugins/grahamgilbert</code>. The plugin we&rsquo;re making today is going in <code>plugins/grahamgilbert/mavcompatibility</code>.</p>
-
-<h2>Metadata</h2>
-
-<p>The first piece you&rsquo;ll need is a <code>.yapsy-plugin</code> file. This contains the metadata for your plugin. It&rsquo;s all pretty self explanatory. This is <code>plugins/grahamgilbert/mavcompatibility/mavcompatibility.yapsy-plugin</code>.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[Core]
-</span><span class='line'>Name = MavCompatibility
-</span><span class='line'>Module = mavcompatibility
-</span><span class='line'>
-</span><span class='line'>[Documentation]
-</span><span class='line'>Author = Graham Gilbert
-</span><span class='line'>Version = 0.1
-</span><span class='line'>Website = http://grahamgilbert.com
-</span><span class='line'>Description = Displays macs that aren't compatible with 10.9.</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Now for the meat</h2>
-
-<p>Onto the actual plugin. Your plugin is going to be sent at least two pieces of information, possibly three.</p>
-
-<ul>
-<li><code>page</code>: This will be the page the plugin is going to be shown on. This will either be <code>front</code>, <code>bu_dashboard</code> or <code>group_dashboard</code>. You will need this information later on.</li>
-<li><code>machines</code>: This a collection of machines you are going to need to work on. Depending on the page, this might be all of them, or just a subset from a Business Unit or Machine Group.</li>
-<li><code>theid</code>: If you are displaying your plugin on either a Business Unit page or a Machine Group page, this is the unique ID of that Business Unit or Machine Group.</li>
-</ul>
-
-
-<p>And in return, your plugin is expected to return two things:</p>
-
-<ul>
-<li>Some HTML: You plugin needs to return it&rsquo;s output.</li>
-<li>The width of the output: Sal uses <a href="http://getbootstrap.com/2.3.2/">Bootstrap</a>, and it uses a grid system. So Sal can wrap lines properly, you need to tell Sal how many columns your plugin needs. This should be an integer.</li>
-</ul>
-
-
-<p>That&rsquo;s the 50,000 ft view of a Sal plugin, let&rsquo;s make one. The main thing to remember is that Sal is written in Django, so if you have any problems, looking at <a href="https://docs.djangoproject.com/en/1.5/">their documentation</a> will help. You can also enable debug logging on your Sal install by uncommenting lines 24 and 25 in <code>server/views.py</code> (turn it off when you&rsquo;re done though, it is VERY verbose).</p>
-
-<p>First off, a little about how Sal stores the data you send it. Sal stores Munki&rsquo;s conditions in the Condition table, and for each one, the name and it&rsquo;s data is stored (this is the same for Facts). Munki&rsquo;s conditions can consist of a variety of data types (strings, dates, arrays), so Sal will flatten any arrays it is given into a comma separated list. Each machine will have multiple Conditions and Facts associated with it.</p>
-
-<p>When displaying the plugin, Sal will look for a function called show_widget, passing the information mentioned previously. Don&rsquo;t worry too much about the templates, we&rsquo;ll cover them later.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/mavcompatibility.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
-</span><span class='line'>            <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
-</span><span class='line'>        <span class="p">})</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="mi">3</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Skip to line 20 &ndash; this is where the real work starts. All we&rsquo;re doing is taking the machines we were passed and first off finding the machines that have the condition we&rsquo;re looking for. We then want to remove those that contain 10.9 in that data.</p>
-
-<h2>Templates</h2>
-
-<p>Then it&rsquo;s just a case of passing those variables to our template. As we aren&rsquo;t linking our buttons to anything for now, both of our templates will be the same, but we will still make two separate ones as we&rsquo;re going to need them next time.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/front.html </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            Not Compatible
-</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Make a file in <code>templates</code> called <code>id.html</code> with the same content for now &ndash; we&rsquo;ll make them different in part two.</p>
-
-<p>We return our plugin on line 28 of <code>mavcompatibility.py</code>. First we render the appropriate template, passing it our data, and we return how wide our plugin is &ndash; in this case it will take up three columns.</p>
-
-<p>That&rsquo;s it for a basic plugin &ndash; we&rsquo;ve taken a bunch of machines, filtered them based on a Munki condition, and we&rsquo;ve returned the data. But this obviously is lacking &ndash; the button doesn&rsquo;t do anything and we still see a big fat zero when all of our machines are 10.9 capable. Anyway, you can get the code so far in my <a href="https://github.com/grahamgilbert/sal-plugins/tree/master/mavcompatibility">sal-plugins repository</a>.</p>
-
-<p>Tune in to part two for the thrilling conclusion!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Sal: The Munki Puppet]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet/"/>
-    <updated>2014-01-17T10:51:46+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet</id>
-    <content type="html"><![CDATA[<p>At <a href="http://pebbleit.com">pebble.it</a>, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a few options, but didn&rsquo;t like any of them, so we made our own.</p>
-
-<p>Say hi to Sal &ndash; the Munki Puppet. It&rsquo;s a multi-tenanted reporting solution for Munki and optionally, Facter.  You can find all of the details <a href="https://github.com/grahamgilbert/sal">over on GitHub</a>, including installation instructions and a package to send out to your clients.</p>
-
-<p><img class="center" src="http://grahamgilbert.com/images/posts/2014-01-17/Sal.png"></p>
-
-<p>There is a plugin system built in to Sal, and over the next few days I will have a couple of posts covering how to make your own.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Managing the Authorization Database with Munki]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki/"/>
-    <updated>2013-12-22T15:25:00+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki</id>
-    <content type="html"><![CDATA[<p>Have you ever wished you didn&rsquo;t have to take calls from your users to unlock various parts of System Preferences? That standard users could unlock Energy Saver or Date and Time preferences? Well dear reader, this is the article for you.</p>
-
-<p>If, for some strange reason you can&rsquo;t be bothered to read this overly long article (I do love to procrastinate), you can head over to my <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki">macscripts repo on GitHub</a> for the scripts and resulting pkginfo files I&rsquo;ve made for this.</p>
-
-<p>Before we start, let&rsquo;s get one thing out of the way &ndash; Munki isn&rsquo;t at heart a configuration management system. I&rsquo;ve traditionally preferred Puppet for these tasks, but as there is at the time of writing a <a href="https://projects.puppetlabs.com/issues/22830">bug open</a> on modifying this with Puppet, I took it upon myself to make this work in my environment. I spent a couple of days trying to get my sub-par Ruby skills to match my aspirations, so I moved onto a much more comfortable technology for me: Python and Munki.</p>
-
-<p>To tackle this issue, I&rsquo;m going to be using the same Philosophy as Puppet:</p>
-
-<ul>
-<li>Check if the resource exists and what it&rsquo;s current value is</li>
-<li>If required, change the value</li>
-<li>And be able to revert back to how things were</li>
-</ul>
-
-
-<p>These translate quite nicely into <code>installcheck_script</code>, <code>postinstall_script</code> and <code>uninstall_script</code> rolled into a <code>nopkg</code> pkginfo (for a good intro into how nopkg pkginfos work, see how to manage printers with them over on the <a href="https://code.google.com/p/munki/wiki/ManagingPrintersWithMunki">Munki wiki</a>). We could do this with a payload free package and an installcheck_script just as easily, but as we&rsquo;re already putting code into our pkginfo, we might as well keep it all in one place.</p>
-
-<p>This isn&rsquo;t intended to be a tutorial on the theory of OS X&rsquo;s authorization database &ndash; there are already <a href="http://mattsmacblog.wordpress.com/2012/01/05/making-use-of-the-etcauthorization-file-in-lion-10-7-x/">excellent resources available</a>.</p>
-
-<h2>installcheck_script</h2>
-
-<p>Our <code>installcheck_script</code> is going to be very basic. To first open up the root <code>system.preferences</code> right, we just need to make sure that the group is set to <code>everyone</code> rather than <code>admin</code>. If you want to use another group, just substitute it in the <code>group</code> variable in the installcheck_script and the postinstall_script.</p>
-
-<figure class='code'><figcaption><span>installcheck.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">plistlib</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># Group System Preferences should be opened to</span>
-</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s">&#39;everyone&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;read&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">formatted</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-</span><span class='line'><span class="c"># if group matches, exit 1 as we don&#39;t need to install</span>
-</span><span class='line'><span class="k">if</span> <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">:</span>
-</span><span class='line'>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</span><span class='line'><span class="k">else</span><span class="p">:</span>
-</span><span class='line'>    <span class="c"># if it doesn&#39;t we&#39;re exiting with 0 as we need to perform the install</span>
-</span><span class='line'>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>postinstall_script</h2>
-
-<p>The <code>postinstall_script</code> is just an extension of the <code>installcheck_script</code> &ndash; but we&rsquo;re going to make use of Python&rsquo;s built-in <code>plistlib</code> to modify the plist and feed it back into <code>security authorizationdb</code> to set our desired settings.</p>
-
-<figure class='code'><figcaption><span>postinstall.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">plistlib</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># Group System Preferences should be opened to</span>
-</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s">&#39;everyone&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;read&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-</span><span class='line'><span class="n">formatted</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># If the group doesn&#39;t match, we&#39;re going to correct it.</span>
-</span><span class='line'><span class="k">if</span> <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">group</span><span class="p">:</span>
-</span><span class='line'>    <span class="c">#input_plist = {}</span>
-</span><span class='line'>    <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group</span>
-</span><span class='line'>    <span class="c"># Convert back to plist</span>
-</span><span class='line'>    <span class="n">input_plist</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">writePlistToString</span><span class="p">(</span><span class="n">formatted</span><span class="p">)</span>
-</span><span class='line'>    <span class="c"># Write the plist back to the authorizationdb</span>
-</span><span class='line'>    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;write&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
-</span><span class='line'>    <span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">input_plist</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>uninstall_script</h2>
-
-<p>We should be good admins and clean up after ourselves, so we&rsquo;ll include an uninstall script.</p>
-
-<figure class='code'><figcaption><span>uninstall.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">plistlib</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># Set the group back to admin</span>
-</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s">&#39;admin&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;read&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-</span><span class='line'><span class="n">formatted</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># If the group doesn&#39;t match, we&#39;re going to correct it.</span>
-</span><span class='line'><span class="k">if</span> <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">group</span><span class="p">:</span>
-</span><span class='line'>    <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group</span>
-</span><span class='line'>    <span class="c"># Convert back to plist</span>
-</span><span class='line'>    <span class="n">input_plist</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">writePlistToString</span><span class="p">(</span><span class="n">formatted</span><span class="p">)</span>
-</span><span class='line'>    <span class="c"># Write the plist back to the authorizationdb</span>
-</span><span class='line'>    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;write&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
-</span><span class='line'>    <span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">input_plist</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Getting it into Munki</h2>
-
-<p>Now we&rsquo;ve got our three scripts, we need to get them together into a pkginfo file. Assuming the scripts you&rsquo;ve just made live in <code>~/src/macscripts/Munki/Auth</code>:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd ~/src/macscripts/Munki/Auth
-</span><span class='line'>$ /usr/local/munki/makepkginfo --installcheck_script=installcheck.py --postinstall_script=postinstall.py --uninstall_script=uninstall.py > OpenSysPrefs-1.0.plist</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Which will produce the bare bones of a pkginfo file, but there are a few other things we need to add into it. Modify OpenSysPref-1.0.plist to look like the below. For further documentation on what we&rsquo;re doing here, have a look at the <a href="https://code.google.com/p/munki/wiki/PkginfoFiles">Munki wiki</a>. The important parts you&rsquo;ll need to add / modify are:</p>
-
-<ul>
-<li>autoremove</li>
-<li>catalog</li>
-<li>description</li>
-<li>display_name</li>
-<li>name</li>
-<li>installer_type</li>
-<li>minimum_os_version</li>
-<li>version</li>
-<li>unattended_install (if you want it to apply in the background)</li>
-<li>uninstall_method</li>
-<li>uninstallable</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-<span class='line-number'>101</span>
-<span class='line-number'>102</span>
-<span class='line-number'>103</span>
-<span class='line-number'>104</span>
-<span class='line-number'>105</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
-</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;dict&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>autoremove<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;false/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>catalogs<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;string&gt;</span>production<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>description<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>Opens System Preferences to Everyone<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>display_name<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>Open System Preferences<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>name<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>OpenSysPrefs<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>installer_type<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>nopkg<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>minimum_os_version<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>10.8.0<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>unattended_install<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;true/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>version<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>1.0<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>installcheck_script<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>#!/usr/bin/env python
-</span><span class='line'>
-</span><span class='line'>import subprocess
-</span><span class='line'>import sys
-</span><span class='line'>import plistlib
-</span><span class='line'>
-</span><span class='line'># Group System Preferences should be opened to
-</span><span class='line'>group = &#39;everyone&#39;
-</span><span class='line'>
-</span><span class='line'>command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;read&#39;, &#39;system.preferences&#39;]
-</span><span class='line'>
-</span><span class='line'>task = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>(out, err) = task.communicate()
-</span><span class='line'>
-</span><span class='line'>formatted = plistlib.readPlistFromString(out)
-</span><span class='line'>
-</span><span class='line'># if group matches, exit 1 as we don&#39;t need to install
-</span><span class='line'>if formatted[&#39;group&#39;] == group:
-</span><span class='line'>    sys.exit(1)
-</span><span class='line'>else:
-</span><span class='line'>    # if it doesn&#39;t we&#39;re exiting with 0 as we need to perform the install
-</span><span class='line'>    sys.exit(0)<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>postinstall_script<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>#!/usr/bin/env python
-</span><span class='line'>
-</span><span class='line'>import subprocess
-</span><span class='line'>import sys
-</span><span class='line'>import plistlib
-</span><span class='line'>
-</span><span class='line'># Group System Preferences should be opened to
-</span><span class='line'>group = &#39;everyone&#39;
-</span><span class='line'>
-</span><span class='line'>command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;read&#39;, &#39;system.preferences&#39;]
-</span><span class='line'>
-</span><span class='line'>task = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>(out, err) = task.communicate()
-</span><span class='line'>formatted = plistlib.readPlistFromString(out)
-</span><span class='line'>
-</span><span class='line'># If the group doesn&#39;t match, we&#39;re going to correct it.
-</span><span class='line'>if formatted[&#39;group&#39;] != group:
-</span><span class='line'>    #input_plist = {}
-</span><span class='line'>    formatted[&#39;group&#39;] = group
-</span><span class='line'>    # Convert back to plist
-</span><span class='line'>    input_plist = plistlib.writePlistToString(formatted)
-</span><span class='line'>    # Write the plist back to the authorizationdb
-</span><span class='line'>    command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;write&#39;, &#39;system.preferences&#39;]
-</span><span class='line'>    task = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>    (out, err) = task.communicate(input=input_plist)<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>uninstall_method<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>uninstall_script<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>uninstallable<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;true/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>uninstall_script<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>#!/usr/bin/env python
-</span><span class='line'>
-</span><span class='line'>import subprocess
-</span><span class='line'>import sys
-</span><span class='line'>import plistlib
-</span><span class='line'>
-</span><span class='line'># Set the group back to admin
-</span><span class='line'>group = &#39;admin&#39;
-</span><span class='line'>
-</span><span class='line'>command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;read&#39;, &#39;system.preferences&#39;]
-</span><span class='line'>
-</span><span class='line'>task = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>(out, err) = task.communicate()
-</span><span class='line'>formatted = plistlib.readPlistFromString(out)
-</span><span class='line'>
-</span><span class='line'># If the group doesn&#39;t match, we&#39;re going to correct it.
-</span><span class='line'>if formatted[&#39;group&#39;] != group:
-</span><span class='line'>    formatted[&#39;group&#39;] = group
-</span><span class='line'>    # Convert back to plist
-</span><span class='line'>    input_plist = plistlib.writePlistToString(formatted)
-</span><span class='line'>    # Write the plist back to the authorizationdb
-</span><span class='line'>    command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;write&#39;, &#39;system.preferences&#39;]
-</span><span class='line'>    task = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>    (out, err) = task.communicate(input=input_plist)<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'><span class="nt">&lt;/dict&gt;</span>
-</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>At this point, you should be able to add this pkginfo to your Munki repository, include it in a manifest and &ndash; well, nothing will happen, as this only unlocks the top level of System Preferences. If you want to do more, you&rsquo;ll need to unlock additional parts as well &ndash; the scripts to do this can be found in my <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki">macscripts repository</a>. I&rsquo;ve specified that <code>OpenSysPrefs</code> is required in all of these &ndash; this means I can include only the needed modifications in the manifest and not worry about the top level being unlocked.</p>
-
-<p>Also remember that Munki has conditional items built right in &ndash; you might only want to unlock the Network pane on laptops so they can install VPN profiles etc using something like this:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>conditional_items<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'><span class="nt">&lt;array&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;dict&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>condition<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>machine_type == &quot;laptop&quot;<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>managed_installs<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;string&gt;</span>UnlockNetwork<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/dict&gt;</span>
-</span><span class='line'><span class="nt">&lt;/array&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
 ]]></content>
   </entry>
   

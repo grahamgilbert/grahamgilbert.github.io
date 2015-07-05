@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Puppet | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/puppet/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-02-12T07:45:49+00:00</updated>
+  <updated>2015-07-05T15:46:59+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,326 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Running Puppet Server in Docker Part 2: r10k]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/"/>
+    <updated>2015-06-24T14:49:31+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k</id>
+    <content type="html"><![CDATA[<p>Last time we got our Puppet Server up and running &ndash; now we need to put some Puppet modules on it so we can use it.</p>
+
+<p>To do that, we&rsquo;re going to use r10k. It&rsquo;s a tool that uses a control git repository that contains something called a puppetfile- a file that lists all of the puppet modules you want to use, either from the puppet forge or from git repositories. You may want to keep this module private by using a paid account on GitHub if your configuration contains secrets, but  it doesn&rsquo;t have to be &ndash; mine doesn&rsquo;t have anything particularly sensitive in, so here it is: <a href="https://github.com/grahamgilbert/personal-puppet">grahamgilbert/personal-puppet</a>. <!--more--></p>
+
+<h2>The Control module</h2>
+
+<p>Puppet recommends the use of environments &ndash; a way of separating your clients into groups &ndash; usually this is test and production groups. r10k uses git branches to determine which environments you have, so we&rsquo;re going to set up our repository. The default branch is called <code>master</code>, but we want ours to be called <code>production</code> &ndash; Github has some excellent <a href="https://help.github.com/articles/setting-the-default-branch/">documentation</a> on the subject. I recommend accepting GitHub&rsquo;s suggestion of putting a README in your repository so you can clone it right away.</p>
+
+<h2>The Puppetfile</h2>
+
+<p>Now we&rsquo;ve got our control repo set up, we can clone it so we can work on it.</p>
+
+<p><code>
+$ git clone https://github.com/yourusername/yourcontolrepo
+</code></p>
+
+<p>If you&rsquo;re familiar with Puppet, this will be familiar &ndash; an environment is what you would have once put at <code>/etc/puppet</code> &ndash; the only change is that you can override options on a per-environment basis by using <code>environment.conf</code>. In my control repo, I have a default manifest at the top of the environment rather than in <code>manifests</code> for example. (<a href="https://docs.puppetlabs.com/puppet/latest/reference/config_file_environment.html">more information</a>)</p>
+
+<p>At its simplest, a Puppetfile is just a list of modules we want to use. As we&rsquo;re just starting off, we can use pre-built ones from GitHub and the forge. We&rsquo;re going to get Munki installed on a client, so we&rsquo;ll use my MacAdmin module. One thing to note is that r10k won&rsquo;t resolve dependencies for you, so be sure to specify any modules the module you need. A simple Puppetfile is below:</p>
+
+<p>``` ruby
+mod &lsquo;mac_admin&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/grahamgilbert/puppet-mac_admin'
+</code></pre>
+
+<p>mod &lsquo;mac_profiles_handler&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/ryanycoleman/rcoleman-mac_profiles_handler'
+</code></pre>
+
+<p>mod &lsquo;mac_facts&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/grahamgilbert/grahamgilbert-mac_facts.git'
+</code></pre>
+
+<p>mod &lsquo;repository&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/boxen/puppet-repository'
+</code></pre>
+
+<p>mod &lsquo;outset&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/grahamgilbert/puppet-outset'
+</code></pre>
+
+<p>mod &lsquo;stdlib&rsquo;,</p>
+
+<pre><code>:git =&gt; 'https://github.com/puppetlabs/puppetlabs-stdlib'
+</code></pre>
+
+<p>```</p>
+
+<h2>Configuring r10k</h2>
+
+<p>The next piece of the puzzle is to set up r10k to download our repository. I&rsquo;m running r10k directly on my Docker host, but this could easily be (and probably should be) put into a Docker container. First off, let&rsquo;s get r10k installed:</p>
+
+<p><code>bash
+$ gem install r10k
+</code></p>
+
+<p>r10k get&rsquo;s in configuration from <code>/etc/r1ok.yaml</code>, so let&rsquo;s create that:</p>
+
+<p>``` yaml /etc/r10k.yaml</p>
+
+<h1>The location to use for storing cached Git repos</h1>
+
+<p>:cachedir: &lsquo;/var/cache/r10k&rsquo;</p>
+
+<h1>A list of git repositories to create</h1>
+
+<p>:sources:
+  # This will clone the git repository and instantiate an environment per
+  # branch in /etc/puppet/environments
+  :personal-puppet:</p>
+
+<pre><code>remote: 'https://github.com/yourusername/yourcontrolrepo'
+basedir: '/usr/local/docker/puppetserver/puppet/environments'
+</code></pre>
+
+<p>```</p>
+
+<h2>Puppet Conf</h2>
+
+<p>The final piece of configuration for today will be to set our Puppet Server to use environments. Add the following to <code>/usr/local/docker/puppetserver/puppet/puppet.conf</code>:</p>
+
+<p>``` ini
+[main]
+logdir=/var/log/puppet
+vardir=/var/lib/puppet
+ssldir=/var/lib/puppet/ssl
+rundir=/var/run/puppet
+factpath=$vardir/lib/facter
+environmentpath=$confdir/environments
+pluginsync=true</p>
+
+<p>[master]</p>
+
+<h1>These are needed when the puppetmaster is run by passenger</h1>
+
+<h1>and can safely be removed if webrick is used.</h1>
+
+<p>ssl_client_header = SSL_CLIENT_S_DN
+ssl_client_verify_header = SSL_CLIENT_VERIFY
+autosign = true
+environmentpath = $confdir/environments</p>
+
+<p>```</p>
+
+<h2>Gimmie some modules</h2>
+
+<p>We&rsquo;re ready to get some modules installed on the Puppet Server:</p>
+
+<p><code>bash
+$ r10k deploy environment -pv
+</code></p>
+
+<p>You&rsquo;ll see all of the modules you specified in your Puppetfile download theselves to the right place. But of course, we&rsquo;re not quite ready to use this for applying configuration to our Macs yet &ndash; we have modules, but we&rsquo;ve not applied the config to specific machines. In the next post we&rsquo;ll cover how we use Hiera to do this.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Running Puppet Server in Docker]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/"/>
+    <updated>2015-06-22T12:29:55+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker</id>
+    <content type="html"><![CDATA[<p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively &ndash; it&rsquo;s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
+
+<p>Over the next few posts, I&rsquo;ll take you through setting up the Puppet Server (running on Docker, naturally!), using r10k and git for managing your modules and using Hiera to configure your Macs &ndash; we&rsquo;ll apply some configuration to a Mac without writing a single line of Puppet code .</p>
+
+<h1>Why?</h1>
+
+<p>You might well be thinking &ldquo;why would I want to use Puppet?&rdquo; After all, you&rsquo;ve already got Munki. There are two main reasons I&rsquo;ve chosen to go back to using a Puppet Server in conjunction with Munki.</p>
+
+<ol>
+<li>It&rsquo;s nice to have a fallback. If I manage to do something stupid and nuke my Munki install, or my customers manage to do the same, I&rsquo;ve got some way of getting the machines back under control.</li>
+<li>&ldquo;Free&rdquo; SSL certs &ndash; this might not be a priority now, but it gives you an easy to to secure your Munki repository later on (which we may cover in a later post).<!--more--></li>
+</ol>
+
+
+<h1>Let&rsquo;s get started</h1>
+
+<p>First off, you&rsquo;re going to need a Linux server with Docker installed. Installing it is beyond the scope of this post, but I do recommend you head over to <a href="http://www.digitalocean.com/?refcode=ce1e0f3880e1">Digital Ocean</a> (disclaimer: referral link). They will get you up and running with a server with Docker pre-installed in under a minute for not much money.  I run mine on Ubuntu 14, but you can choose whichever flavour of Linux you prefer.</p>
+
+<p>You will also need a DNS entry that points to your server&rsquo;s IP address. Whilst you could get away with fudging it by editing /etc/hosts, it&rsquo;s a lot of <a href="http://www.oxforddictionaries.com/definition/english/faff">faff</a>.</p>
+
+<h1>Dockers, images and containers</h1>
+
+<p>I&rsquo;ve already made a Docker image that has Puppet Server in it. Let&rsquo;s pull it down:</p>
+
+<p><code>bash
+$ docker pull grahamgilbert/puppetserver
+</code></p>
+
+<p>And fire it up:</p>
+
+<p><code>
+$ docker run -d --name=puppetserver \
+-e PUPPETSERVER_JAVA_ARGS="-Xms384m -Xmx384m -XX:MaxPermSize=256m" \
+-p 0.0.0.0:8140:8140 \
+-h puppet.yourdomain.com \
+grahamgilbert/puppetserver
+</code></p>
+
+<p>You will need to change the amount of memory assigned to the puppet server depending on how much memory is in your actual server before going to production but for now, 384mb will be fine as we&rsquo;re just setting things up.</p>
+
+<p>BUT there are a few things that we need to persist otherwise our server won&rsquo;t be very useful. First off, let&rsquo;s attach to the container so we can have a look around:</p>
+
+<p><code>
+$ docker exec -t -i puppetserver bash
+</code></p>
+
+<p>You&rsquo;ll be looking at a bash prompt now. First off, check that <code>/etc/puppet</code> and <code>/etc/puppetserver</code> have <em>stuff</em> in them. What&rsquo;s in there isn&rsquo;t important at this stage. We also need to run the Puppet client on the server to move some supporting files in place. We first need to enable auto signing of certificates in <code>/etc/puppet/puppet.conf</code> (we&rsquo;ll cover this more later):</p>
+
+<p>``` bash /etc/puppet/puppet.conf
+[main]
+logdir=/var/log/puppet
+vardir=/var/lib/puppet
+ssldir=/var/lib/puppet/ssl
+rundir=/var/run/puppet
+factpath=$vardir/lib/facter
+templatedir=$confdir/templates</p>
+
+<p>[master]</p>
+
+<h1>These are needed when the puppetmaster is run by passenger</h1>
+
+<h1>and can safely be removed if webrick is used.</h1>
+
+<p>ssl_client_header = SSL_CLIENT_S_DN
+ssl_client_verify_header = SSL_CLIENT_VERIFY
+autosign = true
+```</p>
+
+<p>And then exit the container, stop it and start it up again:</p>
+
+<p><code>bash
+$ exit
+$ docker stop puppetserver
+$ docker start puppetserver
+</code></p>
+
+<p>Take a look at the container&rsquo;s logs &ndash; Puppet Server can take a few seconds to be ready, so look for the line that says it&rsquo;s ready to accept connections:</p>
+
+<p><code>bash
+$ docker logs puppetserver
+</code></p>
+
+<p>When it&rsquo;s ready, enter the container again and run the puppet agent.</p>
+
+<p><code>bash
+$ docker exec -t -i puppetserver bash
+$ puppet agent -t
+</code></p>
+
+<p>Provided that ran with no errors, we can exit out of the container.</p>
+
+<p><code>bash
+$ exit
+</code></p>
+
+<p>We&rsquo;re now going to copy the parts we need to persist to the file system of the host machine &ndash; I like to keep my docker related things in <code>/usr/local/docker</code> but it&rsquo;s up to you.</p>
+
+<p><code>
+$ mkdir -p /usr/local/docker/puppetserver
+</code></p>
+
+<p>We&rsquo;re going to use <code>docker cp</code> to copy out of our container and onto our host filesystem. We want the configuration directories, any custom gems we install (required if we want to use modules such as <a href="https://github.com/dayglojesus/managedmac">managedmac</a>), as well as the SSL certificates and some other supporting files (these aren&rsquo;t technically required, but will save having to run <code>puppet agent -t</code> after the container starts every time we update).</p>
+
+<p><code>bash
+$ docker cp puppetserver:/etc/puppetserver /usr/local/docker/puppetserver/
+$ docker cp puppetserver:/etc/puppet /usr/local/docker/puppetserver/
+$ docker cp puppetserver:/var/lib/puppet/ssl /usr/local/docker/puppetserver/lib/
+$ docker cp puppetserver:/var/lib/puppet/lib /usr/local/docker/puppetserver/lib/
+$ docker cp puppetserver:/var/lib/puppet/jruby-gems /usr/local/docker/puppetserver/
+</code></p>
+
+<p>Now we&rsquo;re ready to run for real. Just a small piece of configuration to make our lives easier whilst we&rsquo;re testing &ndash; enabling auto signing of certificates. By default you will need to sign a certificate for each client that tries to connect to your puppet master. Eventually we will want to sign certificates using some sort of external inventory service (I like Sal, but there are also connectors for Web Help Desk), but for now we&rsquo;ll leave our configuration that tells Puppet to sign every certificate unconditionally.</p>
+
+<p><code>bash
+$ nano /usr/local/docker/puppetserver/puppet/puppet.conf
+</code></p>
+
+<p>And make sure your <code>puppet.conf</code> looks like:</p>
+
+<p>``` bash /usr/local/docker/puppetserver/puppet/puppet.conf
+[main]
+logdir=/var/log/puppet
+vardir=/var/lib/puppet
+ssldir=/var/lib/puppet/ssl
+rundir=/var/run/puppet
+factpath=$vardir/lib/facter
+pluginsync=true
+[master]</p>
+
+<h1>These are needed when the puppetmaster is run by passenger</h1>
+
+<h1>and can safely be removed if webrick is used.</h1>
+
+<p>ssl_client_header = SSL_CLIENT_S_DN
+ssl_client_verify_header = SSL_CLIENT_VERIFY
+autosign = true
+```</p>
+
+<p>Now all that remains is to fire up our final container and then we can hook up a client.</p>
+
+<p>``` bash</p>
+
+<h1>remove our old container</h1>
+
+<p>$ docker rm -f puppetserver
+$ docker run -d \
+  &mdash;name=&ldquo;puppetserver&rdquo; \
+  &mdash;restart=&ldquo;always&rdquo; \
+  -v /usr/local/docker/puppetserver/puppet:/etc/puppet \
+  -v /usr/local/docker/puppetserver/puppetserver:/etc/puppetserver \
+  -v /usr/local/docker/puppetserver/lib/ssl:/var/lib/puppet/ssl \
+  -v /usr/local/docker/puppetserver/jruby-gems:/var/lib/puppet/jruby-gems \
+  -v /usr/local/docker/puppetserver/lib/lib:/var/lib/puppet/lib \
+  -p 0.0.0.0:8140:8140 \
+  -e PUPPETSERVER_JAVA_ARGS=&ldquo;-Xms384m -Xmx384m -XX:MaxPermSize=256m&rdquo; \
+  -h puppet.yourdomain.com \
+  grahamgilbert/puppetserver
+```</p>
+
+<p>Let&rsquo;s make sure it&rsquo;s finished starting up.</p>
+
+<p><code>bash
+$ docker logs -f puppetserver
+</code></p>
+
+<p>This works like tail would. Hit ctrl-c to exit once it says it&rsquo;s ready to go.</p>
+
+<h1>Hook up a client</h1>
+
+<p>You&rsquo;re going to need Puppet, Facter and Hiera on your client Mac. Head over <a href="http://downloads.puppetlabs.com/mac">http://downloads.puppetlabs.com/mac</a> and download and install the latest version of Puppet, Facter and Hiera.</p>
+
+<p>If we just ran Puppet now, it would use the Mac&rsquo;s hostname as the certificate name (the unique identifier for the machine). If you have reliable hostnames, that will probably do you. I prefer to use the machine&rsquo;s serial number (lower case, because that&rsquo;s what Puppet likes). We&rsquo;ll automate this in a later post, but for now we can do it by hand:</p>
+
+<p><code>bash /etc/puppet/puppet.conf
+[main]
+server=puppet.yourdomain.com
+certname=abc123
+</code></p>
+
+<p>All that&rsquo;s left now is to run puppet on the client:</p>
+
+<p><code>bash
+$ puppet agent -t --waitforcert 20
+</code></p>
+
+<p>In a later post, we will look at how we can use r10k to manage our modules and use Hiera to configure our clients without touching a line of Puppet code.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Personal Automation (Part 1)]]></title>
@@ -122,298 +442,6 @@ $ boxen
 <p><img class="center" src="/images/posts/2014-01-17/Sal.png"></p>
 
 <p>There is a plugin system built in to Sal, and over the next few days I will have a couple of posts covering how to make your own.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[buildCrankPkg]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg/"/>
-    <updated>2013-07-17T16:31:00+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg</id>
-    <content type="html"><![CDATA[<p>In my <a href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/">last post</a> I promised a tool I&rsquo;ve been working on to automate the building of a package for crankd.</p>
-
-<p><a href="https://github.com/grahamgilbert/buildCrankPkg">buildCrankPkg</a> is a small script that will:</p>
-
-<ul>
-<li>Pull down the latest version of crankd (or use a local or remote repository if you specify one)</li>
-<li>Build a package that includes crankd and your custom settings and scripts.</li>
-</ul>
-
-
-<p>I&rsquo;ve included two examples, one that implements calling Munki and Puppet as detailed in the last post, and one to run a Casper policy.</p>
-
-<p>If you&rsquo;re happy with what crankd does and using the command line, head on over to the <a href="https://github.com/grahamgilbert/buildCrankPkg">repository</a> and enjoy. If you need a bit more help to get started, read on.<!--more--></p>
-
-<h2>Tutorial</h2>
-
-<p>First off, you&rsquo;re going to need to get the buildCrankPkg repository.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/src
-</span><span class='line'>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/grahamgilbert/buildCrankPkg.git&quot;</span>&gt;https://github.com/grahamgilbert/buildCrankPkg.git&lt;/a&gt;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>You&rsquo;re left with three directories that you need to fill:</p>
-
-<ul>
-<li><code>crankd</code>: You will be putting your custom code in here.</li>
-<li><code>Preferences</code>: Just a plist that will call our custom code.</li>
-<li><code>LaunchDaemons</code>: A LaunchDaemon to run crankd &ndash; an example that should be fine is already there.</li>
-</ul>
-
-
-<p>Assuming you cloned the <code>buildCrankPkg</code> repository to <code>~/src/buildCrankPkg</code>, save the following as <code>~/src/buildCrankPkg/crankd/CrankTools.py</code> (or copy the example). The only change between this one and the <code>CrankTools.py</code> from last time is that we&rsquo;re calling the JAMF binary to run a Casper policy (I know, the horror, I do actually use Casper occasionally). Our trigger&rsquo;s name is NetworkTrigger &ndash; the line you&rsquo;d need to customise to change this is <code>28</code>.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>CrankTools.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="err">!</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">env</span> <span class="n">python</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c">#&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">CrankTools</span><span class="o">.</span><span class="n">py</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">The</span> <span class="n">OnNetworkLoad</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">called</span> <span class="kn">from</span> <span class="nn">crankd</span> <span class="nn">on</span> <span class="nn">a</span> <span class="nn">network</span> <span class="nn">state</span> <span class="nn">change</span><span class="p">,</span> <span class="nb">all</span> <span class="n">other</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">methods</span> <span class="n">assist</span> <span class="n">it</span><span class="o">.</span> <span class="n">Modified</span> <span class="kn">from</span> <span class="nn">Gary</span> <span class="nn">Larizza</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="n">s</span> <span class="n">script</span> <span class="p">(</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://gist.github.com/glarizza/626169&quot;</span><span class="o">&gt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">gist</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">glarizza</span><span class="o">/</span><span class="mi">626169</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span><span class="p">)</span><span class="o">.&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c">#&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">Last</span> <span class="n">Revised</span> <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span> <span class="mi">10</span><span class="o">/</span><span class="mo">07</span><span class="o">/</span><span class="mi">2013</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">author</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">Graham</span> <span class="n">Gilbert</span> <span class="p">(</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;&amp;#x6d;&amp;#x61;&amp;#105;&amp;#108;&amp;#x74;&amp;#111;&amp;#x3a;&amp;#x67;&amp;#x72;&amp;#x61;&amp;#104;&amp;#97;&amp;#x6d;&amp;#64;&amp;#x67;&amp;#x72;&amp;#97;&amp;#104;&amp;#97;&amp;#x6d;&amp;#x67;&amp;#x69;&amp;#108;&amp;#x62;&amp;#x65;&amp;#114;&amp;#x74;&amp;#46;&amp;#99;&amp;#111;&amp;#x6d;&quot;</span><span class="o">&gt;&amp;</span><span class="c">#x67;&amp;#x72;&amp;#x61;&amp;#x68;&amp;#97;&amp;#x6d;&amp;#64;&amp;#103;&amp;#x72;&amp;#97;&amp;#104;&amp;#x61;&amp;#x6d;&amp;#103;&amp;#x69;&amp;#x6c;&amp;#x62;&amp;#x65;&amp;#x72;&amp;#116;&amp;#46;&amp;#99;&amp;#111;&amp;#x6d;&lt;/a&gt;)&amp;rsquo;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">version</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="mf">0.2</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">syslog</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">syslog</span><span class="o">.</span><span class="n">openlog</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">CrankD</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">CrankTools</span><span class="p">():</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="s">&quot;&quot;&quot;The main CrankTools class needed for our crankd config plist&quot;&quot;&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="nf">policyRun</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>    <span class="sd">&quot;&quot;&quot;Checks for an active network connection and calls the jamf binary if it finds one.</span>
-</span><span class='line'><span class="sd">        If the network is NOT active, it logs an error and exits</span>
-</span><span class='line'><span class="sd">    ---</span>
-</span><span class='line'><span class="sd">    Arguments: None</span>
-</span><span class='line'><span class="sd">    Returns:  Nothing</span>
-</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
-</span><span class='line'>    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;jamf&#39;</span><span class="p">,</span><span class="s">&#39;policy&#39;</span><span class="p">,</span><span class="s">&#39;-trigger&#39;</span><span class="p">,</span><span class="s">&#39;NetworkTrigger&#39;</span><span class="p">]</span>
-</span><span class='line'>    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">LinkState</span><span class="p">(</span><span class="s">&#39;en1&#39;</span><span class="p">):</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">callCmd</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">LinkState</span><span class="p">(</span><span class="s">&#39;en0&#39;</span><span class="p">):</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">callCmd</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>        <span class="n">syslog</span><span class="o">.</span><span class="n">syslog</span><span class="p">(</span><span class="n">syslog</span><span class="o">.</span><span class="n">LOG_ALERT</span><span class="p">,</span> <span class="s">&quot;Internet Connection Not Found, Puppet Run Exiting...&quot;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="nf">callCmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
-</span><span class='line'>    <span class="sd">&quot;&quot;&quot;Simple utility function that calls a command via subprocess</span>
-</span><span class='line'><span class="sd">    ---</span>
-</span><span class='line'><span class="sd">    Arguments: command - A list of arguments for the command</span>
-</span><span class='line'><span class="sd">    Returns: Nothing</span>
-</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
-</span><span class='line'>    <span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="nf">LinkState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">):</span>
-</span><span class='line'>    <span class="sd">&quot;&quot;&quot;This utility returns the status of the passed interface.</span>
-</span><span class='line'><span class="sd">    ---</span>
-</span><span class='line'><span class="sd">    Arguments:</span>
-</span><span class='line'><span class="sd">        interface - Either en0 or en1, the BSD interface name of a Network Adapter</span>
-</span><span class='line'><span class="sd">    Returns:</span>
-</span><span class='line'><span class="sd">        status - The return code of the subprocess call</span>
-</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&quot;ipconfig&quot;</span><span class="p">,</span> <span class="s">&quot;getifaddr&quot;</span><span class="p">,</span> <span class="n">interface</span><span class="p">])</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="nf">OnNetworkLoad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span class='line'>    <span class="sd">&quot;&quot;&quot;Called from crankd directly on a Network State Change. We sleep for 10 seconds to ensure that</span>
-</span><span class='line'><span class="sd">        an IP address has been cleared or attained, and then perform a Puppet run and a Munki run.</span>
-</span><span class='line'><span class="sd">    ---</span>
-</span><span class='line'><span class="sd">    Arguments:</span>
-</span><span class='line'><span class="sd">        *args and **kwargs - Catchall arguments coming from crankd</span>
-</span><span class='line'><span class="sd">    Returns:  Nothing</span>
-</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
-</span><span class='line'>    <span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">policyRun</span><span class="p">()</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">crank</span> <span class="o">=</span> <span class="n">CrankTools</span><span class="p">()</span>
-</span><span class='line'><span class="n">crank</span><span class="o">.</span><span class="n">OnNetworkLoad</span><span class="p">()</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">if</span> <span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">name</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">main</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;&amp;</span><span class="n">rsquo</span><span class="p">;:</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">main</span><span class="p">()</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Now for the preferences &ndash; no change from last time here, as we&rsquo;ve not changed the name of our class or method. This goes into <code>~/src/buildCrankPkg/Preferences/com.googlecode.pymacadmin.crankd.plist</code></p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>com.googlecode.pymacadmin.crankd.plist </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>?xml version=<span class="ni">&amp;ldquo;</span>1.0<span class="ni">&amp;rdquo;</span> encoding=<span class="ni">&amp;ldquo;</span>UTF-8<span class="ni">&amp;rdquo;</span>?&gt;
-</span><span class='line'><span class="ni">&amp;lt;</span>!DOCTYPE plist PUBLIC <span class="ni">&amp;ldquo;&amp;ndash;</span>//Apple//DTD PLIST 1.0//EN<span class="ni">&amp;rdquo;</span> <span class="ni">&amp;ldquo;</span><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;</span><span class="nt">&gt;</span>http://www.apple.com/DTDs/PropertyList-1.0.dtd<span class="nt">&lt;/a&gt;</span><span class="ni">&amp;rdquo;</span>&gt;
-</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>dict<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>SystemConfiguration<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>dict<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>State:/Network/Global/IPv4<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>dict<span class="ni">&amp;gt;</span>
-</span><span class='line'>            <span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>method<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'>                <span class="ni">&amp;lt;</span>array<span class="ni">&amp;gt;</span>
-</span><span class='line'>                    <span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>CrankTools<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'>                    <span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>OnNetworkLoad<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'>                <span class="ni">&amp;lt;</span>/array<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>/dict<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>/dict<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>/dict<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;&lt;/plist&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>One last step until we can build our package is the Launch Daemon &ndash; we&rsquo;re going to use the one that&rsquo;s included in the repository, as 99% of people won&rsquo;t need to change it.</p>
-
-<h2>Prepare the build!</h2>
-
-<p>Our package needs to have the version number of 2.1 and we&rsquo;re going to set the package&rsquo;s identifier to com.example.crankd</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/src/buildCrankPkg
-</span><span class='line'>sudo ./buildCrankPkg.py  &amp;mdash;version 2.1 &amp;mdash;identifier com.example.crankd
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Your package will be in <code>~/src/buildCrankPkg</code> waiting for you.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Managing Macs with Puppet at PSU 2013]]></title>
-    <link href="http://grahamgilbert.com/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013/"/>
-    <updated>2013-05-24T13:56:00+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013</id>
-    <content type="html"><![CDATA[<p>For those of you who attended my talk yesterday at PSU MacAdmins on Managing Macs with Puppet, here are are my <a href="/images/posts/2013-05-24/Managing_Macs_with_Puppet.pdf">slides</a> and all of the code and servers used are up on <a href="https://github.com/grahamgilbert/puppet_psu_2013">grahamgilbert/puppet_psu_2013 on GitHub</a>. Please comment, <a href="/about">email me</a> or catch me on the <a href="http://twitter.com/grahamgilbert">twitter</a> if you have any questions about any of this. Hopefully the video will be up soon, so those of you who weren&rsquo;t there to laugh at the guy with the funny accent can see me dealing with internet fails and my obscure British sit-com references.</p>
-
-<p><strong>Update:</strong> the video has now been posted.</p>
-
-<iframe width="480" height="360" src="http://www.youtube.com/embed/GqerWmKU1Js" frameborder="0" allowfullscreen></iframe>
-
 ]]></content>
   </entry>
   

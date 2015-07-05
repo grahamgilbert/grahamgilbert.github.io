@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="We&rsquo;ve already got a fairly decent plugin &ndash; it shows us how many machines we have that aren&rsquo;t able to run 10.9. However, quite a few &hellip;">
+  <meta name="description" content="The first step to getting any Mac set up is to get some software onto it. I&rsquo;m not going to cover how to set up Munki or AutoPkg &ndash; there &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,7 +93,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/">Writing Plugins for Sal: Part 3</a></h1>
+      <h1 class="entry-title"><a href="/blog/2014/07/27/personal-automation-munki-part-2/">Personal Automation: Munki (Part 2)</a></h1>
     
     
       <p class="meta">
@@ -109,23 +109,24 @@
   
 
 
-<time datetime="2014-02-17T21:12:36+00:00" pubdate data-updated="true">Feb 17<span>th</span>, 2014</time>
+<time datetime="2014-07-27T11:21:37+01:00" pubdate data-updated="true">Jul 27<span>th</span>, 2014</time>
         
-         | <a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/#disqus_thread">Comments</a>
+         | <a href="/blog/2014/07/27/personal-automation-munki-part-2/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>We&rsquo;ve already got a fairly decent plugin &ndash; it shows us how many machines we have that aren&rsquo;t able to run 10.9. However, quite a few people won&rsquo;t have any machines that fall into this category, and just want to know when one manages to sneak under the radar, so let&rsquo;s hide the plugin if we don&rsquo;t need to see it.</p>
+  <div class="entry-content"><p>The first step to getting any Mac set up is to get some software onto it. I&rsquo;m not going to cover how to set up <a href="https://code.google.com/p/munki/wiki/GettingStartedWithMunki">Munki</a> or <a href="https://github.com/autopkg/autopkg/wiki/Getting-Started">AutoPkg</a> &ndash; there are lots of other places for that information.</p>
 
-<h2>Previously on Lost</h2>
+<p>As a sysadmin, I&rsquo;m forever testing things. Rather than destroy my own machine, I like to do this in Virtual Machines. My preferred virtualisation solution is VMware Fusion, but unfortunately it&rsquo;s not very easy to deploy out of the box. You need to do a little bit of work to get it into a package that you can import into Munki, but fortunately the process is <a href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2058680">well documented on VMware&rsquo;s site</a>.</p>
 
-<p>In the first part, you might remember that we had to tell Sal how much space our plugin needed. Well, we&rsquo;re going to cover the eventuality of it not needing any space. First off, <code>mavcompatibility.py</code>.</p>
+<p>The next piece of &lsquo;non standard&rsquo; software I need is <a href="http://brew.sh">Homebrew</a>. The installation method listed on their site is to run a terminal command as the current user. The first part of this is obviously fine &ndash; Munki has several methods to run scripts (payload free packages, nopkg), but it runs everything as root. Fortunately, as I&rsquo;m deploying my own machine, I can make some assumptions about where Homebrew will be installed. The first assumption I can make is that there will only be one user on the machine, and the second is that I&rsquo;m going to be logged in most of the time (as my laptop is encrypted, it&rsquo;s either off or logged in).</p>
 
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/mavcompatibility.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p>I&rsquo;m going to utilise a <code>nopkg</code> pkginfo file to perform the installation. The first part of our script to install Homebrew is to make sure that a user (me!) is logged in. Homebrew doesn&rsquo;t like being owned by root, so first we need to make sure that there is a user logged in.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -133,93 +134,20 @@
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+</span><span class='line'><span class="nv">CURRENT_USER</span><span class="o">=</span><span class="sb">`</span>/bin/ls -l /dev/console | /usr/bin/awk <span class="s1">&#39;{ print $3 }&#39;</span><span class="sb">`</span>
 </span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">not_compatible</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">size</span> <span class="o">=</span> <span class="mi">3</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
-</span><span class='line'>            <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
-</span><span class='line'>        <span class="p">})</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">size</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">filter_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&#39;notcompatible&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">machines</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Macs not compatible with OS X 10.9&#39;</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">machines</span> <span class="o">=</span> <span class="bp">None</span>
-</span><span class='line'>            <span class="n">title</span> <span class="o">=</span> <span class="bp">None</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">return</span> <span class="n">machines</span><span class="p">,</span> <span class="n">title</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$CURRENT_USER&quot;</span> <span class="o">==</span> <span class="s1">&#39;root&#39;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'>    <span class="c"># this can&#39;t run at the login window, we need the current user</span>
+</span><span class='line'>    <span class="nb">exit </span>1
+</span><span class='line'><span class="k">fi</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Take a look at lines 22 &ndash; 25. If we get any results from the query on line 20, we&rsquo;re going to be showing the plugin. If there aren&rsquo;t any applicable machines in our inventory, we don&rsquo;t need to show the plugin. We are returning the size to Sal on line 33.  Easy so far.</p>
+<p>So now we know that there&rsquo;s a user logged in, and who that user is. Time to install Homebrew as the current user.</p>
 
-<p>All that&rsquo;s left to do now is make our templates not do anything if they don&rsquo;t need to.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/front.html </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -227,242 +155,18 @@
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="cp">{%</span> <span class="k">if</span> <span class="nv">not_compatible</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="cp">%}</span>
-</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_front&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="cp">%}</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            Not Compatible
-</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span><span class='line'><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /usr/local
+</span><span class='line'>mkdir -p /usr/local/homebrew
+</span><span class='line'>mkdir -p /usr/local/bin
+</span><span class='line'>chown <span class="nv">$CURRENT_USER</span>:_developer /usr/local/homebrew
+</span><span class='line'>chown <span class="nv">$CURRENT_USER</span>:_developer /usr/local/bin
+</span><span class='line'>
+</span><span class='line'><span class="c">#download and install homebrew</span>
+</span><span class='line'>su <span class="nv">$CURRENT_USER</span> -c <span class="s2">&quot;/bin/bash -o pipefail -c &#39;/usr/bin/curl -skSfL https://github.com/mxcl/homebrew/tarball/master | (cd /usr/local ; /usr/bin/tar xz -m --strip 1 -C homebrew; ln -s /usr/local/homebrew/bin/brew /usr/local/bin/brew)&#39;&quot;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Notice the if statement on line 1? If the number of machines is 0, we don&rsquo;t need to show anything. You&rsquo;ll need to make a similar change on <code>grahamgilbert/mavcompatibility/templates/id.html</code>.</p>
-
-<p>That&rsquo;s it &ndash; a simple plugin for Sal. You can find this completed plugin in my <a href="https://github.com/grahamgilbert/sal-plugins">sal-plugins repository</a>.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/">Writing Plugins for Sal: Part 2</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-07T11:34:24+00:00" pubdate data-updated="true">Feb 7<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>And now, time for the shocking second part of our series on how to write plugins for Sal.</p>
-
-<p>In the previous part, we got our basic widget working. This time, we&rsquo;re going to link it up so we can get lists of those pesky non-10.9 compatible Macs when we click on the button.</p>
-
-<h2>It&rsquo;s a list, Jim</h2>
-
-<p>When displaying the list of machines, Sal will call the <code>filter_machines</code> function in your plugin. I&rsquo;m sure you don&rsquo;t want to disappoint, so here&rsquo;s that function added on to the plugin we wrote last time.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/mavcompatibility.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
-</span><span class='line'>            <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
-</span><span class='line'>        <span class="p">})</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="mi">3</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">filter_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&#39;notcompatible&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">machines</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Macs not compatible with OS X 10.9&#39;</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">machines</span> <span class="o">=</span> <span class="bp">None</span>
-</span><span class='line'>            <span class="n">title</span> <span class="o">=</span> <span class="bp">None</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">return</span> <span class="n">machines</span><span class="p">,</span> <span class="n">title</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You&rsquo;ll notice that our filter on the machines is pretty much identical to what we were looking for before &ndash; that&rsquo;s because we&rsquo;re looking for the same machines. We&rsquo;re taking some input (a bunch of machines, and a string that we&rsquo;ll come back to), and giving back the machine that fit our search and a title to show at the top of the page.</p>
-
-<h2>More templating</h2>
-
-<p>So, how did we pass that string? How do we even get to the page where a list of the machines is shown?</p>
-
-<p>We need to edit the templates. First off, the template that is show on the front page of Sal:</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/front.html </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_front&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="cp">%}</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            Not Compatible
-</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The only difference here from last time is we&rsquo;ve filled out the URL. The options for the first part are <code>machine_list_front</code> or <code>machine_list_id</code> &ndash; depending on whether you are coming from the front page (all of the Business Units) or from deeper in the application (the machines are limited), then we&rsquo;re just passing the name of our plugin.</p>
-
-<p>There isn&rsquo;t a huge amount you need to change for the other template &ndash; just tell Sal what type of page you came from (group or business unit) and the ID of the page you came from.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/id.html </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_id&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="nv">page</span> <span class="nv">theid</span> <span class="cp">%}</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            Not Compatible
-</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>There you go &ndash; a simple plugin for Sal. But don&rsquo;t go away thinking we&rsquo;re done. Whilst this is functional, it certainly leaves a fair bit to be desired. In the last part of this series, we&rsquo;ll tidy everything up.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/">Writing Plugins for Sal: Part 1</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-26T10:01:26+00:00" pubdate data-updated="true">Jan 26<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/01/26/writing-plugins-for-sal-part-1/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Writing a plugin for Sal isn&rsquo;t hard. In fact, I&rsquo;d go so far as to say it&rsquo;s easy. We&rsquo;re going to make a plugin that will flag up any machines that aren&rsquo;t compatible with Mavericks, by using <a href="https://github.com/timsutton/munki-conditions/blob/master/supported_major_os_upgrades">Tim Sutton&rsquo;s script</a>. To start off with, you&rsquo;re going to need to get that script onto your Macs at <code>/usr/local/munki/conditions</code>. I&rsquo;d personally use Puppet for that, but if you&rsquo;re a purely Munki shop, you&rsquo;ll be using a package. <a href="https://github.com/grahamgilbert/macscripts/raw/master/Munki/Condtion%20Packages/supported_major_os_upgrades/supported_major_os_upgrades.pkg">And handily, I&rsquo;ve made one</a>.</p>
-
-<p><img class="center" src="/images/posts/2014-01-26/mavcompatibility.png" width="297" height="131"></p>
-
-<p>The convention I&rsquo;d like everyone to follow is to drop your plugins into the <code>plugins</code> directory, in a subdirectory named after yourself &ndash; mine are going in <code>plugins/grahamgilbert</code>. The plugin we&rsquo;re making today is going in <code>plugins/grahamgilbert/mavcompatibility</code>.</p>
-
-<h2>Metadata</h2>
-
-<p>The first piece you&rsquo;ll need is a <code>.yapsy-plugin</code> file. This contains the metadata for your plugin. It&rsquo;s all pretty self explanatory. This is <code>plugins/grahamgilbert/mavcompatibility/mavcompatibility.yapsy-plugin</code>.</p>
+<p>As we&rsquo;re using a <code>nopkg</code> with Munki rather than a payload free package, we&rsquo;ve not left any receipts, so Munki doesn&rsquo;t know if Homebrew is installed. We&rsquo;re going to use an installs array to tell Munki what to look for when determining whether Homebrew is installed or not.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -473,133 +177,19 @@
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[Core]
-</span><span class='line'>Name = MavCompatibility
-</span><span class='line'>Module = mavcompatibility
-</span><span class='line'>
-</span><span class='line'>[Documentation]
-</span><span class='line'>Author = Graham Gilbert
-</span><span class='line'>Version = 0.1
-</span><span class='line'>Website = http://grahamgilbert.com
-</span><span class='line'>Description = Displays macs that aren't compatible with 10.9.</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Now for the meat</h2>
-
-<p>Onto the actual plugin. Your plugin is going to be sent at least two pieces of information, possibly three.</p>
-
-<ul>
-<li><code>page</code>: This will be the page the plugin is going to be shown on. This will either be <code>front</code>, <code>bu_dashboard</code> or <code>group_dashboard</code>. You will need this information later on.</li>
-<li><code>machines</code>: This a collection of machines you are going to need to work on. Depending on the page, this might be all of them, or just a subset from a Business Unit or Machine Group.</li>
-<li><code>theid</code>: If you are displaying your plugin on either a Business Unit page or a Machine Group page, this is the unique ID of that Business Unit or Machine Group.</li>
-</ul>
-
-
-<p>And in return, your plugin is expected to return two things:</p>
-
-<ul>
-<li>Some HTML: You plugin needs to return it&rsquo;s output.</li>
-<li>The width of the output: Sal uses <a href="http://getbootstrap.com/2.3.2/">Bootstrap</a>, and it uses a grid system. So Sal can wrap lines properly, you need to tell Sal how many columns your plugin needs. This should be an integer.</li>
-</ul>
-
-
-<p>That&rsquo;s the 50,000 ft view of a Sal plugin, let&rsquo;s make one. The main thing to remember is that Sal is written in Django, so if you have any problems, looking at <a href="https://docs.djangoproject.com/en/1.5/">their documentation</a> will help. You can also enable debug logging on your Sal install by uncommenting lines 24 and 25 in <code>server/views.py</code> (turn it off when you&rsquo;re done though, it is VERY verbose).</p>
-
-<p>First off, a little about how Sal stores the data you send it. Sal stores Munki&rsquo;s conditions in the Condition table, and for each one, the name and it&rsquo;s data is stored (this is the same for Facts). Munki&rsquo;s conditions can consist of a variety of data types (strings, dates, arrays), so Sal will flatten any arrays it is given into a comma separated list. Each machine will have multiple Conditions and Facts associated with it.</p>
-
-<p>When displaying the plugin, Sal will look for a function called show_widget, passing the information mentioned previously. Don&rsquo;t worry too much about the templates, we&rsquo;ll cover them later.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/mavcompatibility.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
-</span><span class='line'>            <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
-</span><span class='line'>        <span class="p">})</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="mi">3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>installs<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;key&gt;</span>path<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;string&gt;</span>/usr/local/bin/brew<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;key&gt;</span>type<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;string&gt;</span>file<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/array&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Skip to line 20 &ndash; this is where the real work starts. All we&rsquo;re doing is taking the machines we were passed and first off finding the machines that have the condition we&rsquo;re looking for. We then want to remove those that contain 10.9 in that data.</p>
-
-<h2>Templates</h2>
-
-<p>Then it&rsquo;s just a case of passing those variables to our template. As we aren&rsquo;t linking our buttons to anything for now, both of our templates will be the same, but we will still make two separate ones as we&rsquo;re going to need them next time.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/front.html </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            Not Compatible
-</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Make a file in <code>templates</code> called <code>id.html</code> with the same content for now &ndash; we&rsquo;ll make them different in part two.</p>
-
-<p>We return our plugin on line 28 of <code>mavcompatibility.py</code>. First we render the appropriate template, passing it our data, and we return how wide our plugin is &ndash; in this case it will take up three columns.</p>
-
-<p>That&rsquo;s it for a basic plugin &ndash; we&rsquo;ve taken a bunch of machines, filtered them based on a Munki condition, and we&rsquo;ve returned the data. But this obviously is lacking &ndash; the button doesn&rsquo;t do anything and we still see a big fat zero when all of our machines are 10.9 capable. Anyway, you can get the code so far in my <a href="https://github.com/grahamgilbert/sal-plugins/tree/master/mavcompatibility">sal-plugins repository</a>.</p>
-
-<p>Tune in to part two for the thrilling conclusion!</p>
+<p>You might be crying &ldquo;but Homebrew needs the Xcode Command Line Tools installed!&rdquo; &ndash; and you&rsquo;d be 100% correct. You have the option of importing the downloaded package into Munki, but I have adapted <a href="https://github.com/timsutton/osx-vm-templates/blob/master/scripts/xcode-cli-tools.sh">Tim Sutton&rsquo;s script</a> into a <code>nopkg</code>. To find out what&rsquo;s installed, I ran <a href="http://www.fernlightning.com/doku.php?id=software%3afseventer%3astart">fseventer</a> and chose a random file to act as my installs array. I&rsquo;ve posted the pkginfos for both the <a href="https://github.com/grahamgilbert/macscripts/blob/master/Munki/pkginfos/Xcode/XcodeCLITools-2014.07.15.plist">Xcode CLI tools</a> and all of the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki/pkginfos/Homebrew">Homebrew installs</a> on Github.</p>
 </div>
   
   
@@ -612,7 +202,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/01/17/sal-the-munki-puppet/">Sal: The Munki Puppet</a></h1>
+      <h1 class="entry-title"><a href="/blog/2014/07/26/personal-automation-part-1/">Personal Automation (Part 1)</a></h1>
     
     
       <p class="meta">
@@ -628,22 +218,40 @@
   
 
 
-<time datetime="2014-01-17T10:51:46+00:00" pubdate data-updated="true">Jan 17<span>th</span>, 2014</time>
+<time datetime="2014-07-26T11:27:00+01:00" pubdate data-updated="true">Jul 26<span>th</span>, 2014</time>
         
-         | <a href="/blog/2014/01/17/sal-the-munki-puppet/#disqus_thread">Comments</a>
+         | <a href="/blog/2014/07/26/personal-automation-part-1/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>At <a href="http://pebbleit.com">pebble.it</a>, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a few options, but didn&rsquo;t like any of them, so we made our own.</p>
+  <div class="entry-content"><p><a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">Earlier this year</a>, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was designed for internal use at Github, it set some things up how they liked them &ndash; which wasn&rsquo;t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.</p>
 
-<p>Say hi to Sal &ndash; the Munki Puppet. It&rsquo;s a multi-tenanted reporting solution for Munki and optionally, Facter.  You can find all of the details <a href="https://github.com/grahamgilbert/sal">over on GitHub</a>, including installation instructions and a package to send out to your clients.</p>
+<p>Then I updated Boxen. All of my modules were out of date, so I spent a good couple of hours updating all of them so they worked again. Ugh.</p>
 
-<p><img class="center" src="/images/posts/2014-01-17/Sal.png"></p>
+<p>So I started looking at moving to my own solution. One of my major irritations when using Boxen was that it didn&rsquo;t really handle updating your apps &ndash; you got whatever version the module author decided to install and then you had to hope that there was an updatng mechanism built in. I&rsquo;ve said before that there is no better method of getting software onto your Mac then Munki, so the first decison was straightforward. The rest took a little thought.</p>
 
-<p>There is a plugin system built in to Sal, and over the next few days I will have a couple of posts covering how to make your own.</p>
+<h2>The six P&rsquo;s</h2>
+
+<p>My first requirement was that I shouldn&rsquo;t need to run anything to get my configuration to apply. Boxen requires that you run the <code>boxen</code> command periodically across each of your Macs to get the configuration applied. This wasn&rsquo;t always practical. I needed something that would run in the background and keep itself up to date.</p>
+
+<p>As I said before, I really disliked how Boxen installs software. Munki does a much better job, and AutoPkg makes it trivial to make sure you have the latest software version. Being a sysadmin, I need more than simple drag and drop apps and packages though &ndash; I make extensive use of <a href="http://brew.sh">Homebrew</a> to install command line tools like <a href="http://packer.io">Packer</a>, so I needed to come up with a way of installing these with Munki.</p>
+
+<p>However, Munki isn&rsquo;t the best tool for managing my configuration. I&rsquo;ve been using Puppet to manage the Macs  I look after for nearly three years now, and I wanted to base my system on it as I&rsquo;ve already done a lot of the work with making OS X specific modules. I also wanted to use the modules made for Boxen as much as possible (some made too many assumptions about where they were running, so couldn&rsquo;t be re-used.</p>
+
+<p>So to recap:</p>
+
+<ul>
+<li>Munki for software deployment.</li>
+<li>Puppet must run in the background periodically</li>
+<li>The configuration must update itself &ndash; I don&rsquo;t want to have to sync code across machines.</li>
+<li>Where possible, re-use existing Puppet modules</li>
+</ul>
+
+
+<p>Over the next few posts, I&rsquo;ll go over the different parts of this solution, how I put it together and how you might be able to use this.</p>
 </div>
   
   
@@ -656,7 +264,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/12/22/managing-the-authorization-database-with-munki/">Managing the Authorization Database With Munki</a></h1>
+      <h1 class="entry-title"><a href="/blog/2014/07/10/automate-yourself-out-of-a-job/">Automate Yourself Out of a Job</a></h1>
     
     
       <p class="meta">
@@ -672,224 +280,153 @@
   
 
 
-<time datetime="2013-12-22T15:25:00+00:00" pubdate data-updated="true">Dec 22<span>nd</span>, 2013</time>
+<time datetime="2014-07-10T20:39:33+01:00" pubdate data-updated="true">Jul 10<span>th</span>, 2014</time>
         
-         | <a href="/blog/2013/12/22/managing-the-authorization-database-with-munki/#disqus_thread">Comments</a>
+         | <a href="/blog/2014/07/10/automate-yourself-out-of-a-job/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Have you ever wished you didn&rsquo;t have to take calls from your users to unlock various parts of System Preferences? That standard users could unlock Energy Saver or Date and Time preferences? Well dear reader, this is the article for you.</p>
-
-<p>If, for some strange reason you can&rsquo;t be bothered to read this overly long article (I do love to procrastinate), you can head over to my <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki">macscripts repo on GitHub</a> for the scripts and resulting pkginfo files I&rsquo;ve made for this.</p>
-
-<p>Before we start, let&rsquo;s get one thing out of the way &ndash; Munki isn&rsquo;t at heart a configuration management system. I&rsquo;ve traditionally preferred Puppet for these tasks, but as there is at the time of writing a <a href="https://projects.puppetlabs.com/issues/22830">bug open</a> on modifying this with Puppet, I took it upon myself to make this work in my environment. I spent a couple of days trying to get my sub-par Ruby skills to match my aspirations, so I moved onto a much more comfortable technology for me: Python and Munki.</p>
-
-<p>To tackle this issue, I&rsquo;m going to be using the same Philosophy as Puppet:</p>
-
-<ul>
-<li>Check if the resource exists and what it&rsquo;s current value is</li>
-<li>If required, change the value</li>
-<li>And be able to revert back to how things were</li>
-</ul>
+  <div class="entry-content"><p>A massive thanks to everyone who came to my talk today, and thanks to everyone who helped out with the Q&amp;A at the end. All of the code I used in the talk is <a href="https://github.com/grahamgilbert/automate_psu_2014">up on GitHub</a> and <a href="http://grahamgilbert.com/images/posts/2014-07-10/Automate_yourself_out_of_a_job.pdf">here are the slides</a>. Hopefully the video will convey how much fun it actually was &ndash; it could have been a disaster, so I&rsquo;m hugely grateful to everyone who contributed to the discussion at the end.</p>
+</div>
+  
+  
 
 
-<p>These translate quite nicely into <code>installcheck_script</code>, <code>postinstall_script</code> and <code>uninstall_script</code> rolled into a <code>nopkg</code> pkginfo (for a good intro into how nopkg pkginfos work, see how to manage printers with them over on the <a href="https://code.google.com/p/munki/wiki/ManagingPrintersWithMunki">Munki wiki</a>). We could do this with a payload free package and an installcheck_script just as easily, but as we&rsquo;re already putting code into our pkginfo, we might as well keep it all in one place.</p>
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/">Multi Tenanted Munki With Puppet and Sal</a></h1>
+    
+    
+      <p class="meta">
+        
 
-<p>This isn&rsquo;t intended to be a tutorial on the theory of OS X&rsquo;s authorization database &ndash; there are already <a href="http://mattsmacblog.wordpress.com/2012/01/05/making-use-of-the-etcauthorization-file-in-lion-10-7-x/">excellent resources available</a>.</p>
 
-<h2>installcheck_script</h2>
 
-<p>Our <code>installcheck_script</code> is going to be very basic. To first open up the root <code>system.preferences</code> right, we just need to make sure that the group is set to <code>everyone</code> rather than <code>admin</code>. If you want to use another group, just substitute it in the <code>group</code> variable in the installcheck_script and the postinstall_script.</p>
 
-<figure class='code'><figcaption><span>installcheck.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">plistlib</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># Group System Preferences should be opened to</span>
-</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s">&#39;everyone&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;read&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">formatted</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-</span><span class='line'><span class="c"># if group matches, exit 1 as we don&#39;t need to install</span>
-</span><span class='line'><span class="k">if</span> <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">:</span>
-</span><span class='line'>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</span><span class='line'><span class="k">else</span><span class="p">:</span>
-</span><span class='line'>    <span class="c"># if it doesn&#39;t we&#39;re exiting with 0 as we need to perform the install</span>
-</span><span class='line'>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+
+
+
+  
+
+
+<time datetime="2014-07-09T20:27:25+01:00" pubdate data-updated="true">Jul 9<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thanks for everyone that came to my talk today, it was fun to finally show off what I&rsquo;ve been working on for the last year or so. I&rsquo;m sure the video will be up soon, but in the meantime, <a href="http://grahamgilbert.com/images/posts/2014-07-09/Multi_site_Munki.pdf">here are the slides from the talk</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/30/making-packages-with-autopkg/">Making Packages With AutoPkg</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-30T10:12:10+01:00" pubdate data-updated="true">Jun 30<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/06/30/making-packages-with-autopkg/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Over the past few weeks, I&rsquo;ve had the same conversation over and over:
+people telling me that once they get started using Munki, their next
+step will be to start using AutoPkg. I gave each person the same
+response: &ldquo;you&rsquo;re doing it wrong&rdquo;.</p>
+
+<p>AutoPkg a has a reputation of being difficult to use. This is totally
+unjustfied. You don&rsquo;t need to be using Munki for it to be useful, you
+don&rsquo;t need to set it up to run automatically via Jenkins or a
+LaunchDaemon. If you need to get software into a package,  AutoPkg is
+the easiest way.</p>
+
+<h2>Installing AutoPkg</h2>
+
+<p>Head over to the <a href="https://github.com/autopkg/autopkg/releases/latest">releases page on AutoPkg&rsquo;s GitHub repository</a> and
+download the latest version  (0.3.0 at the time of writing). It&rsquo;s an
+Apple package, so double click it and get it installed. If you have Gate Keeper enabled, you&rsquo;ll need to right-click on the package and choose to install it from there, as it&rsquo;s not been signed.</p>
+
+<h2>Recipes</h2>
+
+<p>AutoPkg is useless without recipes. Fortunately, there are hundreds
+that have already been made by the community.</p>
+
+<p>We&rsquo;ll add the set of recipes maintained by AutoPkg&rsquo;s authors, which
+contains some of the most common software. Open up a terminal window
+and enter :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>autopkg repo-add https://github.com/autopkg/recipes
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>postinstall_script</h2>
-
-<p>The <code>postinstall_script</code> is just an extension of the <code>installcheck_script</code> &ndash; but we&rsquo;re going to make use of Python&rsquo;s built-in <code>plistlib</code> to modify the plist and feed it back into <code>security authorizationdb</code> to set our desired settings.</p>
-
-<figure class='code'><figcaption><span>postinstall.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">plistlib</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># Group System Preferences should be opened to</span>
-</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s">&#39;everyone&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;read&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-</span><span class='line'><span class="n">formatted</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># If the group doesn&#39;t match, we&#39;re going to correct it.</span>
-</span><span class='line'><span class="k">if</span> <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">group</span><span class="p">:</span>
-</span><span class='line'>    <span class="c">#input_plist = {}</span>
-</span><span class='line'>    <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group</span>
-</span><span class='line'>    <span class="c"># Convert back to plist</span>
-</span><span class='line'>    <span class="n">input_plist</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">writePlistToString</span><span class="p">(</span><span class="n">formatted</span><span class="p">)</span>
-</span><span class='line'>    <span class="c"># Write the plist back to the authorizationdb</span>
-</span><span class='line'>    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;write&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
-</span><span class='line'>    <span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">input_plist</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>uninstall_script</h2>
-
-<p>We should be good admins and clean up after ourselves, so we&rsquo;ll include an uninstall script.</p>
-
-<figure class='code'><figcaption><span>uninstall.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">plistlib</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># Set the group back to admin</span>
-</span><span class='line'><span class="n">group</span> <span class="o">=</span> <span class="s">&#39;admin&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;read&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-</span><span class='line'><span class="n">formatted</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># If the group doesn&#39;t match, we&#39;re going to correct it.</span>
-</span><span class='line'><span class="k">if</span> <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">group</span><span class="p">:</span>
-</span><span class='line'>    <span class="n">formatted</span><span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group</span>
-</span><span class='line'>    <span class="c"># Convert back to plist</span>
-</span><span class='line'>    <span class="n">input_plist</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">writePlistToString</span><span class="p">(</span><span class="n">formatted</span><span class="p">)</span>
-</span><span class='line'>    <span class="c"># Write the plist back to the authorizationdb</span>
-</span><span class='line'>    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/bin/security&#39;</span><span class="p">,</span> <span class="s">&#39;authorizationdb&#39;</span><span class="p">,</span> <span class="s">&#39;write&#39;</span><span class="p">,</span> <span class="s">&#39;system.preferences&#39;</span><span class="p">]</span>
-</span><span class='line'>    <span class="n">task</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">input_plist</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Getting it into Munki</h2>
-
-<p>Now we&rsquo;ve got our three scripts, we need to get them together into a pkginfo file. Assuming the scripts you&rsquo;ve just made live in <code>~/src/macscripts/Munki/Auth</code>:</p>
+<p>You&rsquo;ll see AutoPkg downloading and adding the recipes to your Mac.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd ~/src/macscripts/Munki/Auth
-</span><span class='line'>$ /usr/local/munki/makepkginfo --installcheck_script=installcheck.py --postinstall_script=postinstall.py --uninstall_script=uninstall.py > OpenSysPrefs-1.0.plist</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Attempting git clone...
+</span><span class='line'>
+</span><span class='line'>Adding /Users/grahamgilbert/Library/AutoPkg/RecipeRepos/com.github.autopkg.recipes to RECIPE_SEARCH_DIRS...
+</span><span class='line'>Updated search path:
+</span><span class='line'>  <span class="s1">&#39;.&#39;</span>
+</span><span class='line'>  <span class="s1">&#39;~/Library/AutoPkg/Recipes&#39;</span>
+</span><span class='line'>  <span class="s1">&#39;/Library/AutoPkg/Recipes&#39;</span>
+</span><span class='line'>  <span class="s1">&#39;/Users/vagrant/Library/AutoPkg/RecipeRepos/com.github.autopkg.recipes&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Which will produce the bare bones of a pkginfo file, but there are a few other things we need to add into it. Modify OpenSysPref-1.0.plist to look like the below. For further documentation on what we&rsquo;re doing here, have a look at the <a href="https://code.google.com/p/munki/wiki/PkginfoFiles">Munki wiki</a>. The important parts you&rsquo;ll need to add / modify are:</p>
+<h2>Using the thing</h2>
 
-<ul>
-<li>autoremove</li>
-<li>catalog</li>
-<li>description</li>
-<li>display_name</li>
-<li>name</li>
-<li>installer_type</li>
-<li>minimum_os_version</li>
-<li>version</li>
-<li>unattended_install (if you want it to apply in the background)</li>
-<li>uninstall_method</li>
-<li>uninstallable</li>
-</ul>
+<p>Let&rsquo;s see what recipes we just added. Still in your terminal, enter:</p>
 
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>autopkg list-recipes
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll see a whole load of output like:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -905,208 +442,36 @@
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-<span class='line-number'>101</span>
-<span class='line-number'>102</span>
-<span class='line-number'>103</span>
-<span class='line-number'>104</span>
-<span class='line-number'>105</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
-</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;dict&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>autoremove<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;false/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>catalogs<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;string&gt;</span>production<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>description<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>Opens System Preferences to Everyone<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>display_name<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>Open System Preferences<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>name<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>OpenSysPrefs<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>installer_type<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>nopkg<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>minimum_os_version<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>10.8.0<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>unattended_install<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;true/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>version<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>1.0<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>installcheck_script<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>#!/usr/bin/env python
-</span><span class='line'>
-</span><span class='line'>import subprocess
-</span><span class='line'>import sys
-</span><span class='line'>import plistlib
-</span><span class='line'>
-</span><span class='line'># Group System Preferences should be opened to
-</span><span class='line'>group = &#39;everyone&#39;
-</span><span class='line'>
-</span><span class='line'>command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;read&#39;, &#39;system.preferences&#39;]
-</span><span class='line'>
-</span><span class='line'>task = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>(out, err) = task.communicate()
-</span><span class='line'>
-</span><span class='line'>formatted = plistlib.readPlistFromString(out)
-</span><span class='line'>
-</span><span class='line'># if group matches, exit 1 as we don&#39;t need to install
-</span><span class='line'>if formatted[&#39;group&#39;] == group:
-</span><span class='line'>    sys.exit(1)
-</span><span class='line'>else:
-</span><span class='line'>    # if it doesn&#39;t we&#39;re exiting with 0 as we need to perform the install
-</span><span class='line'>    sys.exit(0)<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>postinstall_script<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>#!/usr/bin/env python
-</span><span class='line'>
-</span><span class='line'>import subprocess
-</span><span class='line'>import sys
-</span><span class='line'>import plistlib
-</span><span class='line'>
-</span><span class='line'># Group System Preferences should be opened to
-</span><span class='line'>group = &#39;everyone&#39;
-</span><span class='line'>
-</span><span class='line'>command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;read&#39;, &#39;system.preferences&#39;]
-</span><span class='line'>
-</span><span class='line'>task = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>(out, err) = task.communicate()
-</span><span class='line'>formatted = plistlib.readPlistFromString(out)
-</span><span class='line'>
-</span><span class='line'># If the group doesn&#39;t match, we&#39;re going to correct it.
-</span><span class='line'>if formatted[&#39;group&#39;] != group:
-</span><span class='line'>    #input_plist = {}
-</span><span class='line'>    formatted[&#39;group&#39;] = group
-</span><span class='line'>    # Convert back to plist
-</span><span class='line'>    input_plist = plistlib.writePlistToString(formatted)
-</span><span class='line'>    # Write the plist back to the authorizationdb
-</span><span class='line'>    command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;write&#39;, &#39;system.preferences&#39;]
-</span><span class='line'>    task = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>    (out, err) = task.communicate(input=input_plist)<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>uninstall_method<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>uninstall_script<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>uninstallable<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;true/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>uninstall_script<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>#!/usr/bin/env python
-</span><span class='line'>
-</span><span class='line'>import subprocess
-</span><span class='line'>import sys
-</span><span class='line'>import plistlib
-</span><span class='line'>
-</span><span class='line'># Set the group back to admin
-</span><span class='line'>group = &#39;admin&#39;
-</span><span class='line'>
-</span><span class='line'>command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;read&#39;, &#39;system.preferences&#39;]
-</span><span class='line'>
-</span><span class='line'>task = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>(out, err) = task.communicate()
-</span><span class='line'>formatted = plistlib.readPlistFromString(out)
-</span><span class='line'>
-</span><span class='line'># If the group doesn&#39;t match, we&#39;re going to correct it.
-</span><span class='line'>if formatted[&#39;group&#39;] != group:
-</span><span class='line'>    formatted[&#39;group&#39;] = group
-</span><span class='line'>    # Convert back to plist
-</span><span class='line'>    input_plist = plistlib.writePlistToString(formatted)
-</span><span class='line'>    # Write the plist back to the authorizationdb
-</span><span class='line'>    command = [&#39;/usr/bin/security&#39;, &#39;authorizationdb&#39;, &#39;write&#39;, &#39;system.preferences&#39;]
-</span><span class='line'>    task = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-</span><span class='line'>    (out, err) = task.communicate(input=input_plist)<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'><span class="nt">&lt;/dict&gt;</span>
-</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Adium.download
+</span><span class='line'>Adium.munki
+</span><span class='line'>Adium.pkg
+</span><span class='line'>AdobeAIR.pkg
+</span><span class='line'>AdobeAcrobatPro9Update.download
+</span><span class='line'>AdobeAcrobatPro9Update.munki
+</span><span class='line'>AdobeAcrobatProXUpdate.download
+</span><span class='line'>AdobeAcrobatProXUpdate.munki
+</span><span class='line'>AdobeAir.munki
+</span><span class='line'>AdobeFlashPlayer.download
+</span><span class='line'>AdobeFlashPlayer.munki
+</span><span class='line'>AdobeFlashPlayer.pkg
+</span><span class='line'>AdobeFlashPlayerExtractPackage.munki
+</span><span class='line'>...
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>At this point, you should be able to add this pkginfo to your Munki repository, include it in a manifest and &ndash; well, nothing will happen, as this only unlocks the top level of System Preferences. If you want to do more, you&rsquo;ll need to unlock additional parts as well &ndash; the scripts to do this can be found in my <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki">macscripts repository</a>. I&rsquo;ve specified that <code>OpenSysPrefs</code> is required in all of these &ndash; this means I can include only the needed modifications in the manifest and not worry about the top level being unlocked.</p>
+<p>The naming convention in AutoPKG is SoftwareName.output. For for
+example, to run a recipe that downloads Google Chrome and adds it to
+Munki, you would use the GoogleChrome.munki recipe, but if you just
+wanted to download it an make a package, you&rsquo;d use the GoogleChrome.pkg recipe. It just so happens that making a package of Chrome is exactly what we want to do.</p>
 
-<p>Also remember that Munki has conditional items built right in &ndash; you might only want to unlock the Network pane on laptops so they can install VPN profiles etc using something like this:</p>
+<p>Back into your terminal and enter:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>autopkg run GoogleChrome.pkg
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The AutoPkg robot will churn away and you&rsquo;ll get some output similar to:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1117,21 +482,48 @@
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>conditional_items<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'><span class="nt">&lt;array&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;dict&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>condition<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>machine_type == &quot;laptop&quot;<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>managed_installs<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;string&gt;</span>UnlockNetwork<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/dict&gt;</span>
-</span><span class='line'><span class="nt">&lt;/array&gt;</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Processing GoogleChrome.pkg...
+</span><span class='line'>
+</span><span class='line'>The following new items were downloaded:
+</span><span class='line'>    /Users/grahamgilbert/Library/AutoPkg/Cache/com.github.autopkg.pkg.googlechrome/downloads/GoogleChrome.dmg
+</span><span class='line'>
+</span><span class='line'>The following packages were built:
+</span><span class='line'>    Identifier               Version          Pkg path
+</span><span class='line'>    ----------               -------          --------
+</span><span class='line'>    com.google.Chrome        35.0.1916.153    /Users/grahamgilbert/Library/AutoPkg/Cache/com.github.autopkg.pkg.googlechrome/GoogleChrome-35.0.1916.153.pkg
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>And when it&rsquo;s all finished, you&rsquo;ll be left with a nice package that
+you can use anywhere you&rsquo;d use finely crafted packages &ndash; ARD, AutoDMG or even Casper if you&rsquo;re that way inclined (although Allister Banks has been
+working on a way of automating importing packages into the JSS &ndash; see
+his <a href="http://tmblr.co/ZHT_Wy1J-Hk5I">recent talk</a> for more on that subject).</p>
+
+<h2>Doing it all again</h2>
+
+<p>What happens next time you want to build an updated package?</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>autopkg run GoogleChrome.pkg
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Right?</p>
+
+<p>Well, kinda.</p>
+
+<p>What happens if Google changes the URL AutoPkg uses to download
+Chrome? Fortunately we&rsquo;re using the community provided recipes, and if
+something&rsquo;s broken they usually get fixed pretty quickly. We just need
+to tell AutoPkg to update the installed recipes.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>autopkg update-repo all
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And then we&rsquo;re able to build our package safe in the knowledge that
+someone else has done all of the hard work for us.</p>
 </div>
   
   
@@ -1155,30 +547,30 @@
   <h1>About</h1>
   <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
 
-<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer or clients.</small></p>
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer.</small></p>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/">Managing Munki Catalogs With Trello</a>
+        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2015/01/04/migrating-scriptrunner-to-outset/">Migrating scriptRunner to Outset</a>
+        <a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Running Puppet Server in Docker Part 2: R10k</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Creating Business Units and Groups in Sal Using a CSV</a>
+        <a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/11/07/slides-and-notes-from-twisting-munki/">Slides and Notes From Twisting Munki</a>
+        <a href="/blog/2015/06/16/using-munki-trello-with-git/">Using Munki-trello With Git</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/">First-boot-pkg Updated for Yosemite</a>
+        <a href="/blog/2015/05/08/introducing-imagr/">Introducing Imagr</a>
       </li>
     
   </ul>

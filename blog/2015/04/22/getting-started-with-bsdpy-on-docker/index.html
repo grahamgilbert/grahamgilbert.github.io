@@ -1,0 +1,536 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Getting started with BSDPy on Docker - graham gilbert</title>
+  <meta name="author" content="Graham Gilbert">
+
+  
+  <meta name="description" content="Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you&rsquo;re going to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@grahamgilbert">
+<meta name="twitter:creator" content="@grahamgilbert">
+<meta name="twitter:description" content="Mac administration and assorted nerdity">
+<meta name="twitter:title" content="grahamgilbert.com">
+<meta name="twitter:url" content="http://grahamgilbert.com">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27233739-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">graham gilbert</a></h1>
+  
+    <h2>Mac administration and assorted nerdity</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:grahamgilbert.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/talks">Talks</a></li>
+  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Getting Started With BSDPy on Docker</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-04-22T07:07:23+01:00" pubdate data-updated="true">Apr 22<span>nd</span>, 2015</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you&rsquo;re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we&rsquo;re using that. Your Ubuntu box will also need a real IP address &ndash; if you are using VMware Fusion, this will be a Bridged Network Adapter &ndash; adjust the terminology if you&rsquo;re using a different virtualization tool. You don&rsquo;t need to worry about giving your machine a static IP unless you want to &ndash; Macs will NetBoot just fine when they&rsquo;re on the same subnet. <!--more--></p>
+
+<h2>Baby Steps</h2>
+
+<p>Our first job is to install Docker. I&rsquo;ve been as guilty as many with glossing over this step, so here&rsquo;s the massively long and difficult method to install the latest version of Docker on Ubuntu 14. First we make sure <code>wget</code> is installed:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>which wget
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And if that returns nothing then we need to install <code>wget</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo apt-get update
+</span><span class='line'><span class="nv">$ </span>sudo apt-get install wget
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now we can install Docker:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>wget -qO- https://get.docker.com/ | sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pop your password in when you&rsquo;re asked and you&rsquo;re done.</p>
+
+<h2>A long time ago on a server far away</h2>
+
+<p>Whilst you&rsquo;re still recovering from the trauma of that difficult install, I&rsquo;m going to cover a bit of background. I&rsquo;ve been using Docker for just under a year now, and I&rsquo;ve developed a method of working with containers that suits me. I&rsquo;m not for one second suggesting this is the best way of working, but it works nicely for me.</p>
+
+<p>On each of my Docker hosts, there is a directory at <code>/usr/local/docker</code> which is where all of my persistent data lives along with a script called <code>startup.sh</code>. All of my Docker related work happens in this script, and it follows this basic pattern:</p>
+
+<ul>
+<li>Pull the latest version of the images I&rsquo;m using from the Docker Hub (or my private registry, but that&rsquo;s beyond the scope of this post)</li>
+<li>Delete all of the existing containers</li>
+<li>Start up the required containers</li>
+</ul>
+
+
+<h2>Why?</h2>
+
+<p>The main reason I do this is that starting up a new container is often no slower than re-starting an existing one, and by using the order of pull &ndash;> delete &ndash;> relaunch, I can be sure that I&rsquo;m always using the latest version of those containers. I&rsquo;m also not having to type out <strong>LOOOOONNNNGGG</strong> <code>docker run</code> commands every time I want to update a container.</p>
+
+<p>The first part of our startup script will be to pull in the images we need. In addition to BSDPy, we need a TFTP server and a basic web server &ndash; fortunately Pepjin has you covered with Images for these already in the <a href="https://registry.hub.docker.com/repos/macadmins/">macadmins organisation</a>.</p>
+
+<p>If you&rsquo;re not made it already, we need to make the directory we&rsquo;ll store our permanent bits:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo -i
+</span><span class='line'><span class="nv">$ </span>mkdir -p /usr/local/docker/nbi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And fire up your favourite editor and put in the first part of our script:</p>
+
+<figure class='code'><figcaption><span>/usr/local/docker/startup.sh </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'>docker pull macadmins/tftpd
+</span><span class='line'>docker pull macadmins/netboot-httpd
+</span><span class='line'>docker pull bruienne/bsdpy:1.0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we just need to make it executable and we can run it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>chmod 755 /usr/local/docker/startup.sh
+</span><span class='line'><span class="nv">$ </span>/usr/local/docker/startup.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If all goes well Docker will start pulling down the images you need.</p>
+
+<h2>Cleaning up after ourselves</h2>
+
+<p>Pop this little snippet after the last <code>docker pull</code> command &ndash; it will stop and remove any existing containers:</p>
+
+<figure class='code'><figcaption><span>/usr/local/docker/startup.sh</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Other stuff is above here</span>
+</span><span class='line'>docker stop <span class="k">$(</span>docker ps -a -q<span class="k">)</span>
+</span><span class='line'>docker rm <span class="k">$(</span>docker ps -a -q<span class="k">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Linked containers</h2>
+
+<p>As previously alluded to, our NetBoot solution will comprise of three components. Add the following to the end of <code>/usr/local/docker/startup.sh</code> (if your server has more than one ethernet adapter, replace <code>eth0</code> with the name of the adapter you want to use for NetBoot):</p>
+
+<figure class='code'><figcaption><span>/usr/local/docker/startup.sh</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Other stuff is above here</span>
+</span><span class='line'>chmod -R 777 /usr/local/docker/nbi
+</span><span class='line'><span class="nv">IP</span><span class="o">=</span><span class="sb">`</span>ifconfig eth0 2&gt;/dev/null|awk <span class="s1">&#39;/inet addr:/ {print $2}&#39;</span>|sed <span class="s1">&#39;s/addr://&#39;</span><span class="sb">`</span>
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$IP</span>
+</span><span class='line'>
+</span><span class='line'>docker run -d <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/nbi:/nbi <span class="se">\</span>
+</span><span class='line'>  --name web <span class="se">\</span>
+</span><span class='line'>  --restart<span class="o">=</span>always <span class="se">\</span>
+</span><span class='line'>  -p 0.0.0.0:80:80 <span class="se">\</span>
+</span><span class='line'>  macadmins/netboot-httpd
+</span><span class='line'>
+</span><span class='line'>docker run -d <span class="se">\</span>
+</span><span class='line'>  -p 0.0.0.0:69:69/udp <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/nbi:/nbi <span class="se">\</span>
+</span><span class='line'>  --name tftpd <span class="se">\</span>
+</span><span class='line'>  --restart<span class="o">=</span>always <span class="se">\</span>
+</span><span class='line'>  macadmins/tftpd
+</span><span class='line'>
+</span><span class='line'>docker run -d <span class="se">\</span>
+</span><span class='line'>  -p 0.0.0.0:67:67/udp <span class="se">\</span>
+</span><span class='line'>  -v /usr/local/docker/nbi:/nbi <span class="se">\</span>
+</span><span class='line'>  -e <span class="nv">BSDPY_IFACE</span><span class="o">=</span>eth0 <span class="se">\</span>
+</span><span class='line'>  -e <span class="nv">BSDPY_NBI_URL</span><span class="o">=</span>http://<span class="nv">$IP</span> <span class="se">\</span>
+</span><span class='line'>  -e <span class="nv">BSDPY_IP</span><span class="o">=</span><span class="nv">$IP</span> <span class="se">\</span>
+</span><span class='line'>  --name bsdpy <span class="se">\</span>
+</span><span class='line'>  --restart<span class="o">=</span>always <span class="se">\</span>
+</span><span class='line'>  bruienne/bsdpy:1.0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And run your startup script:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>/usr/local/docker/startup.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll see your images being checked for updates, and then your containers will start. you can verify they&rsquo;re running by running:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker ps -a
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Using the thing</h2>
+
+<p>Of course, your NetBoot server isn&rsquo;t going to do anything as you&rsquo;ve not uploaded anything for it to serve yet. Get yourself a NetBoot image (if you&rsquo;re using a DeployStudio NBI, delete the symlink to <code>NetInstall.dmg</code> and rename <code>NetInstall.sparseimage</code> to <code>NetInstall.dmg</code>).</p>
+
+<p>You&rsquo;re not going to have a GUI to modify the <code>NBImageInfo.plist</code> so open it up in a text editor. The important parts to change are to make sure that the Mac you&rsquo;re intending to NetBoot is either in <code>EnabledSystemIdentifiers</code> or not in <code>DisabledSystemIdentifiers</code> and that <code>IsEnabled</code> is set to <code>&lt;true/&gt;</code>. If you are going to be serving more than one image, you can set your default image in here.</p>
+
+<p>All done? Time to get that image on your Docker host. From your admin machine (or wherever your NBI currently lives):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>scp -r /Path/To/MyNetBoot.nbi user@dockerhost:/usr/local/docker/nbi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>All that remains is to restart the <code>bsdpy</code> container on your Docker host:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>/usr/local/docker/startup.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And if you open up the <code>bsdpy</code> container&rsquo;s logs, you&rsquo;ll see it finding your NBI.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker logs bsdpy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And if you want to keep the logs open whilst you&rsquo;re testing, you can use <code>-f</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>docker logs -f bsdpy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion</h2>
+
+<p>If you&rsquo;ve made it all the way down here, congratulations! You&rsquo;ve now managed to move another service off that silly little Mac Mini and onto Linux &ndash; and hopefully you now see how easy it is to get things up and running with Docker.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Graham Gilbert</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-04-22T07:07:23+01:00" pubdate data-updated="true">Apr 22<span>nd</span>, 2015</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/deployment/'>Deployment</a>, <a class='category' href='/blog/categories/docker/'>Docker</a>, <a class='category' href='/blog/categories/os-x/'>OS X</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/04/13/more-fun-with-autonbi/" title="Previous Post: More fun with AutoNBI">&laquo; More fun with AutoNBI</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/04/28/testing-bsdpy-in-vagrant/" title="Next Post: Testing BSDPy in Vagrant">Testing BSDPy in Vagrant &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
+
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer.</small></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Running Puppet Server in Docker Part 2: R10k</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/06/16/using-munki-trello-with-git/">Using Munki-trello With Git</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/05/08/introducing-imagr/">Introducing Imagr</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'grahamgilbert',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+<section>
+  <h1>Twitter</h1>
+<a class="twitter-timeline" href="https://twitter.com/grahamgilbert" data-widget-id="483550747481489408">Tweets by @grahamgilbert</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Graham Gilbert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'grahamgilbert';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
