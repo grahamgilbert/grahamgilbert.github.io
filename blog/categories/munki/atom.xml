@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Munki | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/munki/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-05T15:46:59+01:00</updated>
+  <updated>2015-07-07T18:17:56+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,21 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Munki DND]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/07/07/munki-dnd/"/>
+    <updated>2015-07-07T17:46:44+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/07/07/munki-dnd</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been wanting to get stuck in with a simple Swift project for a while, but couldn&rsquo;t think of anything suitable for a first project (<a href="https://github.com/grahamgilbert/imagr">Imagr</a> was originally going to be that project, but I don&rsquo;t think it would ever have been made if I chose Swift), until I saw <a href="https://grpugh.wordpress.com/2015/07/03/a-do-not-disturb-application-for-munki/">Dr Graham R Pugh&rsquo;s Do Not Disturb application</a>. I thought it was an excellent idea that could be made even better by being a manu bar app.</p>
+
+<p><img class="center" src="images/posts/2015-07-07/active.png"></p>
+
+<p>Enter <a href="https://github.com/grahamgilbert/munki-dnd">Munki DND</a> &ndash; it extends Graham&rsquo;s idea by allowing the administrator to configure the number of hours the user is allowed to suppress notifications for, as well as living in the menu bar so the user can check how long they&rsquo;ve got until notifications become active again.</p>
+
+<p><img class="center" src="images/posts/2015-07-07/disabled.png"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Using munki-trello with Git]]></title>
@@ -190,39 +205,6 @@ git commit -m &ldquo;Munki Trello commit $now&rdquo;</p>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>You might be crying &ldquo;but Homebrew needs the Xcode Command Line Tools installed!&rdquo; &ndash; and you&rsquo;d be 100% correct. You have the option of importing the downloaded package into Munki, but I have adapted <a href="https://github.com/timsutton/osx-vm-templates/blob/master/scripts/xcode-cli-tools.sh">Tim Sutton&rsquo;s script</a> into a <code>nopkg</code>. To find out what&rsquo;s installed, I ran <a href="http://www.fernlightning.com/doku.php?id=software%3afseventer%3astart">fseventer</a> and chose a random file to act as my installs array. I&rsquo;ve posted the pkginfos for both the <a href="https://github.com/grahamgilbert/macscripts/blob/master/Munki/pkginfos/Xcode/XcodeCLITools-2014.07.15.plist">Xcode CLI tools</a> and all of the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki/pkginfos/Homebrew">Homebrew installs</a> on Github.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Personal Automation (Part 1)]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/"/>
-    <updated>2014-07-26T11:27:00+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1</id>
-    <content type="html"><![CDATA[<p><a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">Earlier this year</a>, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was designed for internal use at Github, it set some things up how they liked them &ndash; which wasn&rsquo;t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.</p>
-
-<p>Then I updated Boxen. All of my modules were out of date, so I spent a good couple of hours updating all of them so they worked again. Ugh.</p>
-
-<p>So I started looking at moving to my own solution. One of my major irritations when using Boxen was that it didn&rsquo;t really handle updating your apps &ndash; you got whatever version the module author decided to install and then you had to hope that there was an updatng mechanism built in. I&rsquo;ve said before that there is no better method of getting software onto your Mac then Munki, so the first decison was straightforward. The rest took a little thought.</p>
-
-<h2>The six P&rsquo;s</h2>
-
-<p>My first requirement was that I shouldn&rsquo;t need to run anything to get my configuration to apply. Boxen requires that you run the <code>boxen</code> command periodically across each of your Macs to get the configuration applied. This wasn&rsquo;t always practical. I needed something that would run in the background and keep itself up to date.</p>
-
-<p>As I said before, I really disliked how Boxen installs software. Munki does a much better job, and AutoPkg makes it trivial to make sure you have the latest software version. Being a sysadmin, I need more than simple drag and drop apps and packages though &ndash; I make extensive use of <a href="http://brew.sh">Homebrew</a> to install command line tools like <a href="http://packer.io">Packer</a>, so I needed to come up with a way of installing these with Munki.</p>
-
-<p>However, Munki isn&rsquo;t the best tool for managing my configuration. I&rsquo;ve been using Puppet to manage the Macs  I look after for nearly three years now, and I wanted to base my system on it as I&rsquo;ve already done a lot of the work with making OS X specific modules. I also wanted to use the modules made for Boxen as much as possible (some made too many assumptions about where they were running, so couldn&rsquo;t be re-used.</p>
-
-<p>So to recap:</p>
-
-<ul>
-<li>Munki for software deployment.</li>
-<li>Puppet must run in the background periodically</li>
-<li>The configuration must update itself &ndash; I don&rsquo;t want to have to sync code across machines.</li>
-<li>Where possible, re-use existing Puppet modules</li>
-</ul>
-
-
-<p>Over the next few posts, I&rsquo;ll go over the different parts of this solution, how I put it together and how you might be able to use this.</p>
 ]]></content>
   </entry>
   

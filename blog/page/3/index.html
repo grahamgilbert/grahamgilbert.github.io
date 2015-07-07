@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="A while back, Nate Walck wrote scriptRunner. It&rsquo;s a tool that can run a script either every time a user logs in or just the one time. It has &hellip;">
+  <meta name="description" content="Over the past few months, I&rsquo;ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/">Managing Munki Catalogs With Trello</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-11T12:11:30+00:00" pubdate data-updated="true">Feb 11<span>th</span>, 2015</time>
+        
+         | <a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Over the past few months, I&rsquo;ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage it. We&rsquo;ve got <a href="https://github.com/autopkg/autopkg">AutoPkg</a> populating our <a href="https://github.com/munki/munki">Munki</a> repositories without any manual intervention, but we still need to edit pkgsinfo files to move items through development to testing to production catalogs. Sure, there are existing tools  like <a href="https://github.com/munki/munkiwebadmin">MunkiWebAdmin</a> or <a href="https://github.com/hjuutilainen/munkiadmin">MunkiAdmin</a>, but they either still require knowledge of how Munki works or full access to the repository via a file share of some sort. And we obviously already have a tool for assigning software to machines in Sal+ &ndash; we needed something that can speed this incredibly common task.</p>
+
+<p>Then I cast my mind back to a conversation I had with <a href="https://twitter.com/bruienne">Pepijn Bruienne</a> at PSU last year about his workflow using <a href="https://trello.com">Trello</a> to promote items in his Munki repository. So, after pestering him for some information, I devised a workflow that matched how we worked.</p>
+
+<h2>&ldquo;So how does it work&rdquo;, I hear you cry</h2>
+
+<p>We have five lists on our &ldquo;Munki Package Management&rdquo; Trello board. Essentially when the script runs, it inspects the items in our Munki catalog and if they&rsquo;re not already in the Trello board, it adds them to the correct list (we ignore anything that&rsquo;s already in production. All promotions to production are done using this tool now).</p>
+
+<p><img class="center" src="/images/posts/2015-02-11/to_testing.gif" width="427" height="240"></p>
+
+<p>We also have lists called &ldquo;To Development&rdquo;, &ldquo;To Testing&rdquo; and &ldquo;To Production&rdquo;. Moving items into these lists will be caught by the script next time it runs, and moved to the appropriate catalog.</p>
+
+<p><img class="center" src="/images/posts/2015-02-11/testing.gif" width="427" height="240"></p>
+
+<p>When items finally make it to Production, we add them to a dated Production list. This allows us to have a full history of when things are added to Production and who has moved it through each stage. We&rsquo;re also big users of Slack, so we hooked up it&rsquo;s Tello integration to post a message to our notficiations channel to let our team know when items are added into Munki.</p>
+
+<p>You can grab the script from <a href="https://github.com/pebbleit/munki-trello">pebble.it&rsquo;s GitHub account</a>, or if you&rsquo;re Docker inclined there&rsquo;s a <a href="https://registry.hub.docker.com/u/pebbleit/munki-trello/">container that has everything you need</a>.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -282,46 +336,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/08/24/london-apple-admins/">London Apple Admins</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-08-24T17:17:24+01:00" pubdate data-updated="true">Aug 24<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/08/24/london-apple-admins/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;m delighted to say that the first (first meet that isn&rsquo;t &ldquo;let&rsquo;s go to the pub and get drunk&rdquo;, anyway!) <a href="http://www.londonappleadmins.org.uk">London Apple Admins</a> meetup is happening on the 3rd September at <a href="http://theredherring.co.uk/">The Red Herring in St Pauls</a>. I&rsquo;d like to take all of the credit for organising it, but it was down to the hard work of <a href="http://macmule.com">Ben Toms</a>. The theme this time is &ldquo;this is what I&rsquo;m working on at the moment&rdquo;, so I&rsquo;ll be talking about my new favourite toy, <a href="https://www.docker.com">Docker</a>.</p>
-
-<p>If you&rsquo;ll be in or around London on the 3rd September, <a href="https://www.eventbrite.com/e/london-apple-admins-sept-2014-tickets-12545591201">please get yourself a ticket</a> (they&rsquo;re free) and come and have a beer or two whilst listening to some awesome talks by London based Mac Admins.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -345,6 +359,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/07/munki-dnd/">Munki DND</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
       </li>
     
@@ -358,10 +376,6 @@
     
       <li class="post">
         <a href="/blog/2015/06/16/using-munki-trello-with-git/">Using Munki-trello With Git</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/08/introducing-imagr/">Introducing Imagr</a>
       </li>
     
   </ul>
