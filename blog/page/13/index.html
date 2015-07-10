@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="I recently had a requirement to run an Ununtu machine, but the client had only mac servers, and no budget for additional hardware. The solution &hellip;">
+  <meta name="description" content="Munki is great. It keeps your macs up to date &ndash; well it does most of the time. Sometimes you get a user that just refuses to click on &ldquo; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/07/run-munki-at-boot/">Run Munki at Boot</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-07T09:19:00+01:00" pubdate data-updated="true">May 7<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/05/07/run-munki-at-boot/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Munki is great. It keeps your macs up to date &ndash; well it does most of the time. Sometimes you get a user that just refuses to click on &ldquo;Update&rdquo; now matter how many times it pops up. Now you have a tool to defeat them &ndash; install this package over ARD and munki will install everything that&rsquo;s available, including Apple software updates (it will reboot the mac if needed and carry on where it left off).</p>
+
+<p>I wish I could take credit for all this <a href="http://code.google.com/p/munki/wiki/BootstrappingWithMunki">amazingness</a>, but I just wrapped it up into a package. The source is over at <a href="https://github.com/grahamgilbert/Munki-Bootstrap">GitHub</a>, and there&rsquo;s <a href="https://github.com/downloads/grahamgilbert/Munki-Bootstrap/Munki_Bootstrap.pkg.zip">a pre built package</a> as well.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -313,44 +353,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/23/making-a-lion-recovery-hd-revisited/">Making a Lion Recovery HD Revisited</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-23T11:55:29+00:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
-        
-         | <a href="/blog/2012/02/23/making-a-lion-recovery-hd-revisited/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve pushed some updates to this script, mainly switching to using <a href="https://github.com/unixorn/luggage">The Luggage</a> for making the package. As ever, it&rsquo;s up on <a href="https://github.com/grahamgilbert/Make-Recovery-HD">Github</a>.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/14/">&larr; Older</a>
@@ -374,6 +376,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/10/using-the-sal-api/">Using the Sal API</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/07/munki-dnd/">Munki DND</a>
       </li>
     
@@ -387,10 +393,6 @@
     
       <li class="post">
         <a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/06/16/using-munki-trello-with-git/">Using Munki-trello With Git</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Over the past few months, I&rsquo;ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage &hellip;">
+  <meta name="description" content="Another day, another tool made by Mr Bruienne! A while back, Pepijn released AutoNBI &ndash; a tool for automating the creation of NetInstall sets. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,70 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/04/12/building-custom-netinstalls-with-autonbi/">Building Custom NetInstalls With AutoNBI</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-04-12T20:33:28+01:00" pubdate data-updated="true">Apr 12<span>th</span>, 2015</time>
+        
+         | <a href="/blog/2015/04/12/building-custom-netinstalls-with-autonbi/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Another day, another tool made by <a href="http://enterprisemac.bruienne.com">Mr Bruienne</a>! A while back, Pepijn released <a href="https://bitbucket.org/bruienne/autonbi">AutoNBI</a> &ndash; a tool for automating the creation of NetInstall sets. At the time, it was filled away in the &ldquo;this is cool, but isn&rsquo;t this what System Image Utility does?&rdquo; section. Then I saw his NetInstall running at MacTech (are you seeing a theme here?). It had this really simple DeployStudio like imagaing app &ndash; it was really cool. And suddently it made sense why you can replace the <code>Packages</code> directory with AutoNBI &ndash; a NetInstall is a really stripped down OS X environment, so it it much easier to distribute and use &ndash; we&rsquo;re looking at around 1.8GB for my current NetInstall vs 5-6GB for a normal NetBoot.</p>
+
+<p>This time we&rsquo;ll take a look at how to use AutoNBI to make a standard NetInstall &ndash; in a future post we&rsquo;ll look at some of the more cool things you can do with AutoNBI.</p>
+
+<h2>Ok, stop talking, let&rsquo;s do this.</h2>
+
+<p>We&rsquo;re going to need AutoNBI to start off with. Open up your Terminal and:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git clone https://bitbucket.org/bruienne/autonbi.git
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>autonbi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Prepare the build!</h2>
+
+<p>We&rsquo;re ready to go (assuming you&rsquo;ve got an OS X installer &ndash; you do, right?). Still in your terminal:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo ./AutoNBI.py -s /Applications/Install<span class="se">\ </span>OS<span class="se">\ </span>X<span class="se">\ </span>Yosemite.app -d ~/Desktop -n MyNetInstall -e
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What did we just do? The <code>-s</code> option is simply pointing at our Install OS X Yosemite.app &ndash; if you have it somewhere else, point AutoNBI there. <code>-d</code> is our destination directory and <code>-n</code> is the name of our NetInstall. <code>-e</code> is telling AutoNBI to make the NetInstall enabled.</p>
+
+<p>So the next time there&rsquo;s a new OS X Installer, you can have an updated NetInstall in seconds, not minutes.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -296,46 +360,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/">First-boot-pkg Updated for Yosemite</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-10-21T11:50:28+01:00" pubdate data-updated="true">Oct 21<span>st</span>, 2014</time>
-        
-         | <a href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It seems like Yosemite introduced an <a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">undocumented change</a> that requires any packages that are added an OS X installer (e.g. Netinstall or createOSXinstallPkg) be distribution style packages, or you get a nasty failure acompanied by one of the most unhelpful error messages ever.</p>
-
-<p>To fix this, <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> now builds distribution style packages.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -359,6 +383,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/10/using-the-sal-api/">Using the Sal API</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/07/munki-dnd/">Munki DND</a>
       </li>
     
@@ -372,10 +400,6 @@
     
       <li class="post">
         <a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/06/16/using-munki-trello-with-git/">Using Munki-trello With Git</a>
       </li>
     
   </ul>

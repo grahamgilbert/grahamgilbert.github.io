@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-07T18:23:07+01:00</updated>
+  <updated>2015-07-10T09:31:24+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,67 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Using the Sal API]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api/"/>
+    <updated>2015-07-10T11:12:36+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api</id>
+    <content type="html"><![CDATA[<p>As previously mentioned, Sal now has an <a href="https://github.com/salopensource/sal/blob/master/docs/API.md">API</a>. You might be wondering what you can do with this wonderous API. This is a simple example of using it to automate building packages to enrol Macs into Sal.</p>
+
+<p>The basic workflow of this script is:</p>
+
+<ul>
+<li>Use the API to get a list of all Machine Groups in Sal &ndash; this will return JSON (a markup language that is easily parsable with languages like Python)</li>
+<li>Download the Sal postflight scripts</li>
+<li>Download the latest Facter installer</li>
+<li>For each machine group, build a package that will install all of the packages and then set the correct Sal preferences.</li>
+</ul>
+
+
+<p><a href="https://gist.github.com/grahamgilbert/8ccba318d3ecadee02b1">You can find the script in this Gist</a>. I&rsquo;m not going to go through the script line by line, but we&rsquo;ll cover how to configure it.</p>
+
+<p>First off you will need an API key configuring. Log into Sal as a user with Global Admin privelages and choose the &lsquo;person&rsquo; menu at the top right and then choose Settings. From the sidebar, choose API keys and then choose to make a new one. Give it a name so you can recognise it &ndash; I called this one &ldquo;PKG Generator&rdquo;. You will then be given a public key and a private key. Make a note of them, we&rsquo;ll need them in the next section.</p>
+
+<h2>Configuring the script</h2>
+
+<p>Edit the variables at the top to match your environment:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c"># No trailing slash on this one - I was lazy and didn&#39;t check for it</span>
+</span><span class='line'><span class="n">SAL_URL</span> <span class="o">=</span> <span class="s">&quot;https://sal.yourcompany.com&quot;</span>
+</span><span class='line'><span class="n">PUBLIC_KEY</span> <span class="o">=</span> <span class="s">&quot;yourpublickeyhere&quot;</span>
+</span><span class='line'><span class="n">PRIVATE_KEY</span> <span class="o">=</span> <span class="s">&quot;yourreallyreallyreallylongprivatekeyhere&quot;</span>
+</span><span class='line'><span class="n">PKG_IDENTIFIER</span> <span class="o">=</span> <span class="s">&quot;com.yourcompany.sal_enrol&quot;</span>
+</span><span class='line'><span class="n">SAL_PKG</span> <span class="o">=</span> <span class="s">&quot;https://github.com/salopensource/sal/releases/download/v0.4.0/sal_scripts.pkg&quot;</span>
+</span><span class='line'><span class="n">FACTER_PKG</span> <span class="o">=</span> <span class="s">&quot;https://downloads.puppetlabs.com/mac/facter-latest.dmg&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There are some caveats with this script:</p>
+
+<ul>
+<li>It will spit the packages out in your current directory. Make sure you&rsquo;ve <code>cd</code>-ed into where you want the packages to be generated.</li>
+<li>It uses <code>urllib2</code> to request the information from Sal and to download the packages &ndash; this means that there is no verification of the SSL certificates, so make sure you know where you&rsquo;re connecting to.</li>
+</ul>
+
+
+<p>All ready to run it?</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo python sal_package_generator.py
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And you&rsquo;ll get a directory full of packages that will get your fleet reporting into Sal.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Munki DND]]></title>
@@ -1181,15 +1242,6 @@
     <updated>2014-07-10T20:39:33+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/07/10/automate-yourself-out-of-a-job</id>
     <content type="html"><![CDATA[<p>A massive thanks to everyone who came to my talk today, and thanks to everyone who helped out with the Q&amp;A at the end. All of the code I used in the talk is <a href="https://github.com/grahamgilbert/automate_psu_2014">up on GitHub</a> and <a href="http://grahamgilbert.com/images/posts/2014-07-10/Automate_yourself_out_of_a_job.pdf">here are the slides</a>. Hopefully the video will convey how much fun it actually was &ndash; it could have been a disaster, so I&rsquo;m hugely grateful to everyone who contributed to the discussion at the end.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Multi tenanted Munki with Puppet and Sal]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/"/>
-    <updated>2014-07-09T20:27:25+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal</id>
-    <content type="html"><![CDATA[<p>Thanks for everyone that came to my talk today, it was fun to finally show off what I&rsquo;ve been working on for the last year or so. I&rsquo;m sure the video will be up soon, but in the meantime, <a href="http://grahamgilbert.com/images/posts/2014-07-09/Multi_site_Munki.pdf">here are the slides from the talk</a>.</p>
 ]]></content>
   </entry>
   
