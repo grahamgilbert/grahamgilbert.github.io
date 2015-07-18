@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="As previously mentioned, Sal now has an API. You might be wondering what you can do with this wonderous API. This is a simple example of using it to &hellip;">
+  <meta name="description" content="In the previous two parts, we went over how to get a basic Puppet Server up and running in Docker and how to deploy your modules using r10k. This &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/">Running Puppet Server in Docker Part 3: Hiera</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-18T09:36:01+01:00" pubdate data-updated="true">Jul 18<span>th</span>, 2015</time>
+        
+         | <a href="/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In the previous <a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/">two</a> <a href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/#comment-2143364638">parts</a>, we went over how to get a basic Puppet Server up and running in Docker and how to deploy your modules using r10k. This time we&rsquo;ll assign some configuration to our nodes using <a href="http://docs.puppetlabs.com/hiera/latest/">Hiera</a>.</p>
+
+<p>For a full explanation of what Hiera is, see the Puppetlabs documentation, but essentially, you are using a series of directories and files that are named in a particular way, and then specifying which is the most speccific to your node.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/">Continue reading &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -311,57 +354,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-06-22T12:29:55+01:00" pubdate data-updated="true">Jun 22<span>nd</span>, 2015</time>
-        
-         | <a href="/blog/2015/06/22/running-puppet-server-in-docker/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively &ndash; it&rsquo;s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
-
-<p>Over the next few posts, I&rsquo;ll take you through setting up the Puppet Server (running on Docker, naturally!), using r10k and git for managing your modules and using Hiera to configure your Macs &ndash; we&rsquo;ll apply some configuration to a Mac without writing a single line of Puppet code .</p>
-
-<h1>Why?</h1>
-
-<p>You might well be thinking &ldquo;why would I want to use Puppet?&rdquo; After all, you&rsquo;ve already got Munki. There are two main reasons I&rsquo;ve chosen to go back to using a Puppet Server in conjunction with Munki.</p>
-
-<ol>
-<li>It&rsquo;s nice to have a fallback. If I manage to do something stupid and nuke my Munki install, or my customers manage to do the same, I&rsquo;ve got some way of getting the machines back under control.</li>
-<li>&ldquo;Free&rdquo; SSL certs &ndash; this might not be a priority now, but it gives you an easy to to secure your Munki repository later on (which we may cover in a later post).</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/06/22/running-puppet-server-in-docker/">Continue reading &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -383,6 +375,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/">Running Puppet Server in Docker Part 3: Hiera</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/10/using-the-sal-api/">Using the Sal API</a>
       </li>
     
@@ -396,10 +392,6 @@
     
       <li class="post">
         <a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Running Puppet Server in Docker Part 2: R10k</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Docker | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/docker/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-10T09:31:24+01:00</updated>
+  <updated>2015-07-18T10:32:54+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,84 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Running Puppet Server in Docker Part 3: Hiera]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/"/>
+    <updated>2015-07-18T09:36:01+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera</id>
+    <content type="html"><![CDATA[<p>In the previous <a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/">two</a> <a href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/#comment-2143364638">parts</a>, we went over how to get a basic Puppet Server up and running in Docker and how to deploy your modules using r10k. This time we&rsquo;ll assign some configuration to our nodes using <a href="http://docs.puppetlabs.com/hiera/latest/">Hiera</a>.</p>
+
+<p>For a full explanation of what Hiera is, see the Puppetlabs documentation, but essentially, you are using a series of directories and files that are named in a particular way, and then specifying which is the most speccific to your node.<!--more--></p>
+
+<p>Let&rsquo;s get things set up. First off, you need to tell your server what order it should be looking things up in. Restart the Puppet Server container when you&rsquo;ve made the change. This is mine, yours will likely be different:</p>
+
+<h2>``` yaml /usr/local/docker/puppetserver/puppet/hiera.yaml</h2>
+
+<p>:backends:
+  &ndash; yaml
+:yaml:
+  :datadir: /etc/puppet/environments/%{::environment}/hieradata/
+:hierarchy:
+  &ndash; &ldquo;certs/%{::clean_certname}&rdquo;
+  &ndash; &ldquo;osfamily/%{::osfamily}&rdquo;
+  &ndash; &ldquo;virtual/%{::osfamily}/%{::virtual}&rdquo;
+  &ndash; &ldquo;virtual/%{::virtual}&rdquo;
+  &ndash; common
+```</p>
+
+<p>From top to bottom:</p>
+
+<ul>
+<li>We&rsquo;re telling Hiera that we&rsquo;re using a yaml backend &ndash; you can in theory use anything to provide data to Hiera, but I&rsquo;ve only ever used yaml.</li>
+<li>We&rsquo;re telling Hiera where to find the hierachy &ndash; we&rsquo;re keeping ours in our control repo, so we can make changes based on environment.</li>
+<li>And finally, we&rsquo;re specifying our hierachy. Anything that looks like <code>%{::osfamily}</code> is a value from Facter. This means we can apply configuration dynamically based on the node&rsquo;s values from Facter. Did that mean nothing to you? <a href="http://docs.puppetlabs.com/hiera/latest/hierarchy.html">Go and read this page before carrying on.</a></li>
+</ul>
+
+
+<p>In your control repo, create the following files:</p>
+
+<p><code>bash environment.conf
+manifest = site.pp
+modulepath = modules:site
+</code></p>
+
+<p><code>bash site.pp
+hiera_include('classes')
+</code></p>
+
+<p>Woah, hold on &ndash; what just happened there? In three lines, we told Puppet where to find our <code>site.pp</code> file &ndash; the file that is read first during a Puppet run, and then in <code>site.pp</code> that is should include our classes from Hiera. Let&rsquo;s do that now. We&rsquo;re going to make our most general configuration &ndash; <code>common.yaml</code> that came at the bottom of <code>hiera.yaml</code> above.</p>
+
+<h2>``` yaml hieradata/common.yaml</h2>
+
+<p>classes:
+  &ndash; puppet_run
+&ldquo;puppet_run::server_name&rdquo;: puppet.example.com
+```</p>
+
+<p>We want all of our clients to run Puppet periodically &ndash; so we&rsquo;ve included the <code>puppet_run</code> class and have set the <code>puppet_run::server_name</code> variable. Where did we find that variable? All of a classes variables are <a href="https://github.com/grahamgilbert/puppet-puppet_run/blob/master/manifests/init.pp#L2">listed at the top of the file</a>.</p>
+
+<p>But let&rsquo;s say we want Munki on all of our Macs. We don&rsquo;t want it being installed on Linux, so we need to be a bit more specific in our hierachy:</p>
+
+<h2>``` yaml hieradata/osfamily/Darwin.yaml</h2>
+
+<p>classes:
+  &ndash; mac_admin::munki
+  &ndash; mac_admin::munki::munkitools</p>
+
+<p>mac_admin::munki::repourl: <a href="https://munki.example.com">https://munki.example.com</a>
+mac_admin::munki::install_apple_updates: true
+```</p>
+
+<p>This will only be applied to nodes that have their <code>osfamily</code> fact equal to <code>Darwin</code>.</p>
+
+<p>Now all of that is commited to your control git repository, all that remains is to deploy it on your Puppet Server:</p>
+
+<p><code>bash
+$ r10k deploy environment -pv
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Running Puppet Server in Docker Part 2: r10k]]></title>
@@ -46,7 +124,7 @@ mod &lsquo;mac_admin&rsquo;,</p>
 
 <p>mod &lsquo;mac_profiles_handler&rsquo;,</p>
 
-<pre><code>:git =&gt; 'https://github.com/ryanycoleman/rcoleman-mac_profiles_handler'
+<pre><code>:git =&gt; 'https://github.com/keeleysam/rcoleman-mac_profiles_handler'
 </code></pre>
 
 <p>mod &lsquo;mac_facts&rsquo;,</p>

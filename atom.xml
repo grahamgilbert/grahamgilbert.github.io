@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-10T09:31:24+01:00</updated>
+  <updated>2015-07-18T10:32:54+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,112 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Running Puppet Server in Docker Part 3: Hiera]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/"/>
+    <updated>2015-07-18T09:36:01+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera</id>
+    <content type="html"><![CDATA[<p>In the previous <a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/">two</a> <a href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/#comment-2143364638">parts</a>, we went over how to get a basic Puppet Server up and running in Docker and how to deploy your modules using r10k. This time we&rsquo;ll assign some configuration to our nodes using <a href="http://docs.puppetlabs.com/hiera/latest/">Hiera</a>.</p>
+
+<p>For a full explanation of what Hiera is, see the Puppetlabs documentation, but essentially, you are using a series of directories and files that are named in a particular way, and then specifying which is the most speccific to your node.<!--more--></p>
+
+<p>Let&rsquo;s get things set up. First off, you need to tell your server what order it should be looking things up in. Restart the Puppet Server container when you&rsquo;ve made the change. This is mine, yours will likely be different:</p>
+
+<figure class='code'><figcaption><span>/usr/local/docker/puppetserver/puppet/hiera.yaml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="nn">---</span>
+</span><span class='line'><span class="l-Scalar-Plain">:backends</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">yaml</span>
+</span><span class='line'><span class="l-Scalar-Plain">:yaml</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:datadir</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/etc/puppet/environments/%{::environment}/hieradata/</span>
+</span><span class='line'><span class="l-Scalar-Plain">:hierarchy</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="s">&quot;certs/%{::clean_certname}&quot;</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="s">&quot;osfamily/%{::osfamily}&quot;</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="s">&quot;virtual/%{::osfamily}/%{::virtual}&quot;</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="s">&quot;virtual/%{::virtual}&quot;</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">common</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>From top to bottom:</p>
+
+<ul>
+<li>We&rsquo;re telling Hiera that we&rsquo;re using a yaml backend &ndash; you can in theory use anything to provide data to Hiera, but I&rsquo;ve only ever used yaml.</li>
+<li>We&rsquo;re telling Hiera where to find the hierachy &ndash; we&rsquo;re keeping ours in our control repo, so we can make changes based on environment.</li>
+<li>And finally, we&rsquo;re specifying our hierachy. Anything that looks like <code>%{::osfamily}</code> is a value from Facter. This means we can apply configuration dynamically based on the node&rsquo;s values from Facter. Did that mean nothing to you? <a href="http://docs.puppetlabs.com/hiera/latest/hierarchy.html">Go and read this page before carrying on.</a></li>
+</ul>
+
+
+<p>In your control repo, create the following files:</p>
+
+<figure class='code'><figcaption><span>environment.conf</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">manifest</span> <span class="o">=</span> site.pp
+</span><span class='line'><span class="nv">modulepath</span> <span class="o">=</span> modules:site
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>site.pp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>hiera_include<span class="o">(</span><span class="s1">&#39;classes&#39;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Woah, hold on &ndash; what just happened there? In three lines, we told Puppet where to find our <code>site.pp</code> file &ndash; the file that is read first during a Puppet run, and then in <code>site.pp</code> that is should include our classes from Hiera. Let&rsquo;s do that now. We&rsquo;re going to make our most general configuration &ndash; <code>common.yaml</code> that came at the bottom of <code>hiera.yaml</code> above.</p>
+
+<figure class='code'><figcaption><span>hieradata/common.yaml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="nn">---</span>
+</span><span class='line'><span class="l-Scalar-Plain">classes</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">puppet_run</span>
+</span><span class='line'><span class="s">&quot;puppet_run::server_name&quot;</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">puppet.example.com</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We want all of our clients to run Puppet periodically &ndash; so we&rsquo;ve included the <code>puppet_run</code> class and have set the <code>puppet_run::server_name</code> variable. Where did we find that variable? All of a classes variables are <a href="https://github.com/grahamgilbert/puppet-puppet_run/blob/master/manifests/init.pp#L2">listed at the top of the file</a>.</p>
+
+<p>But let&rsquo;s say we want Munki on all of our Macs. We don&rsquo;t want it being installed on Linux, so we need to be a bit more specific in our hierachy:</p>
+
+<figure class='code'><figcaption><span>hieradata/osfamily/Darwin.yaml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="nn">---</span>
+</span><span class='line'><span class="l-Scalar-Plain">classes</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">mac_admin::munki</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">mac_admin::munki::munkitools</span>
+</span><span class='line'>
+</span><span class='line'><span class="l-Scalar-Plain">mac_admin::munki::repourl</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">https://munki.example.com</span>
+</span><span class='line'><span class="l-Scalar-Plain">mac_admin::munki::install_apple_updates</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will only be applied to nodes that have their <code>osfamily</code> fact equal to <code>Darwin</code>.</p>
+
+<p>Now all of that is commited to your control git repository, all that remains is to deploy it on your Puppet Server:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>r10k deploy environment -pv
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Using the Sal API]]></title>
@@ -152,7 +258,7 @@
 </span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/grahamgilbert/puppet-mac_admin&#39;</span>
 </span><span class='line'>
 </span><span class='line'><span class="n">mod</span> <span class="s1">&#39;mac_profiles_handler&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/ryanycoleman/rcoleman-mac_profiles_handler&#39;</span>
+</span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/keeleysam/rcoleman-mac_profiles_handler&#39;</span>
 </span><span class='line'>
 </span><span class='line'><span class="n">mod</span> <span class="s1">&#39;mac_facts&#39;</span><span class="p">,</span>
 </span><span class='line'>    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/grahamgilbert/grahamgilbert-mac_facts.git&#39;</span>
@@ -1233,15 +1339,6 @@
 
 
 <p>Over the next few posts, I&rsquo;ll go over the different parts of this solution, how I put it together and how you might be able to use this.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Automate yourself out of a job]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/07/10/automate-yourself-out-of-a-job/"/>
-    <updated>2014-07-10T20:39:33+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/07/10/automate-yourself-out-of-a-job</id>
-    <content type="html"><![CDATA[<p>A massive thanks to everyone who came to my talk today, and thanks to everyone who helped out with the Q&amp;A at the end. All of the code I used in the talk is <a href="https://github.com/grahamgilbert/automate_psu_2014">up on GitHub</a> and <a href="http://grahamgilbert.com/images/posts/2014-07-10/Automate_yourself_out_of_a_job.pdf">here are the slides</a>. Hopefully the video will convey how much fun it actually was &ndash; it could have been a disaster, so I&rsquo;m hugely grateful to everyone who contributed to the discussion at the end.</p>
 ]]></content>
   </entry>
   
