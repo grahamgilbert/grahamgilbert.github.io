@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Inspired by some of the cool kids, I&rsquo;ve spent the last couple of evenings migrating my blog over to Octopress. The main motivators were my &hellip;">
+  <meta name="description" content="Over the past week or so, we had a need to enroll macs automagically with a Lion Profile Manager server. My first plan was to do what Charles Edge &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,60 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/04/06/profile-manager-enrollment-package/">Profile Manager Enrollment Package</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-06T10:38:00+09:00" pubdate data-updated="true">Apr 6<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/04/06/profile-manager-enrollment-package/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Over the past week or so, we had a need to enroll macs automagically with a Lion Profile Manager server. My first plan was to do what Charles Edge did in his recent <a href="http://krypted.com/mac-os-x/automating-profile-manager-enrollment-through-deploystudio/">blog post</a> and use DeployStudio. Then I remembered another post by Charles on <a href="http://krypted.com/iphone/profile-manager-and-profiles/">/usr/bin/profiles</a> and wondered if I could make a workflow that can be used throughout our deployment and system maintenance process &ndash; yup, the humble pkg, that can be popped into Munki for existing macs, installed with DeployStudio for imaging and pushed out with ARD if need be.</p>
+
+<p><a href="https://github.com/grahamgilbert/Profile-Manager-Enrollment">Get the code from GitHub</a></p>
+
+<p>Assuming you&rsquo;ve got <a href="https://github.com/unixorn/luggage">The Luggage</a> set up, first off you&rsquo;ll need your enrollment and trust profiles:</p>
+
+<ol>
+<li>Create a new enrollment profile</li>
+<li>Give your enrollement profile a name</li>
+<li>Download the trust profile</li>
+<li>Download the enrollment profile</li>
+</ol>
+
+
+<p><a href="/images/posts/2012-04-06/profile_enrollment_and_trust-full.jpg"><img class="center" src="/images/posts/2012-04-06/profile_enrollment_and_trust-thumb.jpg"></a></p>
+
+<p>If your attachments auto open, click cancel when you&rsquo;re asked if you want to install the profiles so they stay in ~/Downloads. Rename them to enroll.mobileconfig and trust.mobileconfig and pop them into the directory you cloned from GitHub. A quick <code>make pkg</code> and you&rsquo;ve got your package.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/04/03/hello-octopress/">Hello Octopress</a></h1>
     
     
@@ -109,7 +163,7 @@
   
 
 
-<time datetime="2012-04-03T12:49:00+01:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2012</time>
+<time datetime="2012-04-03T12:49:00+09:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2012</time>
         
          | <a href="/blog/2012/04/03/hello-octopress/#disqus_thread">Comments</a>
         
@@ -151,7 +205,7 @@
   
 
 
-<time datetime="2012-03-24T13:09:19+00:00" pubdate data-updated="true">Mar 24<span>th</span>, 2012</time>
+<time datetime="2012-03-24T13:09:19+09:00" pubdate data-updated="true">Mar 24<span>th</span>, 2012</time>
         
          | <a href="/blog/2012/03/24/the-agony-and-ecstasy-of-100meg-broadband/#disqus_thread">Comments</a>
         
@@ -196,7 +250,7 @@
   
 
 
-<time datetime="2012-02-23T11:55:29+00:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
+<time datetime="2012-02-23T11:55:29+09:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
         
          | <a href="/blog/2012/02/23/making-a-lion-recovery-hd-revisited/#disqus_thread">Comments</a>
         
@@ -234,7 +288,7 @@
   
 
 
-<time datetime="2012-02-01T17:30:35+00:00" pubdate data-updated="true">Feb 1<span>st</span>, 2012</time>
+<time datetime="2012-02-01T17:30:35+09:00" pubdate data-updated="true">Feb 1<span>st</span>, 2012</time>
         
          | <a href="/blog/2012/02/01/making-a-lion-recovery-hd/#disqus_thread">Comments</a>
         
@@ -248,59 +302,6 @@
 <p>I&rsquo;ve tried several methods to get around this, including taking an image of an existing Recovery HD. It worked (ish), but didn&rsquo;t feel right. Then I found this post on <a href="https://plus.google.com/113021614344742332063/posts/8D8FJjps5C6">google +</a>. I&rsquo;ve lovingly ripped off the method and put it into a package for deployment with DeployStudio, ARD, or anything else that can take normal packages. <a href="https://github.com/grahamgilbert/Make-Recovery-HD">You can download everything from my GitHub</a>, usage instructions are in the readme.</p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/01/01/web-server-on-linode-part-1/">Web Server on Linode Part 1</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-01T20:23:03+00:00" pubdate data-updated="true">Jan 1<span>st</span>, 2012</time>
-        
-         | <a href="/blog/2012/01/01/web-server-on-linode-part-1/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Recently, I was tasked with moving a client&rsquo;s web server from a box in their office, to something a little more robust when they put something up there that caused the server to go nuts (30 mb/s nuts!).</p>
-
-<p>The main goals were:</p>
-
-<ul>
-<li>Fast, scalable web server</li>
-<li>Multiple FTP users for the client&rsquo;s web team to modify the site</li>
-<li>Integrates with their existing CrashPlan PROe backup system.</li>
-<li>Use GUI&rsquo;s as much as possible for admin so lower level techs could make changes on the server.</li>
-</ul>
-
-
-<p>After considering several options, we decided to go with Linode. I&rsquo;ve had great success hosting my own site with them, and as we had full access to the box, we could install anything we wanted &ndash; including CrashPlan.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/01/01/web-server-on-linode-part-1/">Continue reading &rarr;</a>
-    </footer>
   
 
 
@@ -329,6 +330,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Using a Proxy Container With Docker for Virtualhosts</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/">Mac Admin &amp; Developer Conference UK</a>
       </li>
     
@@ -341,11 +346,7 @@
       </li>
     
       <li class="post">
-        <a href="/blog/2015/07/07/munki-dnd/">Munki DND</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
+        <a href="/blog/2015/07/08/munki-dnd/">Munki DND</a>
       </li>
     
   </ul>

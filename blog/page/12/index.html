@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="I&rsquo;ll preface this with one thing &ndash; I&rsquo;m not a Casper Suite expert. I don&rsquo;t use it reguarly, and at what it costs, I probably &hellip;">
+  <meta name="description" content="I&rsquo;ve had my Mac scripts dotted around my Macs over the years, so after spending twenty minutes looking for my script to add a login item to a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,46 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/01/01/macscripts/">MacScripts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-01T16:12:00+09:00" pubdate data-updated="true">Jan 1<span>st</span>, 2013</time>
+        
+         | <a href="/blog/2013/01/01/macscripts/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve had my Mac scripts dotted around my Macs over the years, so after spending twenty minutes looking for my script to add a login item to a user, I decided to put them all in one place on GitHub. Hopefully someone will find them useful, I&rsquo;ll be adding the rest as soon as I work out where I put them.</p>
+
+<p><a href="https://github.com/grahamgilbert/macscripts">MacScripts on GitHub</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/12/15/casper-versus-deploystudio/">Casper Versus DeployStudio</a></h1>
     
     
@@ -109,7 +149,7 @@
   
 
 
-<time datetime="2012-12-15T13:00:00+00:00" pubdate data-updated="true">Dec 15<span>th</span>, 2012</time>
+<time datetime="2012-12-15T13:00:00+09:00" pubdate data-updated="true">Dec 15<span>th</span>, 2012</time>
         
          | <a href="/blog/2012/12/15/casper-versus-deploystudio/#disqus_thread">Comments</a>
         
@@ -169,7 +209,7 @@
   
 
 
-<time datetime="2012-12-12T11:05:00+00:00" pubdate data-updated="true">Dec 12<span>th</span>, 2012</time>
+<time datetime="2012-12-12T11:05:00+09:00" pubdate data-updated="true">Dec 12<span>th</span>, 2012</time>
         
          | <a href="/blog/2012/12/12/macnamer/#disqus_thread">Comments</a>
         
@@ -209,7 +249,7 @@
   
 
 
-<time datetime="2012-11-12T16:07:00+00:00" pubdate data-updated="true">Nov 12<span>th</span>, 2012</time>
+<time datetime="2012-11-12T16:07:00+09:00" pubdate data-updated="true">Nov 12<span>th</span>, 2012</time>
         
          | <a href="/blog/2012/11/12/meraki-systems-manager/#disqus_thread">Comments</a>
         
@@ -274,7 +314,7 @@
   
 
 
-<time datetime="2012-09-21T07:28:00+01:00" pubdate data-updated="true">Sep 21<span>st</span>, 2012</time>
+<time datetime="2012-09-21T07:28:00+09:00" pubdate data-updated="true">Sep 21<span>st</span>, 2012</time>
         
          | <a href="/blog/2012/09/21/five-reasons-sysadmins-should-use-git/#disqus_thread">Comments</a>
         
@@ -297,79 +337,6 @@
 
 
 <p>So there you go &ndash; I hope this goes some way to answering the question &ldquo;why shuold I be using Git?&rdquo;</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/18/location-based-printers-with-puppet/">Location Based Printers With Puppet</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-18T21:08:00+01:00" pubdate data-updated="true">Aug 18<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/08/18/location-based-printers-with-puppet/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn&rsquo;t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything &ndash; they go to the other site, and they automatically get the right printers set up &ndash; so after a little thought,  came up with this. I&rsquo;ve made use of the excellent <a href="https://github.com/mosen/puppet-cups">mosen-puppet-cups</a> module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).</p>
-
-<div><script src='https://gist.github.com/3389457.js'></script>
-<noscript><pre><code>case $operatingsystem{
-    Darwin:{
-        ##London is on the 10.30.2.0 and 10.30.3.0 Subnets
-        if ($network_en0 == &#39;10.30.2.0&#39;) or ($network_en1 == &#39;10.30.2.0&#39;) or ($network_en0 == &#39;10.30.3.0&#39;) or ($network_en1 == &#39;10.30.3.0&#39;){
-                printer { &quot;Sharp_ARM316&quot;:
-                    ensure      =&gt; present,
-            uri         =&gt; &quot;lpd://sharparm316.ldn.example.com&quot;,
-            description =&gt; &quot;Sharp ARM316&quot;,
-            shared      =&gt; false,
-            ppd         =&gt; &quot;/Library/Printers/PPDs/Contents/Resources/SHARP AR-M316.PPD.gz&quot;, # PPD file will be autorequired
-            }
-        printer { &quot;Xerox_WorkCentre_7120&quot;:
-            ensure      =&gt; present,
-            uri         =&gt; &quot;lpd://xeroxwc7120.ldn.example.com&quot;,
-            description =&gt; &quot;Xerox WorkCentre 7120&quot;,
-            shared      =&gt; false,
-            ppd         =&gt; &quot;/Library/Printers/PPDs/Contents/Resources/Xerox WorkCentre 7120.gz&quot;, # PPD file will be autorequired
-            }
-        }
-            
-        ##San Francisco is on the 10.30.10.0 Subnet
-        if ($network_en0 == &#39;10.30.10.0&#39;) or ($network_en1 == &#39;10.30.10.0&#39;){
-        printer { &quot;Xerox_550&quot;:
-            ensure      =&gt; present,
-            uri         =&gt; &quot;lpd://xerox550.sf.example.com&quot;,
-            description =&gt; &quot;Xerox 550&quot;,
-            shared      =&gt; false,
-            ppd         =&gt; &quot;/Library/Printers/PPDs/Contents/Resources/en.lproj/Xerox 550-560 Integrated Fiery&quot;, # PPD file will be autorequired
-            }
-        }
-    }
-}</code></pre></noscript></div>
-
 </div>
   
   
@@ -400,6 +367,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Using a Proxy Container With Docker for Virtualhosts</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/">Mac Admin &amp; Developer Conference UK</a>
       </li>
     
@@ -412,11 +383,7 @@
       </li>
     
       <li class="post">
-        <a href="/blog/2015/07/07/munki-dnd/">Munki DND</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
+        <a href="/blog/2015/07/08/munki-dnd/">Munki DND</a>
       </li>
     
   </ul>

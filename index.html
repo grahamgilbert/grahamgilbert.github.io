@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="I&rsquo;m very happy to announce that I will be speaking at the first Mac Admin &amp; Developer Conference UK, held in our very own London on &hellip;">
+  <meta name="description" content="I&rsquo;ve been asked a few times over the last few weeks about how you can have multiple services (for example, Munki and Sal) running on the same &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,203 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Using a Proxy Container With Docker for Virtualhosts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-26T12:18:19+09:00" pubdate data-updated="true">Aug 26<span>th</span>, 2015</time>
+        
+         | <a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been asked a few times over the last few weeks about how you can have multiple services (for example, Munki and Sal) running on the same port on the same server &ndash; how we used to do Virtual Hosting when we ran our apps on the host OS. My usual four word answer has been &lsquo;use a proxy container&rsquo;. How you actually do that has been undocumented &ndash; this post hopes to recitfy that.</p>
+
+<p>Let&rsquo;s consider a usual setup that has Sal and Munki running on the same box. We have two hostnames that both resolve to our Docker server &ndash; <code>sal.example.com</code> and <code>munki.example.com</code>, and we have our containers running in a manner similar to the below:</p>
+
+<p><img src="/images/posts/2015-08-26/proxycontainerlayout.png" alt="Container layout" /></p>
+
+<p>Each of our containers is linked to it&rsquo;s parent:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Munki server</span>
+</span><span class='line'>docker run -d <span class="se">\</span>
+</span><span class='line'>-v /usr/local/docker/munki:/munki_repo <span class="se">\</span>
+</span><span class='line'>--restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
+</span><span class='line'>--name<span class="o">=</span><span class="s2">&quot;munki&quot;</span> <span class="se">\</span>
+</span><span class='line'>macadmins/munki
+</span><span class='line'>
+</span><span class='line'><span class="c"># Postgres container for Sal</span>
+</span><span class='line'>docker run -d --name<span class="o">=</span><span class="s2">&quot;postgres-sal&quot;</span> <span class="se">\</span>
+</span><span class='line'>-v /usr/local/docker/sal/db:/var/lib/postgresql/data <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DB_NAME</span><span class="o">=</span>sal <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DB_USER</span><span class="o">=</span>admin <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DB_PASS</span><span class="o">=</span>password <span class="se">\</span>
+</span><span class='line'>--restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
+</span><span class='line'>grahamgilbert/postgres
+</span><span class='line'>
+</span><span class='line'><span class="c"># Sal Container</span>
+</span><span class='line'>docker run -d <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">ADMIN_PASS</span><span class="o">=</span>pass <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DB_NAME</span><span class="o">=</span>sal <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DB_USER</span><span class="o">=</span>admin <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DB_PASS</span><span class="o">=</span>password <span class="se">\</span>
+</span><span class='line'>--name<span class="o">=</span><span class="s2">&quot;sal&quot;</span> <span class="se">\</span>
+</span><span class='line'>--link postgres-sal:db <span class="se">\</span>
+</span><span class='line'>--restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
+</span><span class='line'>macadmins/sal
+</span><span class='line'>
+</span><span class='line'><span class="c"># Proxy</span>
+</span><span class='line'>docker run -d --name<span class="o">=</span><span class="s2">&quot;proxy&quot;</span> <span class="se">\</span>
+</span><span class='line'>--link sal:sal <span class="se">\</span>
+</span><span class='line'>--link munki:munki <span class="se">\</span>
+</span><span class='line'>-v /usr/local/docker/proxy/sites-templates:/etc/nginx/sites-templates <span class="se">\</span>
+</span><span class='line'>-v /usr/local/docker/proxy/keys:/etc/ssl/keys <span class="se">\</span>
+</span><span class='line'>-p 443:443 <span class="se">\</span>
+</span><span class='line'>-p 80:80 <span class="se">\</span>
+</span><span class='line'>--restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
+</span><span class='line'>grahamgilbert/proxy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So how does the <code>proxy</code> container know about the other containers? When you link a Docker container to another, a few environment variables are made available to you &ndash; there are two we&rsquo;re interested in:</p>
+
+<ul>
+<li><code>CONTAINERNAME_PORT_EXPOSEDPORTNUMBER_TCP_ADDR</code></li>
+<li><code>CONTAINERNAME_PORT_EXPOSEDPORTNUMBER_TCP_PORT</code></li>
+</ul>
+
+
+<p>So in the case of the Sal container, it would be <code>SAL_PORT_8000_TCP_ADDR</code> and <code>SAL_PORT_8000_TCP_PORT</code>. The <a href="https://hub.docker.com/r/grahamgilbert/proxy/"><code>grahamgilbert/proxy</code></a> image will simply run over any file named <code>*.tmpl</code> in <code>/etc/nginx/sites-templates</code> and replace the palceholders with the value that&rsquo;s in the environent variable &ndash; here&rsquo;s my nginx configuration file template for Sal:</p>
+
+<figure class='code'><figcaption><span>nginx</span><a href='/etc/nginx/sites-templates/sal.example.com.tmpl'>link</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {
+</span><span class='line'>       listen         80;
+</span><span class='line'>       server_name    sal.example.com;
+</span><span class='line'>       rewrite        ^ https://$server_name$request_uri? permanent;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>server {
+</span><span class='line'>        listen              443 ssl;
+</span><span class='line'>        server_name         sal.example.com;
+</span><span class='line'>        ssl_certificate     /etc/ssl/keys/ssl-unified.crt;
+</span><span class='line'>        ssl_certificate_key /etc/ssl/keys/sal.key;
+</span><span class='line'>
+</span><span class='line'>        location / {
+</span><span class='line'>            proxy_pass http://${SAL_PORT_8000_TCP_ADDR}:${SAL_PORT_8000_TCP_PORT}; # set to your own port
+</span><span class='line'>            proxy_redirect off;
+</span><span class='line'>            proxy_set_header Host $host;
+</span><span class='line'>            proxy_set_header X-Real-IP $remote_addr;
+</span><span class='line'>            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+</span><span class='line'>     
+</span><span class='line'>            client_max_body_size 10m;
+</span><span class='line'>            client_body_buffer_size 128k;
+</span><span class='line'>     
+</span><span class='line'>            proxy_connect_timeout 90;
+</span><span class='line'>            proxy_send_timeout 90;
+</span><span class='line'>            proxy_read_timeout 90;
+</span><span class='line'>            proxy_buffer_size 4k;
+</span><span class='line'>            proxy_buffers 4 32k;
+</span><span class='line'>            proxy_busy_buffers_size 64k;
+</span><span class='line'>            proxy_temp_file_write_size 64k;
+</span><span class='line'>        }
+</span><span class='line'>    }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Using this technique, you can have as many containers as you like all serving content on the same port number &ndash; just change line 14 above to reflect the exposed ports and names of your Docker containers.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/">Mac Admin &amp; Developer Conference UK</a></h1>
     
     
@@ -109,7 +306,7 @@
   
 
 
-<time datetime="2015-07-21T13:33:31+01:00" pubdate data-updated="true">Jul 21<span>st</span>, 2015</time>
+<time datetime="2015-07-21T21:33:31+09:00" pubdate data-updated="true">Jul 21<span>st</span>, 2015</time>
         
          | <a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/#disqus_thread">Comments</a>
         
@@ -147,7 +344,7 @@
   
 
 
-<time datetime="2015-07-18T09:36:01+01:00" pubdate data-updated="true">Jul 18<span>th</span>, 2015</time>
+<time datetime="2015-07-18T17:36:01+09:00" pubdate data-updated="true">Jul 18<span>th</span>, 2015</time>
         
          | <a href="/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/#disqus_thread">Comments</a>
         
@@ -190,7 +387,7 @@
   
 
 
-<time datetime="2015-07-10T11:12:36+01:00" pubdate data-updated="true">Jul 10<span>th</span>, 2015</time>
+<time datetime="2015-07-10T19:12:36+09:00" pubdate data-updated="true">Jul 10<span>th</span>, 2015</time>
         
          | <a href="/blog/2015/07/10/using-the-sal-api/#disqus_thread">Comments</a>
         
@@ -264,7 +461,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/07/07/munki-dnd/">Munki DND</a></h1>
+      <h1 class="entry-title"><a href="/blog/2015/07/08/munki-dnd/">Munki DND</a></h1>
     
     
       <p class="meta">
@@ -280,9 +477,9 @@
   
 
 
-<time datetime="2015-07-07T17:46:44+01:00" pubdate data-updated="true">Jul 7<span>th</span>, 2015</time>
+<time datetime="2015-07-08T01:46:44+09:00" pubdate data-updated="true">Jul 8<span>th</span>, 2015</time>
         
-         | <a href="/blog/2015/07/07/munki-dnd/#disqus_thread">Comments</a>
+         | <a href="/blog/2015/07/08/munki-dnd/#disqus_thread">Comments</a>
         
       </p>
     
@@ -298,50 +495,6 @@
 <p><img class="center" src="/images/posts/2015-07-07/disabled.png"></p>
 
 <p>You can grab version 0.0.1 of Munki DND from the <a href="https://github.com/grahamgilbert/munki-dnd/releases/tag/v0.0.1">Releases page on GitHub</a>.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-06-26T09:40:31+01:00" pubdate data-updated="true">Jun 26<span>th</span>, 2015</time>
-        
-         | <a href="/blog/2015/06/26/the-future-of-sal/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>As some of you may know, yesterday was my last day at pebble.it. Since I announced I was leaving, I’ve been getting asked this pretty regularly, so I thought I’d answer it here.</p>
-
-<p>My new job uses Munki extensively, and I expect to be using Sal there. As such, development of Sal will continue. I no longer have commit access to the Sal Software organisation, so I’ve forked the project and have set up <a href="https://github.com/salopensource">Sal Open Source</a> as an organisation on GitHub &ndash; hopefully this will be the last time anything needs to change. I’ll be moving the preference domain in version 0.4.0 of the client side scripts to <code>com.github.salopensource.sal</code> &ndash; once again, this should be the last time things need to change.</p>
-
-<p>So, what else can you expect from Sal in the near future? The next release will have a GUI for managing your plugins, and I’ve started work on a basic API, which should make it easier for people to extend Sal in any language you like. For example, I’ve been working on a way to sign Puppet certificates based on whether it’s a known machine in Sal, with the machine being created via the API if it doesn’t already exist at imaging time (using Imagr, naturally).</p>
-
-<p>It’s exciting times for users of all the projects I’m working on &ndash; in addition to these changes, I have some changes planned for <a href="https://github.com/grahamgilbert/Crypt">Crypt</a>, and of course <a href="https://github.com/grahamgilbert/imagr">Imagr</a> is still on the development rollercoaster.</p>
 </div>
   
   
@@ -370,6 +523,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Using a Proxy Container With Docker for Virtualhosts</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/">Mac Admin &amp; Developer Conference UK</a>
       </li>
     
@@ -382,11 +539,7 @@
       </li>
     
       <li class="post">
-        <a href="/blog/2015/07/07/munki-dnd/">Munki DND</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
+        <a href="/blog/2015/07/08/munki-dnd/">Munki DND</a>
       </li>
     
   </ul>

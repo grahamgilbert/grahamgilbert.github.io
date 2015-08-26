@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-21T13:41:38+01:00</updated>
+  <updated>2015-08-26T12:45:21+09:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Using the Sal API]]></title>
     <link href="http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api/"/>
-    <updated>2015-07-10T11:12:36+01:00</updated>
+    <updated>2015-07-10T19:12:36+09:00</updated>
     <id>http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api</id>
     <content type="html"><![CDATA[<p>As previously mentioned, Sal now has an <a href="https://github.com/salopensource/sal/blob/master/docs/API.md">API</a>. You might be wondering what you can do with this wonderous API. This is a simple example of using it to automate building packages to enrol Macs into Sal.</p>
 
@@ -72,7 +72,7 @@ $ sudo python sal_package_generator.py
   <entry>
     <title type="html"><![CDATA[Introducing Imagr]]></title>
     <link href="http://grahamgilbert.com/blog/2015/05/08/introducing-imagr/"/>
-    <updated>2015-05-08T14:41:37+01:00</updated>
+    <updated>2015-05-08T22:41:37+09:00</updated>
     <id>http://grahamgilbert.com/blog/2015/05/08/introducing-imagr</id>
     <content type="html"><![CDATA[<p>For the past few weeks, I&rsquo;ve been working with some other Mac admins on a new application that can aid with the deployment of Macs &ndash; say hi to <a href="https://github.com/grahamgilbert/imagr">Imagr</a>.</p>
 
@@ -87,7 +87,7 @@ $ sudo python sal_package_generator.py
   <entry>
     <title type="html"><![CDATA[More fun with AutoNBI]]></title>
     <link href="http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/"/>
-    <updated>2015-04-13T08:05:53+01:00</updated>
+    <updated>2015-04-13T16:05:53+09:00</updated>
     <id>http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi</id>
     <content type="html"><![CDATA[<p>Last time we saw our heroes, there was the unfuffilled promise of making small NetInstall sets. Now is the time to deliver on that promise. We&rsquo;re going to make a small NetInstall that will open up Terminal.app.</p>
 
@@ -145,9 +145,9 @@ $ sudo ./AutoNBI.py -s /Applications/Install\ OS\ X\ Yosemite.app -f Packages -d
   
   <entry>
     <title type="html"><![CDATA[Building custom NetInstalls with AutoNBI]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/"/>
-    <updated>2015-04-12T20:33:28+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi</id>
+    <link href="http://grahamgilbert.com/blog/2015/04/13/building-custom-netinstalls-with-autonbi/"/>
+    <updated>2015-04-13T04:33:28+09:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/13/building-custom-netinstalls-with-autonbi</id>
     <content type="html"><![CDATA[<p>Another day, another tool made by <a href="http://enterprisemac.bruienne.com">Mr Bruienne</a>! A while back, Pepijn released <a href="https://bitbucket.org/bruienne/autonbi">AutoNBI</a> &ndash; a tool for automating the creation of NetInstall sets. At the time, it was filled away in the &ldquo;this is cool, but isn&rsquo;t this what System Image Utility does?&rdquo; section. Then I saw his NetInstall running at MacTech (are you seeing a theme here?). It had this really simple DeployStudio like imagaing app &ndash; it was really cool. And suddently it made sense why you can replace the <code>Packages</code> directory with AutoNBI &ndash; a NetInstall is a really stripped down OS X environment, so it it much easier to distribute and use &ndash; we&rsquo;re looking at around 1.8GB for my current NetInstall vs 5-6GB for a normal NetBoot.</p>
 
 <p>This time we&rsquo;ll take a look at how to use AutoNBI to make a standard NetInstall &ndash; in a future post we&rsquo;ll look at some of the more cool things you can do with AutoNBI.</p>
@@ -178,7 +178,7 @@ $ sudo ./AutoNBI.py -s /Applications/Install\ OS\ X\ Yosemite.app -d ~/Desktop -
   <entry>
     <title type="html"><![CDATA[Managing Munki catalogs with Trello]]></title>
     <link href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/"/>
-    <updated>2015-02-11T12:11:30+00:00</updated>
+    <updated>2015-02-11T21:11:30+09:00</updated>
     <id>http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello</id>
     <content type="html"><![CDATA[<p>Over the past few months, I&rsquo;ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage it. We&rsquo;ve got <a href="https://github.com/autopkg/autopkg">AutoPkg</a> populating our <a href="https://github.com/munki/munki">Munki</a> repositories without any manual intervention, but we still need to edit pkgsinfo files to move items through development to testing to production catalogs. Sure, there are existing tools  like <a href="https://github.com/munki/munkiwebadmin">MunkiWebAdmin</a> or <a href="https://github.com/hjuutilainen/munkiadmin">MunkiAdmin</a>, but they either still require knowledge of how Munki works or full access to the repository via a file share of some sort. And we obviously already have a tool for assigning software to machines in Sal+ &ndash; we needed something that can speed this incredibly common task.</p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: scriptRunner | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/scriptrunner/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-21T13:41:38+01:00</updated>
+  <updated>2015-08-26T12:45:21+09:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Migrating scriptRunner to Outset]]></title>
     <link href="http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/"/>
-    <updated>2015-01-04T11:40:41+00:00</updated>
+    <updated>2015-01-04T20:40:41+09:00</updated>
     <id>http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset</id>
     <content type="html"><![CDATA[<p>A while back, Nate Walck wrote <a href="https://github.com/natewalck/Scripts/blob/master/scriptRunner.py">scriptRunner</a>. It&rsquo;s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released <a href="https://github.com/chilcote/outset">Outset</a>. It has all of the functionality of scriptRunner, but it can also install packages at the Mac&rsquo;s first boot, and run scripts as root at either the first boot or every boot. This comes into it&rsquo;s own when you&rsquo;re trying to do things like skipping the iCloud screens on 10.10 using <a href="https://derflounder.wordpress.com/2014/10/16/disabling-the-icloud-and-diagnostics-pop-up-windows-in-yosemite/">Rich Trouton&rsquo;s script</a> &ndash; this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.</p>
 

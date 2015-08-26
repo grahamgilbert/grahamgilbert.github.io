@@ -4,7 +4,7 @@
   <title><![CDATA[Category: OS X | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/os-x/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-21T13:41:38+01:00</updated>
+  <updated>2015-08-26T12:45:21+09:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Testing BSDPy in Vagrant]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/"/>
-    <updated>2015-04-28T16:10:07+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant</id>
+    <link href="http://grahamgilbert.com/blog/2015/04/29/testing-bsdpy-in-vagrant/"/>
+    <updated>2015-04-29T00:10:07+09:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/29/testing-bsdpy-in-vagrant</id>
     <content type="html"><![CDATA[<p>Last time, we looked at how to spin up a Docker host and run BSDPy on it. That&rsquo;s great for production, but might be a bit of a faff to do every time you want to test your NBI at home.</p>
 
 <p>Inspired by <a href="https://grpugh.wordpress.com/2015/04/28/a-test-docker-bsdpy-environment/">Dr Graham R Pugh</a>, here&rsquo;s my Vagrant setup for this.</p>
@@ -54,7 +54,7 @@ $ vagrant up
   <entry>
     <title type="html"><![CDATA[Getting started with BSDPy on Docker]]></title>
     <link href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/"/>
-    <updated>2015-04-22T07:07:23+01:00</updated>
+    <updated>2015-04-22T15:07:23+09:00</updated>
     <id>http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker</id>
     <content type="html"><![CDATA[<p>Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you&rsquo;re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we&rsquo;re using that. Your Ubuntu box will also need a real IP address &ndash; if you are using VMware Fusion, this will be a Bridged Network Adapter &ndash; adjust the terminology if you&rsquo;re using a different virtualization tool. You don&rsquo;t need to worry about giving your machine a static IP unless you want to &ndash; Macs will NetBoot just fine when they&rsquo;re on the same subnet. <!--more--></p>
 
@@ -235,7 +235,7 @@ $ docker logs -f bsdpy
   <entry>
     <title type="html"><![CDATA[first-boot-pkg updated for Yosemite]]></title>
     <link href="http://grahamgilbert.com/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/"/>
-    <updated>2014-10-21T11:50:28+01:00</updated>
+    <updated>2014-10-21T19:50:28+09:00</updated>
     <id>http://grahamgilbert.com/blog/2014/10/21/first-boot-pkg-updated-for-yosemite</id>
     <content type="html"><![CDATA[<p>It seems like Yosemite introduced an <a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">undocumented change</a> that requires any packages that are added an OS X installer (e.g. Netinstall or createOSXinstallPkg) be distribution style packages, or you get a nasty failure acompanied by one of the most unhelpful error messages ever.</p>
 
@@ -246,7 +246,7 @@ $ docker logs -f bsdpy
   <entry>
     <title type="html"><![CDATA[Personal Automation: Munki (Part 2)]]></title>
     <link href="http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2/"/>
-    <updated>2014-07-27T11:21:37+01:00</updated>
+    <updated>2014-07-27T19:21:37+09:00</updated>
     <id>http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2</id>
     <content type="html"><![CDATA[<p>The first step to getting any Mac set up is to get some software onto it. I&rsquo;m not going to cover how to set up <a href="https://code.google.com/p/munki/wiki/GettingStartedWithMunki">Munki</a> or <a href="https://github.com/autopkg/autopkg/wiki/Getting-Started">AutoPkg</a> &ndash; there are lots of other places for that information.</p>
 
@@ -343,7 +343,7 @@ $ docker logs -f bsdpy
   <entry>
     <title type="html"><![CDATA[Personal Automation (Part 1)]]></title>
     <link href="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/"/>
-    <updated>2014-07-26T11:27:00+01:00</updated>
+    <updated>2014-07-26T19:27:00+09:00</updated>
     <id>http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1</id>
     <content type="html"><![CDATA[<p><a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">Earlier this year</a>, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was designed for internal use at Github, it set some things up how they liked them &ndash; which wasn&rsquo;t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.</p>
 

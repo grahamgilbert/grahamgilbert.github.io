@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Boxen | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/boxen/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-21T13:41:38+01:00</updated>
+  <updated>2015-08-26T12:45:21+09:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Personal Automation (Part 1)]]></title>
     <link href="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/"/>
-    <updated>2014-07-26T11:27:00+01:00</updated>
+    <updated>2014-07-26T19:27:00+09:00</updated>
     <id>http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1</id>
     <content type="html"><![CDATA[<p><a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">Earlier this year</a>, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was designed for internal use at Github, it set some things up how they liked them &ndash; which wasn&rsquo;t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.</p>
 
@@ -49,7 +49,7 @@
   <entry>
     <title type="html"><![CDATA[Updating Boxen]]></title>
     <link href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/"/>
-    <updated>2014-04-04T07:54:26+01:00</updated>
+    <updated>2014-04-04T15:54:26+09:00</updated>
     <id>http://grahamgilbert.com/blog/2014/04/04/updating-boxen</id>
     <content type="html"><![CDATA[<p>As you might know, I&rsquo;m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn&rsquo;t on the Mac I was working on. Then there came the time when I wanted to do a clean install &ndash; that was easily a day down the drain there!</p>
 

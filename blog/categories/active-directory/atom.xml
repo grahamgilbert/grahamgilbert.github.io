@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Active Directory | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/active-directory/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-21T13:41:38+01:00</updated>
+  <updated>2015-08-26T12:45:21+09:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Binding to Active Directory with Munki]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki/"/>
-    <updated>2014-04-01T20:15:39+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki</id>
+    <link href="http://grahamgilbert.com/blog/2014/04/02/binding-to-active-directory-with-munki/"/>
+    <updated>2014-04-02T04:15:39+09:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/04/02/binding-to-active-directory-with-munki</id>
     <content type="html"><![CDATA[<p>Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It&rsquo;s quite  a straightforward process to automate this with Munki, although you do have a few options to consider.</p>
 
 <p>First off, how are you going to deliver the actual bind script? You have the option of a <a href="https://code.google.com/p/munki/wiki/ManagingPrintersWithMunki#Alternate_Method_Using_nopkg">no-pkg pkginfo</a> file, with the script directly in the pkginfo plist. Whilst the script is now easily editable in the pkginfo, it does pose a security issue in that the catalog is kept in /Library/Managed Installs/catalogs, which will contain your script. Along with your AD bind account&rsquo;s details. Whoops!</p>

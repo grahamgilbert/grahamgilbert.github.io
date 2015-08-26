@@ -4,7 +4,7 @@
   <title><![CDATA[Category: NetInstall | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/netinstall/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-21T13:41:38+01:00</updated>
+  <updated>2015-08-26T12:45:21+09:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[More fun with AutoNBI]]></title>
     <link href="http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/"/>
-    <updated>2015-04-13T08:05:53+01:00</updated>
+    <updated>2015-04-13T16:05:53+09:00</updated>
     <id>http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi</id>
     <content type="html"><![CDATA[<p>Last time we saw our heroes, there was the unfuffilled promise of making small NetInstall sets. Now is the time to deliver on that promise. We&rsquo;re going to make a small NetInstall that will open up Terminal.app.</p>
 
@@ -74,9 +74,9 @@ $ sudo ./AutoNBI.py -s /Applications/Install\ OS\ X\ Yosemite.app -f Packages -d
   
   <entry>
     <title type="html"><![CDATA[Building custom NetInstalls with AutoNBI]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/"/>
-    <updated>2015-04-12T20:33:28+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi</id>
+    <link href="http://grahamgilbert.com/blog/2015/04/13/building-custom-netinstalls-with-autonbi/"/>
+    <updated>2015-04-13T04:33:28+09:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/13/building-custom-netinstalls-with-autonbi</id>
     <content type="html"><![CDATA[<p>Another day, another tool made by <a href="http://enterprisemac.bruienne.com">Mr Bruienne</a>! A while back, Pepijn released <a href="https://bitbucket.org/bruienne/autonbi">AutoNBI</a> &ndash; a tool for automating the creation of NetInstall sets. At the time, it was filled away in the &ldquo;this is cool, but isn&rsquo;t this what System Image Utility does?&rdquo; section. Then I saw his NetInstall running at MacTech (are you seeing a theme here?). It had this really simple DeployStudio like imagaing app &ndash; it was really cool. And suddently it made sense why you can replace the <code>Packages</code> directory with AutoNBI &ndash; a NetInstall is a really stripped down OS X environment, so it it much easier to distribute and use &ndash; we&rsquo;re looking at around 1.8GB for my current NetInstall vs 5-6GB for a normal NetBoot.</p>
 
 <p>This time we&rsquo;ll take a look at how to use AutoNBI to make a standard NetInstall &ndash; in a future post we&rsquo;ll look at some of the more cool things you can do with AutoNBI.</p>

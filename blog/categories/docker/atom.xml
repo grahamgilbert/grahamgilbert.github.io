@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Docker | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/docker/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-21T13:41:38+01:00</updated>
+  <updated>2015-08-26T12:45:21+09:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -14,9 +14,158 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Using a proxy container with Docker for virtualhosts]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/"/>
+    <updated>2015-08-26T12:18:19+09:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been asked a few times over the last few weeks about how you can have multiple services (for example, Munki and Sal) running on the same port on the same server &ndash; how we used to do Virtual Hosting when we ran our apps on the host OS. My usual four word answer has been &lsquo;use a proxy container&rsquo;. How you actually do that has been undocumented &ndash; this post hopes to recitfy that.</p>
+
+<p>Let&rsquo;s consider a usual setup that has Sal and Munki running on the same box. We have two hostnames that both resolve to our Docker server &ndash; <code>sal.example.com</code> and <code>munki.example.com</code>, and we have our containers running in a manner similar to the below:</p>
+
+<p><img src="/images/posts/2015-08-26/proxycontainerlayout.png" alt="Container layout" /></p>
+
+<p>Each of our containers is linked to it&rsquo;s parent:</p>
+
+<p>``` bash</p>
+
+<h1>Munki server</h1>
+
+<p>docker run -d \
+-v /usr/local/docker/munki:/munki_repo \
+&mdash;restart=&ldquo;always&rdquo; \
+&mdash;name=&ldquo;munki&rdquo; \
+macadmins/munki</p>
+
+<h1>Postgres container for Sal</h1>
+
+<p>docker run -d &mdash;name=&ldquo;postgres-sal&rdquo; \
+-v /usr/local/docker/sal/db:/var/lib/postgresql/data \
+-e DB_NAME=sal \
+-e DB_USER=admin \
+-e DB_PASS=password \
+&mdash;restart=&ldquo;always&rdquo; \
+grahamgilbert/postgres</p>
+
+<h1>Sal Container</h1>
+
+<p>docker run -d \
+-e ADMIN_PASS=pass \
+-e DB_NAME=sal \
+-e DB_USER=admin \
+-e DB_PASS=password \
+&mdash;name=&ldquo;sal&rdquo; \
+&mdash;link postgres-sal:db \
+&mdash;restart=&ldquo;always&rdquo; \
+macadmins/sal</p>
+
+<h1>Proxy</h1>
+
+<p>docker run -d &mdash;name=&ldquo;proxy&rdquo; \
+&mdash;link sal:sal \
+&mdash;link munki:munki \
+-v /usr/local/docker/proxy/sites-templates:/etc/nginx/sites-templates \
+-v /usr/local/docker/proxy/keys:/etc/ssl/keys \
+-p 443:443 \
+-p 80:80 \
+&mdash;restart=&ldquo;always&rdquo; \
+grahamgilbert/proxy
+```</p>
+
+<p>So how does the <code>proxy</code> container know about the other containers? When you link a Docker container to another, a few environment variables are made available to you &ndash; there are two we&rsquo;re interested in:</p>
+
+<ul>
+<li><code>CONTAINERNAME_PORT_EXPOSEDPORTNUMBER_TCP_ADDR</code></li>
+<li><code>CONTAINERNAME_PORT_EXPOSEDPORTNUMBER_TCP_PORT</code></li>
+</ul>
+
+
+<p>So in the case of the Sal container, it would be <code>SAL_PORT_8000_TCP_ADDR</code> and <code>SAL_PORT_8000_TCP_PORT</code>. The <a href="https://hub.docker.com/r/grahamgilbert/proxy/"><code>grahamgilbert/proxy</code></a> image will simply run over any file named <code>*.tmpl</code> in <code>/etc/nginx/sites-templates</code> and replace the palceholders with the value that&rsquo;s in the environent variable &ndash; here&rsquo;s my nginx configuration file template for Sal:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>nginx</span><a href='/etc/nginx/sites-templates/sal.example.com.tmpl'>link</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>   listen         80;
+</span><span class='line'>   server_name    sal.example.com;
+</span><span class='line'>   rewrite        ^ https://$server_name$request_uri? permanent;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>}&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>server {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>    listen              443 ssl;
+</span><span class='line'>    server_name         sal.example.com;
+</span><span class='line'>    ssl_certificate     /etc/ssl/keys/ssl-unified.crt;
+</span><span class='line'>    ssl_certificate_key /etc/ssl/keys/sal.key;
+</span><span class='line'>
+</span><span class='line'>    location / {
+</span><span class='line'>        proxy_pass http://${SAL_PORT_8000_TCP_ADDR}:${SAL_PORT_8000_TCP_PORT}; # set to your own port
+</span><span class='line'>        proxy_redirect off;
+</span><span class='line'>        proxy_set_header Host $host;
+</span><span class='line'>        proxy_set_header X-Real-IP $remote_addr;
+</span><span class='line'>        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+</span><span class='line'>
+</span><span class='line'>        client_max_body_size 10m;
+</span><span class='line'>        client_body_buffer_size 128k;
+</span><span class='line'>
+</span><span class='line'>        proxy_connect_timeout 90;
+</span><span class='line'>        proxy_send_timeout 90;
+</span><span class='line'>        proxy_read_timeout 90;
+</span><span class='line'>        proxy_buffer_size 4k;
+</span><span class='line'>        proxy_buffers 4 32k;
+</span><span class='line'>        proxy_busy_buffers_size 64k;
+</span><span class='line'>        proxy_temp_file_write_size 64k;
+</span><span class='line'>    }
+</span><span class='line'>}
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Using this technique, you can have as many containers as you like all serving content on the same port number &ndash; just change line 14 above to reflect the exposed ports and names of your Docker containers.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Running Puppet Server in Docker Part 3: Hiera]]></title>
     <link href="http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/"/>
-    <updated>2015-07-18T09:36:01+01:00</updated>
+    <updated>2015-07-18T17:36:01+09:00</updated>
     <id>http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera</id>
     <content type="html"><![CDATA[<p>In the previous <a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/">two</a> <a href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/#comment-2143364638">parts</a>, we went over how to get a basic Puppet Server up and running in Docker and how to deploy your modules using r10k. This time we&rsquo;ll assign some configuration to our nodes using <a href="http://docs.puppetlabs.com/hiera/latest/">Hiera</a>.</p>
 
@@ -94,7 +243,7 @@ $ r10k deploy environment -pv
   <entry>
     <title type="html"><![CDATA[Running Puppet Server in Docker Part 2: r10k]]></title>
     <link href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/"/>
-    <updated>2015-06-24T14:49:31+01:00</updated>
+    <updated>2015-06-24T22:49:31+09:00</updated>
     <id>http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k</id>
     <content type="html"><![CDATA[<p>Last time we got our Puppet Server up and running &ndash; now we need to put some Puppet modules on it so we can use it.</p>
 
@@ -220,7 +369,7 @@ $ r10k deploy environment -pv
   <entry>
     <title type="html"><![CDATA[Running Puppet Server in Docker]]></title>
     <link href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/"/>
-    <updated>2015-06-22T12:29:55+01:00</updated>
+    <updated>2015-06-22T20:29:55+09:00</updated>
     <id>http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker</id>
     <content type="html"><![CDATA[<p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively &ndash; it&rsquo;s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
 
@@ -413,9 +562,9 @@ $ puppet agent -t --waitforcert 20
   
   <entry>
     <title type="html"><![CDATA[Testing BSDPy in Vagrant]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/"/>
-    <updated>2015-04-28T16:10:07+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant</id>
+    <link href="http://grahamgilbert.com/blog/2015/04/29/testing-bsdpy-in-vagrant/"/>
+    <updated>2015-04-29T00:10:07+09:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/29/testing-bsdpy-in-vagrant</id>
     <content type="html"><![CDATA[<p>Last time, we looked at how to spin up a Docker host and run BSDPy on it. That&rsquo;s great for production, but might be a bit of a faff to do every time you want to test your NBI at home.</p>
 
 <p>Inspired by <a href="https://grpugh.wordpress.com/2015/04/28/a-test-docker-bsdpy-environment/">Dr Graham R Pugh</a>, here&rsquo;s my Vagrant setup for this.</p>
@@ -446,187 +595,6 @@ $ vagrant up
 </code></p>
 
 <p>Give it 20 seconds to finish booting and you will see your NBI in the startup pane of your Mac.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Getting started with BSDPy on Docker]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/"/>
-    <updated>2015-04-22T07:07:23+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker</id>
-    <content type="html"><![CDATA[<p>Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you&rsquo;re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we&rsquo;re using that. Your Ubuntu box will also need a real IP address &ndash; if you are using VMware Fusion, this will be a Bridged Network Adapter &ndash; adjust the terminology if you&rsquo;re using a different virtualization tool. You don&rsquo;t need to worry about giving your machine a static IP unless you want to &ndash; Macs will NetBoot just fine when they&rsquo;re on the same subnet. <!--more--></p>
-
-<h2>Baby Steps</h2>
-
-<p>Our first job is to install Docker. I&rsquo;ve been as guilty as many with glossing over this step, so here&rsquo;s the massively long and difficult method to install the latest version of Docker on Ubuntu 14. First we make sure <code>wget</code> is installed:</p>
-
-<p><code>bash
-$ which wget
-</code></p>
-
-<p>And if that returns nothing then we need to install <code>wget</code>:</p>
-
-<p><code>bash
-$ sudo apt-get update
-$ sudo apt-get install wget
-</code></p>
-
-<p>And now we can install Docker:</p>
-
-<p><code>bash
-wget -qO- https://get.docker.com/ | sh
-</code></p>
-
-<p>Pop your password in when you&rsquo;re asked and you&rsquo;re done.</p>
-
-<h2>A long time ago on a server far away</h2>
-
-<p>Whilst you&rsquo;re still recovering from the trauma of that difficult install, I&rsquo;m going to cover a bit of background. I&rsquo;ve been using Docker for just under a year now, and I&rsquo;ve developed a method of working with containers that suits me. I&rsquo;m not for one second suggesting this is the best way of working, but it works nicely for me.</p>
-
-<p>On each of my Docker hosts, there is a directory at <code>/usr/local/docker</code> which is where all of my persistent data lives along with a script called <code>startup.sh</code>. All of my Docker related work happens in this script, and it follows this basic pattern:</p>
-
-<ul>
-<li>Pull the latest version of the images I&rsquo;m using from the Docker Hub (or my private registry, but that&rsquo;s beyond the scope of this post)</li>
-<li>Delete all of the existing containers</li>
-<li>Start up the required containers</li>
-</ul>
-
-
-<h2>Why?</h2>
-
-<p>The main reason I do this is that starting up a new container is often no slower than re-starting an existing one, and by using the order of pull &ndash;> delete &ndash;> relaunch, I can be sure that I&rsquo;m always using the latest version of those containers. I&rsquo;m also not having to type out <strong>LOOOOONNNNGGG</strong> <code>docker run</code> commands every time I want to update a container.</p>
-
-<p>The first part of our startup script will be to pull in the images we need. In addition to BSDPy, we need a TFTP server and a basic web server &ndash; fortunately Pepjin has you covered with Images for these already in the <a href="https://registry.hub.docker.com/repos/macadmins/">macadmins organisation</a>.</p>
-
-<p>If you&rsquo;re not made it already, we need to make the directory we&rsquo;ll store our permanent bits:</p>
-
-<p><code>bash
-$ sudo -i
-$ mkdir -p /usr/local/docker/nbi
-</code></p>
-
-<p>And fire up your favourite editor and put in the first part of our script:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>/usr/local/docker/startup.sh </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;docker pull macadmins/tftpd
-</span><span class='line'>docker pull macadmins/netboot-httpd
-</span><span class='line'>docker pull bruienne/bsdpy:1.0
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Now we just need to make it executable and we can run it:</p>
-
-<p><code>bash
-$ chmod 755 /usr/local/docker/startup.sh
-$ /usr/local/docker/startup.sh
-</code></p>
-
-<p>If all goes well Docker will start pulling down the images you need.</p>
-
-<h2>Cleaning up after ourselves</h2>
-
-<p>Pop this little snippet after the last <code>docker pull</code> command &ndash; it will stop and remove any existing containers:</p>
-
-<p>``` bash /usr/local/docker/startup.sh</p>
-
-<h1>Other stuff is above here</h1>
-
-<p>docker stop $(docker ps -a -q)
-docker rm $(docker ps -a -q)
-```</p>
-
-<h2>Linked containers</h2>
-
-<p>As previously alluded to, our NetBoot solution will comprise of three components. Add the following to the end of <code>/usr/local/docker/startup.sh</code> (if your server has more than one ethernet adapter, replace <code>eth0</code> with the name of the adapter you want to use for NetBoot):</p>
-
-<p>``` bash /usr/local/docker/startup.sh</p>
-
-<h1>Other stuff is above here</h1>
-
-<p>chmod -R 777 /usr/local/docker/nbi
-IP=<code>ifconfig eth0 2&gt;/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'</code>
-echo $IP</p>
-
-<p>docker run -d \
-  -v /usr/local/docker/nbi:/nbi \
-  &mdash;name web \
-  &mdash;restart=always \
-  -p 0.0.0.0:80:80 \
-  macadmins/netboot-httpd</p>
-
-<p>docker run -d \
-  -p 0.0.0.0:69:69/udp \
-  -v /usr/local/docker/nbi:/nbi \
-  &mdash;name tftpd \
-  &mdash;restart=always \
-  macadmins/tftpd</p>
-
-<p>docker run -d \
-  -p 0.0.0.0:67:67/udp \
-  -v /usr/local/docker/nbi:/nbi \
-  -e BSDPY_IFACE=eth0 \
-  -e BSDPY_NBI_URL=<a href="http://$IP">http://$IP</a> \
-  -e BSDPY_IP=$IP \
-  &mdash;name bsdpy \
-  &mdash;restart=always \
-  bruienne/bsdpy:1.0
-```</p>
-
-<p>And run your startup script:</p>
-
-<p><code>bash
-$ /usr/local/docker/startup.sh
-</code></p>
-
-<p>You&rsquo;ll see your images being checked for updates, and then your containers will start. you can verify they&rsquo;re running by running:</p>
-
-<p><code>bash
-$ docker ps -a
-</code></p>
-
-<h2>Using the thing</h2>
-
-<p>Of course, your NetBoot server isn&rsquo;t going to do anything as you&rsquo;ve not uploaded anything for it to serve yet. Get yourself a NetBoot image (if you&rsquo;re using a DeployStudio NBI, delete the symlink to <code>NetInstall.dmg</code> and rename <code>NetInstall.sparseimage</code> to <code>NetInstall.dmg</code>).</p>
-
-<p>You&rsquo;re not going to have a GUI to modify the <code>NBImageInfo.plist</code> so open it up in a text editor. The important parts to change are to make sure that the Mac you&rsquo;re intending to NetBoot is either in <code>EnabledSystemIdentifiers</code> or not in <code>DisabledSystemIdentifiers</code> and that <code>IsEnabled</code> is set to <code>&lt;true/&gt;</code>. If you are going to be serving more than one image, you can set your default image in here.</p>
-
-<p>All done? Time to get that image on your Docker host. From your admin machine (or wherever your NBI currently lives):</p>
-
-<p><code>bash
-scp -r /Path/To/MyNetBoot.nbi user@dockerhost:/usr/local/docker/nbi
-</code></p>
-
-<p>All that remains is to restart the <code>bsdpy</code> container on your Docker host:</p>
-
-<p><code>bash
-$ /usr/local/docker/startup.sh
-</code></p>
-
-<p>And if you open up the <code>bsdpy</code> container&rsquo;s logs, you&rsquo;ll see it finding your NBI.</p>
-
-<p><code>bash
-$ docker logs bsdpy
-</code></p>
-
-<p>And if you want to keep the logs open whilst you&rsquo;re testing, you can use <code>-f</code>.</p>
-
-<p><code>bash
-$ docker logs -f bsdpy
-</code></p>
-
-<h2>Conclusion</h2>
-
-<p>If you&rsquo;ve made it all the way down here, congratulations! You&rsquo;ve now managed to move another service off that silly little Mac Mini and onto Linux &ndash; and hopefully you now see how easy it is to get things up and running with Docker.</p>
 ]]></content>
   </entry>
   

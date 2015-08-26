@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Building custom NetInstalls with AutoNBI - graham gilbert</title>
+  <title>Munki DND - graham gilbert</title>
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Another day, another tool made by Mr Bruienne! A while back, Pepijn released AutoNBI &ndash; a tool for automating the creation of NetInstall sets. &hellip;">
+  <meta name="description" content="I&rsquo;ve been wanting to get stuck in with a simple Swift project for a while, but couldn&rsquo;t think of anything suitable for a first project ( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi">
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2015/07/08/munki-dnd">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
@@ -90,7 +90,7 @@
   
   <header>
     
-      <h1 class="entry-title">Building Custom NetInstalls With AutoNBI</h1>
+      <h1 class="entry-title">Munki DND</h1>
     
     
       <p class="meta">
@@ -106,7 +106,7 @@
   
 
 
-<time datetime="2015-04-12T20:33:28+01:00" pubdate data-updated="true">Apr 12<span>th</span>, 2015</time>
+<time datetime="2015-07-08T01:46:44+09:00" pubdate data-updated="true">Jul 8<span>th</span>, 2015</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -115,33 +115,15 @@
   </header>
 
 
-<div class="entry-content"><p>Another day, another tool made by <a href="http://enterprisemac.bruienne.com">Mr Bruienne</a>! A while back, Pepijn released <a href="https://bitbucket.org/bruienne/autonbi">AutoNBI</a> &ndash; a tool for automating the creation of NetInstall sets. At the time, it was filled away in the &ldquo;this is cool, but isn&rsquo;t this what System Image Utility does?&rdquo; section. Then I saw his NetInstall running at MacTech (are you seeing a theme here?). It had this really simple DeployStudio like imagaing app &ndash; it was really cool. And suddently it made sense why you can replace the <code>Packages</code> directory with AutoNBI &ndash; a NetInstall is a really stripped down OS X environment, so it it much easier to distribute and use &ndash; we&rsquo;re looking at around 1.8GB for my current NetInstall vs 5-6GB for a normal NetBoot.</p>
+<div class="entry-content"><p>I&rsquo;ve been wanting to get stuck in with a simple Swift project for a while, but couldn&rsquo;t think of anything suitable for a first project (<a href="https://github.com/grahamgilbert/imagr">Imagr</a> was originally going to be that project, but I don&rsquo;t think it would ever have been made if I chose Swift), until I saw <a href="https://grpugh.wordpress.com/2015/07/03/a-do-not-disturb-application-for-munki/">Dr Graham R Pugh&rsquo;s Do Not Disturb application</a>. I thought it was an excellent idea that could be made even better by being a manu bar app.</p>
 
-<p>This time we&rsquo;ll take a look at how to use AutoNBI to make a standard NetInstall &ndash; in a future post we&rsquo;ll look at some of the more cool things you can do with AutoNBI.</p>
+<p><img class="center" src="/images/posts/2015-07-07/active.png"></p>
 
-<h2>Ok, stop talking, let&rsquo;s do this.</h2>
+<p>Enter <a href="https://github.com/grahamgilbert/munki-dnd">Munki DND</a> &ndash; it extends Graham&rsquo;s idea by allowing the administrator to configure the number of hours the user is allowed to suppress notifications for, as well as living in the menu bar so the user can check how long they&rsquo;ve got until notifications become active again.</p>
 
-<p>We&rsquo;re going to need AutoNBI to start off with. Open up your Terminal and:</p>
+<p><img class="center" src="/images/posts/2015-07-07/disabled.png"></p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git clone https://bitbucket.org/bruienne/autonbi.git
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>autonbi
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Prepare the build!</h2>
-
-<p>We&rsquo;re ready to go (assuming you&rsquo;ve got an OS X installer &ndash; you do, right?). Still in your terminal:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo ./AutoNBI.py -s /Applications/Install<span class="se">\ </span>OS<span class="se">\ </span>X<span class="se">\ </span>Yosemite.app -d ~/Desktop -n MyNetInstall -e
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>What did we just do? The <code>-s</code> option is simply pointing at our Install OS X Yosemite.app &ndash; if you have it somewhere else, point AutoNBI there. <code>-d</code> is our destination directory and <code>-n</code> is the name of our NetInstall. <code>-e</code> is telling AutoNBI to make the NetInstall enabled.</p>
-
-<p>So the next time there&rsquo;s a new OS X Installer, you can have an updated NetInstall in seconds, not minutes.</p>
+<p>You can grab version 0.0.1 of Munki DND from the <a href="https://github.com/grahamgilbert/munki-dnd/releases/tag/v0.0.1">Releases page on GitHub</a>.</p>
 </div>
 
 
@@ -164,12 +146,12 @@
   
 
 
-<time datetime="2015-04-12T20:33:28+01:00" pubdate data-updated="true">Apr 12<span>th</span>, 2015</time>
+<time datetime="2015-07-08T01:46:44+09:00" pubdate data-updated="true">Jul 8<span>th</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/netinstall/'>NetInstall</a>, <a class='category' href='/blog/categories/python/'>Python</a>
+    <a class='category' href='/blog/categories/munki/'>Munki</a>, <a class='category' href='/blog/categories/swift/'>Swift</a>
   
 </span>
 
@@ -178,7 +160,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2015/07/08/munki-dnd/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2015/07/08/munki-dnd/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -191,10 +173,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2015/02/11/managing-munki-catalogs-with-trello/" title="Previous Post: Managing Munki catalogs with Trello">&laquo; Managing Munki catalogs with Trello</a>
+        <a class="basic-alignment left" href="/blog/2015/06/26/the-future-of-sal/" title="Previous Post: The future of Sal">&laquo; The future of Sal</a>
       
       
-        <a class="basic-alignment right" href="/blog/2015/04/13/more-fun-with-autonbi/" title="Next Post: More fun with AutoNBI">More fun with AutoNBI &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2015/07/10/using-the-sal-api/" title="Next Post: Using the Sal API">Using the Sal API &raquo;</a>
       
     </p>
   </footer>
@@ -221,6 +203,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Using a Proxy Container With Docker for Virtualhosts</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/">Mac Admin &amp; Developer Conference UK</a>
       </li>
     
@@ -233,11 +219,7 @@
       </li>
     
       <li class="post">
-        <a href="/blog/2015/07/07/munki-dnd/">Munki DND</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
+        <a href="/blog/2015/07/08/munki-dnd/">Munki DND</a>
       </li>
     
   </ul>
@@ -300,8 +282,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/';
-        var disqus_url = 'http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/';
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2015/07/08/munki-dnd/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2015/07/08/munki-dnd/';
         var disqus_script = 'embed.js';
       
     (function () {

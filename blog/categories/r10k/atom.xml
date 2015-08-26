@@ -4,7 +4,7 @@
   <title><![CDATA[Category: r10k | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/r10k/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-21T13:41:38+01:00</updated>
+  <updated>2015-08-26T12:45:21+09:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Running Puppet Server in Docker Part 2: r10k]]></title>
     <link href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/"/>
-    <updated>2015-06-24T14:49:31+01:00</updated>
+    <updated>2015-06-24T22:49:31+09:00</updated>
     <id>http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k</id>
     <content type="html"><![CDATA[<p>Last time we got our Puppet Server up and running &ndash; now we need to put some Puppet modules on it so we can use it.</p>
 

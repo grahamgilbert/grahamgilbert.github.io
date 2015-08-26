@@ -1,0 +1,483 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Using a proxy container with Docker for virtualhosts - graham gilbert</title>
+  <meta name="author" content="Graham Gilbert">
+
+  
+  <meta name="description" content="I&rsquo;ve been asked a few times over the last few weeks about how you can have multiple services (for example, Munki and Sal) running on the same &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@grahamgilbert">
+<meta name="twitter:creator" content="@grahamgilbert">
+<meta name="twitter:description" content="Mac administration and assorted nerdity">
+<meta name="twitter:title" content="grahamgilbert.com">
+<meta name="twitter:url" content="http://grahamgilbert.com">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27233739-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">graham gilbert</a></h1>
+  
+    <h2>Mac administration and assorted nerdity</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:grahamgilbert.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/talks">Talks</a></li>
+  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Using a Proxy Container With Docker for Virtualhosts</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-26T12:18:19+09:00" pubdate data-updated="true">Aug 26<span>th</span>, 2015</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I&rsquo;ve been asked a few times over the last few weeks about how you can have multiple services (for example, Munki and Sal) running on the same port on the same server &ndash; how we used to do Virtual Hosting when we ran our apps on the host OS. My usual four word answer has been &lsquo;use a proxy container&rsquo;. How you actually do that has been undocumented &ndash; this post hopes to recitfy that.</p>
+
+<p>Let&rsquo;s consider a usual setup that has Sal and Munki running on the same box. We have two hostnames that both resolve to our Docker server &ndash; <code>sal.example.com</code> and <code>munki.example.com</code>, and we have our containers running in a manner similar to the below:</p>
+
+<p><img src="/images/posts/2015-08-26/proxycontainerlayout.png" alt="Container layout" /></p>
+
+<p>Each of our containers is linked to it&rsquo;s parent:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Munki server</span>
+</span><span class='line'>docker run -d <span class="se">\</span>
+</span><span class='line'>-v /usr/local/docker/munki:/munki_repo <span class="se">\</span>
+</span><span class='line'>--restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
+</span><span class='line'>--name<span class="o">=</span><span class="s2">&quot;munki&quot;</span> <span class="se">\</span>
+</span><span class='line'>macadmins/munki
+</span><span class='line'>
+</span><span class='line'><span class="c"># Postgres container for Sal</span>
+</span><span class='line'>docker run -d --name<span class="o">=</span><span class="s2">&quot;postgres-sal&quot;</span> <span class="se">\</span>
+</span><span class='line'>-v /usr/local/docker/sal/db:/var/lib/postgresql/data <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DB_NAME</span><span class="o">=</span>sal <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DB_USER</span><span class="o">=</span>admin <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DB_PASS</span><span class="o">=</span>password <span class="se">\</span>
+</span><span class='line'>--restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
+</span><span class='line'>grahamgilbert/postgres
+</span><span class='line'>
+</span><span class='line'><span class="c"># Sal Container</span>
+</span><span class='line'>docker run -d <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">ADMIN_PASS</span><span class="o">=</span>pass <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DB_NAME</span><span class="o">=</span>sal <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DB_USER</span><span class="o">=</span>admin <span class="se">\</span>
+</span><span class='line'>-e <span class="nv">DB_PASS</span><span class="o">=</span>password <span class="se">\</span>
+</span><span class='line'>--name<span class="o">=</span><span class="s2">&quot;sal&quot;</span> <span class="se">\</span>
+</span><span class='line'>--link postgres-sal:db <span class="se">\</span>
+</span><span class='line'>--restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
+</span><span class='line'>macadmins/sal
+</span><span class='line'>
+</span><span class='line'><span class="c"># Proxy</span>
+</span><span class='line'>docker run -d --name<span class="o">=</span><span class="s2">&quot;proxy&quot;</span> <span class="se">\</span>
+</span><span class='line'>--link sal:sal <span class="se">\</span>
+</span><span class='line'>--link munki:munki <span class="se">\</span>
+</span><span class='line'>-v /usr/local/docker/proxy/sites-templates:/etc/nginx/sites-templates <span class="se">\</span>
+</span><span class='line'>-v /usr/local/docker/proxy/keys:/etc/ssl/keys <span class="se">\</span>
+</span><span class='line'>-p 443:443 <span class="se">\</span>
+</span><span class='line'>-p 80:80 <span class="se">\</span>
+</span><span class='line'>--restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
+</span><span class='line'>grahamgilbert/proxy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So how does the <code>proxy</code> container know about the other containers? When you link a Docker container to another, a few environment variables are made available to you &ndash; there are two we&rsquo;re interested in:</p>
+
+<ul>
+<li><code>CONTAINERNAME_PORT_EXPOSEDPORTNUMBER_TCP_ADDR</code></li>
+<li><code>CONTAINERNAME_PORT_EXPOSEDPORTNUMBER_TCP_PORT</code></li>
+</ul>
+
+
+<p>So in the case of the Sal container, it would be <code>SAL_PORT_8000_TCP_ADDR</code> and <code>SAL_PORT_8000_TCP_PORT</code>. The <a href="https://hub.docker.com/r/grahamgilbert/proxy/"><code>grahamgilbert/proxy</code></a> image will simply run over any file named <code>*.tmpl</code> in <code>/etc/nginx/sites-templates</code> and replace the palceholders with the value that&rsquo;s in the environent variable &ndash; here&rsquo;s my nginx configuration file template for Sal:</p>
+
+<figure class='code'><figcaption><span>nginx</span><a href='/etc/nginx/sites-templates/sal.example.com.tmpl'>link</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {
+</span><span class='line'>       listen         80;
+</span><span class='line'>       server_name    sal.example.com;
+</span><span class='line'>       rewrite        ^ https://$server_name$request_uri? permanent;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>server {
+</span><span class='line'>        listen              443 ssl;
+</span><span class='line'>        server_name         sal.example.com;
+</span><span class='line'>        ssl_certificate     /etc/ssl/keys/ssl-unified.crt;
+</span><span class='line'>        ssl_certificate_key /etc/ssl/keys/sal.key;
+</span><span class='line'>
+</span><span class='line'>        location / {
+</span><span class='line'>            proxy_pass http://${SAL_PORT_8000_TCP_ADDR}:${SAL_PORT_8000_TCP_PORT}; # set to your own port
+</span><span class='line'>            proxy_redirect off;
+</span><span class='line'>            proxy_set_header Host $host;
+</span><span class='line'>            proxy_set_header X-Real-IP $remote_addr;
+</span><span class='line'>            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+</span><span class='line'>     
+</span><span class='line'>            client_max_body_size 10m;
+</span><span class='line'>            client_body_buffer_size 128k;
+</span><span class='line'>     
+</span><span class='line'>            proxy_connect_timeout 90;
+</span><span class='line'>            proxy_send_timeout 90;
+</span><span class='line'>            proxy_read_timeout 90;
+</span><span class='line'>            proxy_buffer_size 4k;
+</span><span class='line'>            proxy_buffers 4 32k;
+</span><span class='line'>            proxy_busy_buffers_size 64k;
+</span><span class='line'>            proxy_temp_file_write_size 64k;
+</span><span class='line'>        }
+</span><span class='line'>    }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Using this technique, you can have as many containers as you like all serving content on the same port number &ndash; just change line 14 above to reflect the exposed ports and names of your Docker containers.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Graham Gilbert</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-26T12:18:19+09:00" pubdate data-updated="true">Aug 26<span>th</span>, 2015</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/docker/'>Docker</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/" title="Previous Post: Mac Admin &amp; Developer Conference UK">&laquo; Mac Admin &amp; Developer Conference UK</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
+
+<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer.</small></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Using a Proxy Container With Docker for Virtualhosts</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/">Mac Admin &amp; Developer Conference UK</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/">Running Puppet Server in Docker Part 3: Hiera</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/10/using-the-sal-api/">Using the Sal API</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/08/munki-dnd/">Munki DND</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'grahamgilbert',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+<section>
+  <h1>Twitter</h1>
+<a class="twitter-timeline" href="https://twitter.com/grahamgilbert" data-widget-id="483550747481489408">Tweets by @grahamgilbert</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Graham Gilbert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'grahamgilbert';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

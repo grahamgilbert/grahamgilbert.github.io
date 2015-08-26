@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Code | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-21T13:41:38+01:00</updated>
+  <updated>2015-08-26T12:45:21+09:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Building a test Puppet Master with Vagrant]]></title>
     <link href="http://grahamgilbert.com/blog/2013/02/13/building-a-test-puppet-master-with-vagrant/"/>
-    <updated>2013-02-13T08:27:00+00:00</updated>
+    <updated>2013-02-13T08:27:00+09:00</updated>
     <id>http://grahamgilbert.com/blog/2013/02/13/building-a-test-puppet-master-with-vagrant</id>
     <content type="html"><![CDATA[<p>Puppet is awesome. Until you deploy some code that worked locally, but for some reason didn’t when you put it onto your Puppet Master. Whoops.</p>
 
@@ -60,7 +60,7 @@ vagrant up
   <entry>
     <title type="html"><![CDATA[Crypt: A FileVault 2 escrow solution]]></title>
     <link href="http://grahamgilbert.com/blog/2013/01/18/crypt-a-filevault-2-escrow-solution/"/>
-    <updated>2013-01-18T08:05:00+00:00</updated>
+    <updated>2013-01-18T08:05:00+09:00</updated>
     <id>http://grahamgilbert.com/blog/2013/01/18/crypt-a-filevault-2-escrow-solution</id>
     <content type="html"><![CDATA[<p>Although it&rsquo;s been blogged about over at <a href="http://afp548.com/2013/01/02/crypt-a-client-and-web-app-for-filevault-2-encryption-and-escrow/">afp548</a> and <a href="http://derflounder.wordpress.com/2012/12/31/first-look-at-crypt/">Rich Trouton&rsquo;s blog</a>, I&rsquo;d like to introduce you all to <a href="https://github.com/grahamgilbert/Crypt">Crypt</a>.</p>
 
@@ -77,7 +77,7 @@ vagrant up
   <entry>
     <title type="html"><![CDATA[MacNamer]]></title>
     <link href="http://grahamgilbert.com/blog/2012/12/12/macnamer/"/>
-    <updated>2012-12-12T11:05:00+00:00</updated>
+    <updated>2012-12-12T11:05:00+09:00</updated>
     <id>http://grahamgilbert.com/blog/2012/12/12/macnamer</id>
     <content type="html"><![CDATA[<p>A few months ago, we decided to move away from DeployStudio for imaging our Macs to reduce the OS X footprint in the server room (a plain old NetRestore can be run from <a href="https://jamfnation.jamfsoftware.com/viewProduct.html?id=180&amp;view=info">NetSUS</a>). This left us with a problem &ndash; how are we going to name our Macs now (a task previously performed by DeployStudio)?</p>
 
@@ -88,7 +88,7 @@ vagrant up
   <entry>
     <title type="html"><![CDATA[Making a Mountain Lion Recovery HD]]></title>
     <link href="http://grahamgilbert.com/blog/2012/07/28/making-a-mountain-lion-recovery-hd/"/>
-    <updated>2012-07-28T06:48:00+01:00</updated>
+    <updated>2012-07-28T06:48:00+09:00</updated>
     <id>http://grahamgilbert.com/blog/2012/07/28/making-a-mountain-lion-recovery-hd</id>
     <content type="html"><![CDATA[<p><strong>Update:</strong> There&rsquo;s a better method over at <a href="http://afp548.com/2012/08/15/creating-a-10-8-recovery-hd-package-with-luggage/">afp548</a> that does this better. Use that!</p>
 
@@ -128,7 +128,7 @@ vagrant up
   <entry>
     <title type="html"><![CDATA[Profile Manager Enrollment Package]]></title>
     <link href="http://grahamgilbert.com/blog/2012/04/06/profile-manager-enrollment-package/"/>
-    <updated>2012-04-06T10:38:00+01:00</updated>
+    <updated>2012-04-06T10:38:00+09:00</updated>
     <id>http://grahamgilbert.com/blog/2012/04/06/profile-manager-enrollment-package</id>
     <content type="html"><![CDATA[<p>Over the past week or so, we had a need to enroll macs automagically with a Lion Profile Manager server. My first plan was to do what Charles Edge did in his recent <a href="http://krypted.com/mac-os-x/automating-profile-manager-enrollment-through-deploystudio/">blog post</a> and use DeployStudio. Then I remembered another post by Charles on <a href="http://krypted.com/iphone/profile-manager-and-profiles/">/usr/bin/profiles</a> and wondered if I could make a workflow that can be used throughout our deployment and system maintenance process &ndash; yup, the humble pkg, that can be popped into Munki for existing macs, installed with DeployStudio for imaging and pushed out with ARD if need be.</p>
 

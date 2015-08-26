@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Vagrant | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/vagrant/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-21T13:41:38+01:00</updated>
+  <updated>2015-08-26T12:45:21+09:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Testing BSDPy in Vagrant]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/"/>
-    <updated>2015-04-28T16:10:07+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant</id>
+    <link href="http://grahamgilbert.com/blog/2015/04/29/testing-bsdpy-in-vagrant/"/>
+    <updated>2015-04-29T00:10:07+09:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/29/testing-bsdpy-in-vagrant</id>
     <content type="html"><![CDATA[<p>Last time, we looked at how to spin up a Docker host and run BSDPy on it. That&rsquo;s great for production, but might be a bit of a faff to do every time you want to test your NBI at home.</p>
 
 <p>Inspired by <a href="https://grpugh.wordpress.com/2015/04/28/a-test-docker-bsdpy-environment/">Dr Graham R Pugh</a>, here&rsquo;s my Vagrant setup for this.</p>
@@ -54,7 +54,7 @@ $ vagrant up
   <entry>
     <title type="html"><![CDATA[Creating an OS X base box for Vagrant with Packer]]></title>
     <link href="http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/"/>
-    <updated>2013-08-23T11:30:00+01:00</updated>
+    <updated>2013-08-23T11:30:00+09:00</updated>
     <id>http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer</id>
     <content type="html"><![CDATA[<p>A while ago, the chaps over at the <a href="http://www.vagrantup.com/">Vagrant</a> project have recently released a <a href="http://www.vagrantup.com/vmware">plugin to let Vagrant work with VMWare Fusion</a> &ndash; this means we can finally use Vagrant to provision OS X VMs.</p>
 
@@ -219,7 +219,7 @@ $ vagrant up --provider vmware_fusion
   <entry>
     <title type="html"><![CDATA[Building a test Puppet Master with Vagrant]]></title>
     <link href="http://grahamgilbert.com/blog/2013/02/13/building-a-test-puppet-master-with-vagrant/"/>
-    <updated>2013-02-13T08:27:00+00:00</updated>
+    <updated>2013-02-13T08:27:00+09:00</updated>
     <id>http://grahamgilbert.com/blog/2013/02/13/building-a-test-puppet-master-with-vagrant</id>
     <content type="html"><![CDATA[<p>Puppet is awesome. Until you deploy some code that worked locally, but for some reason didn’t when you put it onto your Puppet Master. Whoops.</p>
 

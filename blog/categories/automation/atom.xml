@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Automation | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/automation/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-07-21T13:41:38+01:00</updated>
+  <updated>2015-08-26T12:45:21+09:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Using munki-trello with Git]]></title>
     <link href="http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git/"/>
-    <updated>2015-06-16T11:21:58+01:00</updated>
+    <updated>2015-06-16T19:21:58+09:00</updated>
     <id>http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git</id>
     <content type="html"><![CDATA[<p>So you&rsquo;re managing your catalogs with <a href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/">munki-trello</a>, but you also want to use git and <a href="https://www.afp548.com/2014/12/01/git-fat-intro-part-two-setup-and-migration/">git-fat</a> to track the changes &ndash; what do you do?</p>
 
@@ -69,7 +69,7 @@ git commit -m &ldquo;Munki Trello commit $now&rdquo;</p>
   <entry>
     <title type="html"><![CDATA[Managing Munki catalogs with Trello]]></title>
     <link href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/"/>
-    <updated>2015-02-11T12:11:30+00:00</updated>
+    <updated>2015-02-11T21:11:30+09:00</updated>
     <id>http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello</id>
     <content type="html"><![CDATA[<p>Over the past few months, I&rsquo;ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage it. We&rsquo;ve got <a href="https://github.com/autopkg/autopkg">AutoPkg</a> populating our <a href="https://github.com/munki/munki">Munki</a> repositories without any manual intervention, but we still need to edit pkgsinfo files to move items through development to testing to production catalogs. Sure, there are existing tools  like <a href="https://github.com/munki/munkiwebadmin">MunkiWebAdmin</a> or <a href="https://github.com/hjuutilainen/munkiadmin">MunkiAdmin</a>, but they either still require knowledge of how Munki works or full access to the repository via a file share of some sort. And we obviously already have a tool for assigning software to machines in Sal+ &ndash; we needed something that can speed this incredibly common task.</p>
 
@@ -94,7 +94,7 @@ git commit -m &ldquo;Munki Trello commit $now&rdquo;</p>
   <entry>
     <title type="html"><![CDATA[Personal Automation: Munki (Part 2)]]></title>
     <link href="http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2/"/>
-    <updated>2014-07-27T11:21:37+01:00</updated>
+    <updated>2014-07-27T19:21:37+09:00</updated>
     <id>http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2</id>
     <content type="html"><![CDATA[<p>The first step to getting any Mac set up is to get some software onto it. I&rsquo;m not going to cover how to set up <a href="https://code.google.com/p/munki/wiki/GettingStartedWithMunki">Munki</a> or <a href="https://github.com/autopkg/autopkg/wiki/Getting-Started">AutoPkg</a> &ndash; there are lots of other places for that information.</p>
 
@@ -191,7 +191,7 @@ git commit -m &ldquo;Munki Trello commit $now&rdquo;</p>
   <entry>
     <title type="html"><![CDATA[Personal Automation (Part 1)]]></title>
     <link href="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/"/>
-    <updated>2014-07-26T11:27:00+01:00</updated>
+    <updated>2014-07-26T19:27:00+09:00</updated>
     <id>http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1</id>
     <content type="html"><![CDATA[<p><a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">Earlier this year</a>, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was designed for internal use at Github, it set some things up how they liked them &ndash; which wasn&rsquo;t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.</p>
 

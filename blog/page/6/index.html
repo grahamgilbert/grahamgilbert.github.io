@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="There are some packages that can&rsquo;t be deployed to an unbooted OS, such as when building an image with AutoDMG. If you are using Greg Neagle& &hellip;">
+  <meta name="description" content="Setting up everything you need for Sal can be difficult, especially if you only have an OS X server available. Thankfully, Sal is built on top of a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,120 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2014/05/19/deploying-sal-on-heroku/">Deploying Sal on Heroku</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-19T17:04:05+09:00" pubdate data-updated="true">May 19<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/05/19/deploying-sal-on-heroku/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Setting up everything you need for Sal can be difficult, especially if you only have an OS X server available. Thankfully, Sal is built on top of a very common Python framework, Django. And even more thankfully, you can run Django on a whole host of <a href="http://en.wikipedia.org/wiki/Platform_as_a_service">PaaS</a> providers, including <a href="https://www.heroku.com">Heroku</a>.</p>
+
+<p>Heroku has a very generous <a href="https://www.heroku.com/pricing">free tier</a> that will easily handle a small Sal installation, so let&rsquo;s get started.</p>
+
+<h2>Heroku toolbelt</h2>
+
+<p>If you&rsquo;ve never used Heroku before, you&rsquo;re going to need to head over to <a href="http://heroku.com">their site</a> and sign up for a free account. Whilst you&rsquo;re there, you&rsquo;re also going to need to install their toolbelt. <a href="http://toolbelt.herokuapp.com/">Grab the package</a> and follow their instructions for linking it to your account.</p>
+
+<h2>Configure</h2>
+
+<p>Now we need to get a copy of Sal and configure it. Assuming you keep your code in ~/src:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src
+</span><span class='line'><span class="nv">$ </span>git clone https://github.com/grahamgilbert/sal
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>sal
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we need to make a copy of sal/example_settings.py</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>cp sal/example_settings.py sal/settings.py
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And edit sal/settings.py in your favourite editor to your liking (probably time zone at least).</p>
+
+<p>Heroku uses git for deployment, so we need to commit our changes.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git add .
+</span><span class='line'><span class="nv">$ </span>git commit -m <span class="s2">&quot;initial commit to heroku&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We&rsquo;re nearly there! Time to create our environment on Heroku</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku create
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Of course we haven&rsquo;t pushed Sal to Heroku yet. Let&rsquo;s fix that.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git push heroku master
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll see Sal being pushed up to Heroku and Sal&rsquo;s requirements being installed. A Postgres database will also automatically be created for you. The database will be empty though, so let&rsquo;s populate it with what we need.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku run python manage.py syncdb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When asked, you certainly <em>do</em> want to create a super user. Use a strong username and password as this is the admin for your Sal application.</p>
+
+<p>One last command to run:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku run python manage.py migrate
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Your Sal installation is ready to use:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>heroku open
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As said earlier, the free version does have some limits. The most important with Sal is the number of rows you can have in the free database (10,000), so the more information you collect from each machine (Facter Facts and Munki Conditions), the larger your database is. It&rsquo;s a measley $9 a month to upgrade your database to 10 million rows, so it&rsquo;s easy to scale your database. For more information on upgrading your Heroku environment see <a href="https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups">their documentation</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2014/04/21/first-boot-pkg/">First-boot-pkg</a></h1>
     
     
@@ -109,7 +223,7 @@
   
 
 
-<time datetime="2014-04-21T09:01:24+01:00" pubdate data-updated="true">Apr 21<span>st</span>, 2014</time>
+<time datetime="2014-04-21T17:01:24+09:00" pubdate data-updated="true">Apr 21<span>st</span>, 2014</time>
         
          | <a href="/blog/2014/04/21/first-boot-pkg/#disqus_thread">Comments</a>
         
@@ -162,7 +276,7 @@
   
 
 
-<time datetime="2014-04-04T07:54:26+01:00" pubdate data-updated="true">Apr 4<span>th</span>, 2014</time>
+<time datetime="2014-04-04T15:54:26+09:00" pubdate data-updated="true">Apr 4<span>th</span>, 2014</time>
         
          | <a href="/blog/2014/04/04/updating-boxen/#disqus_thread">Comments</a>
         
@@ -249,7 +363,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/04/01/binding-to-active-directory-with-munki/">Binding to Active Directory With Munki</a></h1>
+      <h1 class="entry-title"><a href="/blog/2014/04/02/binding-to-active-directory-with-munki/">Binding to Active Directory With Munki</a></h1>
     
     
       <p class="meta">
@@ -265,9 +379,9 @@
   
 
 
-<time datetime="2014-04-01T20:15:39+01:00" pubdate data-updated="true">Apr 1<span>st</span>, 2014</time>
+<time datetime="2014-04-02T04:15:39+09:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2014</time>
         
-         | <a href="/blog/2014/04/01/binding-to-active-directory-with-munki/#disqus_thread">Comments</a>
+         | <a href="/blog/2014/04/02/binding-to-active-directory-with-munki/#disqus_thread">Comments</a>
         
       </p>
     
@@ -288,7 +402,7 @@
   
   
     <footer>
-      <a rel="full-article" href="/blog/2014/04/01/binding-to-active-directory-with-munki/">Continue reading &rarr;</a>
+      <a rel="full-article" href="/blog/2014/04/02/binding-to-active-directory-with-munki/">Continue reading &rarr;</a>
     </footer>
   
 
@@ -300,7 +414,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/">Writing Plugins for Sal: Part 3</a></h1>
+      <h1 class="entry-title"><a href="/blog/2014/02/18/writing-plugins-for-sal-part-3/">Writing Plugins for Sal: Part 3</a></h1>
     
     
       <p class="meta">
@@ -316,9 +430,9 @@
   
 
 
-<time datetime="2014-02-17T21:12:36+00:00" pubdate data-updated="true">Feb 17<span>th</span>, 2014</time>
+<time datetime="2014-02-18T06:12:36+09:00" pubdate data-updated="true">Feb 18<span>th</span>, 2014</time>
         
-         | <a href="/blog/2014/02/17/writing-plugins-for-sal-part-3/#disqus_thread">Comments</a>
+         | <a href="/blog/2014/02/18/writing-plugins-for-sal-part-3/#disqus_thread">Comments</a>
         
       </p>
     
@@ -457,180 +571,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/">Writing Plugins for Sal: Part 2</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-07T11:34:24+00:00" pubdate data-updated="true">Feb 7<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>And now, time for the shocking second part of our series on how to write plugins for Sal.</p>
-
-<p>In the previous part, we got our basic widget working. This time, we&rsquo;re going to link it up so we can get lists of those pesky non-10.9 compatible Macs when we click on the button.</p>
-
-<h2>It&rsquo;s a list, Jim</h2>
-
-<p>When displaying the list of machines, Sal will call the <code>filter_machines</code> function in your plugin. I&rsquo;m sure you don&rsquo;t want to disappoint, so here&rsquo;s that function added on to the plugin we wrote last time.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/mavcompatibility.py </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
-</span><span class='line'>            <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
-</span><span class='line'>        <span class="p">})</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="mi">3</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">filter_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&#39;notcompatible&#39;</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">machines</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Macs not compatible with OS X 10.9&#39;</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">machines</span> <span class="o">=</span> <span class="bp">None</span>
-</span><span class='line'>            <span class="n">title</span> <span class="o">=</span> <span class="bp">None</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">return</span> <span class="n">machines</span><span class="p">,</span> <span class="n">title</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You&rsquo;ll notice that our filter on the machines is pretty much identical to what we were looking for before &ndash; that&rsquo;s because we&rsquo;re looking for the same machines. We&rsquo;re taking some input (a bunch of machines, and a string that we&rsquo;ll come back to), and giving back the machine that fit our search and a title to show at the top of the page.</p>
-
-<h2>More templating</h2>
-
-<p>So, how did we pass that string? How do we even get to the page where a list of the machines is shown?</p>
-
-<p>We need to edit the templates. First off, the template that is show on the front page of Sal:</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/front.html </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_front&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="cp">%}</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            Not Compatible
-</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The only difference here from last time is we&rsquo;ve filled out the URL. The options for the first part are <code>machine_list_front</code> or <code>machine_list_id</code> &ndash; depending on whether you are coming from the front page (all of the Business Units) or from deeper in the application (the machines are limited), then we&rsquo;re just passing the name of our plugin.</p>
-
-<p>There isn&rsquo;t a huge amount you need to change for the other template &ndash; just tell Sal what type of page you came from (group or business unit) and the ID of the page you came from.</p>
-
-<figure class='code'><figcaption><span>grahamgilbert/mavcompatibility/templates/id.html </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='html+django'><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;legend&gt;</span><span class="cp">{{</span> <span class="nv">title</span> <span class="cp">}}</span><span class="nt">&lt;/legend&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_id&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="nv">page</span> <span class="nv">theid</span> <span class="cp">%}</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span> <span class="nv">not_compatible</span> <span class="cp">}}</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            Not Compatible
-</span><span class='line'>        <span class="nt">&lt;/a&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>There you go &ndash; a simple plugin for Sal. But don&rsquo;t go away thinking we&rsquo;re done. Whilst this is functional, it certainly leaves a fair bit to be desired. In the last part of this series, we&rsquo;ll tidy everything up.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -654,6 +594,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Using a Proxy Container With Docker for Virtualhosts</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/">Mac Admin &amp; Developer Conference UK</a>
       </li>
     
@@ -666,11 +610,7 @@
       </li>
     
       <li class="post">
-        <a href="/blog/2015/07/07/munki-dnd/">Munki DND</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
+        <a href="/blog/2015/07/08/munki-dnd/">Munki DND</a>
       </li>
     
   </ul>

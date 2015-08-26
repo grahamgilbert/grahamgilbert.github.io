@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="In my last post I promised a tool I&rsquo;ve been working on to automate the building of a package for crankd. buildCrankPkg is a small script that &hellip;">
+  <meta name="description" content="If you&rsquo;ve managed OS X for any amount of time, chances are you&rsquo;ve needed to deploy software. And chances also are that you&rsquo;ve come &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,58 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/08/09/the-luggage-an-introduction/">The Luggage: An Introduction</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-09T18:00:00+09:00" pubdate data-updated="true">Aug 9<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/08/09/the-luggage-an-introduction/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you&rsquo;ve managed OS X for any amount of time, chances are you&rsquo;ve needed to deploy software. And chances also are that you&rsquo;ve come across a vendor (I&rsquo;m looking at you, Adobe) that seems to be incapable of distributing their software in a useful manner. Or maybe you&rsquo;ve got your own scripts or software that you need to get installed on the machines that you look after &ndash; either way, you&rsquo;re going to want to build a package.</p>
+
+<p>You&rsquo;ve got a few options &ndash; Iceberg, Packages, Composer, you&rsquo;ve even got Package Maker. However, my personal choice is The Luggage. It has a few advantages over the alternatives:</p>
+
+<ul>
+<li><strong>It&rsquo;s all text files:</strong> You&rsquo;re building software distributions, you should be checking the files in to build the packages into version control, such as Git. Text files are ideal for checking into version control.</li>
+<li><strong>It&rsquo;s free:</strong> if it costs nothing, there&rsquo;s no reason it can&rsquo;t be installed on everyone&rsquo;s machine.</li>
+<li><strong>It&rsquo;s (still) all text files:</strong> Want to see what will be in the package without any extra work? Crack open the Makefile and you can see straight away what will be in the package.</li>
+<li><strong>The Luggage has a metric buttload of shortcuts built in:</strong> it does the hard work, so you don&rsquo;t have to.</li>
+<li><strong>It&rsquo;s repeatable:</strong> Have you ever tried to talk someone through a series of windows and buttons to get the same result as you&rsquo;re getting? Every time you run The Luggage, you will get the same result.</li>
+<li><strong>It&rsquo;s (really, still) all text files:</strong> It&rsquo;s the most precise tool I&rsquo;ve used &ndash; you only package exactly what you need, no cruft is left behind.</li>
+<li><strong>Your workflow is limited only by your imagination:</strong> Seriously, you can do pretty much anything you can think of. We&rsquo;ll be going through more advanced workflows in future posts, but let&rsquo;s get started with using The Luggage.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/08/09/the-luggage-an-introduction/">Continue reading &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/07/17/buildcrankpkg/">buildCrankPkg</a></h1>
     
     
@@ -109,7 +161,7 @@
   
 
 
-<time datetime="2013-07-17T16:31:00+01:00" pubdate data-updated="true">Jul 17<span>th</span>, 2013</time>
+<time datetime="2013-07-17T16:31:00+09:00" pubdate data-updated="true">Jul 17<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/07/17/buildcrankpkg/#disqus_thread">Comments</a>
         
@@ -162,7 +214,7 @@
   
 
 
-<time datetime="2013-07-12T14:04:00+01:00" pubdate data-updated="true">Jul 12<span>th</span>, 2013</time>
+<time datetime="2013-07-12T14:04:00+09:00" pubdate data-updated="true">Jul 12<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/07/12/using-crankd-to-react-to-network-events/#disqus_thread">Comments</a>
         
@@ -223,7 +275,7 @@
   
 
 
-<time datetime="2013-05-24T13:56:00+01:00" pubdate data-updated="true">May 24<span>th</span>, 2013</time>
+<time datetime="2013-05-24T13:56:00+09:00" pubdate data-updated="true">May 24<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013/#disqus_thread">Comments</a>
         
@@ -266,7 +318,7 @@
   
 
 
-<time datetime="2013-04-07T15:36:00+01:00" pubdate data-updated="true">Apr 7<span>th</span>, 2013</time>
+<time datetime="2013-04-07T15:36:00+09:00" pubdate data-updated="true">Apr 7<span>th</span>, 2013</time>
         
          | <a href="/blog/2013/04/07/one-bootstrap-package-to-rule-them-all/#disqus_thread">Comments</a>
         
@@ -315,47 +367,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/02/facter-101/">Facter 101</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-02T10:11:00+01:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2013</time>
-        
-         | <a href="/blog/2013/04/02/facter-101/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Facter is what gives Puppet it’s brains. It collects information about the computer it is run on and then passes it to the Puppet Master for use in manifests and can optionally be stored. I know, it doesn’t sound like the most earth shattering revelation of all time, but stop for a moment. Every time your current scripts need to taget a specific OS version or a machine with a certain bit of hardware, you need to code it directly into the script. If the method of extracting that information changes, you need to modify every single script that uses that method. With Facter, you&rsquo;re editing one file, which is always up to date on the client. Anyway, that&rsquo;s enough waffle from me. Let&rsquo;s get started.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/02/facter-101/">Continue reading &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/10/">&larr; Older</a>
@@ -379,6 +390,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Using a Proxy Container With Docker for Virtualhosts</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/">Mac Admin &amp; Developer Conference UK</a>
       </li>
     
@@ -391,11 +406,7 @@
       </li>
     
       <li class="post">
-        <a href="/blog/2015/07/07/munki-dnd/">Munki DND</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/06/26/the-future-of-sal/">The Future of Sal</a>
+        <a href="/blog/2015/07/08/munki-dnd/">Munki DND</a>
       </li>
     
   </ul>
