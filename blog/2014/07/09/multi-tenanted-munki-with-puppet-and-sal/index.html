@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>London Apple Admins - graham gilbert</title>
+  <title>Multi tenanted Munki with Puppet and Sal - graham gilbert</title>
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="I&rsquo;m delighted to say that the first (first meet that isn&rsquo;t &ldquo;let&rsquo;s go to the pub and get drunk&rdquo;, anyway!) London Apple &hellip;">
+  <meta name="description" content="Thanks for everyone that came to my talk today, it was fun to finally show off what I&rsquo;ve been working on for the last year or so. I&rsquo;m &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://grahamgilbert.com/blog/2014/08/25/london-apple-admins">
+  <link rel="canonical" href="http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
@@ -29,6 +29,7 @@
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.013/css/hack-extended.min.css" type="text/css">
 <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@grahamgilbert">
@@ -90,7 +91,7 @@
   
   <header>
     
-      <h1 class="entry-title">London Apple Admins</h1>
+      <h1 class="entry-title">Multi Tenanted Munki With Puppet and Sal</h1>
     
     
       <p class="meta">
@@ -106,7 +107,7 @@
   
 
 
-<time datetime="2014-08-25T01:17:24+09:00" pubdate data-updated="true">Aug 25<span>th</span>, 2014</time>
+<time datetime="2014-07-09T20:27:25+01:00" pubdate data-updated="true">Jul 9<span>th</span>, 2014</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -115,9 +116,7 @@
   </header>
 
 
-<div class="entry-content"><p>I&rsquo;m delighted to say that the first (first meet that isn&rsquo;t &ldquo;let&rsquo;s go to the pub and get drunk&rdquo;, anyway!) <a href="http://www.londonappleadmins.org.uk">London Apple Admins</a> meetup is happening on the 3rd September at <a href="http://theredherring.co.uk/">The Red Herring in St Pauls</a>. I&rsquo;d like to take all of the credit for organising it, but it was down to the hard work of <a href="http://macmule.com">Ben Toms</a>. The theme this time is &ldquo;this is what I&rsquo;m working on at the moment&rdquo;, so I&rsquo;ll be talking about my new favourite toy, <a href="https://www.docker.com">Docker</a>.</p>
-
-<p>If you&rsquo;ll be in or around London on the 3rd September, <a href="https://www.eventbrite.com/e/london-apple-admins-sept-2014-tickets-12545591201">please get yourself a ticket</a> (they&rsquo;re free) and come and have a beer or two whilst listening to some awesome talks by London based Mac Admins.</p>
+<div class="entry-content"><p>Thanks for everyone that came to my talk today, it was fun to finally show off what I&rsquo;ve been working on for the last year or so. I&rsquo;m sure the video will be up soon, but in the meantime, <a href="http://grahamgilbert.com/images/posts/2014-07-09/Multi_site_Munki.pdf">here are the slides from the talk</a>.</p>
 </div>
 
 
@@ -140,12 +139,12 @@
   
 
 
-<time datetime="2014-08-25T01:17:24+09:00" pubdate data-updated="true">Aug 25<span>th</span>, 2014</time>
+<time datetime="2014-07-09T20:27:25+01:00" pubdate data-updated="true">Jul 9<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/meetup/'>Meetup</a>
+    <a class='category' href='/blog/categories/os-x/'>OS X</a>, <a class='category' href='/blog/categories/psu/'>PSU</a>, <a class='category' href='/blog/categories/presentation/'>Presentation</a>
   
 </span>
 
@@ -154,7 +153,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2014/08/25/london-apple-admins/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2014/08/25/london-apple-admins/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -167,10 +166,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/07/27/personal-automation-munki-part-2/" title="Previous Post: Personal Automation: Munki (Part 2)">&laquo; Personal Automation: Munki (Part 2)</a>
+        <a class="basic-alignment left" href="/blog/2014/06/30/making-packages-with-autopkg/" title="Previous Post: Making packages with AutoPkg">&laquo; Making packages with AutoPkg</a>
       
       
-        <a class="basic-alignment right" href="/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/" title="Next Post: first-boot-pkg updated for Yosemite">first-boot-pkg updated for Yosemite &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2014/07/10/automate-yourself-out-of-a-job/" title="Next Post: Automate yourself out of a job">Automate yourself out of a job &raquo;</a>
       
     </p>
   </footer>
@@ -197,6 +196,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/09/28/upgrading-os-x-using-a-package/">Upgrading OS X Using a Package</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Using a Proxy Container With Docker for Virtualhosts</a>
       </li>
     
@@ -210,10 +213,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/10/using-the-sal-api/">Using the Sal API</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/08/munki-dnd/">Munki DND</a>
       </li>
     
   </ul>
@@ -276,8 +275,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://grahamgilbert.com/blog/2014/08/25/london-apple-admins/';
-        var disqus_url = 'http://grahamgilbert.com/blog/2014/08/25/london-apple-admins/';
+        var disqus_identifier = 'http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/';
+        var disqus_url = 'http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/';
         var disqus_script = 'embed.js';
       
     (function () {

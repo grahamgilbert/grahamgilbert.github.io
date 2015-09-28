@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-08-26T12:45:21+09:00</updated>
+  <updated>2015-09-28T13:03:27+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -14,9 +14,194 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Upgrading OS X using a package]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package/"/>
+    <updated>2015-09-28T11:35:55+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s the time of year where we start to think about upgrading our machines to the latest version of OS X. There are several ways of doing this, but assuming your users are unable to perform the upgrade themselves via the App Store (if they&rsquo;re running as a standard user or your policies prohibit the use of the App Store), you might be wondering how you can use your management tool to get your machines upgraded and make sure they stay enrolled in your management tool.</p>
+
+<p>We&rsquo;re fortunate that we have a standard packaging format on OS X that virtually all management tools can install, so this is the most universal way of distributing software. Greg Neagle wrote <a href="https://github.com/munki/createOSXinstallPkg">createOSXinstallPkg</a> a few years ago that has several nice features for mac admins:</p>
+
+<ul>
+<li>It wraps up an OS X Installer into a standard package.</li>
+<li>It allows you to add in additional packages &ndash; perhaps you want to make sure your admin user is installed or make sure that a version of Munki that is compatible with the new OS is installed.<!--more--></li>
+</ul>
+
+
+<p><a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">Yosemite introduced</a> a nice undocumented requirement that all packages included in the OS X installer environment are distribution packages. This is in addition to the limited OS X Installer environment not having many of the command line tools you might expect to be there.</p>
+
+<p>One solution to these issues is to use <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> &ndash; a tool that will install a set of packages at first boot, and will wrap them in a distribution style package so it can be used with createOSXinstallPkg.</p>
+
+<h2>The first boot package</h2>
+
+<p>Our first job is to build the package that will be installed at first boot. I am only going to make sure that Munki is installed at first boot, but some other things you might want to put in include:</p>
+
+<ul>
+<li>Your local admin user</li>
+<li>Puppet and Facter</li>
+<li>A payload free package to configure your SUS CatalogURL</li>
+</ul>
+
+
+<h3>Prep for the first boot package</h3>
+
+<p>First off we&rsquo;re going to need the script to build a first boot package. Assuming you&rsquo;re going to keep your code in <code>~/src</code>:</p>
+
+<p><code>bash
+$ cd ~/src
+$ git clone https://github.com/grahamgilbert/first-boot-pkg.git
+$ cd first-boot-pkg
+</code></p>
+
+<p>You have two options for configuring the first boot package &ndash; you can pass it options on the command line or you can use a plist. We&rsquo;re using a plist as it&rsquo;s the most repeatable and sharable method. If you need further options, such as disabling the network check, see the <a href="https://github.com/grahamgilbert/first-boot-pkg">project on Github</a>.</p>
+
+<p>``` xml ~/src/first-boot-pkg/first-boot-config.plist
+&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo;?>
+&lt;!DOCTYPE plist PUBLIC &ldquo;&ndash;//Apple Computer//DTD PLIST 1.0//EN&rdquo;      &ldquo;<a href="http://www.apple.com/DTDs/PropertyList-1.0.dtd">http://www.apple.com/DTDs/PropertyList-1.0.dtd</a>&rdquo;>
+<plist version="1.0">
+<dict></p>
+
+<pre><code>&lt;key&gt;Packages&lt;/key&gt;
+&lt;array&gt;
+    &lt;string&gt;munkitools-2.3.1.2535.pkg&lt;/string&gt;
+&lt;/array&gt;
+&lt;key&gt;Name&lt;/key&gt;
+&lt;string&gt;post-elcap-upgrade.pkg&lt;/string&gt;
+&lt;key&gt;Identifier&lt;/key&gt;
+&lt;string&gt;com.company.post-elcap-upgrade&lt;/string&gt;
+&lt;key&gt;Version&lt;/key&gt;
+&lt;string&gt;0.1&lt;/string&gt;
+</code></pre>
+
+<p></dict>
+</plist>
+```</p>
+
+<p>The above is assuming you&rsquo;ve saved your Munki package to <code>~/src/first-boot-pkg/munkitools-2.3.1.2535.pkg</code> (i.e. in the same directory as your <code>first-boot-config.plist</code>).</p>
+
+<h3>Building the first boot package</h3>
+
+<p>Let&rsquo;s make sure we&rsquo;re in the right directory:</p>
+
+<p><code>bash
+$ cd ~/src/first-boot-pkg
+</code></p>
+
+<p>And let&rsquo;s build the package:</p>
+
+<p>``` bash
+$ sudo ./first-boot-pkg &mdash;plist first-boot-config.plist</p>
+
+<h2>Validating packages:</h2>
+
+<h2>munkitools-2.3.1.2535.pkg looks good.</h2>
+
+<p>pkgbuild: Inferring bundle components from contents of /tmp/tmpfCF2Ry
+pkgbuild: Adding component at Library/PrivilegedHelperTools/LoginLog.app
+pkgbuild: Wrote package to /tmp/tmp0kZed8/post-elcap-upgrade.pkg
+productbuild: Wrote product to /Users/grahamgilbert/src/first-boot-pkg/post-elcap-upgrade.pkg
+```</p>
+
+<h2>Making the OS X upgrade package</h2>
+
+<p>As previously mentioned, we&rsquo;re going to use createOSXinstallPkg, so let&rsquo;s grab that:</p>
+
+<p><code>bash
+$ cd ~/src
+$ git clone https://github.com/munki/createOSXinstallPkg.git
+$ cd createOSXinstallPkg
+</code></p>
+
+<p>And assuming your OS X Installer is saved to the usual place:</p>
+
+<p><code>bash
+$ sudo ./createOSXinstallPkg --pkg ../first-boot-pkg/post-elcap-upgrade.pkg --source "/Applications/Install OS X El Capitan GM Candidate.app"
+</code></p>
+
+<p>createOSXinstallPkg will let you know how it&rsquo;s doing:</p>
+
+<p>``` bash</p>
+
+<h2>Examining and verifying source&hellip;</h2>
+
+<p>InstallESD.dmg: /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg
+OS Version: 10.11</p>
+
+<h2>OS Build: 15A282b</h2>
+
+<p>Output path: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg</p>
+
+<h2>Additional packages:</h2>
+
+<h2>post-elcap-upgrade.pkg</h2>
+
+<h2>Total additional package size: 1856 Kbytes</h2>
+
+<p>Checking available space on /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
+Creating package wrapper&hellip;</p>
+
+<h2>Creating MacOSXInstaller.choiceChanges&hellip;</h2>
+
+<p>Downloading and adding IncompatibleAppList pkg&hellip;
+Downloading <a href="http://swcdn.apple.com/content/downloads/03/34/031-32728/f7ouzm6ipiy5h4c325qbantr81tw7o9yyi/OSX_10_11_IncompatibleAppList.pkg">http://swcdn.apple.com/content/downloads/03/34/031-32728/f7ouzm6ipiy5h4c325qbantr81tw7o9yyi/OSX_10_11_IncompatibleAppList.pkg</a> to /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/OS X Install Data/OSX_10_11_IncompatibleAppList.pkg&hellip;</p>
+
+<h2>Writing index.sproduct to /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/OS X Install Data/index.sproduct&hellip;</h2>
+
+<p>Copying InstallESD into package&hellip;
+Mounting /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
+Copying additional packages to InstallESD/Packages/:</p>
+
+<pre><code>Copying flat package ../first-boot-pkg/post-elcap-upgrade.pkg
+</code></pre>
+
+<p>Creating /private/tmp/tmp4hDxTs/dmg.BzTtzS/Packages/OSInstall.collection
+Unmounting /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
+Creating disk image at /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/InstallESD.dmg&hellip;
+Preparing imaging engine…
+Reading Protective Master Boot Record (MBR : 0)…
+   (CRC32 $9A0557B7: Protective Master Boot Record (MBR : 0))
+Reading GPT Header (Primary GPT Header : 1)…
+   (CRC32 $39D58726: GPT Header (Primary GPT Header : 1))
+Reading GPT Partition Data (Primary GPT Table : 2)…
+   (CRC32 $F5D8C782: GPT Partition Data (Primary GPT Table : 2))
+Reading  (Apple_Free : 3)…
+   (CRC32 $00000000:  (Apple_Free : 3))
+Reading EFI System Partition (C12A7328-F81F-11D2-BA4B-00A0C93EC93B : 4)…
+&hellip;
+   (CRC32 $B54B659C: EFI System Partition (C12A7328-F81F-11D2-BA4B-00A0C93EC93B : 4))
+Reading disk image (Apple_HFS : 5)…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;..
+   (CRC32 $0A97BB61: disk image (Apple_HFS : 5))
+Reading  (Apple_Free : 6)…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;
+   (CRC32 $00000000:  (Apple_Free : 6))
+Reading GPT Partition Data (Backup GPT Table : 7)…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;
+   (CRC32 $F5D8C782: GPT Partition Data (Backup GPT Table : 7))
+Reading GPT Header (Backup GPT Header : 8)…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;.
+   (CRC32 $A9B0AD1F: GPT Header (Backup GPT Header : 8))
+Adding resources…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;.
+Elapsed Time:  1m 13.452s
+File size: 6060448966 bytes, Checksum: CRC32 $613FF36A
+Sectors processed: 13002104, 12518380 compressed
+Speed: 83.2Mbytes/sec
+Savings: 9.0%</p>
+
+<h2>created: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/InstallESD.dmg</h2>
+
+<p>Done! Completed package at: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg
+```</p>
+
+<p>And voilla! You have a package that can be deployed by virtually any management tool (Munki in my case) that will make sure the latest version of Munki is also installed at the same time.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Using the Sal API]]></title>
     <link href="http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api/"/>
-    <updated>2015-07-10T19:12:36+09:00</updated>
+    <updated>2015-07-10T11:12:36+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api</id>
     <content type="html"><![CDATA[<p>As previously mentioned, Sal now has an <a href="https://github.com/salopensource/sal/blob/master/docs/API.md">API</a>. You might be wondering what you can do with this wonderous API. This is a simple example of using it to automate building packages to enrol Macs into Sal.</p>
 
@@ -72,7 +257,7 @@ $ sudo python sal_package_generator.py
   <entry>
     <title type="html"><![CDATA[Introducing Imagr]]></title>
     <link href="http://grahamgilbert.com/blog/2015/05/08/introducing-imagr/"/>
-    <updated>2015-05-08T22:41:37+09:00</updated>
+    <updated>2015-05-08T14:41:37+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/05/08/introducing-imagr</id>
     <content type="html"><![CDATA[<p>For the past few weeks, I&rsquo;ve been working with some other Mac admins on a new application that can aid with the deployment of Macs &ndash; say hi to <a href="https://github.com/grahamgilbert/imagr">Imagr</a>.</p>
 
@@ -87,7 +272,7 @@ $ sudo python sal_package_generator.py
   <entry>
     <title type="html"><![CDATA[More fun with AutoNBI]]></title>
     <link href="http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/"/>
-    <updated>2015-04-13T16:05:53+09:00</updated>
+    <updated>2015-04-13T08:05:53+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi</id>
     <content type="html"><![CDATA[<p>Last time we saw our heroes, there was the unfuffilled promise of making small NetInstall sets. Now is the time to deliver on that promise. We&rsquo;re going to make a small NetInstall that will open up Terminal.app.</p>
 
@@ -145,9 +330,9 @@ $ sudo ./AutoNBI.py -s /Applications/Install\ OS\ X\ Yosemite.app -f Packages -d
   
   <entry>
     <title type="html"><![CDATA[Building custom NetInstalls with AutoNBI]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/04/13/building-custom-netinstalls-with-autonbi/"/>
-    <updated>2015-04-13T04:33:28+09:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/04/13/building-custom-netinstalls-with-autonbi</id>
+    <link href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/"/>
+    <updated>2015-04-12T20:33:28+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi</id>
     <content type="html"><![CDATA[<p>Another day, another tool made by <a href="http://enterprisemac.bruienne.com">Mr Bruienne</a>! A while back, Pepijn released <a href="https://bitbucket.org/bruienne/autonbi">AutoNBI</a> &ndash; a tool for automating the creation of NetInstall sets. At the time, it was filled away in the &ldquo;this is cool, but isn&rsquo;t this what System Image Utility does?&rdquo; section. Then I saw his NetInstall running at MacTech (are you seeing a theme here?). It had this really simple DeployStudio like imagaing app &ndash; it was really cool. And suddently it made sense why you can replace the <code>Packages</code> directory with AutoNBI &ndash; a NetInstall is a really stripped down OS X environment, so it it much easier to distribute and use &ndash; we&rsquo;re looking at around 1.8GB for my current NetInstall vs 5-6GB for a normal NetBoot.</p>
 
 <p>This time we&rsquo;ll take a look at how to use AutoNBI to make a standard NetInstall &ndash; in a future post we&rsquo;ll look at some of the more cool things you can do with AutoNBI.</p>
@@ -172,31 +357,6 @@ $ sudo ./AutoNBI.py -s /Applications/Install\ OS\ X\ Yosemite.app -d ~/Desktop -
 <p>What did we just do? The <code>-s</code> option is simply pointing at our Install OS X Yosemite.app &ndash; if you have it somewhere else, point AutoNBI there. <code>-d</code> is our destination directory and <code>-n</code> is the name of our NetInstall. <code>-e</code> is telling AutoNBI to make the NetInstall enabled.</p>
 
 <p>So the next time there&rsquo;s a new OS X Installer, you can have an updated NetInstall in seconds, not minutes.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Managing Munki catalogs with Trello]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/"/>
-    <updated>2015-02-11T21:11:30+09:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello</id>
-    <content type="html"><![CDATA[<p>Over the past few months, I&rsquo;ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage it. We&rsquo;ve got <a href="https://github.com/autopkg/autopkg">AutoPkg</a> populating our <a href="https://github.com/munki/munki">Munki</a> repositories without any manual intervention, but we still need to edit pkgsinfo files to move items through development to testing to production catalogs. Sure, there are existing tools  like <a href="https://github.com/munki/munkiwebadmin">MunkiWebAdmin</a> or <a href="https://github.com/hjuutilainen/munkiadmin">MunkiAdmin</a>, but they either still require knowledge of how Munki works or full access to the repository via a file share of some sort. And we obviously already have a tool for assigning software to machines in Sal+ &ndash; we needed something that can speed this incredibly common task.</p>
-
-<p>Then I cast my mind back to a conversation I had with <a href="https://twitter.com/bruienne">Pepijn Bruienne</a> at PSU last year about his workflow using <a href="https://trello.com">Trello</a> to promote items in his Munki repository. So, after pestering him for some information, I devised a workflow that matched how we worked.</p>
-
-<h2>&ldquo;So how does it work&rdquo;, I hear you cry</h2>
-
-<p>We have five lists on our &ldquo;Munki Package Management&rdquo; Trello board. Essentially when the script runs, it inspects the items in our Munki catalog and if they&rsquo;re not already in the Trello board, it adds them to the correct list (we ignore anything that&rsquo;s already in production. All promotions to production are done using this tool now).</p>
-
-<p><img class="center" src="/images/posts/2015-02-11/to_testing.gif" width="427" height="240"></p>
-
-<p>We also have lists called &ldquo;To Development&rdquo;, &ldquo;To Testing&rdquo; and &ldquo;To Production&rdquo;. Moving items into these lists will be caught by the script next time it runs, and moved to the appropriate catalog.</p>
-
-<p><img class="center" src="/images/posts/2015-02-11/testing.gif" width="427" height="240"></p>
-
-<p>When items finally make it to Production, we add them to a dated Production list. This allows us to have a full history of when things are added to Production and who has moved it through each stage. We&rsquo;re also big users of Slack, so we hooked up it&rsquo;s Tello integration to post a message to our notficiations channel to let our team know when items are added into Munki.</p>
-
-<p>You can grab the script from <a href="https://github.com/pebbleit/munki-trello">pebble.it&rsquo;s GitHub account</a>, or if you&rsquo;re Docker inclined there&rsquo;s a <a href="https://registry.hub.docker.com/u/pebbleit/munki-trello/">container that has everything you need</a>.</p>
 ]]></content>
   </entry>
   

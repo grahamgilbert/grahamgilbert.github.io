@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Apache | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/apache/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-08-26T12:45:21+09:00</updated>
+  <updated>2015-09-28T13:03:27+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Web server on Linode part 1]]></title>
     <link href="http://grahamgilbert.com/blog/2012/01/01/web-server-on-linode-part-1/"/>
-    <updated>2012-01-01T20:23:03+09:00</updated>
+    <updated>2012-01-01T20:23:03+00:00</updated>
     <id>http://grahamgilbert.com/blog/2012/01/01/web-server-on-linode-part-1</id>
     <content type="html"><![CDATA[<p>Recently, I was tasked with moving a client&rsquo;s web server from a box in their office, to something a little more robust when they put something up there that caused the server to go nuts (30 mb/s nuts!).</p>
 

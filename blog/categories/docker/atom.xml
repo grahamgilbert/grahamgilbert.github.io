@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Docker | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/docker/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-08-26T12:45:21+09:00</updated>
+  <updated>2015-09-28T13:03:27+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Using a proxy container with Docker for virtualhosts]]></title>
     <link href="http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/"/>
-    <updated>2015-08-26T12:18:19+09:00</updated>
+    <updated>2015-08-26T04:18:19+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve been asked a few times over the last few weeks about how you can have multiple services (for example, Munki and Sal) running on the same port on the same server &ndash; how we used to do Virtual Hosting when we ran our apps on the host OS. My usual four word answer has been &lsquo;use a proxy container&rsquo;. How you actually do that has been undocumented &ndash; this post hopes to recitfy that.</p>
 
@@ -165,7 +165,7 @@ grahamgilbert/proxy
   <entry>
     <title type="html"><![CDATA[Running Puppet Server in Docker Part 3: Hiera]]></title>
     <link href="http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/"/>
-    <updated>2015-07-18T17:36:01+09:00</updated>
+    <updated>2015-07-18T09:36:01+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera</id>
     <content type="html"><![CDATA[<p>In the previous <a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/">two</a> <a href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/#comment-2143364638">parts</a>, we went over how to get a basic Puppet Server up and running in Docker and how to deploy your modules using r10k. This time we&rsquo;ll assign some configuration to our nodes using <a href="http://docs.puppetlabs.com/hiera/latest/">Hiera</a>.</p>
 
@@ -243,7 +243,7 @@ $ r10k deploy environment -pv
   <entry>
     <title type="html"><![CDATA[Running Puppet Server in Docker Part 2: r10k]]></title>
     <link href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/"/>
-    <updated>2015-06-24T22:49:31+09:00</updated>
+    <updated>2015-06-24T14:49:31+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k</id>
     <content type="html"><![CDATA[<p>Last time we got our Puppet Server up and running &ndash; now we need to put some Puppet modules on it so we can use it.</p>
 
@@ -369,7 +369,7 @@ $ r10k deploy environment -pv
   <entry>
     <title type="html"><![CDATA[Running Puppet Server in Docker]]></title>
     <link href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/"/>
-    <updated>2015-06-22T20:29:55+09:00</updated>
+    <updated>2015-06-22T12:29:55+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker</id>
     <content type="html"><![CDATA[<p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively &ndash; it&rsquo;s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
 
@@ -562,9 +562,9 @@ $ puppet agent -t --waitforcert 20
   
   <entry>
     <title type="html"><![CDATA[Testing BSDPy in Vagrant]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/04/29/testing-bsdpy-in-vagrant/"/>
-    <updated>2015-04-29T00:10:07+09:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/04/29/testing-bsdpy-in-vagrant</id>
+    <link href="http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/"/>
+    <updated>2015-04-28T16:10:07+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant</id>
     <content type="html"><![CDATA[<p>Last time, we looked at how to spin up a Docker host and run BSDPy on it. That&rsquo;s great for production, but might be a bit of a faff to do every time you want to test your NBI at home.</p>
 
 <p>Inspired by <a href="https://grpugh.wordpress.com/2015/04/28/a-test-docker-bsdpy-environment/">Dr Graham R Pugh</a>, here&rsquo;s my Vagrant setup for this.</p>

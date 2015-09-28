@@ -4,7 +4,7 @@
   <title><![CDATA[Category: OS X | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/os-x/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-08-26T12:45:21+09:00</updated>
+  <updated>2015-09-28T13:03:27+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -14,10 +14,195 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Upgrading OS X using a package]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package/"/>
+    <updated>2015-09-28T11:35:55+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s the time of year where we start to think about upgrading our machines to the latest version of OS X. There are several ways of doing this, but assuming your users are unable to perform the upgrade themselves via the App Store (if they&rsquo;re running as a standard user or your policies prohibit the use of the App Store), you might be wondering how you can use your management tool to get your machines upgraded and make sure they stay enrolled in your management tool.</p>
+
+<p>We&rsquo;re fortunate that we have a standard packaging format on OS X that virtually all management tools can install, so this is the most universal way of distributing software. Greg Neagle wrote <a href="https://github.com/munki/createOSXinstallPkg">createOSXinstallPkg</a> a few years ago that has several nice features for mac admins:</p>
+
+<ul>
+<li>It wraps up an OS X Installer into a standard package.</li>
+<li>It allows you to add in additional packages &ndash; perhaps you want to make sure your admin user is installed or make sure that a version of Munki that is compatible with the new OS is installed.<!--more--></li>
+</ul>
+
+
+<p><a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">Yosemite introduced</a> a nice undocumented requirement that all packages included in the OS X installer environment are distribution packages. This is in addition to the limited OS X Installer environment not having many of the command line tools you might expect to be there.</p>
+
+<p>One solution to these issues is to use <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> &ndash; a tool that will install a set of packages at first boot, and will wrap them in a distribution style package so it can be used with createOSXinstallPkg.</p>
+
+<h2>The first boot package</h2>
+
+<p>Our first job is to build the package that will be installed at first boot. I am only going to make sure that Munki is installed at first boot, but some other things you might want to put in include:</p>
+
+<ul>
+<li>Your local admin user</li>
+<li>Puppet and Facter</li>
+<li>A payload free package to configure your SUS CatalogURL</li>
+</ul>
+
+
+<h3>Prep for the first boot package</h3>
+
+<p>First off we&rsquo;re going to need the script to build a first boot package. Assuming you&rsquo;re going to keep your code in <code>~/src</code>:</p>
+
+<p><code>bash
+$ cd ~/src
+$ git clone https://github.com/grahamgilbert/first-boot-pkg.git
+$ cd first-boot-pkg
+</code></p>
+
+<p>You have two options for configuring the first boot package &ndash; you can pass it options on the command line or you can use a plist. We&rsquo;re using a plist as it&rsquo;s the most repeatable and sharable method. If you need further options, such as disabling the network check, see the <a href="https://github.com/grahamgilbert/first-boot-pkg">project on Github</a>.</p>
+
+<p>``` xml ~/src/first-boot-pkg/first-boot-config.plist
+&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo;?>
+&lt;!DOCTYPE plist PUBLIC &ldquo;&ndash;//Apple Computer//DTD PLIST 1.0//EN&rdquo;      &ldquo;<a href="http://www.apple.com/DTDs/PropertyList-1.0.dtd">http://www.apple.com/DTDs/PropertyList-1.0.dtd</a>&rdquo;>
+<plist version="1.0">
+<dict></p>
+
+<pre><code>&lt;key&gt;Packages&lt;/key&gt;
+&lt;array&gt;
+    &lt;string&gt;munkitools-2.3.1.2535.pkg&lt;/string&gt;
+&lt;/array&gt;
+&lt;key&gt;Name&lt;/key&gt;
+&lt;string&gt;post-elcap-upgrade.pkg&lt;/string&gt;
+&lt;key&gt;Identifier&lt;/key&gt;
+&lt;string&gt;com.company.post-elcap-upgrade&lt;/string&gt;
+&lt;key&gt;Version&lt;/key&gt;
+&lt;string&gt;0.1&lt;/string&gt;
+</code></pre>
+
+<p></dict>
+</plist>
+```</p>
+
+<p>The above is assuming you&rsquo;ve saved your Munki package to <code>~/src/first-boot-pkg/munkitools-2.3.1.2535.pkg</code> (i.e. in the same directory as your <code>first-boot-config.plist</code>).</p>
+
+<h3>Building the first boot package</h3>
+
+<p>Let&rsquo;s make sure we&rsquo;re in the right directory:</p>
+
+<p><code>bash
+$ cd ~/src/first-boot-pkg
+</code></p>
+
+<p>And let&rsquo;s build the package:</p>
+
+<p>``` bash
+$ sudo ./first-boot-pkg &mdash;plist first-boot-config.plist</p>
+
+<h2>Validating packages:</h2>
+
+<h2>munkitools-2.3.1.2535.pkg looks good.</h2>
+
+<p>pkgbuild: Inferring bundle components from contents of /tmp/tmpfCF2Ry
+pkgbuild: Adding component at Library/PrivilegedHelperTools/LoginLog.app
+pkgbuild: Wrote package to /tmp/tmp0kZed8/post-elcap-upgrade.pkg
+productbuild: Wrote product to /Users/grahamgilbert/src/first-boot-pkg/post-elcap-upgrade.pkg
+```</p>
+
+<h2>Making the OS X upgrade package</h2>
+
+<p>As previously mentioned, we&rsquo;re going to use createOSXinstallPkg, so let&rsquo;s grab that:</p>
+
+<p><code>bash
+$ cd ~/src
+$ git clone https://github.com/munki/createOSXinstallPkg.git
+$ cd createOSXinstallPkg
+</code></p>
+
+<p>And assuming your OS X Installer is saved to the usual place:</p>
+
+<p><code>bash
+$ sudo ./createOSXinstallPkg --pkg ../first-boot-pkg/post-elcap-upgrade.pkg --source "/Applications/Install OS X El Capitan GM Candidate.app"
+</code></p>
+
+<p>createOSXinstallPkg will let you know how it&rsquo;s doing:</p>
+
+<p>``` bash</p>
+
+<h2>Examining and verifying source&hellip;</h2>
+
+<p>InstallESD.dmg: /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg
+OS Version: 10.11</p>
+
+<h2>OS Build: 15A282b</h2>
+
+<p>Output path: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg</p>
+
+<h2>Additional packages:</h2>
+
+<h2>post-elcap-upgrade.pkg</h2>
+
+<h2>Total additional package size: 1856 Kbytes</h2>
+
+<p>Checking available space on /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
+Creating package wrapper&hellip;</p>
+
+<h2>Creating MacOSXInstaller.choiceChanges&hellip;</h2>
+
+<p>Downloading and adding IncompatibleAppList pkg&hellip;
+Downloading <a href="http://swcdn.apple.com/content/downloads/03/34/031-32728/f7ouzm6ipiy5h4c325qbantr81tw7o9yyi/OSX_10_11_IncompatibleAppList.pkg">http://swcdn.apple.com/content/downloads/03/34/031-32728/f7ouzm6ipiy5h4c325qbantr81tw7o9yyi/OSX_10_11_IncompatibleAppList.pkg</a> to /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/OS X Install Data/OSX_10_11_IncompatibleAppList.pkg&hellip;</p>
+
+<h2>Writing index.sproduct to /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/OS X Install Data/index.sproduct&hellip;</h2>
+
+<p>Copying InstallESD into package&hellip;
+Mounting /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
+Copying additional packages to InstallESD/Packages/:</p>
+
+<pre><code>Copying flat package ../first-boot-pkg/post-elcap-upgrade.pkg
+</code></pre>
+
+<p>Creating /private/tmp/tmp4hDxTs/dmg.BzTtzS/Packages/OSInstall.collection
+Unmounting /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
+Creating disk image at /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/InstallESD.dmg&hellip;
+Preparing imaging engine…
+Reading Protective Master Boot Record (MBR : 0)…
+   (CRC32 $9A0557B7: Protective Master Boot Record (MBR : 0))
+Reading GPT Header (Primary GPT Header : 1)…
+   (CRC32 $39D58726: GPT Header (Primary GPT Header : 1))
+Reading GPT Partition Data (Primary GPT Table : 2)…
+   (CRC32 $F5D8C782: GPT Partition Data (Primary GPT Table : 2))
+Reading  (Apple_Free : 3)…
+   (CRC32 $00000000:  (Apple_Free : 3))
+Reading EFI System Partition (C12A7328-F81F-11D2-BA4B-00A0C93EC93B : 4)…
+&hellip;
+   (CRC32 $B54B659C: EFI System Partition (C12A7328-F81F-11D2-BA4B-00A0C93EC93B : 4))
+Reading disk image (Apple_HFS : 5)…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;..
+   (CRC32 $0A97BB61: disk image (Apple_HFS : 5))
+Reading  (Apple_Free : 6)…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;
+   (CRC32 $00000000:  (Apple_Free : 6))
+Reading GPT Partition Data (Backup GPT Table : 7)…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;
+   (CRC32 $F5D8C782: GPT Partition Data (Backup GPT Table : 7))
+Reading GPT Header (Backup GPT Header : 8)…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;.
+   (CRC32 $A9B0AD1F: GPT Header (Backup GPT Header : 8))
+Adding resources…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;.
+Elapsed Time:  1m 13.452s
+File size: 6060448966 bytes, Checksum: CRC32 $613FF36A
+Sectors processed: 13002104, 12518380 compressed
+Speed: 83.2Mbytes/sec
+Savings: 9.0%</p>
+
+<h2>created: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/InstallESD.dmg</h2>
+
+<p>Done! Completed package at: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg
+```</p>
+
+<p>And voilla! You have a package that can be deployed by virtually any management tool (Munki in my case) that will make sure the latest version of Munki is also installed at the same time.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Testing BSDPy in Vagrant]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/04/29/testing-bsdpy-in-vagrant/"/>
-    <updated>2015-04-29T00:10:07+09:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/04/29/testing-bsdpy-in-vagrant</id>
+    <link href="http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/"/>
+    <updated>2015-04-28T16:10:07+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant</id>
     <content type="html"><![CDATA[<p>Last time, we looked at how to spin up a Docker host and run BSDPy on it. That&rsquo;s great for production, but might be a bit of a faff to do every time you want to test your NBI at home.</p>
 
 <p>Inspired by <a href="https://grpugh.wordpress.com/2015/04/28/a-test-docker-bsdpy-environment/">Dr Graham R Pugh</a>, here&rsquo;s my Vagrant setup for this.</p>
@@ -54,7 +239,7 @@ $ vagrant up
   <entry>
     <title type="html"><![CDATA[Getting started with BSDPy on Docker]]></title>
     <link href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/"/>
-    <updated>2015-04-22T15:07:23+09:00</updated>
+    <updated>2015-04-22T07:07:23+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker</id>
     <content type="html"><![CDATA[<p>Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you&rsquo;re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we&rsquo;re using that. Your Ubuntu box will also need a real IP address &ndash; if you are using VMware Fusion, this will be a Bridged Network Adapter &ndash; adjust the terminology if you&rsquo;re using a different virtualization tool. You don&rsquo;t need to worry about giving your machine a static IP unless you want to &ndash; Macs will NetBoot just fine when they&rsquo;re on the same subnet. <!--more--></p>
 
@@ -235,7 +420,7 @@ $ docker logs -f bsdpy
   <entry>
     <title type="html"><![CDATA[first-boot-pkg updated for Yosemite]]></title>
     <link href="http://grahamgilbert.com/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/"/>
-    <updated>2014-10-21T19:50:28+09:00</updated>
+    <updated>2014-10-21T11:50:28+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/10/21/first-boot-pkg-updated-for-yosemite</id>
     <content type="html"><![CDATA[<p>It seems like Yosemite introduced an <a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">undocumented change</a> that requires any packages that are added an OS X installer (e.g. Netinstall or createOSXinstallPkg) be distribution style packages, or you get a nasty failure acompanied by one of the most unhelpful error messages ever.</p>
 
@@ -246,7 +431,7 @@ $ docker logs -f bsdpy
   <entry>
     <title type="html"><![CDATA[Personal Automation: Munki (Part 2)]]></title>
     <link href="http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2/"/>
-    <updated>2014-07-27T19:21:37+09:00</updated>
+    <updated>2014-07-27T11:21:37+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2</id>
     <content type="html"><![CDATA[<p>The first step to getting any Mac set up is to get some software onto it. I&rsquo;m not going to cover how to set up <a href="https://code.google.com/p/munki/wiki/GettingStartedWithMunki">Munki</a> or <a href="https://github.com/autopkg/autopkg/wiki/Getting-Started">AutoPkg</a> &ndash; there are lots of other places for that information.</p>
 
@@ -337,39 +522,6 @@ $ docker logs -f bsdpy
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>You might be crying &ldquo;but Homebrew needs the Xcode Command Line Tools installed!&rdquo; &ndash; and you&rsquo;d be 100% correct. You have the option of importing the downloaded package into Munki, but I have adapted <a href="https://github.com/timsutton/osx-vm-templates/blob/master/scripts/xcode-cli-tools.sh">Tim Sutton&rsquo;s script</a> into a <code>nopkg</code>. To find out what&rsquo;s installed, I ran <a href="http://www.fernlightning.com/doku.php?id=software%3afseventer%3astart">fseventer</a> and chose a random file to act as my installs array. I&rsquo;ve posted the pkginfos for both the <a href="https://github.com/grahamgilbert/macscripts/blob/master/Munki/pkginfos/Xcode/XcodeCLITools-2014.07.15.plist">Xcode CLI tools</a> and all of the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki/pkginfos/Homebrew">Homebrew installs</a> on Github.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Personal Automation (Part 1)]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/"/>
-    <updated>2014-07-26T19:27:00+09:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1</id>
-    <content type="html"><![CDATA[<p><a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">Earlier this year</a>, I professed my love of Boxen &ndash; the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was designed for internal use at Github, it set some things up how they liked them &ndash; which wasn&rsquo;t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.</p>
-
-<p>Then I updated Boxen. All of my modules were out of date, so I spent a good couple of hours updating all of them so they worked again. Ugh.</p>
-
-<p>So I started looking at moving to my own solution. One of my major irritations when using Boxen was that it didn&rsquo;t really handle updating your apps &ndash; you got whatever version the module author decided to install and then you had to hope that there was an updatng mechanism built in. I&rsquo;ve said before that there is no better method of getting software onto your Mac then Munki, so the first decison was straightforward. The rest took a little thought.</p>
-
-<h2>The six P&rsquo;s</h2>
-
-<p>My first requirement was that I shouldn&rsquo;t need to run anything to get my configuration to apply. Boxen requires that you run the <code>boxen</code> command periodically across each of your Macs to get the configuration applied. This wasn&rsquo;t always practical. I needed something that would run in the background and keep itself up to date.</p>
-
-<p>As I said before, I really disliked how Boxen installs software. Munki does a much better job, and AutoPkg makes it trivial to make sure you have the latest software version. Being a sysadmin, I need more than simple drag and drop apps and packages though &ndash; I make extensive use of <a href="http://brew.sh">Homebrew</a> to install command line tools like <a href="http://packer.io">Packer</a>, so I needed to come up with a way of installing these with Munki.</p>
-
-<p>However, Munki isn&rsquo;t the best tool for managing my configuration. I&rsquo;ve been using Puppet to manage the Macs  I look after for nearly three years now, and I wanted to base my system on it as I&rsquo;ve already done a lot of the work with making OS X specific modules. I also wanted to use the modules made for Boxen as much as possible (some made too many assumptions about where they were running, so couldn&rsquo;t be re-used.</p>
-
-<p>So to recap:</p>
-
-<ul>
-<li>Munki for software deployment.</li>
-<li>Puppet must run in the background periodically</li>
-<li>The configuration must update itself &ndash; I don&rsquo;t want to have to sync code across machines.</li>
-<li>Where possible, re-use existing Puppet modules</li>
-</ul>
-
-
-<p>Over the next few posts, I&rsquo;ll go over the different parts of this solution, how I put it together and how you might be able to use this.</p>
 ]]></content>
   </entry>
   

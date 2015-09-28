@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Munki | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/munki/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-08-26T12:45:21+09:00</updated>
+  <updated>2015-09-28T13:03:27+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -14,10 +14,195 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Upgrading OS X using a package]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package/"/>
+    <updated>2015-09-28T11:35:55+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s the time of year where we start to think about upgrading our machines to the latest version of OS X. There are several ways of doing this, but assuming your users are unable to perform the upgrade themselves via the App Store (if they&rsquo;re running as a standard user or your policies prohibit the use of the App Store), you might be wondering how you can use your management tool to get your machines upgraded and make sure they stay enrolled in your management tool.</p>
+
+<p>We&rsquo;re fortunate that we have a standard packaging format on OS X that virtually all management tools can install, so this is the most universal way of distributing software. Greg Neagle wrote <a href="https://github.com/munki/createOSXinstallPkg">createOSXinstallPkg</a> a few years ago that has several nice features for mac admins:</p>
+
+<ul>
+<li>It wraps up an OS X Installer into a standard package.</li>
+<li>It allows you to add in additional packages &ndash; perhaps you want to make sure your admin user is installed or make sure that a version of Munki that is compatible with the new OS is installed.<!--more--></li>
+</ul>
+
+
+<p><a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">Yosemite introduced</a> a nice undocumented requirement that all packages included in the OS X installer environment are distribution packages. This is in addition to the limited OS X Installer environment not having many of the command line tools you might expect to be there.</p>
+
+<p>One solution to these issues is to use <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> &ndash; a tool that will install a set of packages at first boot, and will wrap them in a distribution style package so it can be used with createOSXinstallPkg.</p>
+
+<h2>The first boot package</h2>
+
+<p>Our first job is to build the package that will be installed at first boot. I am only going to make sure that Munki is installed at first boot, but some other things you might want to put in include:</p>
+
+<ul>
+<li>Your local admin user</li>
+<li>Puppet and Facter</li>
+<li>A payload free package to configure your SUS CatalogURL</li>
+</ul>
+
+
+<h3>Prep for the first boot package</h3>
+
+<p>First off we&rsquo;re going to need the script to build a first boot package. Assuming you&rsquo;re going to keep your code in <code>~/src</code>:</p>
+
+<p><code>bash
+$ cd ~/src
+$ git clone https://github.com/grahamgilbert/first-boot-pkg.git
+$ cd first-boot-pkg
+</code></p>
+
+<p>You have two options for configuring the first boot package &ndash; you can pass it options on the command line or you can use a plist. We&rsquo;re using a plist as it&rsquo;s the most repeatable and sharable method. If you need further options, such as disabling the network check, see the <a href="https://github.com/grahamgilbert/first-boot-pkg">project on Github</a>.</p>
+
+<p>``` xml ~/src/first-boot-pkg/first-boot-config.plist
+&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo;?>
+&lt;!DOCTYPE plist PUBLIC &ldquo;&ndash;//Apple Computer//DTD PLIST 1.0//EN&rdquo;      &ldquo;<a href="http://www.apple.com/DTDs/PropertyList-1.0.dtd">http://www.apple.com/DTDs/PropertyList-1.0.dtd</a>&rdquo;>
+<plist version="1.0">
+<dict></p>
+
+<pre><code>&lt;key&gt;Packages&lt;/key&gt;
+&lt;array&gt;
+    &lt;string&gt;munkitools-2.3.1.2535.pkg&lt;/string&gt;
+&lt;/array&gt;
+&lt;key&gt;Name&lt;/key&gt;
+&lt;string&gt;post-elcap-upgrade.pkg&lt;/string&gt;
+&lt;key&gt;Identifier&lt;/key&gt;
+&lt;string&gt;com.company.post-elcap-upgrade&lt;/string&gt;
+&lt;key&gt;Version&lt;/key&gt;
+&lt;string&gt;0.1&lt;/string&gt;
+</code></pre>
+
+<p></dict>
+</plist>
+```</p>
+
+<p>The above is assuming you&rsquo;ve saved your Munki package to <code>~/src/first-boot-pkg/munkitools-2.3.1.2535.pkg</code> (i.e. in the same directory as your <code>first-boot-config.plist</code>).</p>
+
+<h3>Building the first boot package</h3>
+
+<p>Let&rsquo;s make sure we&rsquo;re in the right directory:</p>
+
+<p><code>bash
+$ cd ~/src/first-boot-pkg
+</code></p>
+
+<p>And let&rsquo;s build the package:</p>
+
+<p>``` bash
+$ sudo ./first-boot-pkg &mdash;plist first-boot-config.plist</p>
+
+<h2>Validating packages:</h2>
+
+<h2>munkitools-2.3.1.2535.pkg looks good.</h2>
+
+<p>pkgbuild: Inferring bundle components from contents of /tmp/tmpfCF2Ry
+pkgbuild: Adding component at Library/PrivilegedHelperTools/LoginLog.app
+pkgbuild: Wrote package to /tmp/tmp0kZed8/post-elcap-upgrade.pkg
+productbuild: Wrote product to /Users/grahamgilbert/src/first-boot-pkg/post-elcap-upgrade.pkg
+```</p>
+
+<h2>Making the OS X upgrade package</h2>
+
+<p>As previously mentioned, we&rsquo;re going to use createOSXinstallPkg, so let&rsquo;s grab that:</p>
+
+<p><code>bash
+$ cd ~/src
+$ git clone https://github.com/munki/createOSXinstallPkg.git
+$ cd createOSXinstallPkg
+</code></p>
+
+<p>And assuming your OS X Installer is saved to the usual place:</p>
+
+<p><code>bash
+$ sudo ./createOSXinstallPkg --pkg ../first-boot-pkg/post-elcap-upgrade.pkg --source "/Applications/Install OS X El Capitan GM Candidate.app"
+</code></p>
+
+<p>createOSXinstallPkg will let you know how it&rsquo;s doing:</p>
+
+<p>``` bash</p>
+
+<h2>Examining and verifying source&hellip;</h2>
+
+<p>InstallESD.dmg: /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg
+OS Version: 10.11</p>
+
+<h2>OS Build: 15A282b</h2>
+
+<p>Output path: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg</p>
+
+<h2>Additional packages:</h2>
+
+<h2>post-elcap-upgrade.pkg</h2>
+
+<h2>Total additional package size: 1856 Kbytes</h2>
+
+<p>Checking available space on /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
+Creating package wrapper&hellip;</p>
+
+<h2>Creating MacOSXInstaller.choiceChanges&hellip;</h2>
+
+<p>Downloading and adding IncompatibleAppList pkg&hellip;
+Downloading <a href="http://swcdn.apple.com/content/downloads/03/34/031-32728/f7ouzm6ipiy5h4c325qbantr81tw7o9yyi/OSX_10_11_IncompatibleAppList.pkg">http://swcdn.apple.com/content/downloads/03/34/031-32728/f7ouzm6ipiy5h4c325qbantr81tw7o9yyi/OSX_10_11_IncompatibleAppList.pkg</a> to /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/OS X Install Data/OSX_10_11_IncompatibleAppList.pkg&hellip;</p>
+
+<h2>Writing index.sproduct to /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/OS X Install Data/index.sproduct&hellip;</h2>
+
+<p>Copying InstallESD into package&hellip;
+Mounting /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
+Copying additional packages to InstallESD/Packages/:</p>
+
+<pre><code>Copying flat package ../first-boot-pkg/post-elcap-upgrade.pkg
+</code></pre>
+
+<p>Creating /private/tmp/tmp4hDxTs/dmg.BzTtzS/Packages/OSInstall.collection
+Unmounting /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
+Creating disk image at /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/InstallESD.dmg&hellip;
+Preparing imaging engine…
+Reading Protective Master Boot Record (MBR : 0)…
+   (CRC32 $9A0557B7: Protective Master Boot Record (MBR : 0))
+Reading GPT Header (Primary GPT Header : 1)…
+   (CRC32 $39D58726: GPT Header (Primary GPT Header : 1))
+Reading GPT Partition Data (Primary GPT Table : 2)…
+   (CRC32 $F5D8C782: GPT Partition Data (Primary GPT Table : 2))
+Reading  (Apple_Free : 3)…
+   (CRC32 $00000000:  (Apple_Free : 3))
+Reading EFI System Partition (C12A7328-F81F-11D2-BA4B-00A0C93EC93B : 4)…
+&hellip;
+   (CRC32 $B54B659C: EFI System Partition (C12A7328-F81F-11D2-BA4B-00A0C93EC93B : 4))
+Reading disk image (Apple_HFS : 5)…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;..
+   (CRC32 $0A97BB61: disk image (Apple_HFS : 5))
+Reading  (Apple_Free : 6)…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;
+   (CRC32 $00000000:  (Apple_Free : 6))
+Reading GPT Partition Data (Backup GPT Table : 7)…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;
+   (CRC32 $F5D8C782: GPT Partition Data (Backup GPT Table : 7))
+Reading GPT Header (Backup GPT Header : 8)…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;.
+   (CRC32 $A9B0AD1F: GPT Header (Backup GPT Header : 8))
+Adding resources…
+&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;.
+Elapsed Time:  1m 13.452s
+File size: 6060448966 bytes, Checksum: CRC32 $613FF36A
+Sectors processed: 13002104, 12518380 compressed
+Speed: 83.2Mbytes/sec
+Savings: 9.0%</p>
+
+<h2>created: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/InstallESD.dmg</h2>
+
+<p>Done! Completed package at: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg
+```</p>
+
+<p>And voilla! You have a package that can be deployed by virtually any management tool (Munki in my case) that will make sure the latest version of Munki is also installed at the same time.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Munki DND]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/07/08/munki-dnd/"/>
-    <updated>2015-07-08T01:46:44+09:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/07/08/munki-dnd</id>
+    <link href="http://grahamgilbert.com/blog/2015/07/07/munki-dnd/"/>
+    <updated>2015-07-07T17:46:44+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/07/07/munki-dnd</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve been wanting to get stuck in with a simple Swift project for a while, but couldn&rsquo;t think of anything suitable for a first project (<a href="https://github.com/grahamgilbert/imagr">Imagr</a> was originally going to be that project, but I don&rsquo;t think it would ever have been made if I chose Swift), until I saw <a href="https://grpugh.wordpress.com/2015/07/03/a-do-not-disturb-application-for-munki/">Dr Graham R Pugh&rsquo;s Do Not Disturb application</a>. I thought it was an excellent idea that could be made even better by being a manu bar app.</p>
 
 <p><img class="center" src="/images/posts/2015-07-07/active.png"></p>
@@ -33,7 +218,7 @@
   <entry>
     <title type="html"><![CDATA[Using munki-trello with Git]]></title>
     <link href="http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git/"/>
-    <updated>2015-06-16T19:21:58+09:00</updated>
+    <updated>2015-06-16T11:21:58+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git</id>
     <content type="html"><![CDATA[<p>So you&rsquo;re managing your catalogs with <a href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/">munki-trello</a>, but you also want to use git and <a href="https://www.afp548.com/2014/12/01/git-fat-intro-part-two-setup-and-migration/">git-fat</a> to track the changes &ndash; what do you do?</p>
 
@@ -86,7 +271,7 @@ git commit -m &ldquo;Munki Trello commit $now&rdquo;</p>
   <entry>
     <title type="html"><![CDATA[Managing Munki catalogs with Trello]]></title>
     <link href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/"/>
-    <updated>2015-02-11T21:11:30+09:00</updated>
+    <updated>2015-02-11T12:11:30+00:00</updated>
     <id>http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello</id>
     <content type="html"><![CDATA[<p>Over the past few months, I&rsquo;ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage it. We&rsquo;ve got <a href="https://github.com/autopkg/autopkg">AutoPkg</a> populating our <a href="https://github.com/munki/munki">Munki</a> repositories without any manual intervention, but we still need to edit pkgsinfo files to move items through development to testing to production catalogs. Sure, there are existing tools  like <a href="https://github.com/munki/munkiwebadmin">MunkiWebAdmin</a> or <a href="https://github.com/hjuutilainen/munkiadmin">MunkiAdmin</a>, but they either still require knowledge of how Munki works or full access to the repository via a file share of some sort. And we obviously already have a tool for assigning software to machines in Sal+ &ndash; we needed something that can speed this incredibly common task.</p>
 
@@ -111,106 +296,9 @@ git commit -m &ldquo;Munki Trello commit $now&rdquo;</p>
   <entry>
     <title type="html"><![CDATA[Slides and notes from Twisting Munki]]></title>
     <link href="http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki/"/>
-    <updated>2014-11-07T09:51:33+09:00</updated>
+    <updated>2014-11-07T00:51:33+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki</id>
     <content type="html"><![CDATA[<p>Firstly, thanks if you came to my talk and putting up with me! You can get my slides and code from the <a href="https://github.com/grahamgilbert/mactech_2014">GitHub repository</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Personal Automation: Munki (Part 2)]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2/"/>
-    <updated>2014-07-27T19:21:37+09:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2</id>
-    <content type="html"><![CDATA[<p>The first step to getting any Mac set up is to get some software onto it. I&rsquo;m not going to cover how to set up <a href="https://code.google.com/p/munki/wiki/GettingStartedWithMunki">Munki</a> or <a href="https://github.com/autopkg/autopkg/wiki/Getting-Started">AutoPkg</a> &ndash; there are lots of other places for that information.</p>
-
-<p>As a sysadmin, I&rsquo;m forever testing things. Rather than destroy my own machine, I like to do this in Virtual Machines. My preferred virtualisation solution is VMware Fusion, but unfortunately it&rsquo;s not very easy to deploy out of the box. You need to do a little bit of work to get it into a package that you can import into Munki, but fortunately the process is <a href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2058680">well documented on VMware&rsquo;s site</a>.</p>
-
-<p>The next piece of &lsquo;non standard&rsquo; software I need is <a href="http://brew.sh">Homebrew</a>. The installation method listed on their site is to run a terminal command as the current user. The first part of this is obviously fine &ndash; Munki has several methods to run scripts (payload free packages, nopkg), but it runs everything as root. Fortunately, as I&rsquo;m deploying my own machine, I can make some assumptions about where Homebrew will be installed. The first assumption I can make is that there will only be one user on the machine, and the second is that I&rsquo;m going to be logged in most of the time (as my laptop is encrypted, it&rsquo;s either off or logged in).</p>
-
-<p>I&rsquo;m going to utilise a <code>nopkg</code> pkginfo file to perform the installation. The first part of our script to install Homebrew is to make sure that a user (me!) is logged in. Homebrew doesn&rsquo;t like being owned by root, so first we need to make sure that there is a user logged in.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;CURRENT_USER<span class="o">=</span>&lt;code&gt;/bin/ls -l /dev/console | /usr/bin/awk <span class="s1">&#39;{ print $3 }&#39;</span>&lt;/code&gt;&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;if <span class="o">[</span> &amp;ldquo;<span class="nv">$CURRENT_USER</span>&amp;rdquo; <span class="o">==</span> &amp;lsquo;root&amp;rsquo; <span class="o">]</span>; <span class="k">then</span>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;pre&gt;&lt;code&gt;# this can<span class="err">&#39;</span>t run at the login window, we need the current user
-</span><span class='line'><span class="nb">exit </span>1
-</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;fi
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>So now we know that there&rsquo;s a user logged in, and who that user is. Time to install Homebrew as the current user.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /usr/local
-</span><span class='line'>mkdir -p /usr/local/homebrew
-</span><span class='line'>mkdir -p /usr/local/bin
-</span><span class='line'>chown <span class="nv">$CURRENT_USER</span>:&lt;em&gt;developer /usr/local/homebrew
-</span><span class='line'>chown <span class="nv">$CURRENT_USER</span>:&lt;/em&gt;developer /usr/local/bin&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;download and install homebrew&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;su <span class="nv">$CURRENT_USER</span> -c &amp;ldquo;/bin/bash -o pipefail -c &amp;lsquo;/usr/bin/curl -skSfL &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/mxcl/homebrew/tarball/master&quot;</span>&gt;https://github.com/mxcl/homebrew/tarball/master&lt;/a&gt; | <span class="o">(</span><span class="nb">cd</span> /usr/local ; /usr/bin/tar xz -m &amp;mdash;strip 1 -C homebrew; ln -s /usr/local/homebrew/bin/brew /usr/local/bin/brew<span class="o">)</span>&amp;rsquo;&amp;rdquo;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>As we&rsquo;re using a <code>nopkg</code> with Munki rather than a payload free package, we&rsquo;ve not left any receipts, so Munki doesn&rsquo;t know if Homebrew is installed. We&rsquo;re going to use an installs array to tell Munki what to look for when determining whether Homebrew is installed or not.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>installs<span class="nt">&lt;/key&gt;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>array<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>dict<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>path<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>/usr/local/bin/brew<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>key<span class="ni">&amp;gt;</span>type<span class="ni">&amp;lt;</span>/key<span class="ni">&amp;gt;</span>
-</span><span class='line'>        <span class="ni">&amp;lt;</span>string<span class="ni">&amp;gt;</span>file<span class="ni">&amp;lt;</span>/string<span class="ni">&amp;gt;</span>
-</span><span class='line'>    <span class="ni">&amp;lt;</span>/dict<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="ni">&amp;lt;</span>/array<span class="ni">&amp;gt;</span>
-</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>You might be crying &ldquo;but Homebrew needs the Xcode Command Line Tools installed!&rdquo; &ndash; and you&rsquo;d be 100% correct. You have the option of importing the downloaded package into Munki, but I have adapted <a href="https://github.com/timsutton/osx-vm-templates/blob/master/scripts/xcode-cli-tools.sh">Tim Sutton&rsquo;s script</a> into a <code>nopkg</code>. To find out what&rsquo;s installed, I ran <a href="http://www.fernlightning.com/doku.php?id=software%3afseventer%3astart">fseventer</a> and chose a random file to act as my installs array. I&rsquo;ve posted the pkginfos for both the <a href="https://github.com/grahamgilbert/macscripts/blob/master/Munki/pkginfos/Xcode/XcodeCLITools-2014.07.15.plist">Xcode CLI tools</a> and all of the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki/pkginfos/Homebrew">Homebrew installs</a> on Github.</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Hiera | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/hiera/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-08-26T12:45:21+09:00</updated>
+  <updated>2015-09-28T13:03:27+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Running Puppet Server in Docker Part 3: Hiera]]></title>
     <link href="http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/"/>
-    <updated>2015-07-18T17:36:01+09:00</updated>
+    <updated>2015-07-18T09:36:01+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera</id>
     <content type="html"><![CDATA[<p>In the previous <a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/">two</a> <a href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/#comment-2143364638">parts</a>, we went over how to get a basic Puppet Server up and running in Docker and how to deploy your modules using r10k. This time we&rsquo;ll assign some configuration to our nodes using <a href="http://docs.puppetlabs.com/hiera/latest/">Hiera</a>.</p>
 

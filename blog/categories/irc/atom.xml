@@ -4,7 +4,7 @@
   <title><![CDATA[Category: IRC | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/irc/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-08-26T12:45:21+09:00</updated>
+  <updated>2015-09-28T13:03:27+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[ZNC: An IRC Bouncer]]></title>
     <link href="http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer/"/>
-    <updated>2013-10-13T08:35:00+09:00</updated>
+    <updated>2013-10-13T08:35:00+01:00</updated>
     <id>http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer</id>
     <content type="html"><![CDATA[<p>Yes,  it&rsquo;s true. The most interesting conversations in the Mac admin world take place using technology from the 1980&rsquo;s &ndash; <a href="http://en.wikipedia.org/wiki/Internet_Relay_Chat">IRC</a> (##osx-server on <a href="http://freenode.net/">freenode</a>). Those of you who know me will know that I&rsquo;m borderline OCD. In this instance, my major annoyance was that I&rsquo;d only get half of the conversation and I&rsquo;d miss private messages when I had to put my laptop to sleep. I needed to somehow keep a persistient conenction to IRC without having to sit infront of my computer 24/7.</p>
 

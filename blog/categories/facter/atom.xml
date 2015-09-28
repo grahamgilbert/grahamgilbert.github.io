@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Facter | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/facter/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-08-26T12:45:21+09:00</updated>
+  <updated>2015-09-28T13:03:27+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Facter 101]]></title>
     <link href="http://grahamgilbert.com/blog/2013/04/02/facter-101/"/>
-    <updated>2013-04-02T10:11:00+09:00</updated>
+    <updated>2013-04-02T10:11:00+01:00</updated>
     <id>http://grahamgilbert.com/blog/2013/04/02/facter-101</id>
     <content type="html"><![CDATA[<p>Facter is what gives Puppet it’s brains. It collects information about the computer it is run on and then passes it to the Puppet Master for use in manifests and can optionally be stored. I know, it doesn’t sound like the most earth shattering revelation of all time, but stop for a moment. Every time your current scripts need to taget a specific OS version or a machine with a certain bit of hardware, you need to code it directly into the script. If the method of extracting that information changes, you need to modify every single script that uses that method. With Facter, you&rsquo;re editing one file, which is always up to date on the client. Anyway, that&rsquo;s enough waffle from me. Let&rsquo;s get started.<!--more--></p>
 

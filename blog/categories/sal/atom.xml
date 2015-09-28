@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Sal | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/sal/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-08-26T12:45:21+09:00</updated>
+  <updated>2015-09-28T13:03:27+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Using the Sal API]]></title>
     <link href="http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api/"/>
-    <updated>2015-07-10T19:12:36+09:00</updated>
+    <updated>2015-07-10T11:12:36+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api</id>
     <content type="html"><![CDATA[<p>As previously mentioned, Sal now has an <a href="https://github.com/salopensource/sal/blob/master/docs/API.md">API</a>. You might be wondering what you can do with this wonderous API. This is a simple example of using it to automate building packages to enrol Macs into Sal.</p>
 
@@ -72,7 +72,7 @@ $ sudo python sal_package_generator.py
   <entry>
     <title type="html"><![CDATA[The future of Sal]]></title>
     <link href="http://grahamgilbert.com/blog/2015/06/26/the-future-of-sal/"/>
-    <updated>2015-06-26T17:40:31+09:00</updated>
+    <updated>2015-06-26T09:40:31+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/06/26/the-future-of-sal</id>
     <content type="html"><![CDATA[<p>As some of you may know, yesterday was my last day at pebble.it. Since I announced I was leaving, I’ve been getting asked this pretty regularly, so I thought I’d answer it here.</p>
 
@@ -87,7 +87,7 @@ $ sudo python sal_package_generator.py
   <entry>
     <title type="html"><![CDATA[Creating Business Units and Groups in Sal using a CSV]]></title>
     <link href="http://grahamgilbert.com/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/"/>
-    <updated>2014-12-08T16:52:21+09:00</updated>
+    <updated>2014-12-08T07:52:21+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv</id>
     <content type="html"><![CDATA[<p>Obviously I&rsquo;m a little biased, but I love Sal. But, it can be a little tedious to get everything set up the first time if you have hundreds of Business Units and Machine Groups. I&rsquo;ve quietly ignored the problem for a while, but then I saw this tweet pop up in my feed:</p>
 
@@ -160,7 +160,7 @@ Machine Group 3 didn't exist and has been created.
   <entry>
     <title type="html"><![CDATA[Deploying Sal on Heroku]]></title>
     <link href="http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku/"/>
-    <updated>2014-05-19T17:04:05+09:00</updated>
+    <updated>2014-05-19T09:04:05+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku</id>
     <content type="html"><![CDATA[<p>Setting up everything you need for Sal can be difficult, especially if you only have an OS X server available. Thankfully, Sal is built on top of a very common Python framework, Django. And even more thankfully, you can run Django on a whole host of <a href="http://en.wikipedia.org/wiki/Platform_as_a_service">PaaS</a> providers, including <a href="https://www.heroku.com">Heroku</a>.</p>
 
@@ -233,9 +233,9 @@ $ heroku open
   
   <entry>
     <title type="html"><![CDATA[Writing Plugins for Sal: Part 3]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/02/18/writing-plugins-for-sal-part-3/"/>
-    <updated>2014-02-18T06:12:36+09:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/02/18/writing-plugins-for-sal-part-3</id>
+    <link href="http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3/"/>
+    <updated>2014-02-17T21:12:36+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3</id>
     <content type="html"><![CDATA[<p>We&rsquo;ve already got a fairly decent plugin &ndash; it shows us how many machines we have that aren&rsquo;t able to run 10.9. However, quite a few people won&rsquo;t have any machines that fall into this category, and just want to know when one manages to sneak under the radar, so let&rsquo;s hide the plugin if we don&rsquo;t need to see it.</p>
 
 <h2>Previously on Lost</h2>

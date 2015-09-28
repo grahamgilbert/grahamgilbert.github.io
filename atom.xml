@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-08-26T12:45:21+09:00</updated>
+  <updated>2015-09-28T13:03:27+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -14,9 +14,276 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Upgrading OS X using a package]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package/"/>
+    <updated>2015-09-28T11:35:55+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s the time of year where we start to think about upgrading our machines to the latest version of OS X. There are several ways of doing this, but assuming your users are unable to perform the upgrade themselves via the App Store (if they&rsquo;re running as a standard user or your policies prohibit the use of the App Store), you might be wondering how you can use your management tool to get your machines upgraded and make sure they stay enrolled in your management tool.</p>
+
+<p>We&rsquo;re fortunate that we have a standard packaging format on OS X that virtually all management tools can install, so this is the most universal way of distributing software. Greg Neagle wrote <a href="https://github.com/munki/createOSXinstallPkg">createOSXinstallPkg</a> a few years ago that has several nice features for mac admins:</p>
+
+<ul>
+<li>It wraps up an OS X Installer into a standard package.</li>
+<li>It allows you to add in additional packages &ndash; perhaps you want to make sure your admin user is installed or make sure that a version of Munki that is compatible with the new OS is installed.<!--more--></li>
+</ul>
+
+
+<p><a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">Yosemite introduced</a> a nice undocumented requirement that all packages included in the OS X installer environment are distribution packages. This is in addition to the limited OS X Installer environment not having many of the command line tools you might expect to be there.</p>
+
+<p>One solution to these issues is to use <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> &ndash; a tool that will install a set of packages at first boot, and will wrap them in a distribution style package so it can be used with createOSXinstallPkg.</p>
+
+<h2>The first boot package</h2>
+
+<p>Our first job is to build the package that will be installed at first boot. I am only going to make sure that Munki is installed at first boot, but some other things you might want to put in include:</p>
+
+<ul>
+<li>Your local admin user</li>
+<li>Puppet and Facter</li>
+<li>A payload free package to configure your SUS CatalogURL</li>
+</ul>
+
+
+<h3>Prep for the first boot package</h3>
+
+<p>First off we&rsquo;re going to need the script to build a first boot package. Assuming you&rsquo;re going to keep your code in <code>~/src</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src
+</span><span class='line'><span class="nv">$ </span>git clone https://github.com/grahamgilbert/first-boot-pkg.git
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>first-boot-pkg
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You have two options for configuring the first boot package &ndash; you can pass it options on the command line or you can use a plist. We&rsquo;re using a plist as it&rsquo;s the most repeatable and sharable method. If you need further options, such as disabling the network check, see the <a href="https://github.com/grahamgilbert/first-boot-pkg">project on Github</a>.</p>
+
+<figure class='code'><figcaption><span>~/src/first-boot-pkg/first-boot-config.plist</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple Computer//DTD PLIST 1.0//EN&quot;      &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>Packages<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;string&gt;</span>munkitools-2.3.1.2535.pkg<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>Name<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>post-elcap-upgrade.pkg<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>Identifier<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>com.company.post-elcap-upgrade<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>Version<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>0.1<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'><span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The above is assuming you&rsquo;ve saved your Munki package to <code>~/src/first-boot-pkg/munkitools-2.3.1.2535.pkg</code> (i.e. in the same directory as your <code>first-boot-config.plist</code>).</p>
+
+<h3>Building the first boot package</h3>
+
+<p>Let&rsquo;s make sure we&rsquo;re in the right directory:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src/first-boot-pkg
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And let&rsquo;s build the package:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo ./first-boot-pkg --plist first-boot-config.plist
+</span><span class='line'>Validating packages:
+</span><span class='line'>----------------------------------------------------------------
+</span><span class='line'>munkitools-2.3.1.2535.pkg looks good.
+</span><span class='line'>----------------------------------------------------------------
+</span><span class='line'>pkgbuild: Inferring bundle components from contents of /tmp/tmpfCF2Ry
+</span><span class='line'>pkgbuild: Adding component at Library/PrivilegedHelperTools/LoginLog.app
+</span><span class='line'>pkgbuild: Wrote package to /tmp/tmp0kZed8/post-elcap-upgrade.pkg
+</span><span class='line'>productbuild: Wrote product to /Users/grahamgilbert/src/first-boot-pkg/post-elcap-upgrade.pkg
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Making the OS X upgrade package</h2>
+
+<p>As previously mentioned, we&rsquo;re going to use createOSXinstallPkg, so let&rsquo;s grab that:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ~/src
+</span><span class='line'><span class="nv">$ </span>git clone https://github.com/munki/createOSXinstallPkg.git
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>createOSXinstallPkg
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And assuming your OS X Installer is saved to the usual place:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo ./createOSXinstallPkg --pkg ../first-boot-pkg/post-elcap-upgrade.pkg --source <span class="s2">&quot;/Applications/Install OS X El Capitan GM Candidate.app&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>createOSXinstallPkg will let you know how it&rsquo;s doing:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Examining and verifying source...
+</span><span class='line'>----------------------------------------------------------------
+</span><span class='line'>InstallESD.dmg: /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg
+</span><span class='line'>OS Version: 10.11
+</span><span class='line'>OS Build: 15A282b
+</span><span class='line'>----------------------------------------------------------------
+</span><span class='line'>Output path: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg
+</span><span class='line'>Additional packages:
+</span><span class='line'>----------------------------------------------------------------
+</span><span class='line'>post-elcap-upgrade.pkg
+</span><span class='line'>----------------------------------------------------------------
+</span><span class='line'>Total additional package size: 1856 Kbytes
+</span><span class='line'>----------------------------------------------------------------
+</span><span class='line'>Checking available space on /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg...
+</span><span class='line'>Creating package wrapper...
+</span><span class='line'>Creating MacOSXInstaller.choiceChanges...
+</span><span class='line'>----------------------------------------------------------------
+</span><span class='line'>Downloading and adding IncompatibleAppList pkg...
+</span><span class='line'>Downloading http://swcdn.apple.com/content/downloads/03/34/031-32728/f7ouzm6ipiy5h4c325qbantr81tw7o9yyi/OSX_10_11_IncompatibleAppList.pkg to /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/OS X Install Data/OSX_10_11_IncompatibleAppList.pkg...
+</span><span class='line'>Writing index.sproduct to /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/OS X Install Data/index.sproduct...
+</span><span class='line'>----------------------------------------------------------------
+</span><span class='line'>Copying InstallESD into package...
+</span><span class='line'>Mounting /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg...
+</span><span class='line'>Copying additional packages to InstallESD/Packages/:
+</span><span class='line'>    Copying flat package ../first-boot-pkg/post-elcap-upgrade.pkg
+</span><span class='line'>Creating /private/tmp/tmp4hDxTs/dmg.BzTtzS/Packages/OSInstall.collection
+</span><span class='line'>Unmounting /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg...
+</span><span class='line'>Creating disk image at /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/InstallESD.dmg...
+</span><span class='line'>Preparing imaging engine…
+</span><span class='line'>Reading Protective Master Boot Record <span class="o">(</span>MBR : 0<span class="o">)</span>…
+</span><span class='line'>   <span class="o">(</span>CRC32 <span class="nv">$9A0557B7</span>: Protective Master Boot Record <span class="o">(</span>MBR : 0<span class="o">))</span>
+</span><span class='line'>Reading GPT Header <span class="o">(</span>Primary GPT Header : 1<span class="o">)</span>…
+</span><span class='line'>   <span class="o">(</span>CRC32 <span class="nv">$39D58726</span>: GPT Header <span class="o">(</span>Primary GPT Header : 1<span class="o">))</span>
+</span><span class='line'>Reading GPT Partition Data <span class="o">(</span>Primary GPT Table : 2<span class="o">)</span>…
+</span><span class='line'>   <span class="o">(</span>CRC32 <span class="nv">$F5D8C782</span>: GPT Partition Data <span class="o">(</span>Primary GPT Table : 2<span class="o">))</span>
+</span><span class='line'>Reading  <span class="o">(</span>Apple_Free : 3<span class="o">)</span>…
+</span><span class='line'>   <span class="o">(</span>CRC32 <span class="nv">$00000000</span>:  <span class="o">(</span>Apple_Free : 3<span class="o">))</span>
+</span><span class='line'>Reading EFI System Partition <span class="o">(</span>C12A7328-F81F-11D2-BA4B-00A0C93EC93B : 4<span class="o">)</span>…
+</span><span class='line'>...
+</span><span class='line'>   <span class="o">(</span>CRC32 <span class="nv">$B54B659C</span>: EFI System Partition <span class="o">(</span>C12A7328-F81F-11D2-BA4B-00A0C93EC93B : 4<span class="o">))</span>
+</span><span class='line'>Reading disk image <span class="o">(</span>Apple_HFS : 5<span class="o">)</span>…
+</span><span class='line'>...............................................................................................
+</span><span class='line'>   <span class="o">(</span>CRC32 <span class="nv">$0A97BB61</span>: disk image <span class="o">(</span>Apple_HFS : 5<span class="o">))</span>
+</span><span class='line'>Reading  <span class="o">(</span>Apple_Free : 6<span class="o">)</span>…
+</span><span class='line'>................................................................................................
+</span><span class='line'>   <span class="o">(</span>CRC32 <span class="nv">$00000000</span>:  <span class="o">(</span>Apple_Free : 6<span class="o">))</span>
+</span><span class='line'>Reading GPT Partition Data <span class="o">(</span>Backup GPT Table : 7<span class="o">)</span>…
+</span><span class='line'>................................................................................................
+</span><span class='line'>   <span class="o">(</span>CRC32 <span class="nv">$F5D8C782</span>: GPT Partition Data <span class="o">(</span>Backup GPT Table : 7<span class="o">))</span>
+</span><span class='line'>Reading GPT Header <span class="o">(</span>Backup GPT Header : 8<span class="o">)</span>…
+</span><span class='line'>.................................................................................................
+</span><span class='line'>   <span class="o">(</span>CRC32 <span class="nv">$A9B0AD1F</span>: GPT Header <span class="o">(</span>Backup GPT Header : 8<span class="o">))</span>
+</span><span class='line'>Adding resources…
+</span><span class='line'>.................................................................................................
+</span><span class='line'>Elapsed Time:  1m 13.452s
+</span><span class='line'>File size: 6060448966 bytes, Checksum: CRC32 <span class="nv">$613FF36A</span>
+</span><span class='line'>Sectors processed: 13002104, 12518380 compressed
+</span><span class='line'>Speed: 83.2Mbytes/sec
+</span><span class='line'>Savings: 9.0%
+</span><span class='line'>created: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/InstallESD.dmg
+</span><span class='line'>----------------------------------------------------------------
+</span><span class='line'>Done! Completed package at: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And voilla! You have a package that can be deployed by virtually any management tool (Munki in my case) that will make sure the latest version of Munki is also installed at the same time.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Using a proxy container with Docker for virtualhosts]]></title>
     <link href="http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/"/>
-    <updated>2015-08-26T12:18:19+09:00</updated>
+    <updated>2015-08-26T04:18:19+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve been asked a few times over the last few weeks about how you can have multiple services (for example, Munki and Sal) running on the same port on the same server &ndash; how we used to do Virtual Hosting when we ran our apps on the host OS. My usual four word answer has been &lsquo;use a proxy container&rsquo;. How you actually do that has been undocumented &ndash; this post hopes to recitfy that.</p>
 
@@ -184,7 +451,7 @@
   <entry>
     <title type="html"><![CDATA[Mac Admin &amp; Developer Conference UK]]></title>
     <link href="http://grahamgilbert.com/blog/2015/07/21/mac-admin-and-developer-conference-uk/"/>
-    <updated>2015-07-21T21:33:31+09:00</updated>
+    <updated>2015-07-21T13:33:31+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/07/21/mac-admin-and-developer-conference-uk</id>
     <content type="html"><![CDATA[<p>I&rsquo;m very happy to announce that <a href="http://www.macad.uk/speaker/graham-gilbert/">I will be speaking</a> at the first <a href="http://www.macad.uk/">Mac Admin &amp; Developer Conference UK</a>, held in our very own London on Feburary 9th and 10th, 2016. In addition to some <a href="http://www.macad.uk/speakers/">fantastic speakers</a> (I have no idea how they let me in), it&rsquo;s being <a href="http://www.macad.uk/sponsor/london-apple-admins/">sponsored</a> by <a href="http://www.londonappleadmins.org.uk/">London Apple Admins</a> (who will be meeting next in early September &ndash; we are looking for people who would like to give a short 15-20 minute presentation &ndash; get in touch if you&rsquo;re interested).</p>
 ]]></content>
@@ -193,7 +460,7 @@
   <entry>
     <title type="html"><![CDATA[Running Puppet Server in Docker Part 3: Hiera]]></title>
     <link href="http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/"/>
-    <updated>2015-07-18T17:36:01+09:00</updated>
+    <updated>2015-07-18T09:36:01+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera</id>
     <content type="html"><![CDATA[<p>In the previous <a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/">two</a> <a href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/#comment-2143364638">parts</a>, we went over how to get a basic Puppet Server up and running in Docker and how to deploy your modules using r10k. This time we&rsquo;ll assign some configuration to our nodes using <a href="http://docs.puppetlabs.com/hiera/latest/">Hiera</a>.</p>
 
@@ -299,7 +566,7 @@
   <entry>
     <title type="html"><![CDATA[Using the Sal API]]></title>
     <link href="http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api/"/>
-    <updated>2015-07-10T19:12:36+09:00</updated>
+    <updated>2015-07-10T11:12:36+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api</id>
     <content type="html"><![CDATA[<p>As previously mentioned, Sal now has an <a href="https://github.com/salopensource/sal/blob/master/docs/API.md">API</a>. You might be wondering what you can do with this wonderous API. This is a simple example of using it to automate building packages to enrol Macs into Sal.</p>
 
@@ -359,9 +626,9 @@
   
   <entry>
     <title type="html"><![CDATA[Munki DND]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/07/08/munki-dnd/"/>
-    <updated>2015-07-08T01:46:44+09:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/07/08/munki-dnd</id>
+    <link href="http://grahamgilbert.com/blog/2015/07/07/munki-dnd/"/>
+    <updated>2015-07-07T17:46:44+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/07/07/munki-dnd</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve been wanting to get stuck in with a simple Swift project for a while, but couldn&rsquo;t think of anything suitable for a first project (<a href="https://github.com/grahamgilbert/imagr">Imagr</a> was originally going to be that project, but I don&rsquo;t think it would ever have been made if I chose Swift), until I saw <a href="https://grpugh.wordpress.com/2015/07/03/a-do-not-disturb-application-for-munki/">Dr Graham R Pugh&rsquo;s Do Not Disturb application</a>. I thought it was an excellent idea that could be made even better by being a manu bar app.</p>
 
 <p><img class="center" src="http://grahamgilbert.com/images/posts/2015-07-07/active.png"></p>
@@ -377,7 +644,7 @@
   <entry>
     <title type="html"><![CDATA[The future of Sal]]></title>
     <link href="http://grahamgilbert.com/blog/2015/06/26/the-future-of-sal/"/>
-    <updated>2015-06-26T17:40:31+09:00</updated>
+    <updated>2015-06-26T09:40:31+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/06/26/the-future-of-sal</id>
     <content type="html"><![CDATA[<p>As some of you may know, yesterday was my last day at pebble.it. Since I announced I was leaving, I’ve been getting asked this pretty regularly, so I thought I’d answer it here.</p>
 
@@ -392,7 +659,7 @@
   <entry>
     <title type="html"><![CDATA[Running Puppet Server in Docker Part 2: r10k]]></title>
     <link href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/"/>
-    <updated>2015-06-24T22:49:31+09:00</updated>
+    <updated>2015-06-24T14:49:31+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k</id>
     <content type="html"><![CDATA[<p>Last time we got our Puppet Server up and running &ndash; now we need to put some Puppet modules on it so we can use it.</p>
 
@@ -540,7 +807,7 @@
   <entry>
     <title type="html"><![CDATA[Running Puppet Server in Docker]]></title>
     <link href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/"/>
-    <updated>2015-06-22T20:29:55+09:00</updated>
+    <updated>2015-06-22T12:29:55+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker</id>
     <content type="html"><![CDATA[<p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively &ndash; it&rsquo;s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
 
@@ -793,7 +1060,7 @@
   <entry>
     <title type="html"><![CDATA[Using munki-trello with Git]]></title>
     <link href="http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git/"/>
-    <updated>2015-06-16T19:21:58+09:00</updated>
+    <updated>2015-06-16T11:21:58+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git</id>
     <content type="html"><![CDATA[<p>So you&rsquo;re managing your catalogs with <a href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/">munki-trello</a>, but you also want to use git and <a href="https://www.afp548.com/2014/12/01/git-fat-intro-part-two-setup-and-migration/">git-fat</a> to track the changes &ndash; what do you do?</p>
 
@@ -873,7 +1140,7 @@
   <entry>
     <title type="html"><![CDATA[Introducing Imagr]]></title>
     <link href="http://grahamgilbert.com/blog/2015/05/08/introducing-imagr/"/>
-    <updated>2015-05-08T22:41:37+09:00</updated>
+    <updated>2015-05-08T14:41:37+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/05/08/introducing-imagr</id>
     <content type="html"><![CDATA[<p>For the past few weeks, I&rsquo;ve been working with some other Mac admins on a new application that can aid with the deployment of Macs &ndash; say hi to <a href="https://github.com/grahamgilbert/imagr">Imagr</a>.</p>
 
@@ -887,9 +1154,9 @@
   
   <entry>
     <title type="html"><![CDATA[Testing BSDPy in Vagrant]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/04/29/testing-bsdpy-in-vagrant/"/>
-    <updated>2015-04-29T00:10:07+09:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/04/29/testing-bsdpy-in-vagrant</id>
+    <link href="http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/"/>
+    <updated>2015-04-28T16:10:07+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant</id>
     <content type="html"><![CDATA[<p>Last time, we looked at how to spin up a Docker host and run BSDPy on it. That&rsquo;s great for production, but might be a bit of a faff to do every time you want to test your NBI at home.</p>
 
 <p>Inspired by <a href="https://grpugh.wordpress.com/2015/04/28/a-test-docker-bsdpy-environment/">Dr Graham R Pugh</a>, here&rsquo;s my Vagrant setup for this.</p>
@@ -929,7 +1196,7 @@
   <entry>
     <title type="html"><![CDATA[Getting started with BSDPy on Docker]]></title>
     <link href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/"/>
-    <updated>2015-04-22T15:07:23+09:00</updated>
+    <updated>2015-04-22T07:07:23+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker</id>
     <content type="html"><![CDATA[<p>Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you&rsquo;re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we&rsquo;re using that. Your Ubuntu box will also need a real IP address &ndash; if you are using VMware Fusion, this will be a Bridged Network Adapter &ndash; adjust the terminology if you&rsquo;re using a different virtualization tool. You don&rsquo;t need to worry about giving your machine a static IP unless you want to &ndash; Macs will NetBoot just fine when they&rsquo;re on the same subnet. <!--more--></p>
 
@@ -1148,7 +1415,7 @@
   <entry>
     <title type="html"><![CDATA[More fun with AutoNBI]]></title>
     <link href="http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/"/>
-    <updated>2015-04-13T16:05:53+09:00</updated>
+    <updated>2015-04-13T08:05:53+01:00</updated>
     <id>http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi</id>
     <content type="html"><![CDATA[<p>Last time we saw our heroes, there was the unfuffilled promise of making small NetInstall sets. Now is the time to deliver on that promise. We&rsquo;re going to make a small NetInstall that will open up Terminal.app.</p>
 
@@ -1206,9 +1473,9 @@
   
   <entry>
     <title type="html"><![CDATA[Building custom NetInstalls with AutoNBI]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/04/13/building-custom-netinstalls-with-autonbi/"/>
-    <updated>2015-04-13T04:33:28+09:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/04/13/building-custom-netinstalls-with-autonbi</id>
+    <link href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/"/>
+    <updated>2015-04-12T20:33:28+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi</id>
     <content type="html"><![CDATA[<p>Another day, another tool made by <a href="http://enterprisemac.bruienne.com">Mr Bruienne</a>! A while back, Pepijn released <a href="https://bitbucket.org/bruienne/autonbi">AutoNBI</a> &ndash; a tool for automating the creation of NetInstall sets. At the time, it was filled away in the &ldquo;this is cool, but isn&rsquo;t this what System Image Utility does?&rdquo; section. Then I saw his NetInstall running at MacTech (are you seeing a theme here?). It had this really simple DeployStudio like imagaing app &ndash; it was really cool. And suddently it made sense why you can replace the <code>Packages</code> directory with AutoNBI &ndash; a NetInstall is a really stripped down OS X environment, so it it much easier to distribute and use &ndash; we&rsquo;re looking at around 1.8GB for my current NetInstall vs 5-6GB for a normal NetBoot.</p>
 
 <p>This time we&rsquo;ll take a look at how to use AutoNBI to make a standard NetInstall &ndash; in a future post we&rsquo;ll look at some of the more cool things you can do with AutoNBI.</p>
@@ -1242,7 +1509,7 @@
   <entry>
     <title type="html"><![CDATA[Managing Munki catalogs with Trello]]></title>
     <link href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/"/>
-    <updated>2015-02-11T21:11:30+09:00</updated>
+    <updated>2015-02-11T12:11:30+00:00</updated>
     <id>http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello</id>
     <content type="html"><![CDATA[<p>Over the past few months, I&rsquo;ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage it. We&rsquo;ve got <a href="https://github.com/autopkg/autopkg">AutoPkg</a> populating our <a href="https://github.com/munki/munki">Munki</a> repositories without any manual intervention, but we still need to edit pkgsinfo files to move items through development to testing to production catalogs. Sure, there are existing tools  like <a href="https://github.com/munki/munkiwebadmin">MunkiWebAdmin</a> or <a href="https://github.com/hjuutilainen/munkiadmin">MunkiAdmin</a>, but they either still require knowledge of how Munki works or full access to the repository via a file share of some sort. And we obviously already have a tool for assigning software to machines in Sal+ &ndash; we needed something that can speed this incredibly common task.</p>
 
@@ -1267,7 +1534,7 @@
   <entry>
     <title type="html"><![CDATA[Migrating scriptRunner to Outset]]></title>
     <link href="http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/"/>
-    <updated>2015-01-04T20:40:41+09:00</updated>
+    <updated>2015-01-04T11:40:41+00:00</updated>
     <id>http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset</id>
     <content type="html"><![CDATA[<p>A while back, Nate Walck wrote <a href="https://github.com/natewalck/Scripts/blob/master/scriptRunner.py">scriptRunner</a>. It&rsquo;s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released <a href="https://github.com/chilcote/outset">Outset</a>. It has all of the functionality of scriptRunner, but it can also install packages at the Mac&rsquo;s first boot, and run scripts as root at either the first boot or every boot. This comes into it&rsquo;s own when you&rsquo;re trying to do things like skipping the iCloud screens on 10.10 using <a href="https://derflounder.wordpress.com/2014/10/16/disabling-the-icloud-and-diagnostics-pop-up-windows-in-yosemite/">Rich Trouton&rsquo;s script</a> &ndash; this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.</p>
 
@@ -1292,7 +1559,7 @@
   <entry>
     <title type="html"><![CDATA[Creating Business Units and Groups in Sal using a CSV]]></title>
     <link href="http://grahamgilbert.com/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/"/>
-    <updated>2014-12-08T16:52:21+09:00</updated>
+    <updated>2014-12-08T07:52:21+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv</id>
     <content type="html"><![CDATA[<p>Obviously I&rsquo;m a little biased, but I love Sal. But, it can be a little tedious to get everything set up the first time if you have hundreds of Business Units and Machine Groups. I&rsquo;ve quietly ignored the problem for a while, but then I saw this tweet pop up in my feed:</p>
 
@@ -1384,7 +1651,7 @@
   <entry>
     <title type="html"><![CDATA[Slides and notes from Twisting Munki]]></title>
     <link href="http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki/"/>
-    <updated>2014-11-07T09:51:33+09:00</updated>
+    <updated>2014-11-07T00:51:33+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki</id>
     <content type="html"><![CDATA[<p>Firstly, thanks if you came to my talk and putting up with me! You can get my slides and code from the <a href="https://github.com/grahamgilbert/mactech_2014">GitHub repository</a>.</p>
 ]]></content>
@@ -1393,22 +1660,11 @@
   <entry>
     <title type="html"><![CDATA[first-boot-pkg updated for Yosemite]]></title>
     <link href="http://grahamgilbert.com/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/"/>
-    <updated>2014-10-21T19:50:28+09:00</updated>
+    <updated>2014-10-21T11:50:28+01:00</updated>
     <id>http://grahamgilbert.com/blog/2014/10/21/first-boot-pkg-updated-for-yosemite</id>
     <content type="html"><![CDATA[<p>It seems like Yosemite introduced an <a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">undocumented change</a> that requires any packages that are added an OS X installer (e.g. Netinstall or createOSXinstallPkg) be distribution style packages, or you get a nasty failure acompanied by one of the most unhelpful error messages ever.</p>
 
 <p>To fix this, <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> now builds distribution style packages.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[London Apple Admins]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/08/25/london-apple-admins/"/>
-    <updated>2014-08-25T01:17:24+09:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/08/25/london-apple-admins</id>
-    <content type="html"><![CDATA[<p>I&rsquo;m delighted to say that the first (first meet that isn&rsquo;t &ldquo;let&rsquo;s go to the pub and get drunk&rdquo;, anyway!) <a href="http://www.londonappleadmins.org.uk">London Apple Admins</a> meetup is happening on the 3rd September at <a href="http://theredherring.co.uk/">The Red Herring in St Pauls</a>. I&rsquo;d like to take all of the credit for organising it, but it was down to the hard work of <a href="http://macmule.com">Ben Toms</a>. The theme this time is &ldquo;this is what I&rsquo;m working on at the moment&rdquo;, so I&rsquo;ll be talking about my new favourite toy, <a href="https://www.docker.com">Docker</a>.</p>
-
-<p>If you&rsquo;ll be in or around London on the 3rd September, <a href="https://www.eventbrite.com/e/london-apple-admins-sept-2014-tickets-12545591201">please get yourself a ticket</a> (they&rsquo;re free) and come and have a beer or two whilst listening to some awesome talks by London based Mac Admins.</p>
 ]]></content>
   </entry>
   
