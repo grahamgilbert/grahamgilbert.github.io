@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-09-28T13:03:27+01:00</updated>
+  <updated>2015-10-15T13:25:47+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,71 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Detecting when a Munki client is on the corporate network]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/"/>
+    <updated>2015-10-15T12:37:34+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network</id>
+    <content type="html"><![CDATA[<p>Sometimes it is useful to know whether a Munki client is on your corporate network &ndash; you might have a package or script that will only work when able to access an internal resource, or you might just want statistics on which users are accessing your internal infrastructure and external infrastructure.</p>
+
+<p>The idea is to have your clients attempt to access a URL that they will only have access to when they&rsquo;re on your internal network. This URL should return the following plist when the client accesses it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>response<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>active<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'><span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>The condition script</h2>
+
+<p>You can find the condition script on <a href="https://github.com/grahamgilbert/munki_conditions/tree/master/on_corp">my Github</a>. You should modify <a href="https://github.com/grahamgilbert/munki_conditions/blob/master/on_corp/on_corp.py#L11">line 11</a> of that script to point to your plist, and you can then distribute it to your clients however you wish (a Makefile for <a href="https://github.com/unixorn/luggage">The Luggage</a> is in the repo).</p>
+
+<p>When all is running, you will have access to an <code>on_corp</code> condition for use in your manifests.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>conditional_items<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'><span class="nt">&lt;array&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;key&gt;</span>condition<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;string&gt;</span>on_corp == TRUE<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;key&gt;</span>managed_installs<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;string&gt;</span>MyOnCorpOnlyPackage<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'> <span class="nt">&lt;/array&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Or if your Munki reporting tool supports using data from Conditions (like <a href="https://github.com/salopensource/sal">Sal</a>!), you could display that infomation in a <a href="https://github.com/salopensource/grahamgilbert-plugins/tree/master/oncorp">plugin</a>.</p>
+
+<p><img class="center" src="http://grahamgilbert.com/images/posts/2015-10-15/Sal_plugin.png" width="290" height="133"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Upgrading OS X using a package]]></title>
@@ -1654,17 +1719,6 @@
     <updated>2014-11-07T00:51:33+00:00</updated>
     <id>http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki</id>
     <content type="html"><![CDATA[<p>Firstly, thanks if you came to my talk and putting up with me! You can get my slides and code from the <a href="https://github.com/grahamgilbert/mactech_2014">GitHub repository</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[first-boot-pkg updated for Yosemite]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/"/>
-    <updated>2014-10-21T11:50:28+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/10/21/first-boot-pkg-updated-for-yosemite</id>
-    <content type="html"><![CDATA[<p>It seems like Yosemite introduced an <a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">undocumented change</a> that requires any packages that are added an OS X installer (e.g. Netinstall or createOSXinstallPkg) be distribution style packages, or you get a nasty failure acompanied by one of the most unhelpful error messages ever.</p>
-
-<p>To fix this, <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> now builds distribution style packages.</p>
 ]]></content>
   </entry>
   

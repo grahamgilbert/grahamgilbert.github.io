@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="It&rsquo;s the time of year where we start to think about upgrading our machines to the latest version of OS X. There are several ways of doing this &hellip;">
+  <meta name="description" content="Sometimes it is useful to know whether a Munki client is on your corporate network &ndash; you might have a package or script that will only work &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -88,6 +88,100 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/">Detecting When a Munki Client Is on the Corporate Network</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-15T12:37:34+01:00" pubdate data-updated="true">Oct 15<span>th</span>, 2015</time>
+        
+         | <a href="/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Sometimes it is useful to know whether a Munki client is on your corporate network &ndash; you might have a package or script that will only work when able to access an internal resource, or you might just want statistics on which users are accessing your internal infrastructure and external infrastructure.</p>
+
+<p>The idea is to have your clients attempt to access a URL that they will only have access to when they&rsquo;re on your internal network. This URL should return the following plist when the client accesses it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>response<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;string&gt;</span>active<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'><span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>The condition script</h2>
+
+<p>You can find the condition script on <a href="https://github.com/grahamgilbert/munki_conditions/tree/master/on_corp">my Github</a>. You should modify <a href="https://github.com/grahamgilbert/munki_conditions/blob/master/on_corp/on_corp.py#L11">line 11</a> of that script to point to your plist, and you can then distribute it to your clients however you wish (a Makefile for <a href="https://github.com/unixorn/luggage">The Luggage</a> is in the repo).</p>
+
+<p>When all is running, you will have access to an <code>on_corp</code> condition for use in your manifests.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>conditional_items<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'><span class="nt">&lt;array&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;key&gt;</span>condition<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;string&gt;</span>on_corp == TRUE<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;key&gt;</span>managed_installs<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;string&gt;</span>MyOnCorpOnlyPackage<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'> <span class="nt">&lt;/array&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Or if your Munki reporting tool supports using data from Conditions (like <a href="https://github.com/salopensource/sal">Sal</a>!), you could display that infomation in a <a href="https://github.com/salopensource/grahamgilbert-plugins/tree/master/oncorp">plugin</a>.</p>
+
+<p><img class="center" src="/images/posts/2015-10-15/Sal_plugin.png" width="290" height="133"></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -414,96 +508,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/07/10/using-the-sal-api/">Using the Sal API</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-07-10T11:12:36+01:00" pubdate data-updated="true">Jul 10<span>th</span>, 2015</time>
-        
-         | <a href="/blog/2015/07/10/using-the-sal-api/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>As previously mentioned, Sal now has an <a href="https://github.com/salopensource/sal/blob/master/docs/API.md">API</a>. You might be wondering what you can do with this wonderous API. This is a simple example of using it to automate building packages to enrol Macs into Sal.</p>
-
-<p>The basic workflow of this script is:</p>
-
-<ul>
-<li>Use the API to get a list of all Machine Groups in Sal &ndash; this will return JSON (a markup language that is easily parsable with languages like Python)</li>
-<li>Download the Sal postflight scripts</li>
-<li>Download the latest Facter installer</li>
-<li>For each machine group, build a package that will install all of the packages and then set the correct Sal preferences.</li>
-</ul>
-
-
-<p><a href="https://gist.github.com/grahamgilbert/8ccba318d3ecadee02b1">You can find the script in this Gist</a>. I&rsquo;m not going to go through the script line by line, but we&rsquo;ll cover how to configure it.</p>
-
-<p>First off you will need an API key configuring. Log into Sal as a user with Global Admin privelages and choose the &lsquo;person&rsquo; menu at the top right and then choose Settings. From the sidebar, choose API keys and then choose to make a new one. Give it a name so you can recognise it &ndash; I called this one &ldquo;PKG Generator&rdquo;. You will then be given a public key and a private key. Make a note of them, we&rsquo;ll need them in the next section.</p>
-
-<h2>Configuring the script</h2>
-
-<p>Edit the variables at the top to match your environment:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c"># No trailing slash on this one - I was lazy and didn&#39;t check for it</span>
-</span><span class='line'><span class="n">SAL_URL</span> <span class="o">=</span> <span class="s">&quot;https://sal.yourcompany.com&quot;</span>
-</span><span class='line'><span class="n">PUBLIC_KEY</span> <span class="o">=</span> <span class="s">&quot;yourpublickeyhere&quot;</span>
-</span><span class='line'><span class="n">PRIVATE_KEY</span> <span class="o">=</span> <span class="s">&quot;yourreallyreallyreallylongprivatekeyhere&quot;</span>
-</span><span class='line'><span class="n">PKG_IDENTIFIER</span> <span class="o">=</span> <span class="s">&quot;com.yourcompany.sal_enrol&quot;</span>
-</span><span class='line'><span class="n">SAL_PKG</span> <span class="o">=</span> <span class="s">&quot;https://github.com/salopensource/sal/releases/download/v0.4.0/sal_scripts.pkg&quot;</span>
-</span><span class='line'><span class="n">FACTER_PKG</span> <span class="o">=</span> <span class="s">&quot;https://downloads.puppetlabs.com/mac/facter-latest.dmg&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>There are some caveats with this script:</p>
-
-<ul>
-<li>It will spit the packages out in your current directory. Make sure you&rsquo;ve <code>cd</code>-ed into where you want the packages to be generated.</li>
-<li>It uses <code>urllib2</code> to request the information from Sal and to download the packages &ndash; this means that there is no verification of the SSL certificates, so make sure you know where you&rsquo;re connecting to.</li>
-</ul>
-
-
-<p>All ready to run it?</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo python sal_package_generator.py
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And you&rsquo;ll get a directory full of packages that will get your fleet reporting into Sal.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -525,6 +529,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/">Detecting When a Munki Client Is on the Corporate Network</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/09/28/upgrading-os-x-using-a-package/">Upgrading OS X Using a Package</a>
       </li>
     
@@ -538,10 +546,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/">Running Puppet Server in Docker Part 3: Hiera</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/10/using-the-sal-api/">Using the Sal API</a>
       </li>
     
   </ul>

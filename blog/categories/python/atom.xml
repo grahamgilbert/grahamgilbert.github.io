@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Python | graham gilbert]]></title>
+  <title><![CDATA[Category: python | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-09-28T13:03:27+01:00</updated>
+  <updated>2015-10-15T13:25:47+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -14,349 +14,54 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Upgrading OS X using a package]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package/"/>
-    <updated>2015-09-28T11:35:55+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package</id>
-    <content type="html"><![CDATA[<p>It&rsquo;s the time of year where we start to think about upgrading our machines to the latest version of OS X. There are several ways of doing this, but assuming your users are unable to perform the upgrade themselves via the App Store (if they&rsquo;re running as a standard user or your policies prohibit the use of the App Store), you might be wondering how you can use your management tool to get your machines upgraded and make sure they stay enrolled in your management tool.</p>
+    <title type="html"><![CDATA[Detecting when a Munki client is on the corporate network]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/"/>
+    <updated>2015-10-15T12:37:34+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network</id>
+    <content type="html"><![CDATA[<p>Sometimes it is useful to know whether a Munki client is on your corporate network &ndash; you might have a package or script that will only work when able to access an internal resource, or you might just want statistics on which users are accessing your internal infrastructure and external infrastructure.</p>
 
-<p>We&rsquo;re fortunate that we have a standard packaging format on OS X that virtually all management tools can install, so this is the most universal way of distributing software. Greg Neagle wrote <a href="https://github.com/munki/createOSXinstallPkg">createOSXinstallPkg</a> a few years ago that has several nice features for mac admins:</p>
+<p>The idea is to have your clients attempt to access a URL that they will only have access to when they&rsquo;re on your internal network. This URL should return the following plist when the client accesses it:</p>
 
-<ul>
-<li>It wraps up an OS X Installer into a standard package.</li>
-<li>It allows you to add in additional packages &ndash; perhaps you want to make sure your admin user is installed or make sure that a version of Munki that is compatible with the new OS is installed.<!--more--></li>
-</ul>
-
-
-<p><a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">Yosemite introduced</a> a nice undocumented requirement that all packages included in the OS X installer environment are distribution packages. This is in addition to the limited OS X Installer environment not having many of the command line tools you might expect to be there.</p>
-
-<p>One solution to these issues is to use <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> &ndash; a tool that will install a set of packages at first boot, and will wrap them in a distribution style package so it can be used with createOSXinstallPkg.</p>
-
-<h2>The first boot package</h2>
-
-<p>Our first job is to build the package that will be installed at first boot. I am only going to make sure that Munki is installed at first boot, but some other things you might want to put in include:</p>
-
-<ul>
-<li>Your local admin user</li>
-<li>Puppet and Facter</li>
-<li>A payload free package to configure your SUS CatalogURL</li>
-</ul>
-
-
-<h3>Prep for the first boot package</h3>
-
-<p>First off we&rsquo;re going to need the script to build a first boot package. Assuming you&rsquo;re going to keep your code in <code>~/src</code>:</p>
-
-<p><code>bash
-$ cd ~/src
-$ git clone https://github.com/grahamgilbert/first-boot-pkg.git
-$ cd first-boot-pkg
-</code></p>
-
-<p>You have two options for configuring the first boot package &ndash; you can pass it options on the command line or you can use a plist. We&rsquo;re using a plist as it&rsquo;s the most repeatable and sharable method. If you need further options, such as disabling the network check, see the <a href="https://github.com/grahamgilbert/first-boot-pkg">project on Github</a>.</p>
-
-<p>``` xml ~/src/first-boot-pkg/first-boot-config.plist
+<p>``` xml
 &lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo;?>
-&lt;!DOCTYPE plist PUBLIC &ldquo;&ndash;//Apple Computer//DTD PLIST 1.0//EN&rdquo;      &ldquo;<a href="http://www.apple.com/DTDs/PropertyList-1.0.dtd">http://www.apple.com/DTDs/PropertyList-1.0.dtd</a>&rdquo;>
+&lt;!DOCTYPE plist PUBLIC &ldquo;&ndash;//Apple//DTD PLIST 1.0//EN&rdquo; &ldquo;<a href="http://www.apple.com/DTDs/PropertyList-1.0.dtd">http://www.apple.com/DTDs/PropertyList-1.0.dtd</a>&rdquo;>
 <plist version="1.0">
 <dict></p>
 
-<pre><code>&lt;key&gt;Packages&lt;/key&gt;
-&lt;array&gt;
-    &lt;string&gt;munkitools-2.3.1.2535.pkg&lt;/string&gt;
-&lt;/array&gt;
-&lt;key&gt;Name&lt;/key&gt;
-&lt;string&gt;post-elcap-upgrade.pkg&lt;/string&gt;
-&lt;key&gt;Identifier&lt;/key&gt;
-&lt;string&gt;com.company.post-elcap-upgrade&lt;/string&gt;
-&lt;key&gt;Version&lt;/key&gt;
-&lt;string&gt;0.1&lt;/string&gt;
+<pre><code>&lt;key&gt;response&lt;/key&gt;
+&lt;string&gt;active&lt;/string&gt;
 </code></pre>
 
 <p></dict>
 </plist>
 ```</p>
 
-<p>The above is assuming you&rsquo;ve saved your Munki package to <code>~/src/first-boot-pkg/munkitools-2.3.1.2535.pkg</code> (i.e. in the same directory as your <code>first-boot-config.plist</code>).</p>
+<h2>The condition script</h2>
 
-<h3>Building the first boot package</h3>
+<p>You can find the condition script on <a href="https://github.com/grahamgilbert/munki_conditions/tree/master/on_corp">my Github</a>. You should modify <a href="https://github.com/grahamgilbert/munki_conditions/blob/master/on_corp/on_corp.py#L11">line 11</a> of that script to point to your plist, and you can then distribute it to your clients however you wish (a Makefile for <a href="https://github.com/unixorn/luggage">The Luggage</a> is in the repo).</p>
 
-<p>Let&rsquo;s make sure we&rsquo;re in the right directory:</p>
+<p>When all is running, you will have access to an <code>on_corp</code> condition for use in your manifests.</p>
 
-<p><code>bash
-$ cd ~/src/first-boot-pkg
-</code></p>
+<p>``` xml
+<key>conditional_items</key>
+<array></p>
 
-<p>And let&rsquo;s build the package:</p>
-
-<p>``` bash
-$ sudo ./first-boot-pkg &mdash;plist first-boot-config.plist</p>
-
-<h2>Validating packages:</h2>
-
-<h2>munkitools-2.3.1.2535.pkg looks good.</h2>
-
-<p>pkgbuild: Inferring bundle components from contents of /tmp/tmpfCF2Ry
-pkgbuild: Adding component at Library/PrivilegedHelperTools/LoginLog.app
-pkgbuild: Wrote package to /tmp/tmp0kZed8/post-elcap-upgrade.pkg
-productbuild: Wrote product to /Users/grahamgilbert/src/first-boot-pkg/post-elcap-upgrade.pkg
-```</p>
-
-<h2>Making the OS X upgrade package</h2>
-
-<p>As previously mentioned, we&rsquo;re going to use createOSXinstallPkg, so let&rsquo;s grab that:</p>
-
-<p><code>bash
-$ cd ~/src
-$ git clone https://github.com/munki/createOSXinstallPkg.git
-$ cd createOSXinstallPkg
-</code></p>
-
-<p>And assuming your OS X Installer is saved to the usual place:</p>
-
-<p><code>bash
-$ sudo ./createOSXinstallPkg --pkg ../first-boot-pkg/post-elcap-upgrade.pkg --source "/Applications/Install OS X El Capitan GM Candidate.app"
-</code></p>
-
-<p>createOSXinstallPkg will let you know how it&rsquo;s doing:</p>
-
-<p>``` bash</p>
-
-<h2>Examining and verifying source&hellip;</h2>
-
-<p>InstallESD.dmg: /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg
-OS Version: 10.11</p>
-
-<h2>OS Build: 15A282b</h2>
-
-<p>Output path: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg</p>
-
-<h2>Additional packages:</h2>
-
-<h2>post-elcap-upgrade.pkg</h2>
-
-<h2>Total additional package size: 1856 Kbytes</h2>
-
-<p>Checking available space on /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
-Creating package wrapper&hellip;</p>
-
-<h2>Creating MacOSXInstaller.choiceChanges&hellip;</h2>
-
-<p>Downloading and adding IncompatibleAppList pkg&hellip;
-Downloading <a href="http://swcdn.apple.com/content/downloads/03/34/031-32728/f7ouzm6ipiy5h4c325qbantr81tw7o9yyi/OSX_10_11_IncompatibleAppList.pkg">http://swcdn.apple.com/content/downloads/03/34/031-32728/f7ouzm6ipiy5h4c325qbantr81tw7o9yyi/OSX_10_11_IncompatibleAppList.pkg</a> to /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/OS X Install Data/OSX_10_11_IncompatibleAppList.pkg&hellip;</p>
-
-<h2>Writing index.sproduct to /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/OS X Install Data/index.sproduct&hellip;</h2>
-
-<p>Copying InstallESD into package&hellip;
-Mounting /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
-Copying additional packages to InstallESD/Packages/:</p>
-
-<pre><code>Copying flat package ../first-boot-pkg/post-elcap-upgrade.pkg
+<pre><code>&lt;dict&gt;
+  &lt;key&gt;condition&lt;/key&gt;
+  &lt;string&gt;on_corp == TRUE&lt;/string&gt;
+  &lt;key&gt;managed_installs&lt;/key&gt;
+  &lt;array&gt;
+      &lt;string&gt;MyOnCorpOnlyPackage&lt;/string&gt;
+  &lt;/array&gt;
+&lt;/dict&gt;
 </code></pre>
 
-<p>Creating /private/tmp/tmp4hDxTs/dmg.BzTtzS/Packages/OSInstall.collection
-Unmounting /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
-Creating disk image at /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/InstallESD.dmg&hellip;
-Preparing imaging engine…
-Reading Protective Master Boot Record (MBR : 0)…
-   (CRC32 $9A0557B7: Protective Master Boot Record (MBR : 0))
-Reading GPT Header (Primary GPT Header : 1)…
-   (CRC32 $39D58726: GPT Header (Primary GPT Header : 1))
-Reading GPT Partition Data (Primary GPT Table : 2)…
-   (CRC32 $F5D8C782: GPT Partition Data (Primary GPT Table : 2))
-Reading  (Apple_Free : 3)…
-   (CRC32 $00000000:  (Apple_Free : 3))
-Reading EFI System Partition (C12A7328-F81F-11D2-BA4B-00A0C93EC93B : 4)…
-&hellip;
-   (CRC32 $B54B659C: EFI System Partition (C12A7328-F81F-11D2-BA4B-00A0C93EC93B : 4))
-Reading disk image (Apple_HFS : 5)…
-&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;..
-   (CRC32 $0A97BB61: disk image (Apple_HFS : 5))
-Reading  (Apple_Free : 6)…
-&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;
-   (CRC32 $00000000:  (Apple_Free : 6))
-Reading GPT Partition Data (Backup GPT Table : 7)…
-&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;
-   (CRC32 $F5D8C782: GPT Partition Data (Backup GPT Table : 7))
-Reading GPT Header (Backup GPT Header : 8)…
-&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;.
-   (CRC32 $A9B0AD1F: GPT Header (Backup GPT Header : 8))
-Adding resources…
-&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;.
-Elapsed Time:  1m 13.452s
-File size: 6060448966 bytes, Checksum: CRC32 $613FF36A
-Sectors processed: 13002104, 12518380 compressed
-Speed: 83.2Mbytes/sec
-Savings: 9.0%</p>
-
-<h2>created: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/InstallESD.dmg</h2>
-
-<p>Done! Completed package at: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg
+<p> </array>
 ```</p>
 
-<p>And voilla! You have a package that can be deployed by virtually any management tool (Munki in my case) that will make sure the latest version of Munki is also installed at the same time.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Using the Sal API]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api/"/>
-    <updated>2015-07-10T11:12:36+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api</id>
-    <content type="html"><![CDATA[<p>As previously mentioned, Sal now has an <a href="https://github.com/salopensource/sal/blob/master/docs/API.md">API</a>. You might be wondering what you can do with this wonderous API. This is a simple example of using it to automate building packages to enrol Macs into Sal.</p>
+<p>Or if your Munki reporting tool supports using data from Conditions (like <a href="https://github.com/salopensource/sal">Sal</a>!), you could display that infomation in a <a href="https://github.com/salopensource/grahamgilbert-plugins/tree/master/oncorp">plugin</a>.</p>
 
-<p>The basic workflow of this script is:</p>
-
-<ul>
-<li>Use the API to get a list of all Machine Groups in Sal &ndash; this will return JSON (a markup language that is easily parsable with languages like Python)</li>
-<li>Download the Sal postflight scripts</li>
-<li>Download the latest Facter installer</li>
-<li>For each machine group, build a package that will install all of the packages and then set the correct Sal preferences.</li>
-</ul>
-
-
-<p><a href="https://gist.github.com/grahamgilbert/8ccba318d3ecadee02b1">You can find the script in this Gist</a>. I&rsquo;m not going to go through the script line by line, but we&rsquo;ll cover how to configure it.</p>
-
-<p>First off you will need an API key configuring. Log into Sal as a user with Global Admin privelages and choose the &lsquo;person&rsquo; menu at the top right and then choose Settings. From the sidebar, choose API keys and then choose to make a new one. Give it a name so you can recognise it &ndash; I called this one &ldquo;PKG Generator&rdquo;. You will then be given a public key and a private key. Make a note of them, we&rsquo;ll need them in the next section.</p>
-
-<h2>Configuring the script</h2>
-
-<p>Edit the variables at the top to match your environment:</p>
-
-<p>``` python</p>
-
-<h1>No trailing slash on this one &ndash; I was lazy and didn&rsquo;t check for it</h1>
-
-<p>SAL_URL = &ldquo;<a href="https://sal.yourcompany.com">https://sal.yourcompany.com</a>&rdquo;
-PUBLIC_KEY = &ldquo;yourpublickeyhere&rdquo;
-PRIVATE_KEY = &ldquo;yourreallyreallyreallylongprivatekeyhere&rdquo;
-PKG_IDENTIFIER = &ldquo;com.yourcompany.sal_enrol&rdquo;
-SAL_PKG = &ldquo;<a href="https://github.com/salopensource/sal/releases/download/v0.4.0/sal_scripts.pkg">https://github.com/salopensource/sal/releases/download/v0.4.0/sal_scripts.pkg</a>&rdquo;
-FACTER_PKG = &ldquo;<a href="https://downloads.puppetlabs.com/mac/facter-latest.dmg">https://downloads.puppetlabs.com/mac/facter-latest.dmg</a>&rdquo;</p>
-
-<p>```</p>
-
-<p>There are some caveats with this script:</p>
-
-<ul>
-<li>It will spit the packages out in your current directory. Make sure you&rsquo;ve <code>cd</code>-ed into where you want the packages to be generated.</li>
-<li>It uses <code>urllib2</code> to request the information from Sal and to download the packages &ndash; this means that there is no verification of the SSL certificates, so make sure you know where you&rsquo;re connecting to.</li>
-</ul>
-
-
-<p>All ready to run it?</p>
-
-<p><code>bash
-$ sudo python sal_package_generator.py
-</code></p>
-
-<p>And you&rsquo;ll get a directory full of packages that will get your fleet reporting into Sal.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Introducing Imagr]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/05/08/introducing-imagr/"/>
-    <updated>2015-05-08T14:41:37+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/05/08/introducing-imagr</id>
-    <content type="html"><![CDATA[<p>For the past few weeks, I&rsquo;ve been working with some other Mac admins on a new application that can aid with the deployment of Macs &ndash; say hi to <a href="https://github.com/grahamgilbert/imagr">Imagr</a>.</p>
-
-<p><img src="/images/posts/2015-05-08/Imagr.png"></p>
-
-<p>It&rsquo;s not intended to be a full replacement for Deploystudio, but it&rsquo;s now got all of the features I need to use Imagr full time. If you&rsquo;d like to get started with Imagr, head on over to the <a href="https://github.com/grahamgilbert/imagr/wiki/Getting-Started">Wiki</a> &ndash; the only requirement is a web server, so the barrier to entry is pretty low (if you followed my guide on how to set up <a href="/blog/2015/04/22/getting-started-with-bsdpy-on-docker/">BSDPy</a>, you can use that web server).</p>
-
-<p>I hope you&rsquo;ll give it a go and maybe, just maybe, we can get rid of those little Mac Minis for good!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[More fun with AutoNBI]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/"/>
-    <updated>2015-04-13T08:05:53+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi</id>
-    <content type="html"><![CDATA[<p>Last time we saw our heroes, there was the unfuffilled promise of making small NetInstall sets. Now is the time to deliver on that promise. We&rsquo;re going to make a small NetInstall that will open up Terminal.app.</p>
-
-<p>If you&rsquo;ve not read the <a href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/">previous post</a> (and have got AutoNBI), go and do it now. I&rsquo;ll wait. All done? <!--more--></p>
-
-<h2>Previously on 24</h2>
-
-<p><img src="/images/posts/2015-04-13/jack.gif"></p>
-
-<p>As mentioned in the previous post, we&rsquo;re aiming to have a small NetInstall set. Once you&rsquo;ve made your NetInstall, open up <code>NetInstall.dmg</code> &ndash; you&rsquo;ll see a <code>Packages</code> directory. This is where the majority of the bulk in a NetInstall lives &ndash; the packages it actually installs. There is also a hidden <code>BaseSystem.dmg</code> which is what will load when your NetBoot the machine.</p>
-
-<h2>I&rsquo;m bored, can we make something please?</h2>
-
-<p>As I mentioned above, we&rsquo;re going to make a simple NetInstall that will open up a Terminal window. To do that, we&rsquo;re going to leverage something that Apple kindly left in the image for us &ndash; <code>rc.imaging</code>. A bit of background &ndash; in <code>/etc</code> you&rsquo;ll find a series of <code>rc.*</code> files. One of those in a NetInstall is <code>rc.install</code>, which will look for an <code>rc.imaging</code> file in a few places &ndash; one of those is <code>/System/Installation/Packages/Extras</code> &ndash; conveniently a location that Pepijn has made AutoNBI able to work with.</p>
-
-<p>Somewhere on your Mac, make a directory called <code>Packages</code> and then inside that, make a directory called <code>Extras</code>. Inside that directory we&rsquo;re going to create a file called <code>rc.imaging</code> with the following contents:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Packages/Extras/rc.imaging </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;/sbin/reboot
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>And make sure it&rsquo;s executable:</p>
-
-<p><code>bash
-$ sudo chmod 755 Packages/Extras/rc.imaging
-$ sudo chown root:wheel Packages/Extras/rc.imaging
-</code></p>
-
-<p>And now to make the NetInstall:</p>
-
-<p><code>bash
-$ sudo ./AutoNBI.py -s /Applications/Install\ OS\ X\ Yosemite.app -f Packages -d ~/Desktop -n MyNetInstall -e
-</code></p>
-
-<p>The only change from last time is the <code>-f</code> option &ndash; this is the path to your <code>Packages</code> directory. I created my Packages directory in the same directory as AutoNBI.py &ndash; adjust the path if you made yours somewhere else.</p>
-
-<p><img src="/images/posts/2015-04-13/netboot.png"></p>
-
-<p>You should now be able to boot off your tiny NBI (mine was 574MB) and have a bit of an explore. You&rsquo;ll notice that quite a bit is missing to achieve this tiny size &ndash; fortunately Pepijn has been working on getting Ruby and Python included in BaseSystem.dmg, so you have more scripting options when booted.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Building custom NetInstalls with AutoNBI]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/"/>
-    <updated>2015-04-12T20:33:28+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi</id>
-    <content type="html"><![CDATA[<p>Another day, another tool made by <a href="http://enterprisemac.bruienne.com">Mr Bruienne</a>! A while back, Pepijn released <a href="https://bitbucket.org/bruienne/autonbi">AutoNBI</a> &ndash; a tool for automating the creation of NetInstall sets. At the time, it was filled away in the &ldquo;this is cool, but isn&rsquo;t this what System Image Utility does?&rdquo; section. Then I saw his NetInstall running at MacTech (are you seeing a theme here?). It had this really simple DeployStudio like imagaing app &ndash; it was really cool. And suddently it made sense why you can replace the <code>Packages</code> directory with AutoNBI &ndash; a NetInstall is a really stripped down OS X environment, so it it much easier to distribute and use &ndash; we&rsquo;re looking at around 1.8GB for my current NetInstall vs 5-6GB for a normal NetBoot.</p>
-
-<p>This time we&rsquo;ll take a look at how to use AutoNBI to make a standard NetInstall &ndash; in a future post we&rsquo;ll look at some of the more cool things you can do with AutoNBI.</p>
-
-<h2>Ok, stop talking, let&rsquo;s do this.</h2>
-
-<p>We&rsquo;re going to need AutoNBI to start off with. Open up your Terminal and:</p>
-
-<p><code>bash
-$ git clone https://bitbucket.org/bruienne/autonbi.git
-$ cd autonbi
-</code></p>
-
-<h2>Prepare the build!</h2>
-
-<p>We&rsquo;re ready to go (assuming you&rsquo;ve got an OS X installer &ndash; you do, right?). Still in your terminal:</p>
-
-<p><code>bash
-$ sudo ./AutoNBI.py -s /Applications/Install\ OS\ X\ Yosemite.app -d ~/Desktop -n MyNetInstall -e
-</code></p>
-
-<p>What did we just do? The <code>-s</code> option is simply pointing at our Install OS X Yosemite.app &ndash; if you have it somewhere else, point AutoNBI there. <code>-d</code> is our destination directory and <code>-n</code> is the name of our NetInstall. <code>-e</code> is telling AutoNBI to make the NetInstall enabled.</p>
-
-<p>So the next time there&rsquo;s a new OS X Installer, you can have an updated NetInstall in seconds, not minutes.</p>
+<p><img class="center" src="/images/posts/2015-10-15/Sal_plugin.png" width="290" height="133"></p>
 ]]></content>
   </entry>
   

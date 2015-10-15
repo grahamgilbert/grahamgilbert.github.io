@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="I&rsquo;ve been wanting to get stuck in with a simple Swift project for a while, but couldn&rsquo;t think of anything suitable for a first project ( &hellip;">
+  <meta name="description" content="As previously mentioned, Sal now has an API. You might be wondering what you can do with this wonderous API. This is a simple example of using it to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -88,6 +88,96 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/10/using-the-sal-api/">Using the Sal API</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-10T11:12:36+01:00" pubdate data-updated="true">Jul 10<span>th</span>, 2015</time>
+        
+         | <a href="/blog/2015/07/10/using-the-sal-api/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>As previously mentioned, Sal now has an <a href="https://github.com/salopensource/sal/blob/master/docs/API.md">API</a>. You might be wondering what you can do with this wonderous API. This is a simple example of using it to automate building packages to enrol Macs into Sal.</p>
+
+<p>The basic workflow of this script is:</p>
+
+<ul>
+<li>Use the API to get a list of all Machine Groups in Sal &ndash; this will return JSON (a markup language that is easily parsable with languages like Python)</li>
+<li>Download the Sal postflight scripts</li>
+<li>Download the latest Facter installer</li>
+<li>For each machine group, build a package that will install all of the packages and then set the correct Sal preferences.</li>
+</ul>
+
+
+<p><a href="https://gist.github.com/grahamgilbert/8ccba318d3ecadee02b1">You can find the script in this Gist</a>. I&rsquo;m not going to go through the script line by line, but we&rsquo;ll cover how to configure it.</p>
+
+<p>First off you will need an API key configuring. Log into Sal as a user with Global Admin privelages and choose the &lsquo;person&rsquo; menu at the top right and then choose Settings. From the sidebar, choose API keys and then choose to make a new one. Give it a name so you can recognise it &ndash; I called this one &ldquo;PKG Generator&rdquo;. You will then be given a public key and a private key. Make a note of them, we&rsquo;ll need them in the next section.</p>
+
+<h2>Configuring the script</h2>
+
+<p>Edit the variables at the top to match your environment:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c"># No trailing slash on this one - I was lazy and didn&#39;t check for it</span>
+</span><span class='line'><span class="n">SAL_URL</span> <span class="o">=</span> <span class="s">&quot;https://sal.yourcompany.com&quot;</span>
+</span><span class='line'><span class="n">PUBLIC_KEY</span> <span class="o">=</span> <span class="s">&quot;yourpublickeyhere&quot;</span>
+</span><span class='line'><span class="n">PRIVATE_KEY</span> <span class="o">=</span> <span class="s">&quot;yourreallyreallyreallylongprivatekeyhere&quot;</span>
+</span><span class='line'><span class="n">PKG_IDENTIFIER</span> <span class="o">=</span> <span class="s">&quot;com.yourcompany.sal_enrol&quot;</span>
+</span><span class='line'><span class="n">SAL_PKG</span> <span class="o">=</span> <span class="s">&quot;https://github.com/salopensource/sal/releases/download/v0.4.0/sal_scripts.pkg&quot;</span>
+</span><span class='line'><span class="n">FACTER_PKG</span> <span class="o">=</span> <span class="s">&quot;https://downloads.puppetlabs.com/mac/facter-latest.dmg&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There are some caveats with this script:</p>
+
+<ul>
+<li>It will spit the packages out in your current directory. Make sure you&rsquo;ve <code>cd</code>-ed into where you want the packages to be generated.</li>
+<li>It uses <code>urllib2</code> to request the information from Sal and to download the packages &ndash; this means that there is no verification of the SSL certificates, so make sure you know where you&rsquo;re connecting to.</li>
+</ul>
+
+
+<p>All ready to run it?</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo python sal_package_generator.py
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And you&rsquo;ll get a directory full of packages that will get your fleet reporting into Sal.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -273,115 +363,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/06/16/using-munki-trello-with-git/">Using Munki-trello With Git</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-06-16T11:21:58+01:00" pubdate data-updated="true">Jun 16<span>th</span>, 2015</time>
-        
-         | <a href="/blog/2015/06/16/using-munki-trello-with-git/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>So you&rsquo;re managing your catalogs with <a href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/">munki-trello</a>, but you also want to use git and <a href="https://www.afp548.com/2014/12/01/git-fat-intro-part-two-setup-and-migration/">git-fat</a> to track the changes &ndash; what do you do?</p>
-
-<p>If you were using the script that I posted previously, your changes would be mangled when you pull in changes  &ndash; it turned out the solution was simple. I&rsquo;m going to assume your Munki server has commit access to your Munki git repository. We&rsquo;re pulling down the latest version of the git repo before performing any work, and then we&rsquo;re git adding just the <code>catalogs</code> and <code>pkgsinfo</code> directories &ndash; the only directories munki-trello will modify. And if there aren&rsquo;t any changes, git won&rsquo;t commit anything, so we can just run <code>git commit</code> and <code>git push</code> without worrying about it.</p>
-
-<p>If we schedule the below script to happen regularly (via cron), we also get our git changes deployed automagically.</p>
-
-<figure class='code'><figcaption><span>/usr/local/bin/munki-trello.sh</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># Cron doesn&#39;t have $PATH set as we do, need to find git fat</span>
-</span><span class='line'><span class="nv">PATH</span><span class="o">=</span>/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:<span class="nv">$PATH</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># Change this to wherever your Munki repository is on disk</span>
-</span><span class='line'><span class="nb">cd</span> /usr/local/docker/munki
-</span><span class='line'>
-</span><span class='line'><span class="c"># Pull down changes</span>
-</span><span class='line'>git pull
-</span><span class='line'>
-</span><span class='line'><span class="c"># and the &#39;fat&#39; files</span>
-</span><span class='line'>git fat pull
-</span><span class='line'>
-</span><span class='line'>docker pull pebbleit/munki-trello
-</span><span class='line'>
-</span><span class='line'>docker run --rm -v /usr/local/docker/munki:/munki_repo <span class="se">\</span>
-</span><span class='line'>-e <span class="nv">DOCKER_TRELLO_KEY</span><span class="o">=</span>mytrellokey <span class="se">\</span>
-</span><span class='line'>-e <span class="nv">DOCKER_TRELLO_TOKEN</span><span class="o">=</span>mytrellotoken <span class="se">\</span>
-</span><span class='line'>-e <span class="nv">DOCKER_TRELLO_BOARDID</span><span class="o">=</span>myboardid <span class="se">\</span>
-</span><span class='line'>pebbleit/munki-trello
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>git add catalogs
-</span><span class='line'>git add manifests
-</span><span class='line'>git add pkgsinfo
-</span><span class='line'>
-</span><span class='line'><span class="c"># Change the following line if you want to change the git commit message</span>
-</span><span class='line'><span class="nv">now</span><span class="o">=</span><span class="s2">&quot;$(date)&quot;</span>
-</span><span class='line'>git commit -m <span class="s2">&quot;Munki Trello commit $now&quot;</span>
-</span><span class='line'>
-</span><span class='line'>git push
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -405,6 +386,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/">Detecting When a Munki Client Is on the Corporate Network</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/09/28/upgrading-os-x-using-a-package/">Upgrading OS X Using a Package</a>
       </li>
     
@@ -418,10 +403,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/">Running Puppet Server in Docker Part 3: Hiera</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/10/using-the-sal-api/">Using the Sal API</a>
       </li>
     
   </ul>

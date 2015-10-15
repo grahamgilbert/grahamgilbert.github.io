@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Munki | graham gilbert]]></title>
+  <title><![CDATA[Category: munki | graham gilbert]]></title>
   <link href="http://grahamgilbert.com/blog/categories/munki/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-09-28T13:03:27+01:00</updated>
+  <updated>2015-10-15T13:25:47+01:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -14,291 +14,54 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Upgrading OS X using a package]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package/"/>
-    <updated>2015-09-28T11:35:55+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package</id>
-    <content type="html"><![CDATA[<p>It&rsquo;s the time of year where we start to think about upgrading our machines to the latest version of OS X. There are several ways of doing this, but assuming your users are unable to perform the upgrade themselves via the App Store (if they&rsquo;re running as a standard user or your policies prohibit the use of the App Store), you might be wondering how you can use your management tool to get your machines upgraded and make sure they stay enrolled in your management tool.</p>
+    <title type="html"><![CDATA[Detecting when a Munki client is on the corporate network]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/"/>
+    <updated>2015-10-15T12:37:34+01:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network</id>
+    <content type="html"><![CDATA[<p>Sometimes it is useful to know whether a Munki client is on your corporate network &ndash; you might have a package or script that will only work when able to access an internal resource, or you might just want statistics on which users are accessing your internal infrastructure and external infrastructure.</p>
 
-<p>We&rsquo;re fortunate that we have a standard packaging format on OS X that virtually all management tools can install, so this is the most universal way of distributing software. Greg Neagle wrote <a href="https://github.com/munki/createOSXinstallPkg">createOSXinstallPkg</a> a few years ago that has several nice features for mac admins:</p>
+<p>The idea is to have your clients attempt to access a URL that they will only have access to when they&rsquo;re on your internal network. This URL should return the following plist when the client accesses it:</p>
 
-<ul>
-<li>It wraps up an OS X Installer into a standard package.</li>
-<li>It allows you to add in additional packages &ndash; perhaps you want to make sure your admin user is installed or make sure that a version of Munki that is compatible with the new OS is installed.<!--more--></li>
-</ul>
-
-
-<p><a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">Yosemite introduced</a> a nice undocumented requirement that all packages included in the OS X installer environment are distribution packages. This is in addition to the limited OS X Installer environment not having many of the command line tools you might expect to be there.</p>
-
-<p>One solution to these issues is to use <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> &ndash; a tool that will install a set of packages at first boot, and will wrap them in a distribution style package so it can be used with createOSXinstallPkg.</p>
-
-<h2>The first boot package</h2>
-
-<p>Our first job is to build the package that will be installed at first boot. I am only going to make sure that Munki is installed at first boot, but some other things you might want to put in include:</p>
-
-<ul>
-<li>Your local admin user</li>
-<li>Puppet and Facter</li>
-<li>A payload free package to configure your SUS CatalogURL</li>
-</ul>
-
-
-<h3>Prep for the first boot package</h3>
-
-<p>First off we&rsquo;re going to need the script to build a first boot package. Assuming you&rsquo;re going to keep your code in <code>~/src</code>:</p>
-
-<p><code>bash
-$ cd ~/src
-$ git clone https://github.com/grahamgilbert/first-boot-pkg.git
-$ cd first-boot-pkg
-</code></p>
-
-<p>You have two options for configuring the first boot package &ndash; you can pass it options on the command line or you can use a plist. We&rsquo;re using a plist as it&rsquo;s the most repeatable and sharable method. If you need further options, such as disabling the network check, see the <a href="https://github.com/grahamgilbert/first-boot-pkg">project on Github</a>.</p>
-
-<p>``` xml ~/src/first-boot-pkg/first-boot-config.plist
+<p>``` xml
 &lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo;?>
-&lt;!DOCTYPE plist PUBLIC &ldquo;&ndash;//Apple Computer//DTD PLIST 1.0//EN&rdquo;      &ldquo;<a href="http://www.apple.com/DTDs/PropertyList-1.0.dtd">http://www.apple.com/DTDs/PropertyList-1.0.dtd</a>&rdquo;>
+&lt;!DOCTYPE plist PUBLIC &ldquo;&ndash;//Apple//DTD PLIST 1.0//EN&rdquo; &ldquo;<a href="http://www.apple.com/DTDs/PropertyList-1.0.dtd">http://www.apple.com/DTDs/PropertyList-1.0.dtd</a>&rdquo;>
 <plist version="1.0">
 <dict></p>
 
-<pre><code>&lt;key&gt;Packages&lt;/key&gt;
-&lt;array&gt;
-    &lt;string&gt;munkitools-2.3.1.2535.pkg&lt;/string&gt;
-&lt;/array&gt;
-&lt;key&gt;Name&lt;/key&gt;
-&lt;string&gt;post-elcap-upgrade.pkg&lt;/string&gt;
-&lt;key&gt;Identifier&lt;/key&gt;
-&lt;string&gt;com.company.post-elcap-upgrade&lt;/string&gt;
-&lt;key&gt;Version&lt;/key&gt;
-&lt;string&gt;0.1&lt;/string&gt;
+<pre><code>&lt;key&gt;response&lt;/key&gt;
+&lt;string&gt;active&lt;/string&gt;
 </code></pre>
 
 <p></dict>
 </plist>
 ```</p>
 
-<p>The above is assuming you&rsquo;ve saved your Munki package to <code>~/src/first-boot-pkg/munkitools-2.3.1.2535.pkg</code> (i.e. in the same directory as your <code>first-boot-config.plist</code>).</p>
+<h2>The condition script</h2>
 
-<h3>Building the first boot package</h3>
+<p>You can find the condition script on <a href="https://github.com/grahamgilbert/munki_conditions/tree/master/on_corp">my Github</a>. You should modify <a href="https://github.com/grahamgilbert/munki_conditions/blob/master/on_corp/on_corp.py#L11">line 11</a> of that script to point to your plist, and you can then distribute it to your clients however you wish (a Makefile for <a href="https://github.com/unixorn/luggage">The Luggage</a> is in the repo).</p>
 
-<p>Let&rsquo;s make sure we&rsquo;re in the right directory:</p>
+<p>When all is running, you will have access to an <code>on_corp</code> condition for use in your manifests.</p>
 
-<p><code>bash
-$ cd ~/src/first-boot-pkg
-</code></p>
+<p>``` xml
+<key>conditional_items</key>
+<array></p>
 
-<p>And let&rsquo;s build the package:</p>
-
-<p>``` bash
-$ sudo ./first-boot-pkg &mdash;plist first-boot-config.plist</p>
-
-<h2>Validating packages:</h2>
-
-<h2>munkitools-2.3.1.2535.pkg looks good.</h2>
-
-<p>pkgbuild: Inferring bundle components from contents of /tmp/tmpfCF2Ry
-pkgbuild: Adding component at Library/PrivilegedHelperTools/LoginLog.app
-pkgbuild: Wrote package to /tmp/tmp0kZed8/post-elcap-upgrade.pkg
-productbuild: Wrote product to /Users/grahamgilbert/src/first-boot-pkg/post-elcap-upgrade.pkg
-```</p>
-
-<h2>Making the OS X upgrade package</h2>
-
-<p>As previously mentioned, we&rsquo;re going to use createOSXinstallPkg, so let&rsquo;s grab that:</p>
-
-<p><code>bash
-$ cd ~/src
-$ git clone https://github.com/munki/createOSXinstallPkg.git
-$ cd createOSXinstallPkg
-</code></p>
-
-<p>And assuming your OS X Installer is saved to the usual place:</p>
-
-<p><code>bash
-$ sudo ./createOSXinstallPkg --pkg ../first-boot-pkg/post-elcap-upgrade.pkg --source "/Applications/Install OS X El Capitan GM Candidate.app"
-</code></p>
-
-<p>createOSXinstallPkg will let you know how it&rsquo;s doing:</p>
-
-<p>``` bash</p>
-
-<h2>Examining and verifying source&hellip;</h2>
-
-<p>InstallESD.dmg: /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg
-OS Version: 10.11</p>
-
-<h2>OS Build: 15A282b</h2>
-
-<p>Output path: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg</p>
-
-<h2>Additional packages:</h2>
-
-<h2>post-elcap-upgrade.pkg</h2>
-
-<h2>Total additional package size: 1856 Kbytes</h2>
-
-<p>Checking available space on /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
-Creating package wrapper&hellip;</p>
-
-<h2>Creating MacOSXInstaller.choiceChanges&hellip;</h2>
-
-<p>Downloading and adding IncompatibleAppList pkg&hellip;
-Downloading <a href="http://swcdn.apple.com/content/downloads/03/34/031-32728/f7ouzm6ipiy5h4c325qbantr81tw7o9yyi/OSX_10_11_IncompatibleAppList.pkg">http://swcdn.apple.com/content/downloads/03/34/031-32728/f7ouzm6ipiy5h4c325qbantr81tw7o9yyi/OSX_10_11_IncompatibleAppList.pkg</a> to /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/OS X Install Data/OSX_10_11_IncompatibleAppList.pkg&hellip;</p>
-
-<h2>Writing index.sproduct to /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/OS X Install Data/index.sproduct&hellip;</h2>
-
-<p>Copying InstallESD into package&hellip;
-Mounting /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
-Copying additional packages to InstallESD/Packages/:</p>
-
-<pre><code>Copying flat package ../first-boot-pkg/post-elcap-upgrade.pkg
+<pre><code>&lt;dict&gt;
+  &lt;key&gt;condition&lt;/key&gt;
+  &lt;string&gt;on_corp == TRUE&lt;/string&gt;
+  &lt;key&gt;managed_installs&lt;/key&gt;
+  &lt;array&gt;
+      &lt;string&gt;MyOnCorpOnlyPackage&lt;/string&gt;
+  &lt;/array&gt;
+&lt;/dict&gt;
 </code></pre>
 
-<p>Creating /private/tmp/tmp4hDxTs/dmg.BzTtzS/Packages/OSInstall.collection
-Unmounting /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg&hellip;
-Creating disk image at /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/InstallESD.dmg&hellip;
-Preparing imaging engine…
-Reading Protective Master Boot Record (MBR : 0)…
-   (CRC32 $9A0557B7: Protective Master Boot Record (MBR : 0))
-Reading GPT Header (Primary GPT Header : 1)…
-   (CRC32 $39D58726: GPT Header (Primary GPT Header : 1))
-Reading GPT Partition Data (Primary GPT Table : 2)…
-   (CRC32 $F5D8C782: GPT Partition Data (Primary GPT Table : 2))
-Reading  (Apple_Free : 3)…
-   (CRC32 $00000000:  (Apple_Free : 3))
-Reading EFI System Partition (C12A7328-F81F-11D2-BA4B-00A0C93EC93B : 4)…
-&hellip;
-   (CRC32 $B54B659C: EFI System Partition (C12A7328-F81F-11D2-BA4B-00A0C93EC93B : 4))
-Reading disk image (Apple_HFS : 5)…
-&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;..
-   (CRC32 $0A97BB61: disk image (Apple_HFS : 5))
-Reading  (Apple_Free : 6)…
-&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;
-   (CRC32 $00000000:  (Apple_Free : 6))
-Reading GPT Partition Data (Backup GPT Table : 7)…
-&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;
-   (CRC32 $F5D8C782: GPT Partition Data (Backup GPT Table : 7))
-Reading GPT Header (Backup GPT Header : 8)…
-&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;.
-   (CRC32 $A9B0AD1F: GPT Header (Backup GPT Header : 8))
-Adding resources…
-&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;.
-Elapsed Time:  1m 13.452s
-File size: 6060448966 bytes, Checksum: CRC32 $613FF36A
-Sectors processed: 13002104, 12518380 compressed
-Speed: 83.2Mbytes/sec
-Savings: 9.0%</p>
-
-<h2>created: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/InstallESD.dmg</h2>
-
-<p>Done! Completed package at: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg
+<p> </array>
 ```</p>
 
-<p>And voilla! You have a package that can be deployed by virtually any management tool (Munki in my case) that will make sure the latest version of Munki is also installed at the same time.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Munki DND]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/07/07/munki-dnd/"/>
-    <updated>2015-07-07T17:46:44+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/07/07/munki-dnd</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve been wanting to get stuck in with a simple Swift project for a while, but couldn&rsquo;t think of anything suitable for a first project (<a href="https://github.com/grahamgilbert/imagr">Imagr</a> was originally going to be that project, but I don&rsquo;t think it would ever have been made if I chose Swift), until I saw <a href="https://grpugh.wordpress.com/2015/07/03/a-do-not-disturb-application-for-munki/">Dr Graham R Pugh&rsquo;s Do Not Disturb application</a>. I thought it was an excellent idea that could be made even better by being a manu bar app.</p>
+<p>Or if your Munki reporting tool supports using data from Conditions (like <a href="https://github.com/salopensource/sal">Sal</a>!), you could display that infomation in a <a href="https://github.com/salopensource/grahamgilbert-plugins/tree/master/oncorp">plugin</a>.</p>
 
-<p><img class="center" src="/images/posts/2015-07-07/active.png"></p>
-
-<p>Enter <a href="https://github.com/grahamgilbert/munki-dnd">Munki DND</a> &ndash; it extends Graham&rsquo;s idea by allowing the administrator to configure the number of hours the user is allowed to suppress notifications for, as well as living in the menu bar so the user can check how long they&rsquo;ve got until notifications become active again.</p>
-
-<p><img class="center" src="/images/posts/2015-07-07/disabled.png"></p>
-
-<p>You can grab version 0.0.1 of Munki DND from the <a href="https://github.com/grahamgilbert/munki-dnd/releases/tag/v0.0.1">Releases page on GitHub</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Using munki-trello with Git]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git/"/>
-    <updated>2015-06-16T11:21:58+01:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git</id>
-    <content type="html"><![CDATA[<p>So you&rsquo;re managing your catalogs with <a href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/">munki-trello</a>, but you also want to use git and <a href="https://www.afp548.com/2014/12/01/git-fat-intro-part-two-setup-and-migration/">git-fat</a> to track the changes &ndash; what do you do?</p>
-
-<p>If you were using the script that I posted previously, your changes would be mangled when you pull in changes  &ndash; it turned out the solution was simple. I&rsquo;m going to assume your Munki server has commit access to your Munki git repository. We&rsquo;re pulling down the latest version of the git repo before performing any work, and then we&rsquo;re git adding just the <code>catalogs</code> and <code>pkgsinfo</code> directories &ndash; the only directories munki-trello will modify. And if there aren&rsquo;t any changes, git won&rsquo;t commit anything, so we can just run <code>git commit</code> and <code>git push</code> without worrying about it.</p>
-
-<p>If we schedule the below script to happen regularly (via cron), we also get our git changes deployed automagically.</p>
-
-<p>``` bash /usr/local/bin/munki-trello.sh</p>
-
-<h1>!/bin/bash</h1>
-
-<h1>Cron doesn&rsquo;t have $PATH set as we do, need to find git fat</h1>
-
-<p>PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:$PATH</p>
-
-<h1>Change this to wherever your Munki repository is on disk</h1>
-
-<p>cd /usr/local/docker/munki</p>
-
-<h1>Pull down changes</h1>
-
-<p>git pull</p>
-
-<h1>and the &lsquo;fat&rsquo; files</h1>
-
-<p>git fat pull</p>
-
-<p>docker pull pebbleit/munki-trello</p>
-
-<p>docker run &mdash;rm -v /usr/local/docker/munki:/munki_repo \
--e DOCKER_TRELLO_KEY=mytrellokey \
--e DOCKER_TRELLO_TOKEN=mytrellotoken \
--e DOCKER_TRELLO_BOARDID=myboardid \
-pebbleit/munki-trello</p>
-
-<p>git add catalogs
-git add manifests
-git add pkgsinfo</p>
-
-<h1>Change the following line if you want to change the git commit message</h1>
-
-<p>now=&ldquo;$(date)&rdquo;
-git commit -m &ldquo;Munki Trello commit $now&rdquo;</p>
-
-<p>git push
-```</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Managing Munki catalogs with Trello]]></title>
-    <link href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/"/>
-    <updated>2015-02-11T12:11:30+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello</id>
-    <content type="html"><![CDATA[<p>Over the past few months, I&rsquo;ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage it. We&rsquo;ve got <a href="https://github.com/autopkg/autopkg">AutoPkg</a> populating our <a href="https://github.com/munki/munki">Munki</a> repositories without any manual intervention, but we still need to edit pkgsinfo files to move items through development to testing to production catalogs. Sure, there are existing tools  like <a href="https://github.com/munki/munkiwebadmin">MunkiWebAdmin</a> or <a href="https://github.com/hjuutilainen/munkiadmin">MunkiAdmin</a>, but they either still require knowledge of how Munki works or full access to the repository via a file share of some sort. And we obviously already have a tool for assigning software to machines in Sal+ &ndash; we needed something that can speed this incredibly common task.</p>
-
-<p>Then I cast my mind back to a conversation I had with <a href="https://twitter.com/bruienne">Pepijn Bruienne</a> at PSU last year about his workflow using <a href="https://trello.com">Trello</a> to promote items in his Munki repository. So, after pestering him for some information, I devised a workflow that matched how we worked.</p>
-
-<h2>&ldquo;So how does it work&rdquo;, I hear you cry</h2>
-
-<p>We have five lists on our &ldquo;Munki Package Management&rdquo; Trello board. Essentially when the script runs, it inspects the items in our Munki catalog and if they&rsquo;re not already in the Trello board, it adds them to the correct list (we ignore anything that&rsquo;s already in production. All promotions to production are done using this tool now).</p>
-
-<p><img class="center" src="/images/posts/2015-02-11/to_testing.gif" width="427" height="240"></p>
-
-<p>We also have lists called &ldquo;To Development&rdquo;, &ldquo;To Testing&rdquo; and &ldquo;To Production&rdquo;. Moving items into these lists will be caught by the script next time it runs, and moved to the appropriate catalog.</p>
-
-<p><img class="center" src="/images/posts/2015-02-11/testing.gif" width="427" height="240"></p>
-
-<p>When items finally make it to Production, we add them to a dated Production list. This allows us to have a full history of when things are added to Production and who has moved it through each stage. We&rsquo;re also big users of Slack, so we hooked up it&rsquo;s Tello integration to post a message to our notficiations channel to let our team know when items are added into Munki.</p>
-
-<p>You can grab the script from <a href="https://github.com/pebbleit/munki-trello">pebble.it&rsquo;s GitHub account</a>, or if you&rsquo;re Docker inclined there&rsquo;s a <a href="https://registry.hub.docker.com/u/pebbleit/munki-trello/">container that has everything you need</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Slides and notes from Twisting Munki]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki/"/>
-    <updated>2014-11-07T00:51:33+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki</id>
-    <content type="html"><![CDATA[<p>Firstly, thanks if you came to my talk and putting up with me! You can get my slides and code from the <a href="https://github.com/grahamgilbert/mactech_2014">GitHub repository</a>.</p>
+<p><img class="center" src="/images/posts/2015-10-15/Sal_plugin.png" width="290" height="133"></p>
 ]]></content>
   </entry>
   

@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="Before reading this post, you really need to read part 1 &ndash; none of this will make sense without it! Still with me? Let&rsquo;s do finally do &hellip;">
+  <meta name="description" content="Puppet is awesome. Until you deploy some code that worked locally, but for some reason didn’t when you put it onto your Puppet Master. Whoops. So, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -88,6 +88,79 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/13/building-a-test-puppet-master-with-vagrant/">Building a Test Puppet Master With Vagrant</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-13T08:27:00+00:00" pubdate data-updated="true">Feb 13<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/02/13/building-a-test-puppet-master-with-vagrant/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Puppet is awesome. Until you deploy some code that worked locally, but for some reason didn’t when you put it onto your Puppet Master. Whoops.</p>
+
+<p>So, you need a testing setup. But Puppet can take a while to keep configuring. Which is where <a href="http://www.vagrantup.com">Vagrant</a> comes in. It it a tool which allows you to build virtual machines automatically (currently only with VirtualBox, but VMWare Fusion support is coming very soon). And the best part (for me, anyway) is that it uses Puppet to configure the VM (Puppet to configure your Puppet Master? All too meta for this time of the morning).</p>
+
+<p>Anyway, that’s enough waffle &ndash; the Vagrant configuration is up on my <a href="https://github.com/grahamgilbert/vagrant-puppetmaster">GitHub</a>.</p>
+
+<p>If you are following along with my series on getting started with Puppet on OS X, you can replace the Puppet Labs provided VM with this setup (which would be a good idea, as the Enterprise version is a few versions behind the Open Source version, missing some features when managing Macs).</p>
+
+<p>This testing setup includes:</p>
+
+<ul>
+<li>A Puppet Master running using the built in web server (fine for testing, not enough poke for a production server)</li>
+<li>Puppet Dashboard (we all love a GUI, right?)</li>
+<li>PuppetDB (this will store data about your nodes, and then hooks into the Dashboard to display it)</li>
+</ul>
+
+
+<p>To get up and running quickly, you will need:</p>
+
+<ul>
+<li><a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a></li>
+<li><a href="http://downloads.vagrantup.com/">Vagrant</a></li>
+</ul>
+
+
+<p>Once those are installed, cd into the directory where you keep your code (mine lives in ~/Documents/Code), clone the repo and then tell Vagrant to bring the VM up.</p>
+
+<pre><code>cd ~/Documents/Code
+git clone https://github.com/grahamgilbert/vagrant-puppetmaster.git
+cd vagrant-puppetmaster
+vagrant up
+</code></pre>
+
+<p>If you don’t have the base box Ubuntu box downloaded, Vagrant will pull it down for you and cache the clean VM for you. It will then make a copy, run the script that installs the latest version of Puppet, then run through the Puppet code that will configure the VM to be a Puppet Master for you. Once the VM is running, you can place your modules and manifests in <code>puppet/modules</code> and <code>puppet/manifests</code>, respectively. The dashboard is accessible at <a href="http://192.168.33.10:3000">http://192.168.33.10:3000</a>.</p>
+
+<p><strong>This VM is not suitable for production.</strong> I’ve made several tweaks to the configuration that makes it easier to test your code, but would be a security risk if used on a production server. <strong>Only use this configuration for testing.</strong> We’re also installing everything onto one VM &ndash; you probably want to separate this out into at least two boxes in production, maybe even three if you have a large deployment. Like I said, the idea here is to quickly set up a testing environment that behaves like our production environment.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -336,74 +409,6 @@ Some might be, others won&rsquo;t for one reason or another.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/07/updating-instadmg-based-netrestore-images/">Updating InstaDMG Based NetRestore Images</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-07T11:54:00+00:00" pubdate data-updated="true">Jan 7<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/01/07/updating-instadmg-based-netrestore-images/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This probably isn&rsquo;t news to anyone else, but I made a discovery last week that will save me a fair bit of time.</p>
-
-<p>Whilst staring at System Image Utility after yet another change to the build, I thought that there must be a better way of doing this, bearing in mind that the basic InstaDMG process is:</p>
-
-<ul>
-<li>Install the OS</li>
-<li>Install Packages</li>
-<li><strong>Make a read-only DMG</strong></li>
-<li><strong>Prep the DMG for ASR</strong></li>
-</ul>
-
-
-<p>And SIU&rsquo;s process is:</p>
-
-<ul>
-<li><strong>Make a read-only DMG</strong></li>
-<li><strong>Prep the DMG for ASR</strong></li>
-<li>Copy it into a writable disk image with a stripped down OS to restore the image.</li>
-</ul>
-
-
-<p>So, two steps are duplicated. This inefficiency must be stopped!</p>
-
-<p>After a 30 second hunt in the NetInstall.dmg file that SIU spits out, I saw a file called System.dmg in the Packages folder &ndash; sure enough, it was my InstaDMG image. I replaced it with my new build, and it worked flawlessly.</p>
-
-<p>If your new image is larger than the one you&rsquo;re replacing, you just need to expand the NetInstall.dmg image to a size large enough to accomodate the new image.</p>
-
-<pre><code>hdiutil resize -growonly -size 15g /path/to/your/NetRestore.nbi/NetInstall.dmg
-</code></pre>
-
-<p>Replace the 15g with whatever size you want, 15 GB was plenty to accomodate my updated image.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/12/">&larr; Older</a>
@@ -427,6 +432,10 @@ Some might be, others won&rsquo;t for one reason or another.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/">Detecting When a Munki Client Is on the Corporate Network</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/09/28/upgrading-os-x-using-a-package/">Upgrading OS X Using a Package</a>
       </li>
     
@@ -440,10 +449,6 @@ Some might be, others won&rsquo;t for one reason or another.</p>
     
       <li class="post">
         <a href="/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/">Running Puppet Server in Docker Part 3: Hiera</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/10/using-the-sal-api/">Using the Sal API</a>
       </li>
     
   </ul>
