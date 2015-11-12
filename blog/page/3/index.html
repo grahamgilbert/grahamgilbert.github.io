@@ -9,7 +9,7 @@
   <meta name="author" content="Graham Gilbert">
 
   
-  <meta name="description" content="So you&rsquo;re managing your catalogs with munki-trello, but you also want to use git and git-fat to track the changes &ndash; what do you do? If &hellip;">
+  <meta name="description" content="Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -88,6 +88,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/22/running-puppet-server-in-docker/">Running Puppet Server in Docker</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-22T12:29:55+01:00" pubdate data-updated="true">Jun 22<span>nd</span>, 2015</time>
+        
+         | <a href="/blog/2015/06/22/running-puppet-server-in-docker/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively &ndash; it&rsquo;s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
+
+<p>Over the next few posts, I&rsquo;ll take you through setting up the Puppet Server (running on Docker, naturally!), using r10k and git for managing your modules and using Hiera to configure your Macs &ndash; we&rsquo;ll apply some configuration to a Mac without writing a single line of Puppet code .</p>
+
+<h1>Why?</h1>
+
+<p>You might well be thinking &ldquo;why would I want to use Puppet?&rdquo; After all, you&rsquo;ve already got Munki. There are two main reasons I&rsquo;ve chosen to go back to using a Puppet Server in conjunction with Munki.</p>
+
+<ol>
+<li>It&rsquo;s nice to have a fallback. If I manage to do something stupid and nuke my Munki install, or my customers manage to do the same, I&rsquo;ve got some way of getting the machines back under control.</li>
+<li>&ldquo;Free&rdquo; SSL certs &ndash; this might not be a priority now, but it gives you an easy to to secure your Munki repository later on (which we may cover in a later post).</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/22/running-puppet-server-in-docker/">Continue reading &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -353,49 +404,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/04/13/more-fun-with-autonbi/">More Fun With AutoNBI</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-04-13T08:05:53+01:00" pubdate data-updated="true">Apr 13<span>th</span>, 2015</time>
-        
-         | <a href="/blog/2015/04/13/more-fun-with-autonbi/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Last time we saw our heroes, there was the unfuffilled promise of making small NetInstall sets. Now is the time to deliver on that promise. We&rsquo;re going to make a small NetInstall that will open up Terminal.app.</p>
-
-<p>If you&rsquo;ve not read the <a href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/">previous post</a> (and have got AutoNBI), go and do it now. I&rsquo;ll wait. All done? </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/04/13/more-fun-with-autonbi/">Continue reading &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -419,6 +427,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/11/12/mactech-2015-hands-on-with-imagr/">MacTech 2015: Hands on With Imagr</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/">Detecting When a Munki Client Is on the Corporate Network</a>
       </li>
     
@@ -432,10 +444,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/">Mac Admin &amp; Developer Conference UK</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/">Running Puppet Server in Docker Part 3: Hiera</a>
       </li>
     
   </ul>

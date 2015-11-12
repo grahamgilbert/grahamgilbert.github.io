@@ -4,7 +4,7 @@
   <title><![CDATA[graham gilbert]]></title>
   <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
   <link href="http://grahamgilbert.com/"/>
-  <updated>2015-10-15T17:37:16+01:00</updated>
+  <updated>2015-11-12T19:42:01+00:00</updated>
   <id>http://grahamgilbert.com/</id>
   <author>
     <name><![CDATA[Graham Gilbert]]></name>
@@ -12,6 +12,15 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[MacTech 2015: Hands on with Imagr]]></title>
+    <link href="http://grahamgilbert.com/blog/2015/11/12/mactech-2015-hands-on-with-imagr/"/>
+    <updated>2015-11-12T19:32:13+00:00</updated>
+    <id>http://grahamgilbert.com/blog/2015/11/12/mactech-2015-hands-on-with-imagr</id>
+    <content type="html"><![CDATA[<p>Last week, I led a lab in which participants got hands on with <a href="https://github.com/grahamgilbert/imagr">Imagr</a>. I will hopefully be able to distribute the materials I used (the disk image is nearly 2GB, so I need to find a way of it not bankrupting me!), but in the meantime, <a href="http://grahamgilbert.com/images/2015-11-12/ImagrLab.pdf">here are the slides</a>. Thanks to everyone who attended, I hope you had as much fun as I did.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Detecting when a Munki client is on the corporate network]]></title>
@@ -1710,15 +1719,6 @@
 
 
 <p>There it is &ndash; a simple management command to automate tasks with Sal and running it in a temporary Docker container. You can use the temporary container technique for many tasks &ndash; performing a <code>repo_sync</code> on a <a href="https://registry.hub.docker.com/u/macadmins/reposado/">Reposado container</a> is a good example.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Slides and notes from Twisting Munki]]></title>
-    <link href="http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki/"/>
-    <updated>2014-11-07T00:51:33+00:00</updated>
-    <id>http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki</id>
-    <content type="html"><![CDATA[<p>Firstly, thanks if you came to my talk and putting up with me! You can get my slides and code from the <a href="https://github.com/grahamgilbert/mactech_2014">GitHub repository</a>.</p>
 ]]></content>
   </entry>
   
