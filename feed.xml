@@ -2,13 +2,13 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
 <title type="text">graham gilbert dot com</title>
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
-<link rel="self" type="application/atom+xml" href="/feed.xml" />
-<link rel="alternate" type="text/html" href="" />
-<updated>2015-11-23T22:02:33+00:00</updated>
-<id>/</id>
+<link rel="self" type="application/atom+xml" href="http://grahamgilbert.com/feed.xml" />
+<link rel="alternate" type="text/html" href="http://grahamgilbert.com" />
+<updated>2015-11-23T22:02:53+00:00</updated>
+<id>http://grahamgilbert.com/</id>
 <author>
   <name>Graham Gilbert</name>
-  <uri>/</uri>
+  <uri>http://grahamgilbert.com/</uri>
   <email>graham@grahamgilbert.com</email>
 </author>
 
@@ -17,13 +17,13 @@
 
 <entry>
   <title type="html"><![CDATA[Releasing Changes With Sharding]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/11/23/releasing-changes-with-sharding/" />
-  <id>/blog/2015/11/23/releasing-changes-with-sharding</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/" />
+  <id>http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding</id>
   <published>2015-11-23T19:16:02+00:00</published>
   <updated>2015-11-23T19:16:02+00:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -161,7 +161,7 @@
   &lt;li&gt;&lt;a href=&quot;https://github.com/salopensource/grahamgilbert-plugins/tree/master/shard&quot;&gt;Sal Plugin&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/11/23/releasing-changes-with-sharding/&quot;&gt;Releasing Changes With Sharding&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on November 23, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/&quot;&gt;Releasing Changes With Sharding&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on November 23, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -170,19 +170,19 @@
 
 <entry>
   <title type="html"><![CDATA[MacTech 2015: Hands on with Imagr]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/11/12/mactech-2015-hands-on-with-imagr/" />
-  <id>/blog/2015/11/12/mactech-2015-hands-on-with-imagr</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/11/12/mactech-2015-hands-on-with-imagr/" />
+  <id>http://grahamgilbert.com/blog/2015/11/12/mactech-2015-hands-on-with-imagr</id>
   <published>2015-11-12T19:32:13+00:00</published>
   <updated>2015-11-12T19:32:13+00:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
     &lt;p&gt;Last week, I led a lab in which participants got hands on with &lt;a href=&quot;https://github.com/grahamgilbert/imagr&quot;&gt;Imagr&lt;/a&gt;. I will hopefully be able to distribute the materials I used (the disk image is nearly 2GB, so I need to find a way of it not bankrupting me!), but in the meantime, &lt;a href=&quot;/images/posts/2015-11-12/ImagrLab.pdf&quot;&gt;here are the slides&lt;/a&gt;. Thanks to everyone who attended, I hope you had as much fun as I did.&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/11/12/mactech-2015-hands-on-with-imagr/&quot;&gt;MacTech 2015: Hands on with Imagr&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on November 12, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/11/12/mactech-2015-hands-on-with-imagr/&quot;&gt;MacTech 2015: Hands on with Imagr&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on November 12, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -191,13 +191,13 @@
 
 <entry>
   <title type="html"><![CDATA[Detecting when a Munki client is on the corporate network]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/" />
-  <id>/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/" />
+  <id>http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network</id>
   <published>2015-10-15T12:37:34+01:00</published>
   <updated>2015-10-15T12:37:34+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -236,7 +236,7 @@
 
 &lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;/images/posts/2015-10-15/Sal_plugin.png&quot; width=&quot;290&quot; height=&quot;133&quot; /&gt;&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/&quot;&gt;Detecting when a Munki client is on the corporate network&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on October 15, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/&quot;&gt;Detecting when a Munki client is on the corporate network&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on October 15, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -245,13 +245,13 @@
 
 <entry>
   <title type="html"><![CDATA[Upgrading OS X using a package]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/09/28/upgrading-os-x-using-a-package/" />
-  <id>/blog/2015/09/28/upgrading-os-x-using-a-package</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package/" />
+  <id>http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package</id>
   <published>2015-09-28T11:35:55+01:00</published>
   <updated>2015-09-28T11:35:55+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -404,7 +404,7 @@
 
 &lt;p&gt;And voilla! You have a package that can be deployed by virtually any management tool (Munki in my case) that will make sure the latest version of Munki is also installed at the same time.&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/09/28/upgrading-os-x-using-a-package/&quot;&gt;Upgrading OS X using a package&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on September 28, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package/&quot;&gt;Upgrading OS X using a package&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on September 28, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -413,13 +413,13 @@
 
 <entry>
   <title type="html"><![CDATA[Using a proxy container with Docker for virtualhosts]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/" />
-  <id>/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/" />
+  <id>http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts</id>
   <published>2015-08-26T04:18:19+01:00</published>
   <updated>2015-08-26T04:18:19+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -507,7 +507,7 @@
 
 &lt;p&gt;Using this technique, you can have as many containers as you like all serving content on the same port number - just change line 14 above to reflect the exposed ports and names of your Docker containers.&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/&quot;&gt;Using a proxy container with Docker for virtualhosts&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on August 26, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/&quot;&gt;Using a proxy container with Docker for virtualhosts&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on August 26, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -516,19 +516,19 @@
 
 <entry>
   <title type="html"><![CDATA[Mac Admin &amp; Developer Conference UK]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/" />
-  <id>/blog/2015/07/21/mac-admin-and-developer-conference-uk</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/07/21/mac-admin-and-developer-conference-uk/" />
+  <id>http://grahamgilbert.com/blog/2015/07/21/mac-admin-and-developer-conference-uk</id>
   <published>2015-07-21T13:33:31+01:00</published>
   <updated>2015-07-21T13:33:31+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
     &lt;p&gt;I’m very happy to announce that &lt;a href=&quot;http://www.macad.uk/speaker/graham-gilbert/&quot;&gt;I will be speaking&lt;/a&gt; at the first &lt;a href=&quot;http://www.macad.uk/&quot;&gt;Mac Admin &amp;amp; Developer Conference UK&lt;/a&gt;, held in our very own London on Feburary 9th and 10th, 2016. In addition to some &lt;a href=&quot;http://www.macad.uk/speakers/&quot;&gt;fantastic speakers&lt;/a&gt; (I have no idea how they let me in), it’s being &lt;a href=&quot;http://www.macad.uk/sponsor/london-apple-admins/&quot;&gt;sponsored&lt;/a&gt; by &lt;a href=&quot;http://www.londonappleadmins.org.uk/&quot;&gt;London Apple Admins&lt;/a&gt; (who will be meeting next in early September - we are looking for people who would like to give a short 15-20 minute presentation - get in touch if you’re interested).&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/07/21/mac-admin-and-developer-conference-uk/&quot;&gt;Mac Admin &amp;amp; Developer Conference UK&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on July 21, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/07/21/mac-admin-and-developer-conference-uk/&quot;&gt;Mac Admin &amp;amp; Developer Conference UK&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on July 21, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -537,13 +537,13 @@
 
 <entry>
   <title type="html"><![CDATA[Running Puppet Server in Docker Part 3: Hiera]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/" />
-  <id>/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/" />
+  <id>http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera</id>
   <published>2015-07-18T09:36:01+01:00</published>
   <updated>2015-07-18T09:36:01+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -604,7 +604,7 @@
 
 &lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;r10k deploy environment -pv&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/&quot;&gt;Running Puppet Server in Docker Part 3: Hiera&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on July 18, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/&quot;&gt;Running Puppet Server in Docker Part 3: Hiera&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on July 18, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -613,13 +613,13 @@
 
 <entry>
   <title type="html"><![CDATA[Using the Sal API]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/07/10/using-the-sal-api/" />
-  <id>/blog/2015/07/10/using-the-sal-api</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api/" />
+  <id>http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api</id>
   <published>2015-07-10T11:12:36+01:00</published>
   <updated>2015-07-10T11:12:36+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -663,7 +663,7 @@
 
 &lt;p&gt;And you’ll get a directory full of packages that will get your fleet reporting into Sal.&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/07/10/using-the-sal-api/&quot;&gt;Using the Sal API&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on July 10, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api/&quot;&gt;Using the Sal API&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on July 10, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -672,13 +672,13 @@
 
 <entry>
   <title type="html"><![CDATA[Munki DND]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/07/07/munki-dnd/" />
-  <id>/blog/2015/07/07/munki-dnd</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/07/07/munki-dnd/" />
+  <id>http://grahamgilbert.com/blog/2015/07/07/munki-dnd</id>
   <published>2015-07-07T17:46:44+01:00</published>
   <updated>2015-07-07T17:46:44+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -693,7 +693,7 @@
 &lt;p&gt;You can grab version 0.0.1 of Munki DND from the &lt;a href=&quot;https://github.com/grahamgilbert/munki-dnd/releases/tag/v0.0.1&quot;&gt;Releases page on GitHub&lt;/a&gt;.&lt;/p&gt;
 
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/07/07/munki-dnd/&quot;&gt;Munki DND&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on July 07, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/07/07/munki-dnd/&quot;&gt;Munki DND&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on July 07, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -702,13 +702,13 @@
 
 <entry>
   <title type="html"><![CDATA[The future of Sal]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/06/26/the-future-of-sal/" />
-  <id>/blog/2015/06/26/the-future-of-sal</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/06/26/the-future-of-sal/" />
+  <id>http://grahamgilbert.com/blog/2015/06/26/the-future-of-sal</id>
   <published>2015-06-26T09:40:31+01:00</published>
   <updated>2015-06-26T09:40:31+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -720,7 +720,7 @@
 
 &lt;p&gt;It’s exciting times for users of all the projects I’m working on - in addition to these changes, I have some changes planned for &lt;a href=&quot;https://github.com/grahamgilbert/Crypt&quot;&gt;Crypt&lt;/a&gt;, and of course &lt;a href=&quot;https://github.com/grahamgilbert/imagr&quot;&gt;Imagr&lt;/a&gt; is still on the development rollercoaster.&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/06/26/the-future-of-sal/&quot;&gt;The future of Sal&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on June 26, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/06/26/the-future-of-sal/&quot;&gt;The future of Sal&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on June 26, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -729,13 +729,13 @@
 
 <entry>
   <title type="html"><![CDATA[Running Puppet Server in Docker Part 2: r10k]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/" />
-  <id>/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/" />
+  <id>http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k</id>
   <published>2015-06-24T14:49:31+01:00</published>
   <updated>2015-06-24T14:49:31+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -816,7 +816,7 @@
 
 &lt;p&gt;You’ll see all of the modules you specified in your Puppetfile download theselves to the right place. But of course, we’re not quite ready to use this for applying configuration to our Macs yet - we have modules, but we’ve not applied the config to specific machines. In the next post we’ll cover how we use Hiera to do this.&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/&quot;&gt;Running Puppet Server in Docker Part 2: r10k&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on June 24, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/&quot;&gt;Running Puppet Server in Docker Part 2: r10k&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on June 24, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -825,13 +825,13 @@
 
 <entry>
   <title type="html"><![CDATA[Running Puppet Server in Docker]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/06/22/running-puppet-server-in-docker/" />
-  <id>/blog/2015/06/22/running-puppet-server-in-docker</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/" />
+  <id>http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker</id>
   <published>2015-06-22T12:29:55+01:00</published>
   <updated>2015-06-22T12:29:55+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -980,7 +980,7 @@
 
 &lt;p&gt;In a later post, we will look at how we can use r10k to manage our modules and use Hiera to configure our clients without touching a line of Puppet code.&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/06/22/running-puppet-server-in-docker/&quot;&gt;Running Puppet Server in Docker&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on June 22, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/&quot;&gt;Running Puppet Server in Docker&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on June 22, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -989,13 +989,13 @@
 
 <entry>
   <title type="html"><![CDATA[Using munki-trello with Git]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/06/16/using-munki-trello-with-git/" />
-  <id>/blog/2015/06/16/using-munki-trello-with-git</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git/" />
+  <id>http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git</id>
   <published>2015-06-16T11:21:58+01:00</published>
   <updated>2015-06-16T11:21:58+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -1029,7 +1029,7 @@
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;31&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;32&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;git push&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
 
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/06/16/using-munki-trello-with-git/&quot;&gt;Using munki-trello with Git&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on June 16, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git/&quot;&gt;Using munki-trello with Git&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on June 16, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -1038,13 +1038,13 @@
 
 <entry>
   <title type="html"><![CDATA[Introducing Imagr]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/05/08/introducing-imagr/" />
-  <id>/blog/2015/05/08/introducing-imagr</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/05/08/introducing-imagr/" />
+  <id>http://grahamgilbert.com/blog/2015/05/08/introducing-imagr</id>
   <published>2015-05-08T14:41:37+01:00</published>
   <updated>2015-05-08T14:41:37+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -1056,7 +1056,7 @@
 
 &lt;p&gt;I hope you’ll give it a go and maybe, just maybe, we can get rid of those little Mac Minis for good!&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/05/08/introducing-imagr/&quot;&gt;Introducing Imagr&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on May 08, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/05/08/introducing-imagr/&quot;&gt;Introducing Imagr&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on May 08, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -1065,13 +1065,13 @@
 
 <entry>
   <title type="html"><![CDATA[Testing BSDPy in Vagrant]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/04/28/testing-bsdpy-in-vagrant/" />
-  <id>/blog/2015/04/28/testing-bsdpy-in-vagrant</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/" />
+  <id>http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant</id>
   <published>2015-04-28T16:10:07+01:00</published>
   <updated>2015-04-28T16:10:07+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -1101,7 +1101,7 @@
 
 &lt;p&gt;Give it 20 seconds to finish booting and you will see your NBI in the startup pane of your Mac.&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/04/28/testing-bsdpy-in-vagrant/&quot;&gt;Testing BSDPy in Vagrant&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on April 28, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/&quot;&gt;Testing BSDPy in Vagrant&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on April 28, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -1110,13 +1110,13 @@
 
 <entry>
   <title type="html"><![CDATA[Getting started with BSDPy on Docker]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/04/22/getting-started-with-bsdpy-on-docker/" />
-  <id>/blog/2015/04/22/getting-started-with-bsdpy-on-docker</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/" />
+  <id>http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker</id>
   <published>2015-04-22T07:07:23+01:00</published>
   <updated>2015-04-22T07:07:23+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -1248,7 +1248,7 @@
 
 &lt;p&gt;If you’ve made it all the way down here, congratulations! You’ve now managed to move another service off that silly little Mac Mini and onto Linux - and hopefully you now see how easy it is to get things up and running with Docker.&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/04/22/getting-started-with-bsdpy-on-docker/&quot;&gt;Getting started with BSDPy on Docker&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on April 22, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/&quot;&gt;Getting started with BSDPy on Docker&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on April 22, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -1257,13 +1257,13 @@
 
 <entry>
   <title type="html"><![CDATA[More fun with AutoNBI]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/04/13/more-fun-with-autonbi/" />
-  <id>/blog/2015/04/13/more-fun-with-autonbi</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/" />
+  <id>http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi</id>
   <published>2015-04-13T08:05:53+01:00</published>
   <updated>2015-04-13T08:05:53+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -1302,7 +1302,7 @@
 
 &lt;p&gt;You should now be able to boot off your tiny NBI (mine was 574MB) and have a bit of an explore. You’ll notice that quite a bit is missing to achieve this tiny size - fortunately Pepijn has been working on getting Ruby and Python included in BaseSystem.dmg, so you have more scripting options when booted.&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/04/13/more-fun-with-autonbi/&quot;&gt;More fun with AutoNBI&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on April 13, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/&quot;&gt;More fun with AutoNBI&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on April 13, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -1311,13 +1311,13 @@
 
 <entry>
   <title type="html"><![CDATA[Building custom NetInstalls with AutoNBI]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/04/12/building-custom-netinstalls-with-autonbi/" />
-  <id>/blog/2015/04/12/building-custom-netinstalls-with-autonbi</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/" />
+  <id>http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi</id>
   <published>2015-04-12T20:33:28+01:00</published>
   <updated>2015-04-12T20:33:28+01:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -1342,7 +1342,7 @@
 
 &lt;p&gt;So the next time there’s a new OS X Installer, you can have an updated NetInstall in seconds, not minutes.&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/04/12/building-custom-netinstalls-with-autonbi/&quot;&gt;Building custom NetInstalls with AutoNBI&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on April 12, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/&quot;&gt;Building custom NetInstalls with AutoNBI&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on April 12, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -1351,13 +1351,13 @@
 
 <entry>
   <title type="html"><![CDATA[Managing Munki catalogs with Trello]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/02/11/managing-munki-catalogs-with-trello/" />
-  <id>/blog/2015/02/11/managing-munki-catalogs-with-trello</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/" />
+  <id>http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello</id>
   <published>2015-02-11T12:11:30+00:00</published>
   <updated>2015-02-11T12:11:30+00:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -1379,7 +1379,7 @@
 
 &lt;p&gt;You can grab the script from &lt;a href=&quot;https://github.com/pebbleit/munki-trello&quot;&gt;pebble.it’s GitHub account&lt;/a&gt;, or if you’re Docker inclined there’s a &lt;a href=&quot;https://registry.hub.docker.com/u/pebbleit/munki-trello/&quot;&gt;container that has everything you need&lt;/a&gt;.&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/02/11/managing-munki-catalogs-with-trello/&quot;&gt;Managing Munki catalogs with Trello&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on February 11, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/&quot;&gt;Managing Munki catalogs with Trello&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on February 11, 2015.&lt;/p&gt;
   </content>
 </entry>
 
@@ -1388,13 +1388,13 @@
 
 <entry>
   <title type="html"><![CDATA[Migrating scriptRunner to Outset]]></title>
-  <link rel="alternate" type="text/html" href="/blog/2015/01/04/migrating-scriptrunner-to-outset/" />
-  <id>/blog/2015/01/04/migrating-scriptrunner-to-outset</id>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/" />
+  <id>http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset</id>
   <published>2015-01-04T11:40:41+00:00</published>
   <updated>2015-01-04T11:40:41+00:00</updated>
   <author>
     <name>Graham Gilbert</name>
-    <uri></uri>
+    <uri>http://grahamgilbert.com</uri>
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
@@ -1415,7 +1415,7 @@
 
 &lt;p&gt;I’ve assumed that you can move your scripts into the new Outset directories using your configuration management tool (Munki, Puppet, Capser, whatever), but if you need a tool that can do this for you (with the previously stated caveat about the file extensions of the scripts), you’ll find a script that can be dropped into Outset’s firstboot directory.&lt;/p&gt;
 
-    &lt;p&gt;&lt;a href=&quot;/blog/2015/01/04/migrating-scriptrunner-to-outset/&quot;&gt;Migrating scriptRunner to Outset&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;&quot;&gt;graham gilbert dot com&lt;/a&gt; on January 04, 2015.&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/&quot;&gt;Migrating scriptRunner to Outset&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on January 04, 2015.&lt;/p&gt;
   </content>
 </entry>
 
