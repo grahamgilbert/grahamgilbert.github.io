@@ -1,651 +1,264 @@
-
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
 <head>
-  <meta charset="utf-8">
-  <title>graham gilbert</title>
-  <meta name="author" content="Graham Gilbert">
+<meta charset="utf-8">
+<title>graham gilbert dot com</title>
+<meta name="description" content="Mac administration and assorted nerdity">
+<meta name="keywords" content="osx, Sal, Imagr, python, mac, apple">
 
-  
-  <meta name="description" content="Last week, I led a lab in which participants got hands on with Imagr. I will hopefully be able to distribute the materials I used (the disk image is &hellip;">
-  
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  
-  <link rel="canonical" href="http://grahamgilbert.com">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.013/css/hack-extended.min.css" type="text/css">
-<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-<meta name="twitter:card" content="summary">
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="graham gilbert dot com">
+<meta name="twitter:description" content="Mac administration and assorted nerdity">
 <meta name="twitter:site" content="@grahamgilbert">
 <meta name="twitter:creator" content="@grahamgilbert">
-<meta name="twitter:description" content="Mac administration and assorted nerdity">
-<meta name="twitter:title" content="grahamgilbert.com">
-<meta name="twitter:url" content="http://grahamgilbert.com">
 
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-27233739-1']);
-    _gaq.push(['_trackPageview']);
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/default-thumb.png">
 
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
+<!-- Open Graph -->
+<meta property="og:locale" content="en_GB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="graham gilbert dot com">
+<meta property="og:description" content="Mac administration and assorted nerdity">
+<meta property="og:url" content="/">
+<meta property="og:site_name" content="graham gilbert dot com">
+
+<meta property="og:image" content="/images/default-thumb.png">
 
 
+
+
+
+<link rel="canonical" href="/">
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="graham gilbert dot com Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+	<script src="/assets/js/vendor/html5shiv.min.js"></script>
+	<script src="/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="/favicon.png">
+<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
+<link rel="apple-touch-icon-precomposed" href="/images/apple-touch-icon-precomposed.png">
+<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/apple-touch-icon-72x72-precomposed.png">
+<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114x114-precomposed.png">
+<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144x144-precomposed.png">
+<link href='/stylesheets/all-476e6a9e20e90d95691860a993d65b96.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">graham gilbert</a></h1>
+<body class="home">
+
+<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+
+<div class="navigation-wrapper">
+	<div class="site-name">
+		<a href="/">graham gilbert dot com</a>
+	</div><!-- /.site-name -->
+	<div class="top-navigation">
+		<nav role="navigation" id="site-nav" class="nav">
+		    <ul>
+		        
+				    
+				        
+				    
+				    <li><a href="/about/" >About</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="/talks/" >Talks</a></li>
+				
+				    
+				        
+				        
+				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="/posts/" >Archives</a></li>
+				
+		    </ul>
+		</nav>
+	</div><!-- /.top-navigation -->
+</div><!-- /.navigation-wrapper -->
+
+
+
+<div id="main" role="main">
+  <div class="article-author-side">
+    <div itemscope itemtype="http://schema.org/Person">
+
+
+	<img src="/images/about.jpg" class="bio-photo" alt="Graham Gilbert bio photo">
+
+
+  <h3 itemprop="name">Graham Gilbert</h3>
+  <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
   
-    <h2>Mac administration and assorted nerdity</h2>
+  <a href="http://twitter.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-twitter-square"></i> Twitter</a>
   
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
   
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="sitesearch" value="grahamgilbert.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/about">About</a></li>
-  <li><a href="/">Blog</a></li>
-  <li><a href="/talks">Talks</a></li>
-  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
+  <a href="http://linkedin.com/in/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-linkedin-square"></i> LinkedIn</a>
   
   
   
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/11/12/mactech-2015-hands-on-with-imagr/">MacTech 2015: Hands on With Imagr</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
+  <a href="http://github.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-github"></i> Github</a>
   
-
-
-<time datetime="2015-11-12T19:32:13+00:00" pubdate data-updated="true">Nov 12<span>th</span>, 2015</time>
-        
-         | <a href="/blog/2015/11/12/mactech-2015-hands-on-with-imagr/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Last week, I led a lab in which participants got hands on with <a href="https://github.com/grahamgilbert/imagr">Imagr</a>. I will hopefully be able to distribute the materials I used (the disk image is nearly 2GB, so I need to find a way of it not bankrupting me!), but in the meantime, <a href="/images/posts/2015-11-12/ImagrLab.pdf">here are the slides</a>. Thanks to everyone who attended, I hope you had as much fun as I did.</p>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 </div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
+  </div>
+  <div id="index">
+    
+    
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/">Detecting When a Munki Client Is on the Corporate Network</a></h1>
-    
-    
-      <p class="meta">
-        
+        <h2><a href="/blog/2015/11/23/releasing-changes-with-sharding/" title="Releasing Changes With Sharding">Releasing Changes With Sharding</a></h2>
+          <article>
+          
+            <p>Sharing is traditionally associated with databases - splitting up your dataset to make it more manageable. When using the term in this instance we are taking about splitting up our computers - there are several reasons you might want to do this. You might want to split them up for similar performance reasons - if you’re deploying large software updates your server might not be able to cope with all your clients pulling it at once. You might want a way to roll changes out to certain groups of machines.</p>
+
+<p>Facebook spoke about sharding at <a href="http://macbrained.org/recap-may-quantcast/">macbrained in May 2015</a>, but they weren’t clear on how they use it. A few people were pretty interested in using this method of rolling out changes to their machines, but it was <a href="http://groob.io/">Victor Vrantchan</a> who came up with a <a href="https://github.com/whitby/mac-scripts/tree/master/munki_condition_shard">method of deriving a value between one and 100 based on the machines serial number</a>.</p>
+
+<p>Using this condition as a base and a similar Facter Fact I’ve started using the method outlined below to release changes to the macs I look after.</p>
 
 
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-15T12:37:34+01:00" pubdate data-updated="true">Oct 15<span>th</span>, 2015</time>
-        
-         | <a href="/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Sometimes it is useful to know whether a Munki client is on your corporate network &ndash; you might have a package or script that will only work when able to access an internal resource, or you might just want statistics on which users are accessing your internal infrastructure and external infrastructure.</p>
-
-<p>The idea is to have your clients attempt to access a URL that they will only have access to when they&rsquo;re on your internal network. This URL should return the following plist when the client accesses it:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
-</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;dict&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>response<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;string&gt;</span>active<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'><span class="nt">&lt;/dict&gt;</span>
-</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>The condition script</h2>
-
-<p>You can find the condition script on <a href="https://github.com/grahamgilbert/munki_conditions/tree/master/on_corp">my Github</a>. You should modify <a href="https://github.com/grahamgilbert/munki_conditions/blob/master/on_corp/on_corp.py#L11">line 11</a> of that script to point to your plist, and you can then distribute it to your clients however you wish (a Makefile for <a href="https://github.com/unixorn/luggage">The Luggage</a> is in the repo).</p>
-
-<p>When all is running, you will have access to an <code>on_corp</code> condition for use in your manifests.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>conditional_items<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'><span class="nt">&lt;array&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;dict&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;key&gt;</span>condition<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;string&gt;</span>on_corp == TRUE<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;key&gt;</span>managed_installs<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;array&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;string&gt;</span>MyOnCorpOnlyPackage<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/array&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/dict&gt;</span>
-</span><span class='line'> <span class="nt">&lt;/array&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Or if your Munki reporting tool supports using data from Conditions (like <a href="https://github.com/salopensource/sal">Sal</a>!), you could display that infomation in a <a href="https://github.com/salopensource/grahamgilbert-plugins/tree/master/oncorp">plugin</a>.</p>
-
-<p><img class="center" src="/images/posts/2015-10-15/Sal_plugin.png" width="290" height="133"></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
+            <p><b><a href="/blog/2015/11/23/releasing-changes-with-sharding/">Continue reading...</a></b></p>
+          
+          </article>
+          <hr />
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/09/28/upgrading-os-x-using-a-package/">Upgrading OS X Using a Package</a></h1>
+
     
     
-      <p class="meta">
-        
+      
+        <h2><a href="/blog/2015/11/12/mactech-2015-hands-on-with-imagr/" title="MacTech 2015: Hands on with Imagr">MacTech 2015: Hands on with Imagr</a></h2>
+          <article>
+          
+            <p>Last week, I led a lab in which participants got hands on with <a href="https://github.com/grahamgilbert/imagr">Imagr</a>. I will hopefully be able to distribute the materials I used (the disk image is nearly 2GB, so I need to find a way of it not bankrupting me!), but in the meantime, <a href="/images/posts/2015-11-12/ImagrLab.pdf">here are the slides</a>. Thanks to everyone who attended, I hope you had as much fun as I did.</p>
 
+          
+          </article>
+          <hr />
+      
 
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-09-28T11:35:55+01:00" pubdate data-updated="true">Sep 28<span>th</span>, 2015</time>
-        
-         | <a href="/blog/2015/09/28/upgrading-os-x-using-a-package/#disqus_thread">Comments</a>
-        
-      </p>
     
-  </header>
+    
+      
+        <h2><a href="/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/" title="Detecting when a Munki client is on the corporate network">Detecting when a Munki client is on the corporate network</a></h2>
+          <article>
+          
+            <p>Sometimes it is useful to know whether a Munki client is on your corporate network - you might have a package or script that will only work when able to access an internal resource, or you might just want statistics on which users are accessing your internal infrastructure and external infrastructure.</p>
 
 
-  <div class="entry-content"><p>It&rsquo;s the time of year where we start to think about upgrading our machines to the latest version of OS X. There are several ways of doing this, but assuming your users are unable to perform the upgrade themselves via the App Store (if they&rsquo;re running as a standard user or your policies prohibit the use of the App Store), you might be wondering how you can use your management tool to get your machines upgraded and make sure they stay enrolled in your management tool.</p>
+            <p><b><a href="/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/">Continue reading...</a></b></p>
+          
+          </article>
+          <hr />
+      
 
-<p>We&rsquo;re fortunate that we have a standard packaging format on OS X that virtually all management tools can install, so this is the most universal way of distributing software. Greg Neagle wrote <a href="https://github.com/munki/createOSXinstallPkg">createOSXinstallPkg</a> a few years ago that has several nice features for mac admins:</p>
+    
+    
+      
+        <h2><a href="/blog/2015/09/28/upgrading-os-x-using-a-package/" title="Upgrading OS X using a package">Upgrading OS X using a package</a></h2>
+          <article>
+          
+            <p>It’s the time of year where we start to think about upgrading our machines to the latest version of OS X. There are several ways of doing this, but assuming your users are unable to perform the upgrade themselves via the App Store (if they’re running as a standard user or your policies prohibit the use of the App Store), you might be wondering how you can use your management tool to get your machines upgraded and make sure they stay enrolled in your management tool.</p>
+
+<p>We’re fortunate that we have a standard packaging format on OS X that virtually all management tools can install, so this is the most universal way of distributing software. Greg Neagle wrote <a href="https://github.com/munki/createOSXinstallPkg">createOSXinstallPkg</a> a few years ago that has several nice features for mac admins:</p>
 
 <ul>
-<li>It wraps up an OS X Installer into a standard package.</li>
-<li>It allows you to add in additional packages &ndash; perhaps you want to make sure your admin user is installed or make sure that a version of Munki that is compatible with the new OS is installed.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/09/28/upgrading-os-x-using-a-package/">Continue reading &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Using a Proxy Container With Docker for Virtualhosts</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-26T04:18:19+01:00" pubdate data-updated="true">Aug 26<span>th</span>, 2015</time>
-        
-         | <a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve been asked a few times over the last few weeks about how you can have multiple services (for example, Munki and Sal) running on the same port on the same server &ndash; how we used to do Virtual Hosting when we ran our apps on the host OS. My usual four word answer has been &lsquo;use a proxy container&rsquo;. How you actually do that has been undocumented &ndash; this post hopes to recitfy that.</p>
-
-<p>Let&rsquo;s consider a usual setup that has Sal and Munki running on the same box. We have two hostnames that both resolve to our Docker server &ndash; <code>sal.example.com</code> and <code>munki.example.com</code>, and we have our containers running in a manner similar to the below:</p>
-
-<p><img src="/images/posts/2015-08-26/proxycontainerlayout.png" alt="Container layout" /></p>
-
-<p>Each of our containers is linked to it&rsquo;s parent:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Munki server</span>
-</span><span class='line'>docker run -d <span class="se">\</span>
-</span><span class='line'>-v /usr/local/docker/munki:/munki_repo <span class="se">\</span>
-</span><span class='line'>--restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
-</span><span class='line'>--name<span class="o">=</span><span class="s2">&quot;munki&quot;</span> <span class="se">\</span>
-</span><span class='line'>macadmins/munki
-</span><span class='line'>
-</span><span class='line'><span class="c"># Postgres container for Sal</span>
-</span><span class='line'>docker run -d --name<span class="o">=</span><span class="s2">&quot;postgres-sal&quot;</span> <span class="se">\</span>
-</span><span class='line'>-v /usr/local/docker/sal/db:/var/lib/postgresql/data <span class="se">\</span>
-</span><span class='line'>-e <span class="nv">DB_NAME</span><span class="o">=</span>sal <span class="se">\</span>
-</span><span class='line'>-e <span class="nv">DB_USER</span><span class="o">=</span>admin <span class="se">\</span>
-</span><span class='line'>-e <span class="nv">DB_PASS</span><span class="o">=</span>password <span class="se">\</span>
-</span><span class='line'>--restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
-</span><span class='line'>grahamgilbert/postgres
-</span><span class='line'>
-</span><span class='line'><span class="c"># Sal Container</span>
-</span><span class='line'>docker run -d <span class="se">\</span>
-</span><span class='line'>-e <span class="nv">ADMIN_PASS</span><span class="o">=</span>pass <span class="se">\</span>
-</span><span class='line'>-e <span class="nv">DB_NAME</span><span class="o">=</span>sal <span class="se">\</span>
-</span><span class='line'>-e <span class="nv">DB_USER</span><span class="o">=</span>admin <span class="se">\</span>
-</span><span class='line'>-e <span class="nv">DB_PASS</span><span class="o">=</span>password <span class="se">\</span>
-</span><span class='line'>--name<span class="o">=</span><span class="s2">&quot;sal&quot;</span> <span class="se">\</span>
-</span><span class='line'>--link postgres-sal:db <span class="se">\</span>
-</span><span class='line'>--restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
-</span><span class='line'>macadmins/sal
-</span><span class='line'>
-</span><span class='line'><span class="c"># Proxy</span>
-</span><span class='line'>docker run -d --name<span class="o">=</span><span class="s2">&quot;proxy&quot;</span> <span class="se">\</span>
-</span><span class='line'>--link sal:sal <span class="se">\</span>
-</span><span class='line'>--link munki:munki <span class="se">\</span>
-</span><span class='line'>-v /usr/local/docker/proxy/sites-templates:/etc/nginx/sites-templates <span class="se">\</span>
-</span><span class='line'>-v /usr/local/docker/proxy/keys:/etc/ssl/keys <span class="se">\</span>
-</span><span class='line'>-p 443:443 <span class="se">\</span>
-</span><span class='line'>-p 80:80 <span class="se">\</span>
-</span><span class='line'>--restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
-</span><span class='line'>grahamgilbert/proxy
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So how does the <code>proxy</code> container know about the other containers? When you link a Docker container to another, a few environment variables are made available to you &ndash; there are two we&rsquo;re interested in:</p>
-
-<ul>
-<li><code>CONTAINERNAME_PORT_EXPOSEDPORTNUMBER_TCP_ADDR</code></li>
-<li><code>CONTAINERNAME_PORT_EXPOSEDPORTNUMBER_TCP_PORT</code></li>
+  <li>It wraps up an OS X Installer into a standard package.</li>
+  <li>It allows you to add in additional packages - perhaps you want to make sure your admin user is installed or make sure that a version of Munki that is compatible with the new OS is installed.</li>
 </ul>
 
 
-<p>So in the case of the Sal container, it would be <code>SAL_PORT_8000_TCP_ADDR</code> and <code>SAL_PORT_8000_TCP_PORT</code>. The <a href="https://hub.docker.com/r/grahamgilbert/proxy/"><code>grahamgilbert/proxy</code></a> image will simply run over any file named <code>*.tmpl</code> in <code>/etc/nginx/sites-templates</code> and replace the palceholders with the value that&rsquo;s in the environent variable &ndash; here&rsquo;s my nginx configuration file template for Sal:</p>
-
-<figure class='code'><figcaption><span>nginx</span><a href='/etc/nginx/sites-templates/sal.example.com.tmpl'>link</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>server {
-</span><span class='line'>       listen         80;
-</span><span class='line'>       server_name    sal.example.com;
-</span><span class='line'>       rewrite        ^ https://$server_name$request_uri? permanent;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>server {
-</span><span class='line'>        listen              443 ssl;
-</span><span class='line'>        server_name         sal.example.com;
-</span><span class='line'>        ssl_certificate     /etc/ssl/keys/ssl-unified.crt;
-</span><span class='line'>        ssl_certificate_key /etc/ssl/keys/sal.key;
-</span><span class='line'>
-</span><span class='line'>        location / {
-</span><span class='line'>            proxy_pass http://${SAL_PORT_8000_TCP_ADDR}:${SAL_PORT_8000_TCP_PORT}; # set to your own port
-</span><span class='line'>            proxy_redirect off;
-</span><span class='line'>            proxy_set_header Host $host;
-</span><span class='line'>            proxy_set_header X-Real-IP $remote_addr;
-</span><span class='line'>            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-</span><span class='line'>     
-</span><span class='line'>            client_max_body_size 10m;
-</span><span class='line'>            client_body_buffer_size 128k;
-</span><span class='line'>     
-</span><span class='line'>            proxy_connect_timeout 90;
-</span><span class='line'>            proxy_send_timeout 90;
-</span><span class='line'>            proxy_read_timeout 90;
-</span><span class='line'>            proxy_buffer_size 4k;
-</span><span class='line'>            proxy_buffers 4 32k;
-</span><span class='line'>            proxy_busy_buffers_size 64k;
-</span><span class='line'>            proxy_temp_file_write_size 64k;
-</span><span class='line'>        }
-</span><span class='line'>    }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Using this technique, you can have as many containers as you like all serving content on the same port number &ndash; just change line 14 above to reflect the exposed ports and names of your Docker containers.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
+            <p><b><a href="/blog/2015/09/28/upgrading-os-x-using-a-package/">Continue reading...</a></b></p>
+          
+          </article>
+          <hr />
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/">Mac Admin &amp; Developer Conference UK</a></h1>
+
     
     
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-07-21T13:33:31+01:00" pubdate data-updated="true">Jul 21<span>st</span>, 2015</time>
-        
-         | <a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;m very happy to announce that <a href="http://www.macad.uk/speaker/graham-gilbert/">I will be speaking</a> at the first <a href="http://www.macad.uk/">Mac Admin &amp; Developer Conference UK</a>, held in our very own London on Feburary 9th and 10th, 2016. In addition to some <a href="http://www.macad.uk/speakers/">fantastic speakers</a> (I have no idea how they let me in), it&rsquo;s being <a href="http://www.macad.uk/sponsor/london-apple-admins/">sponsored</a> by <a href="http://www.londonappleadmins.org.uk/">London Apple Admins</a> (who will be meeting next in early September &ndash; we are looking for people who would like to give a short 15-20 minute presentation &ndash; get in touch if you&rsquo;re interested).</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="/blog/page/2/">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
-<aside class="sidebar">
-  
-    <section>
-  <h1>About</h1>
-  <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
-
-<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer.</small></p>
-</section>
-<section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/11/12/mactech-2015-hands-on-with-imagr/">MacTech 2015: Hands on With Imagr</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/">Detecting When a Munki Client Is on the Corporate Network</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/09/28/upgrading-os-x-using-a-package/">Upgrading OS X Using a Package</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Using a Proxy Container With Docker for Virtualhosts</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/">Mac Admin &amp; Developer Conference UK</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
-  </ul>
-  
-  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
-  
-  <script type="text/javascript">
-    $(document).ready(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
-
-        github.showRepos({
-            user: 'grahamgilbert',
-            count: 4,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-<section>
-  <h1>Twitter</h1>
-<a class="twitter-timeline" href="https://twitter.com/grahamgilbert" data-widget-id="483550747481489408">Tweets by @grahamgilbert</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-
-
-  
-</aside>
-
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Graham Gilbert -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
-</footer>
-  
-
-<script type="text/javascript">
-      var disqus_shortname = 'grahamgilbert';
       
-        
-        var disqus_script = 'count.js';
+        <h2><a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/" title="Using a proxy container with Docker for virtualhosts">Using a proxy container with Docker for virtualhosts</a></h2>
+          <article>
+          
+            <p>I’ve been asked a few times over the last few weeks about how you can have multiple services (for example, Munki and Sal) running on the same port on the same server - how we used to do Virtual Hosting when we ran our apps on the host OS. My usual four word answer has been ‘use a proxy container’. How you actually do that has been undocumented - this post hopes to recitfy that.</p>
+
+
+            <p><b><a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Continue reading...</a></b></p>
+          
+          </article>
+          <hr />
       
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
+
+    
+  </div><!-- /#index -->
+</div><!-- /#main -->
+
+<div class="footer-wrap">
+  <footer>
+    <span>&copy; 2015 Graham Gilbert. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> using the <a href="http://mademistakes.com/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a> theme.</span>
+  </footer>
+</div><!-- /.footer-wrap -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="/assets/js/scripts.min.js"></script>
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  var _gaq = _gaq || [];
+  var pluginUrl =
+ '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-27233739-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
 </script>
-
-
-
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
 
 </body>
 </html>

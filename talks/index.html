@@ -1,276 +1,228 @@
-
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
 <head>
-  <meta charset="utf-8">
-  <title>Talks - graham gilbert</title>
-  <meta name="author" content="Graham Gilbert">
+<meta charset="utf-8">
+<title>Talks &#8211; graham gilbert dot com</title>
 
-  
-  <meta name="description" content="Talks Hands on with Imagr (MacTech Conference, 2015) This session introduced participants to Imagr, the open source OS X deployment tool. Workshop &hellip;">
-  
+<meta name="keywords" content="">
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  
-  <link rel="canonical" href="http://grahamgilbert.com/talks">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="graham gilbert" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.013/css/hack-extended.min.css" type="text/css">
-<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-<meta name="twitter:card" content="summary">
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Talks">
+
 <meta name="twitter:site" content="@grahamgilbert">
 <meta name="twitter:creator" content="@grahamgilbert">
-<meta name="twitter:description" content="Mac administration and assorted nerdity">
-<meta name="twitter:title" content="grahamgilbert.com">
-<meta name="twitter:url" content="http://grahamgilbert.com">
 
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-27233739-1']);
-    _gaq.push(['_trackPageview']);
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/default-thumb.png">
 
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
+<!-- Open Graph -->
+<meta property="og:locale" content="en_GB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Talks">
+
+<meta property="og:url" content="/talks/">
+<meta property="og:site_name" content="graham gilbert dot com">
+
+<meta property="og:image" content="/images/default-thumb.png">
 
 
+
+
+
+<link rel="canonical" href="/talks/">
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="graham gilbert dot com Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+	<script src="/assets/js/vendor/html5shiv.min.js"></script>
+	<script src="/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="/favicon.png">
+<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
+<link rel="apple-touch-icon-precomposed" href="/images/apple-touch-icon-precomposed.png">
+<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/apple-touch-icon-72x72-precomposed.png">
+<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114x114-precomposed.png">
+<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144x144-precomposed.png">
+<link href='/stylesheets/all-476e6a9e20e90d95691860a993d65b96.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">graham gilbert</a></h1>
-  
-    <h2>Mac administration and assorted nerdity</h2>
-  
-</hgroup>
+<body class="page">
 
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="sitesearch" value="grahamgilbert.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/about">About</a></li>
-  <li><a href="/">Blog</a></li>
-  <li><a href="/talks">Talks</a></li>
-  <li><a href="http://twitter.com/grahamgilbert">Twitter</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
+<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
 
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article role="article">
+<div class="navigation-wrapper">
+	<div class="site-name">
+		<a href="/">graham gilbert dot com</a>
+	</div><!-- /.site-name -->
+	<div class="top-navigation">
+		<nav role="navigation" id="site-nav" class="nav">
+		    <ul>
+		        
+				    
+				        
+				    
+				    <li><a href="/about/" >About</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="/talks/" >Talks</a></li>
+				
+				    
+				        
+				        
+				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="/posts/" >Archives</a></li>
+				
+		    </ul>
+		</nav>
+	</div><!-- /.top-navigation -->
+</div><!-- /.navigation-wrapper -->
+
+
+
+<div id="main" role="main">
+  <div class="article-author-side">
+    <div itemscope itemtype="http://schema.org/Person">
+
+
+	<img src="/images/about.jpg" class="bio-photo" alt="Graham Gilbert bio photo">
+
+
+  <h3 itemprop="name">Graham Gilbert</h3>
+  <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
   
-  <header>
-    <h1 class="entry-title">Talks</h1>
-    
-  </header>
+  <a href="http://twitter.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-twitter-square"></i> Twitter</a>
   
-  <h2>Hands on with Imagr (MacTech Conference, 2015)</h2>
+  
+  <a href="http://linkedin.com/in/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-linkedin-square"></i> LinkedIn</a>
+  
+  
+  
+  <a href="http://github.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-github"></i> Github</a>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</div>
+  </div>
+  <article class="page">
+    <h1>Talks</h1>
+    <div class="article-wrap">
+      <h2 id="hands-on-with-imagr-mactech-conference-2015">Hands on with Imagr (MacTech Conference, 2015)</h2>
 
 <p>This session introduced participants to <a href="https://github.com/grahamgilbert/imagr">Imagr</a>, the open source OS X deployment tool. Workshop participants got hands on with Imagr, going from setting up the server environment to configuring Imagr and deploying an OS X machine. <a href="/images/posts/2015-11-12/ImagrLab.pdf">(slides)</a></p>
 
-<h2>Twisting Munki (MacTech Conference, 2014)</h2>
+<h2 id="twisting-munki-mactech-conference-2014">Twisting Munki (MacTech Conference, 2014)</h2>
 
-<p>Munki is one of the best tools for installing software on a Mac, but it isn&rsquo;t a configuration management system. It does however, share certain traits with them. We&rsquo;ll take a look at how Munki can be used to apply configuration to OS X devices, how we can use some of the mechanisms that Munki provides to ensure that the desired state is maintained and how we can use some of Munki&rsquo;s features to make it behave more like dedicated configuration management tools. Along the way we&rsquo;ll take a look at some methods for applying some of the more common (and some of the stranger!) settings on OS X using profiles, payload free packages and the command line. <a href="https://github.com/grahamgilbert/mactech_2014">(slides and code)</a></p>
+<p>Munki is one of the best tools for installing software on a Mac, but it isn’t a configuration management system. It does however, share certain traits with them. We’ll take a look at how Munki can be used to apply configuration to OS X devices, how we can use some of the mechanisms that Munki provides to ensure that the desired state is maintained and how we can use some of Munki’s features to make it behave more like dedicated configuration management tools. Along the way we’ll take a look at some methods for applying some of the more common (and some of the stranger!) settings on OS X using profiles, payload free packages and the command line. <a href="https://github.com/grahamgilbert/mactech_2014">(slides and code)</a></p>
 
-<h2>Automate yourself out of a job (Penn State MacAdmins, 2014)</h2>
+<h2 id="automate-yourself-out-of-a-job-penn-state-macadmins-2014">Automate yourself out of a job (Penn State MacAdmins, 2014)</h2>
 
-<div style="width:440px;height:330px;margin-bottom:20px"><iframe width="420" height="315" src="http://www.youtube.com/embed/sjbESCx-G48" frameborder="0" allowfullscreen> </iframe></div>
-
+<div style="width:440px;height:330px;margin-bottom:20px"><iframe width="420" height="315" src="http://www.youtube.com/embed/sjbESCx-G48" frameborder="0" allowfullscreen=""> </iframe></div>
 
 <p>Many new mac admins start off by accident. First there are a few macs, then there’s a whole lab of them. And before you know it, you’re managing hundreds of them. Techniques that worked with a few machines are no longer scalable without an army of staff. When you could once set up each new mac and user by hand, you now need a repeatable, automated method of deploying your customisations and preferences to your machines.</p>
 
 <p>This session will cover how to configure default user preferences on first login, how to create and deploy managed preferences via profiles, how to package your configurations so they can be deployed by tools such as ARD or Munki and how to make OS X images with your customisations built in the easy way. <a href="/images/posts/2014-07-10/Automate_yourself_out_of_a_job.pdf">(pdf)</a></p>
 
-<h2>Multi Tenanted Munki with Puppet and Sal (Penn State MacAdmins, 2014)</h2>
+<h2 id="multi-tenanted-munki-with-puppet-and-sal-penn-state-macadmins-2014">Multi Tenanted Munki with Puppet and Sal (Penn State MacAdmins, 2014)</h2>
 
-<div style="width:440px;height:330px;margin-bottom:20px"><iframe width="420" height="315" src="http://www.youtube.com/embed/BPTJnz27T44" frameborder="0" allowfullscreen> </iframe></div>
-
+<div style="width:440px;height:330px;margin-bottom:20px"><iframe width="420" height="315" src="http://www.youtube.com/embed/BPTJnz27T44" frameborder="0" allowfullscreen=""> </iframe></div>
 
 <p>I spoke about how I tackled the problem of managing multiple Munki stallations by automating the configuration of the remote cache repositories, dynamically configure the clients based on their location and how we empowered our clients by giving them detailed information on their Mac estate with Sal (the Munki Puppet). <a href="/images/posts/2014-07-09/Multi_site_Munki.pdf">(pdf)</a></p>
 
-<h2>Managing Macs with Puppet (Penn State MacAdmins, 2013)</h2>
+<h2 id="managing-macs-with-puppet-penn-state-macadmins-2013">Managing Macs with Puppet (Penn State MacAdmins, 2013)</h2>
 
-<div style="width:440px;height:330px;margin-bottom:20px"><iframe width="420" height="315" src="http://www.youtube.com/embed/GqerWmKU1Js" frameborder="0" allowfullscreen> </iframe></div>
-
+<div style="width:440px;height:330px;margin-bottom:20px"><iframe width="420" height="315" src="http://www.youtube.com/embed/GqerWmKU1Js" frameborder="0" allowfullscreen=""> </iframe></div>
 
 <p>I spoke about why we chose to use Puppet at pebble.it, how it differs from competing solutions, and how we have utilised it in conjunction with Facter to dynamically configure our machines and gain visibility into the Macs we looked after. <a href="/images/posts/2013-05-24/Managing_Macs_with_Puppet.pdf">(pdf)</a></p>
 
-  
-    <footer>
       
-      
-        <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://grahamgilbert.com/talks/index.html" data-via="grahamgilbert" data-counturl="http://grahamgilbert.com/talks/index.html" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-      
-    </footer>
-  
-</article>
-
-</div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1>About</h1>
-  <p><img src="/images/me.jpg" class="left" />A Mac admin, automating the hell out of things in London. <a href="/about">More?</a></p>
-
-<p class="clear"><small>The opinions on this site are my own, and are not necessarily shared by my employer.</small></p>
-</section>
-<section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/11/12/mactech-2015-hands-on-with-imagr/">MacTech 2015: Hands on With Imagr</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/">Detecting When a Munki Client Is on the Corporate Network</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/09/28/upgrading-os-x-using-a-package/">Upgrading OS X Using a Package</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Using a Proxy Container With Docker for Virtualhosts</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/">Mac Admin &amp; Developer Conference UK</a>
-      </li>
-    
+        <hr />
+        <div class="social-share">
+  <h4>Share on</h4>
+  <ul>
+    <li>
+      <a href="https://twitter.com/intent/tweet?text=/talks/index.html" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
+    </li>
+    <li>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/talks/index.html" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
+    </li>
+    <li>
+      <a href="https://plus.google.com/share?url=/talks/index.html" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
+    </li>
   </ul>
-</section>
+</div><!-- /.social-share -->
+      
+    </div><!-- /.article-wrap -->
+    
+  </article>
+</div><!-- /#index -->
 
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
-  </ul>
-  
-  <a href="https://github.com/grahamgilbert">@grahamgilbert</a> on GitHub
-  
-  <script type="text/javascript">
-    $(document).ready(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
+<div class="footer-wrap">
+  <footer>
+    <span>&copy; 2015 Graham Gilbert. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> using the <a href="http://mademistakes.com/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a> theme.</span>
+  </footer>
+</div><!-- /.footer-wrap -->
 
-        github.showRepos({
-            user: 'grahamgilbert',
-            count: 4,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="/assets/js/scripts.min.js"></script>
 
-<section>
-  <h1>Twitter</h1>
-<a class="twitter-timeline" href="https://twitter.com/grahamgilbert" data-widget-id="483550747481489408">Tweets by @grahamgilbert</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  var _gaq = _gaq || [];
+  var pluginUrl =
+ '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-27233739-1']);
+  _gaq.push(['_trackPageview']);
 
-
-
-
-  
-</aside>
-
-
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Graham Gilbert -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
-</footer>
-  
-
-
-
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
 
 </body>
 </html>
