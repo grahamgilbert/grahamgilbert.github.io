@@ -4,7 +4,7 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://grahamgilbert.com/feed.xml" />
 <link rel="alternate" type="text/html" href="http://grahamgilbert.com" />
-<updated>2015-11-23T22:02:53+00:00</updated>
+<updated>2015-11-24T09:40:18+00:00</updated>
 <id>http://grahamgilbert.com/</id>
 <author>
   <name>Graham Gilbert</name>
@@ -19,8 +19,8 @@
   <title type="html"><![CDATA[Releasing Changes With Sharding]]></title>
   <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/" />
   <id>http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding</id>
-  <published>2015-11-23T19:16:02+00:00</published>
-  <updated>2015-11-23T19:16:02+00:00</updated>
+  <published>2015-11-23T00:00:00+00:00</published>
+  <updated>2015-11-23T00:00:00+00:00</updated>
   <author>
     <name>Graham Gilbert</name>
     <uri>http://grahamgilbert.com</uri>
@@ -29,7 +29,7 @@
   <content type="html">
     &lt;p&gt;Sharding is traditionally associated with databases - splitting up your dataset to make it more manageable. When using the term in this instance we are taking about splitting up our computers - there are several reasons you might want to do this. You might want to split them up for similar performance reasons - if you’re deploying large software updates your server might not be able to cope with all your clients pulling it at once. You might want a way to roll changes out to certain groups of machines.&lt;/p&gt;
 
-&lt;p&gt;Facebook spoke about sharding at &lt;a href=&quot;http://macbrained.org/recap-may-quantcast/&quot;&gt;macbrained in May 2015&lt;/a&gt;, but they weren’t clear on how they use it. A few people were pretty interested in using this method of rolling out changes to their machines, but it was &lt;a href=&quot;http://groob.io/&quot;&gt;Victor Vrantchan&lt;/a&gt; who came up with a &lt;a href=&quot;https://github.com/whitby/mac-scripts/tree/master/munki_condition_shard&quot;&gt;method of deriving a value between one and 100 based on the machines serial number&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Facebook spoke about sharding at &lt;a href=&quot;http://macbrained.org/recap-may-quantcast/&quot;&gt;macbrained in May 2015&lt;/a&gt;, but they weren’t clear on how they use it (&lt;strong&gt;edit:&lt;/strong&gt; they actually first spoke about it at &lt;a href=&quot;https://macsysadmin.se/2014/Thursday.html&quot;&gt;MacSysAdmin&lt;/a&gt;). A few people were pretty interested in using this method of rolling out changes to their machines, but it was &lt;a href=&quot;http://groob.io/&quot;&gt;Victor Vrantchan&lt;/a&gt; who came up with a &lt;a href=&quot;https://github.com/whitby/mac-scripts/tree/master/munki_condition_shard&quot;&gt;method of deriving a value between one and 100 based on the machines serial number&lt;/a&gt; (&lt;strong&gt;edit:&lt;/strong&gt; this was based on &lt;a href=&quot;https://github.com/facebook/IT-CPE/blob/master/code/lib/modules/sys_tools.py#L161&quot;&gt;Facebook’s&lt;/a&gt; and &lt;a href=&quot;https://github.com/google/macops/blob/master/gmacpyutil/gmacpyutil/experiments.py&quot;&gt;Google’s&lt;/a&gt; code. Elliot Jordan also came up with something &lt;a href=&quot;https://gist.github.com/homebysix/b35f1979d5b11e00602c&quot;&gt;similar for Casper&lt;/a&gt;).&lt;/p&gt;
 
 &lt;p&gt;Using this condition as a base and a similar Facter Fact I’ve started using the method outlined below to release changes to the macs I look after. &lt;!-- more --&gt;&lt;/p&gt;
 
