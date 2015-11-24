@@ -4,7 +4,7 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://grahamgilbert.com/feed.xml" />
 <link rel="alternate" type="text/html" href="http://grahamgilbert.com" />
-<updated>2015-11-24T09:40:18+00:00</updated>
+<updated>2015-11-24T09:40:32+00:00</updated>
 <id>http://grahamgilbert.com/</id>
 <author>
   <name>Graham Gilbert</name>
@@ -19,8 +19,9 @@
   <title type="html"><![CDATA[Releasing Changes With Sharding]]></title>
   <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/" />
   <id>http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding</id>
-  <published>2015-11-23T00:00:00+00:00</published>
-  <updated>2015-11-23T00:00:00+00:00</updated>
+  <updated>2015-11-24 09:16:02 +0000T00:00:00-00:00</updated>
+  <published>2015-11-23T19:16:02+00:00</published>
+  
   <author>
     <name>Graham Gilbert</name>
     <uri>http://grahamgilbert.com</uri>
