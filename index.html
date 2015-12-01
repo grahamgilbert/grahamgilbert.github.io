@@ -139,6 +139,21 @@
     
     
       
+        <h1><a href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/" title="Redirecting Munki Downloads">Redirecting Munki Downloads</a></h1>
+          <article>
+          
+            <p>Munki 2.4.0 brought the option to have Munki follow http redirects (my first contribution to Munki). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done.</p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/">Continue reading...</a></b></p>
+          
+          </article>
+          <hr />
+      
+
+    
+    
+      
         <h1><a href="http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/" title="Releasing Changes With Sharding">Releasing Changes With Sharding</a></h1>
           <article>
           
@@ -200,21 +215,6 @@
 
 
             <p><b><a href="http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package/">Continue reading...</a></b></p>
-          
-          </article>
-          <hr />
-      
-
-    
-    
-      
-        <h1><a href="http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/" title="Using a proxy container with Docker for virtualhosts">Using a proxy container with Docker for virtualhosts</a></h1>
-          <article>
-          
-            <p>I’ve been asked a few times over the last few weeks about how you can have multiple services (for example, Munki and Sal) running on the same port on the same server - how we used to do Virtual Hosting when we ran our apps on the host OS. My usual four word answer has been ‘use a proxy container’. How you actually do that has been undocumented - this post hopes to recitfy that.</p>
-
-
-            <p><b><a href="http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Continue reading...</a></b></p>
           
           </article>
           <hr />

@@ -1,0 +1,370 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Redirecting Munki Downloads &#8211; graham gilbert dot com</title>
+<meta name="description" content="Munki 2.4.0 brought the option to have Munki follow http redirects (my first contribution to Munki). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done.
+
+">
+<meta name="keywords" content="">
+
+
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Redirecting Munki Downloads">
+<meta name="twitter:description" content="Munki 2.4.0 brought the option to have Munki follow http redirects (my first contribution to Munki). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done.
+
+">
+<meta name="twitter:site" content="@grahamgilbert">
+<meta name="twitter:creator" content="@grahamgilbert">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://grahamgilbert.com/images/default-thumb.png">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_GB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redirecting Munki Downloads">
+<meta property="og:description" content="Munki 2.4.0 brought the option to have Munki follow http redirects (my first contribution to Munki). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done.
+
+">
+<meta property="og:url" content="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/">
+<meta property="og:site_name" content="graham gilbert dot com">
+
+<meta property="og:image" content="http://grahamgilbert.com/images/default-thumb.png">
+
+
+
+
+
+<link rel="canonical" href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/">
+<link href="http://grahamgilbert.com/atom.xml" type="application/atom+xml" rel="alternate" title="graham gilbert dot com Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://grahamgilbert.com/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+	<script src="http://grahamgilbert.com/assets/js/vendor/html5shiv.min.js"></script>
+	<script src="http://grahamgilbert.com/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="http://grahamgilbert.com/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+
+<link href='/stylesheets/all-476e6a9e20e90d95691860a993d65b96.css' media='all' rel='stylesheet' type='text/css'>
+</head>
+
+<body class="post">
+
+<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+
+<div class="navigation-wrapper">
+	<div class="site-name">
+		<input type="text" class="st-default-search-input" style="width: 150px;">
+	</div><!-- /.site-name -->
+	<div class="top-navigation">
+		<nav role="navigation" id="site-nav" class="nav">
+		    <ul>
+		        
+				    
+				        
+				    
+				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
+				
+				    
+				        
+				        
+				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
+				
+		    </ul>
+		</nav>
+	</div><!-- /.top-navigation -->
+</div><!-- /.navigation-wrapper -->
+
+
+
+<div id="main" role="main">
+  <div class="article-author-side">
+    <div itemscope itemtype="http://schema.org/Person">
+
+	<img src="http://grahamgilbert.com/images/about.jpg" class="bio-photo" alt="Graham Gilbert bio photo">
+
+
+  <h3 itemprop="name">Graham Gilbert</h3>
+  <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
+  <a href="http://twitter.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-twitter-square"></i> Twitter</a>
+  
+  
+  <a href="http://linkedin.com/in/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-linkedin-square"></i> LinkedIn</a>
+  
+  
+  
+  <a href="http://github.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-github"></i> Github</a>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</div>
+  </div>
+  <article class="post">
+    <div class="headline-wrap">
+      
+        <h1><a href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/" rel="bookmark" title="Redirecting Munki Downloads">Redirecting Munki Downloads</a></h1>
+      
+    </div><!--/ .headline-wrap -->
+    <div class="article-wrap">
+      <p>Munki 2.4.0 brought the option to have Munki follow http redirects (my first contribution to Munki). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done. <!-- more --></p>
+
+<p>I use Nginx for my Munki server, but you should be able to translate this technique for your server of choice.</p>
+
+<p>First off, if you are using Puppet for this, you will need my <a href="https://github.com/grahamgilbert/puppet-mac_admin">mac_admin module</a>, as it contains a Fact that will return the version of Munki installed on the client - we will use this to target machines that are able to use redirects.</p>
+
+<h2 id="the-profile">The profile</h2>
+
+<p>The profile was generated with Tim Sutton’s excellent <a href="https://github.com/timsutton/mcxToProfile">mcxToProfile</a> from a pre-configured <code>/Library/Preferences/ManagedInstalls.plist</code>:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;key&gt;</span>PayloadContent<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;array&gt;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>PayloadContent<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">                <span class="nt">&lt;key&gt;</span>ManagedInstalls<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">                <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">                    <span class="nt">&lt;key&gt;</span>Forced<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">                    <span class="nt">&lt;array&gt;</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">                        <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">                            <span class="nt">&lt;key&gt;</span>mcx_preference_settings<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">                            <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">                                <span class="nt">&lt;key&gt;</span>AdditionalHttpHeaders<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">                                <span class="nt">&lt;array&gt;</span>
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">                            <span class="nt">&lt;string&gt;</span>X-Supports-Munki-Redirects: true<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">                        <span class="nt">&lt;/array&gt;</span>
+</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">                                <span class="nt">&lt;key&gt;</span>FollowHTTPRedirects<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">                                <span class="nt">&lt;string&gt;</span>https<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">                            <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">                        <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">                    <span class="nt">&lt;/array&gt;</span>
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">                <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>PayloadDisplayName<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;string&gt;</span>Munki HTTP Headers<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>PayloadEnabled<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;true/&gt;</span>
+</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>PayloadIdentifier<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;string&gt;</span>MCXToProfile.1411efe2-2cc5-4c7f-829f-4f012a1053f4.alacarte.customsettings.3334a546-251b-47dc-85c9-8f52c36bfc8a<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>PayloadType<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;string&gt;</span>com.apple.ManagedClient.preferences<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>PayloadUUID<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="37" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;string&gt;</span>3334a546-251b-47dc-85c9-8f52c36bfc8a<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>PayloadVersion<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="39" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;integer&gt;</span>1<span class="nt">&lt;/integer&gt;</span>
+</div></div><div data-line="40" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="41" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;/array&gt;</span>
+</div></div><div data-line="42" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;key&gt;</span>PayloadDescription<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="43" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;string&gt;</span>Included custom settings:
+</div></div><div data-line="44" class="code-highlight-row numbered"><div class="code-highlight-line">ManagedInstalls
+</div></div><div data-line="45" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="46" class="code-highlight-row numbered"><div class="code-highlight-line">Git revision: 6c7f6a207a<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="47" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;key&gt;</span>PayloadDisplayName<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="48" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;string&gt;</span>Munki HTTP Header<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="49" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;key&gt;</span>PayloadIdentifier<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="50" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;string&gt;</span>com.company.munkiheader<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="51" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;key&gt;</span>PayloadOrganization<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="52" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;string&gt;&lt;/string&gt;</span>
+</div></div><div data-line="53" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;key&gt;</span>PayloadRemovalDisallowed<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="54" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;true/&gt;</span>
+</div></div><div data-line="55" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;key&gt;</span>PayloadScope<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="56" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;string&gt;</span>System<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="57" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;key&gt;</span>PayloadType<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="58" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;string&gt;</span>Configuration<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="59" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;key&gt;</span>PayloadUUID<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="60" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;string&gt;</span>71ef3bc9-8c5b-41c8-b0d7-c2a623434d70<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="61" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;key&gt;</span>PayloadVersion<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="62" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;integer&gt;</span>1<span class="nt">&lt;/integer&gt;</span>
+</div></div><div data-line="63" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="64" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;/plist&gt;</span></div></div></pre></div></figure>
+
+<p>This profile will configure two things - it will set Munki to follow redirects to HTTPS URLs (if you want to allow redirects to plain HTTP URLs, you should use <code>all</code> as your preference value), and it will also set a custom HTTP header - we’ll look at what we use that for later.</p>
+
+<h2 id="deploying-the-settings-to-compatible-macs">Deploying the settings to compatible Macs</h2>
+
+<p>As I mentioned previously, I use Puppet to deploy configuration to my Macs. I’m using Sam Keeley’s fork of the <a href="https://github.com/keeleysam/puppet-mac_profiles_handler">mac_profiles_handler</a> module to deploy the profile, and the <code>mac_munki_version</code> fact from the previously mentioned mac_admin module. Using Puppet to deploy the profile allows us to use the <code>versioncmp</code> function to compare the version of Munki currently installed with our target version.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">class</span> <span class="na">munki_httpheader</span> <span class="p">&#x7b;</span><span class="c"></span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">    # If we&#39;re equal to 2.4.0 we get 0, if we&#39;re greater, we get 1</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">if</span> <span class="k">versioncmp</span><span class="p">(</span><span class="nv">$::mac_munki_version,</span> <span class="s">&#39;2.4.0&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="na">mac_profiles_handler</span><span class="p">::</span><span class="na">manage</span> <span class="p">&#x7b;</span> <span class="s">&#39;com.company.munkiheader&#39;</span><span class="p">:</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="na">ensure</span>      <span class="o">=&gt;</span> <span class="k">present</span><span class="p">,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="na">file_source</span> <span class="o">=&gt;</span> <span class="s">&#39;puppet:///modules/munki_httpheader/com.company.munkiheader.mobileconfig&#39;</span><span class="p">,</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="p">&#x7d;</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7d;</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<p>If you wanted to configure this using only Munki, you could deliver the profile using Munki with a conditional item, but you would need to update the condition every time a major version comes out as Munki isn’t able to work out if the version is greater or not, so we would need to do multiple <code>munki_version LIKE</code> statements.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;key&gt;</span>conditional_items<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;array&gt;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;key&gt;</span>condition<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;string&gt;</span>munki_version LIKE &#39;*2.4.0*&#39;<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;key&gt;</span>managed_installs<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;array&gt;</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;string&gt;</span>AdditionalMunkiHeaderProfile<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;/array&gt;</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;/array&gt;</span></div></div></pre></div></figure>
+
+<h2 id="the-web-server">The web server</h2>
+
+<p>The reason for the additional HTTP header is that we need to tell Nginx that the client is capable of following HTTP redirects. If we just redirected blindly, clients that aren’t running Munki 2.4.0 will fail to download anything (which is clearly not fantastic).</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">map</span> <span class="nv">$http_x_supports_munki_redirects</span> <span class="nv">$supports_redirects</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="kn">default</span> <span class="s">&quot;0&quot;</span><span class="p">;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="kn">true</span>    <span class="s">&quot;1&quot;</span><span class="p">;</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">server</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="kn">if</span> <span class="s">(</span><span class="nv">$supports_redirects</span><span class="s">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="kn">rewrite</span> <span class="s">^/pkgs/apps/ToRedirect/(.+)</span> <span class="s">https://company.cloudfront.net/pkgs/apps/ToRedirect/</span><span class="nv">$1</span> <span class="s">redirect</span><span class="p">;</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="p">&#x7d;</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1"># The rest of your nginx config will go here</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<p>This allows us to redirect any packages that are in <code>/pkgs/apps/ToRedirect</code> if the client is capble of following the redirect - if they aren’t, they will carry on and read the rest of the configuration and get the file directly from the main web server.</p>
+
+      <hr />
+      <footer role="contentinfo">
+        <div class="social-share">
+  <h4>Share on</h4>
+  <ul>
+    <li>
+      <a href="https://twitter.com/intent/tweet?text=http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
+    </li>
+    <li>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
+    </li>
+    <li>
+      <a href="https://plus.google.com/share?url=http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
+    </li>
+  </ul>
+</div><!-- /.social-share -->
+        <p class="byline"><strong>Redirecting Munki Downloads</strong> was published on <time datetime="2015-12-01T12:09:00+00:00">December 01, 2015</time>.</p>
+      </footer>
+    </div><!-- /.article-wrap -->
+  
+    <section id="disqus_thread"></section><!-- /#disqus_thread -->
+  
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrap">
+  
+  <div class="related-articles">
+  <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
+    <ul>
+    
+      <li><a href="http://grahamgilbert.com/blog/2013/01/13/casper-vs-munki/" title="Casper Vs Munki">Casper Vs Munki</a></li>
+    
+      <li><a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/" title="Running Puppet Server in Docker">Running Puppet Server in Docker</a></li>
+    
+      <li><a href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/" title="Using crankd to react to network events">Using crankd to react to network events</a></li>
+    
+    </ul>
+    <hr />
+  </div><!-- /.related-articles -->
+  
+  <footer>
+    <span>&copy; 2015 Graham Gilbert.</span>
+  </footer>
+</div><!-- /.footer-wrap -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://grahamgilbert.com/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://grahamgilbert.com/assets/js/scripts.min.js"></script>
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  var _gaq = _gaq || [];
+  var pluginUrl =
+ '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-27233739-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sFQe2UApMaKvCdHMFL6r','2.0.0');
+</script>
+          
+
+
+  <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'grahamgilbert'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+</body>
+</html>
