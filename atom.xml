@@ -4,7 +4,7 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://grahamgilbert.com/feed.xml" />
 <link rel="alternate" type="text/html" href="http://grahamgilbert.com" />
-<updated>2015-12-01T07:05:36+00:00</updated>
+<updated>2015-12-01T07:45:35+00:00</updated>
 <id>http://grahamgilbert.com/</id>
 <author>
   <name>Graham Gilbert</name>
@@ -27,7 +27,7 @@
     <email>graham@grahamgilbert.com</email>
   </author>
   <content type="html">
-    &lt;p&gt;Munki 2.4.0 brought the option to have Munki follow http redirects (my first contribution to Munki). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done. &lt;!-- more --&gt;&lt;/p&gt;
+    &lt;p&gt;Munki 2.4.0 brought the option to have Munki follow http redirects (&lt;a href=&quot;https://github.com/munki/munki/pull/530&quot;&gt;my first contribution to Munki&lt;/a&gt;). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done. &lt;!-- more --&gt;&lt;/p&gt;
 
 &lt;p&gt;I use Nginx for my Munki server, but you should be able to translate this technique for your server of choice.&lt;/p&gt;
 
