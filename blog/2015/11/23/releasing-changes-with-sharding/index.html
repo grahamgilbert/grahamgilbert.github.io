@@ -187,7 +187,7 @@ Using this condition as a base and a similar Facter Fact I’ve started using th
 
 <h2 id="but-what-about-my-bosses-bosses-boss">But what about my bosses bosses boss?</h2>
 
-<p>Of course there are machines you absolutely don’t want to be testing things on. Important people, your mum, whoever. Conversely, there will be people you want to be out there on the front lines testing everything you can throw at them. Let’s take the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki/Condtion%20Packages/shard">condition</a> (as my ruby in the <a href="https://github.com/grahamgilbert/puppet-mac_admin/blob/master/lib/facter/shard.rb">Fact</a> will probably offend your eyes). If <code>/usr/local/shard/production</code> is present, the machine always gets a shard value of <code>1</code>. If <code>/usr/local/shard/testing</code> is present, the machine will get a shard value of 100:</p>
+<p>Of course there are machines you absolutely don’t want to be testing things on. Important people, your mum, whoever. Conversely, there will be people you want to be out there on the front lines testing everything you can throw at them. Let’s take the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki/Condtion%20Packages/shard">condition</a> (as my ruby in the <a href="https://github.com/grahamgilbert/puppet-mac_admin/blob/master/lib/facter/shard.rb">Fact</a> will probably offend your eyes). If <code>/usr/local/shard/production</code> is present, the machine always gets a shard value of <code>100</code>. If <code>/usr/local/shard/testing</code> is present, the machine will get a shard value of <code>1</code>:</p>
 
 <figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/usr/local/munki/conditions/shard</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">#!/usr/bin/env python</span>
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">import</span> <span class="nn">hashlib</span>
@@ -325,11 +325,11 @@ Using this condition as a base and a similar Facter Fact I’ve started using th
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
-      <li><a href="http://grahamgilbert.com/blog/2013/01/13/casper-vs-munki/" title="Casper Vs Munki">Casper Vs Munki</a></li>
+      <li><a href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/" title="Redirecting Munki Downloads">Redirecting Munki Downloads</a></li>
     
-      <li><a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/" title="Running Puppet Server in Docker">Running Puppet Server in Docker</a></li>
+      <li><a href="http://grahamgilbert.com/blog/2015/11/12/mactech-2015-hands-on-with-imagr/" title="MacTech 2015: Hands on with Imagr">MacTech 2015: Hands on with Imagr</a></li>
     
-      <li><a href="http://grahamgilbert.com/blog/2013/04/02/facter-101/" title="Facter 101">Facter 101</a></li>
+      <li><a href="http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/" title="Detecting when a Munki client is on the corporate network">Detecting when a Munki client is on the corporate network</a></li>
     
     </ul>
     <hr />

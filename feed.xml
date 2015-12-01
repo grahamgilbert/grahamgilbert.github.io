@@ -4,7 +4,7 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://grahamgilbert.com/feed.xml" />
 <link rel="alternate" type="text/html" href="http://grahamgilbert.com" />
-<updated>2015-12-01T07:45:35+00:00</updated>
+<updated>2015-12-01T13:10:35+00:00</updated>
 <id>http://grahamgilbert.com/</id>
 <author>
   <name>Graham Gilbert</name>
@@ -195,7 +195,7 @@
 
 &lt;h2 id=&quot;but-what-about-my-bosses-bosses-boss&quot;&gt;But what about my bosses bosses boss?&lt;/h2&gt;
 
-&lt;p&gt;Of course there are machines you absolutely don’t want to be testing things on. Important people, your mum, whoever. Conversely, there will be people you want to be out there on the front lines testing everything you can throw at them. Let’s take the &lt;a href=&quot;https://github.com/grahamgilbert/macscripts/tree/master/Munki/Condtion%20Packages/shard&quot;&gt;condition&lt;/a&gt; (as my ruby in the &lt;a href=&quot;https://github.com/grahamgilbert/puppet-mac_admin/blob/master/lib/facter/shard.rb&quot;&gt;Fact&lt;/a&gt; will probably offend your eyes). If &lt;code&gt;/usr/local/shard/production&lt;/code&gt; is present, the machine always gets a shard value of &lt;code&gt;1&lt;/code&gt;. If &lt;code&gt;/usr/local/shard/testing&lt;/code&gt; is present, the machine will get a shard value of 100:&lt;/p&gt;
+&lt;p&gt;Of course there are machines you absolutely don’t want to be testing things on. Important people, your mum, whoever. Conversely, there will be people you want to be out there on the front lines testing everything you can throw at them. Let’s take the &lt;a href=&quot;https://github.com/grahamgilbert/macscripts/tree/master/Munki/Condtion%20Packages/shard&quot;&gt;condition&lt;/a&gt; (as my ruby in the &lt;a href=&quot;https://github.com/grahamgilbert/puppet-mac_admin/blob/master/lib/facter/shard.rb&quot;&gt;Fact&lt;/a&gt; will probably offend your eyes). If &lt;code&gt;/usr/local/shard/production&lt;/code&gt; is present, the machine always gets a shard value of &lt;code&gt;100&lt;/code&gt;. If &lt;code&gt;/usr/local/shard/testing&lt;/code&gt; is present, the machine will get a shard value of &lt;code&gt;1&lt;/code&gt;:&lt;/p&gt;
 
 &lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;figcaption class=&quot;code-highlight-caption&quot;&gt;&lt;span class=&quot;code-highlight-caption-title&quot;&gt;/usr/local/munki/conditions/shard&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python&lt;/span&gt;
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;hashlib&lt;/span&gt;
