@@ -5,12 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<title>Location based printers with Puppet &#8211; graham gilbert dot com</title>
-<meta name="description" content="This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent mosen-puppet-cups module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).
+<title>Crypt 2 Alpha Release &#8211; graham gilbert dot com</title>
+<meta name="description" content="A few months ago at PSU, Tom Burgin and Jeremy Baker spoke about using Authorization Plugins. I sat there watching this talk thinking about how cool it would be to use this method for Crypt. And then I had a go at it. And it was hard. So I put it to one side.
 
-400: Invalid request
-
-
+Then in November, I met up with Tom at MacTech. He very kindly donated a few hours of his time to get me started with re-writing Crypt as an authorization plugin in Swift.
 
 ">
 <meta name="keywords" content="">
@@ -18,12 +16,10 @@
 
 
 <!-- Twitter Cards -->
-<meta name="twitter:title" content="Location based printers with Puppet">
-<meta name="twitter:description" content="This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent mosen-puppet-cups module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).
+<meta name="twitter:title" content="Crypt 2 Alpha Release">
+<meta name="twitter:description" content="A few months ago at PSU, Tom Burgin and Jeremy Baker spoke about using Authorization Plugins. I sat there watching this talk thinking about how cool it would be to use this method for Crypt. And then I had a go at it. And it was hard. So I put it to one side.
 
-400: Invalid request
-
-
+Then in November, I met up with Tom at MacTech. He very kindly donated a few hours of his time to get me started with re-writing Crypt as an authorization plugin in Swift.
 
 ">
 <meta name="twitter:site" content="@grahamgilbert">
@@ -35,15 +31,13 @@
 <!-- Open Graph -->
 <meta property="og:locale" content="en_GB">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Location based printers with Puppet">
-<meta property="og:description" content="This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent mosen-puppet-cups module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).
+<meta property="og:title" content="Crypt 2 Alpha Release">
+<meta property="og:description" content="A few months ago at PSU, Tom Burgin and Jeremy Baker spoke about using Authorization Plugins. I sat there watching this talk thinking about how cool it would be to use this method for Crypt. And then I had a go at it. And it was hard. So I put it to one side.
 
-400: Invalid request
-
-
+Then in November, I met up with Tom at MacTech. He very kindly donated a few hours of his time to get me started with re-writing Crypt as an authorization plugin in Swift.
 
 ">
-<meta property="og:url" content="http://grahamgilbert.com/blog/2012/08/18/location-based-printers-with-puppet/">
+<meta property="og:url" content="http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/">
 <meta property="og:site_name" content="graham gilbert dot com">
 
 <meta property="og:image" content="http://grahamgilbert.com/images/default-thumb.png">
@@ -52,7 +46,7 @@
 
 
 
-<link rel="canonical" href="http://grahamgilbert.com/blog/2012/08/18/location-based-printers-with-puppet/">
+<link rel="canonical" href="http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/">
 <link href="http://grahamgilbert.com/atom.xml" type="application/atom+xml" rel="alternate" title="graham gilbert dot com Feed">
 
 <!-- http://t.co/dKP3o1e -->
@@ -156,16 +150,19 @@
   <article class="post">
     <div class="headline-wrap">
       
-        <h1><a href="http://grahamgilbert.com/blog/2012/08/18/location-based-printers-with-puppet/" rel="bookmark" title="Location based printers with Puppet">Location based printers with Puppet</a></h1>
+        <h1><a href="http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/" rel="bookmark" title="Crypt 2 Alpha Release">Crypt 2 Alpha Release</a></h1>
       
     </div><!--/ .headline-wrap -->
     <div class="article-wrap">
-      <p>This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent <a href="https://github.com/mosen/puppet-cups">mosen-puppet-cups</a> module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).</p>
+      <p>A few months ago at PSU, Tom Burgin and Jeremy Baker <a href="https://youtu.be/tcmql5byA_I?list=PLRUboZUQxbyVydhdMcxGGfEaZc2sFdQk8">spoke about using Authorization Plugins</a>. I sat there watching this talk thinking about how cool it would be to use this method for Crypt. And then I had a go at it. And it was <em>hard</em>. So I put it to one side.</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
-<script src="https://gist.github.com/3389457.js"> </script>
+<p>Then in November, I met up with Tom at MacTech. He very kindly donated a few hours of his time to get me started with re-writing Crypt as an authorization plugin in Swift. <!-- more --></p>
 
+<p>Moving to an authorization plugin gives us a couple of advantages. The first is that this is the Apple-supported way of interacting with the machine before the user has completed login. Previously we had to use a Login Hook to launch things as the user was logging in if we wanted to run them as root - this has been deprecated for several releases of OS X, so it’s a good time to move off. Secondly, we get access to the user’s username and password, so it’s a more streamlined process when enabling FileVault not needing to ask the user to enter their credentials twice.</p>
+
+<p><img class="center" src="/images/posts/2015-12-03/crypt2.png" /></p>
+
+<p>Please bear in mind this is an <strong>alpha</strong> release. You should not use this in production, but testing feedback is more than welcome. You can find out more on the <a href="https://github.com/grahamgilbert/crypt2">GitHub repo</a>.</p>
 
       <hr />
       <footer role="contentinfo">
@@ -173,17 +170,17 @@
   <h4>Share on</h4>
   <ul>
     <li>
-      <a href="https://twitter.com/intent/tweet?text=http://grahamgilbert.com/blog/2012/08/18/location-based-printers-with-puppet/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
+      <a href="https://twitter.com/intent/tweet?text=http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
     </li>
     <li>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=http://grahamgilbert.com/blog/2012/08/18/location-based-printers-with-puppet/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
     </li>
     <li>
-      <a href="https://plus.google.com/share?url=http://grahamgilbert.com/blog/2012/08/18/location-based-printers-with-puppet/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
+      <a href="https://plus.google.com/share?url=http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
     </li>
   </ul>
 </div><!-- /.social-share -->
-        <p class="byline"><strong>Location based printers with Puppet</strong> was published on <time datetime="2012-08-18T21:08:00+01:00">August 18, 2012</time>.</p>
+        <p class="byline"><strong>Crypt 2 Alpha Release</strong> was published on <time datetime="2015-12-03T13:10:49+00:00">December 03, 2015</time>.</p>
       </footer>
     </div><!-- /.article-wrap -->
   
@@ -200,7 +197,7 @@
     
       <li><a href="http://grahamgilbert.com/blog/2013/01/13/casper-vs-munki/" title="Casper Vs Munki">Casper Vs Munki</a></li>
     
-      <li><a href="http://grahamgilbert.com/blog/2012/01/01/web-server-on-linode-part-1/" title="Web server on Linode part 1">Web server on Linode part 1</a></li>
+      <li><a href="http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/" title="Releasing Changes With Sharding">Releasing Changes With Sharding</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/" title="Running Puppet Server in Docker">Running Puppet Server in Docker</a></li>
     
