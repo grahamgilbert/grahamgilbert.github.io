@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/</loc>
+    <lastmod>2015-12-13T13:55:13+00:00</lastmod>
+  </url>
+  <url>
     <loc>http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/</loc>
     <lastmod>2015-12-03T13:10:49+00:00</lastmod>
   </url>
