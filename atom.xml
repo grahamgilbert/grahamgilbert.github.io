@@ -4,13 +4,36 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://grahamgilbert.com/feed.xml" />
 <link rel="alternate" type="text/html" href="http://grahamgilbert.com" />
-<updated>2015-12-13T14:30:08+00:00</updated>
+<updated>2015-12-15T16:48:21+00:00</updated>
 <id>http://grahamgilbert.com/</id>
 <author>
   <name>Graham Gilbert</name>
   <uri>http://grahamgilbert.com/</uri>
   <email>graham@grahamgilbert.com</email>
 </author>
+
+
+  
+
+<entry>
+  <title type="html"><![CDATA[Imagr 0.0.5]]></title>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" />
+  <id>http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5</id>
+  <published>2015-12-15T16:35:26+00:00</published>
+  <updated>2015-12-15T16:35:26+00:00</updated>
+  <author>
+    <name>Graham Gilbert</name>
+    <uri>http://grahamgilbert.com</uri>
+    <email>graham@grahamgilbert.com</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;It’s been 246 days and 290 commits since I started working on Imagr, and today is it’s &lt;a href=&quot;https://github.com/grahamgilbert/imagr/releases/tag/0.0.5&quot;&gt;0.0.5 release&lt;/a&gt;. It’s been a while since I blogged about Imagr, so in case you have forgotten that I make it, go and take a look!&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/grahamgilbert/imagr/releases/tag/0.0.5&quot;&gt;&lt;img class=&quot;center&quot; src=&quot;/images/posts/2015-12-15/imagr.png&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/&quot;&gt;Imagr 0.0.5&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on December 15, 2015.&lt;/p&gt;
+  </content>
+</entry>
 
 
   
@@ -1483,60 +1506,6 @@
 &lt;p&gt;If you’ve made it all the way down here, congratulations! You’ve now managed to move another service off that silly little Mac Mini and onto Linux - and hopefully you now see how easy it is to get things up and running with Docker.&lt;/p&gt;
 
     &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/&quot;&gt;Getting started with BSDPy on Docker&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on April 22, 2015.&lt;/p&gt;
-  </content>
-</entry>
-
-
-  
-
-<entry>
-  <title type="html"><![CDATA[More fun with AutoNBI]]></title>
-  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/" />
-  <id>http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi</id>
-  <published>2015-04-13T08:05:53+01:00</published>
-  <updated>2015-04-13T08:05:53+01:00</updated>
-  <author>
-    <name>Graham Gilbert</name>
-    <uri>http://grahamgilbert.com</uri>
-    <email>graham@grahamgilbert.com</email>
-  </author>
-  <content type="html">
-    &lt;p&gt;Last time we saw our heroes, there was the unfuffilled promise of making small NetInstall sets. Now is the time to deliver on that promise. We’re going to make a small NetInstall that will open up Terminal.app.&lt;/p&gt;
-
-&lt;p&gt;If you’ve not read the &lt;a href=&quot;http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/&quot;&gt;previous post&lt;/a&gt; (and have got AutoNBI), go and do it now. I’ll wait. All done? &lt;!-- more --&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;previously-on-24&quot;&gt;Previously on 24&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/posts/2015-04-13/jack.gif&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;As mentioned in the previous post, we’re aiming to have a small NetInstall set. Once you’ve made your NetInstall, open up &lt;code&gt;NetInstall.dmg&lt;/code&gt; - you’ll see a &lt;code&gt;Packages&lt;/code&gt; directory. This is where the majority of the bulk in a NetInstall lives - the packages it actually installs. There is also a hidden &lt;code&gt;BaseSystem.dmg&lt;/code&gt; which is what will load when your NetBoot the machine.&lt;/p&gt;
-
-&lt;h2 id=&quot;im-bored-can-we-make-something-please&quot;&gt;I’m bored, can we make something please?&lt;/h2&gt;
-
-&lt;p&gt;As I mentioned above, we’re going to make a simple NetInstall that will open up a Terminal window. To do that, we’re going to leverage something that Apple kindly left in the image for us - &lt;code&gt;rc.imaging&lt;/code&gt;. A bit of background - in &lt;code&gt;/etc&lt;/code&gt; you’ll find a series of &lt;code&gt;rc.*&lt;/code&gt; files. One of those in a NetInstall is &lt;code&gt;rc.install&lt;/code&gt;, which will look for an &lt;code&gt;rc.imaging&lt;/code&gt; file in a few places - one of those is &lt;code&gt;/System/Installation/Packages/Extras&lt;/code&gt; - conveniently a location that Pepijn has made AutoNBI able to work with.&lt;/p&gt;
-
-&lt;p&gt;Somewhere on your Mac, make a directory called &lt;code&gt;Packages&lt;/code&gt; and then inside that, make a directory called &lt;code&gt;Extras&lt;/code&gt;. Inside that directory we’re going to create a file called &lt;code&gt;rc.imaging&lt;/code&gt; with the following contents:&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;figcaption class=&quot;code-highlight-caption&quot;&gt;&lt;span class=&quot;code-highlight-caption-title&quot;&gt;Packages/Extras/rc.imaging&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;4&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;5&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;/sbin/reboot&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;And make sure it’s executable:&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo chmod &lt;span class=&quot;m&quot;&gt;755&lt;/span&gt; Packages/Extras/rc.imaging
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo chown root:wheel Packages/Extras/rc.imaging&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;And now to make the NetInstall:&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo ./AutoNBI.py -s /Applications/Install&lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;OS&lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;X&lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;Yosemite.app -f Packages -d ~/Desktop -n MyNetInstall -e&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;The only change from last time is the &lt;code&gt;-f&lt;/code&gt; option - this is the path to your &lt;code&gt;Packages&lt;/code&gt; directory. I created my Packages directory in the same directory as AutoNBI.py - adjust the path if you made yours somewhere else.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/posts/2015-04-13/netboot.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;You should now be able to boot off your tiny NBI (mine was 574MB) and have a bit of an explore. You’ll notice that quite a bit is missing to achieve this tiny size - fortunately Pepijn has been working on getting Ruby and Python included in BaseSystem.dmg, so you have more scripting options when booted.&lt;/p&gt;
-
-    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/&quot;&gt;More fun with AutoNBI&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on April 13, 2015.&lt;/p&gt;
   </content>
 </entry>
 
