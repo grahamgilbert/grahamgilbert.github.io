@@ -139,6 +139,31 @@
     
     
       
+        <h1><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></h1>
+          <article>
+          
+            <p>Some may wonder why you would go to the trouble of dynamically generating first boot scripts. I mean, how many can you need?</p>
+
+<p>Let’s say you have ten sites, each with five builds - that fifty first boot scripts to maintain already. It’s entirely possible that they’re all the same, so you could use <a href="https://github.com/grahamgilbert/imagr/wiki/Workflow-Config#scripts">Imagr’s ability to use a script from a central URL</a>. But you also may need to make slight tweaks depending on what type of machine it is and where it is located.</p>
+
+<p>Over the next few posts, we are going to build an app using the <a href="http://flask.pocoo.org">Flask</a> framework that will:</p>
+
+<ul>
+  <li>Read in headers sent by <a href="https://github.com/grahamgilbert/">Imagr</a> to return a dynamically generated first boot script</li>
+  <li>Create a Munki manifest for the Mac</li>
+  <li>Wrap up the application into a Docker image so it can be easily deployed</li>
+</ul>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">Continue reading...</a></b></p>
+          
+          </article>
+          <hr />
+      
+
+    
+    
+      
         <h1><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></h1>
           <article>
           
@@ -201,31 +226,12 @@
       
 
     
-    
-      
-        <h1><a href="http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/" title="Releasing Changes With Sharding">Releasing Changes With Sharding</a></h1>
-          <article>
-          
-            <p>Sharding is traditionally associated with databases - splitting up your dataset to make it more manageable. When using the term in this instance we are taking about splitting up our computers - there are several reasons you might want to do this. You might want to split them up for similar performance reasons - if you’re deploying large software updates your server might not be able to cope with all your clients pulling it at once. You might want a way to roll changes out to certain groups of machines.</p>
-
-<p>Facebook spoke about sharding at <a href="http://macbrained.org/recap-may-quantcast/">macbrained in May 2015</a>, but they weren’t clear on how they use it (<strong>edit:</strong> they actually first spoke about it at <a href="https://macsysadmin.se/2014/Thursday.html">MacSysAdmin</a>). A few people were pretty interested in using this method of rolling out changes to their machines, but it was <a href="http://groob.io/">Victor Vrantchan</a> who came up with a <a href="https://github.com/whitby/mac-scripts/tree/master/munki_condition_shard">method of deriving a value between one and 100 based on the machines serial number</a> (<strong>edit:</strong> this was based on <a href="https://github.com/facebook/IT-CPE/blob/master/code/lib/modules/sys_tools.py#L161">Facebook’s</a> and <a href="https://github.com/google/macops/blob/master/gmacpyutil/gmacpyutil/experiments.py">Google’s</a> code. Elliot Jordan also came up with something <a href="https://gist.github.com/homebysix/b35f1979d5b11e00602c">similar for Casper</a>).</p>
-
-<p>Using this condition as a base and a similar Facter Fact I’ve started using the method outlined below to release changes to the macs I look after.</p>
-
-
-            <p><b><a href="http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/">Continue reading...</a></b></p>
-          
-          </article>
-          <hr />
-      
-
-    
   </div><!-- /#index -->
 </div><!-- /#main -->
 
 <div class="footer-wrap">
   <footer>
-    <span>&copy; 2015 Graham Gilbert.</span>
+    <span>&copy; 2016 Graham Gilbert.</span>
   </footer>
 </div><!-- /.footer-wrap -->
 
