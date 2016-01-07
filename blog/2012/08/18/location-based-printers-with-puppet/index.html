@@ -8,22 +8,79 @@
 <title>Location based printers with Puppet &#8211; graham gilbert dot com</title>
 <meta name="description" content="This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent mosen-puppet-cups module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).
 
-400: Invalid request
+``` init.pp
+case $operatingsystem{
+	Darwin:{
+		##London is on the 10.30.2.0 and 10.30.3.0 Subnets
+		if ($network_en0 == ‘10.30.2.0’) or ($network_en1 == ‘10.30.2.0’) or ($network_en0 == ‘10.30.3.0’) or ($network_en1 == ‘10.30.3.0’){
+            	printer { “Sharp_ARM316”:
+                	ensure      =&gt; present,
+			uri         =&gt; “lpd://sharparm316.ldn.example.com”,
+			description =&gt; “Sharp ARM316”,
+			shared      =&gt; false,
+			ppd         =&gt; “/Library/Printers/PPDs/Contents/Resources/SHARP AR-M316.PPD.gz”, # PPD file will be autorequired
+			}
+		printer { “Xerox_WorkCentre_7120”:
+			ensure      =&gt; present,
+			uri         =&gt; “lpd://xeroxwc7120.ldn.example.com”,
+			description =&gt; “Xerox WorkCentre 7120”,
+			shared      =&gt; false,
+			ppd         =&gt; “/Library/Printers/PPDs/Contents/Resources/Xerox WorkCentre 7120.gz”, # PPD file will be autorequired
+			}
+		}
 
-
+	##San Francisco is on the 10.30.10.0 Subnet
+	if ($network_en0 == '10.30.10.0') or ($network_en1 == '10.30.10.0'){
+ 		printer { "Xerox_550":
+		ensure      =&gt; present,
+		uri         =&gt; "lpd://xerox550.sf.example.com",
+		description =&gt; "Xerox 550",
+		shared      =&gt; false,
+		ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/en.lproj/Xerox 550-560 Integrated Fiery", # PPD file will be autorequired
+		}
+	}
+} } ```
 
 ">
 <meta name="keywords" content="">
-
 
 
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Location based printers with Puppet">
 <meta name="twitter:description" content="This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent mosen-puppet-cups module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).
 
-400: Invalid request
+``` init.pp
+case $operatingsystem{
+	Darwin:{
+		##London is on the 10.30.2.0 and 10.30.3.0 Subnets
+		if ($network_en0 == ‘10.30.2.0’) or ($network_en1 == ‘10.30.2.0’) or ($network_en0 == ‘10.30.3.0’) or ($network_en1 == ‘10.30.3.0’){
+            	printer { “Sharp_ARM316”:
+                	ensure      =&gt; present,
+			uri         =&gt; “lpd://sharparm316.ldn.example.com”,
+			description =&gt; “Sharp ARM316”,
+			shared      =&gt; false,
+			ppd         =&gt; “/Library/Printers/PPDs/Contents/Resources/SHARP AR-M316.PPD.gz”, # PPD file will be autorequired
+			}
+		printer { “Xerox_WorkCentre_7120”:
+			ensure      =&gt; present,
+			uri         =&gt; “lpd://xeroxwc7120.ldn.example.com”,
+			description =&gt; “Xerox WorkCentre 7120”,
+			shared      =&gt; false,
+			ppd         =&gt; “/Library/Printers/PPDs/Contents/Resources/Xerox WorkCentre 7120.gz”, # PPD file will be autorequired
+			}
+		}
 
-
+	##San Francisco is on the 10.30.10.0 Subnet
+	if ($network_en0 == '10.30.10.0') or ($network_en1 == '10.30.10.0'){
+ 		printer { "Xerox_550":
+		ensure      =&gt; present,
+		uri         =&gt; "lpd://xerox550.sf.example.com",
+		description =&gt; "Xerox 550",
+		shared      =&gt; false,
+		ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/en.lproj/Xerox 550-560 Integrated Fiery", # PPD file will be autorequired
+		}
+	}
+} } ```
 
 ">
 <meta name="twitter:site" content="@grahamgilbert">
@@ -38,9 +95,38 @@
 <meta property="og:title" content="Location based printers with Puppet">
 <meta property="og:description" content="This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent mosen-puppet-cups module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).
 
-400: Invalid request
+``` init.pp
+case $operatingsystem{
+	Darwin:{
+		##London is on the 10.30.2.0 and 10.30.3.0 Subnets
+		if ($network_en0 == ‘10.30.2.0’) or ($network_en1 == ‘10.30.2.0’) or ($network_en0 == ‘10.30.3.0’) or ($network_en1 == ‘10.30.3.0’){
+            	printer { “Sharp_ARM316”:
+                	ensure      =&gt; present,
+			uri         =&gt; “lpd://sharparm316.ldn.example.com”,
+			description =&gt; “Sharp ARM316”,
+			shared      =&gt; false,
+			ppd         =&gt; “/Library/Printers/PPDs/Contents/Resources/SHARP AR-M316.PPD.gz”, # PPD file will be autorequired
+			}
+		printer { “Xerox_WorkCentre_7120”:
+			ensure      =&gt; present,
+			uri         =&gt; “lpd://xeroxwc7120.ldn.example.com”,
+			description =&gt; “Xerox WorkCentre 7120”,
+			shared      =&gt; false,
+			ppd         =&gt; “/Library/Printers/PPDs/Contents/Resources/Xerox WorkCentre 7120.gz”, # PPD file will be autorequired
+			}
+		}
 
-
+	##San Francisco is on the 10.30.10.0 Subnet
+	if ($network_en0 == '10.30.10.0') or ($network_en1 == '10.30.10.0'){
+ 		printer { "Xerox_550":
+		ensure      =&gt; present,
+		uri         =&gt; "lpd://xerox550.sf.example.com",
+		description =&gt; "Xerox 550",
+		shared      =&gt; false,
+		ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/en.lproj/Xerox 550-560 Integrated Fiery", # PPD file will be autorequired
+		}
+	}
+} } ```
 
 ">
 <meta property="og:url" content="http://grahamgilbert.com/blog/2012/08/18/location-based-printers-with-puppet/">
@@ -76,7 +162,7 @@
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-476e6a9e20e90d95691860a993d65b96.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -92,27 +178,17 @@
 		    <ul>
 		        
 				    
-				        
-				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
-				    
-				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
-				        
-				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
-				        
-				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
-				    
-				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -162,10 +238,37 @@
     <div class="article-wrap">
       <p>This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent <a href="https://github.com/mosen/puppet-cups">mosen-puppet-cups</a> module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
-<script src="https://gist.github.com/3389457.js"> </script>
-
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">case $operatingsystem&#x7b;
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	Darwin:&#x7b;
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">		##London is on the 10.30.2.0 and 10.30.3.0 Subnets
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">		if ($network_en0 == '10.30.2.0') or ($network_en1 == '10.30.2.0') or ($network_en0 == '10.30.3.0') or ($network_en1 == '10.30.3.0')&#x7b;
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">            	printer &#x7b; "Sharp_ARM316":
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">                	ensure      =&gt; present,
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">			uri         =&gt; "lpd://sharparm316.ldn.example.com",
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">			description =&gt; "Sharp ARM316",
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">			shared      =&gt; false,
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">			ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/SHARP AR-M316.PPD.gz", # PPD file will be autorequired
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">			&#x7d;
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">		printer &#x7b; "Xerox_WorkCentre_7120":
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">			ensure      =&gt; present,
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">			uri         =&gt; "lpd://xeroxwc7120.ldn.example.com",
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">			description =&gt; "Xerox WorkCentre 7120",
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">			shared      =&gt; false,
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">			ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/Xerox WorkCentre 7120.gz", # PPD file will be autorequired
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">			&#x7d;
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">		&#x7d;
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">		##San Francisco is on the 10.30.10.0 Subnet
+</div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">		if ($network_en0 == '10.30.10.0') or ($network_en1 == '10.30.10.0')&#x7b;
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line"> 		printer &#x7b; "Xerox_550":
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">			ensure      =&gt; present,
+</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">			uri         =&gt; "lpd://xerox550.sf.example.com",
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">			description =&gt; "Xerox 550",
+</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">			shared      =&gt; false,
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">			ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/en.lproj/Xerox 550-560 Integrated Fiery", # PPD file will be autorequired
+</div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line">			&#x7d;
+</div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">		&#x7d;
+</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">	&#x7d;
+</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">&#x7d;</div></div></pre></div></figure>
 
       <hr />
       <footer role="contentinfo">
@@ -198,11 +301,11 @@
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />
