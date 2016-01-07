@@ -12,6 +12,7 @@
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Redirecting Munki Downloads">
 <meta name="twitter:description" content="Munki 2.4.0 brought the option to have Munki follow http redirects (my first contribution to Munki). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done.
@@ -63,7 +64,7 @@
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -79,17 +80,27 @@
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -147,9 +158,9 @@
 
 <p>The profile was generated with Tim Sutton’s excellent <a href="https://github.com/timsutton/mcxToProfile">mcxToProfile</a> from a pre-configured <code>/Library/Preferences/ManagedInstalls.plist</code>:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">"1.0"</span><span class="nt">&gt;</span>
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;dict&gt;</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;key&gt;</span>PayloadContent<span class="nt">&lt;/key&gt;</span>
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;array&gt;</span>
@@ -217,12 +228,12 @@
 
 <p>As I mentioned previously, I use Puppet to deploy configuration to my Macs. I’m using Sam Keeley’s fork of the <a href="https://github.com/keeleysam/puppet-mac_profiles_handler">mac_profiles_handler</a> module to deploy the profile, and the <code>mac_munki_version</code> fact from the previously mentioned mac_admin module. Using Puppet to deploy the profile allows us to use the <code>versioncmp</code> function to compare the version of Munki currently installed with our target version.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">class</span> <span class="na">munki_httpheader</span> <span class="p">&#x7b;</span><span class="c"></span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">    # If we&#39;re equal to 2.4.0 we get 0, if we&#39;re greater, we get 1</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">if</span> <span class="k">versioncmp</span><span class="p">(</span><span class="nv">$::mac_munki_version,</span> <span class="s">&#39;2.4.0&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">&#x7b;</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="na">mac_profiles_handler</span><span class="p">::</span><span class="na">manage</span> <span class="p">&#x7b;</span> <span class="s">&#39;com.company.munkiheader&#39;</span><span class="p">:</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="na">ensure</span>      <span class="o">=&gt;</span> <span class="k">present</span><span class="p">,</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="na">file_source</span> <span class="o">=&gt;</span> <span class="s">&#39;puppet:///modules/munki_httpheader/com.company.munkiheader.mobileconfig&#39;</span><span class="p">,</span>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">class</span> <span class="nc">munki_httpheader</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># If we're equal to 2.4.0 we get 0, if we're greater, we get 1</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">if</span> <span class="nf">versioncmp</span><span class="p">(</span><span class="nv">$::mac_munki_version</span><span class="p">,</span> <span class="s1">'2.4.0'</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="m">0</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">mac_profiles_handler::manage</span> <span class="p">&#x7b;</span> <span class="s1">'com.company.munkiheader'</span><span class="p">:</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="py">ensure</span>      <span class="p">=&gt;</span> <span class="n">present</span><span class="p">,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="py">file_source</span> <span class="p">=&gt;</span> <span class="s1">'puppet:///modules/munki_httpheader/com.company.munkiheader.mobileconfig'</span><span class="p">,</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="p">&#x7d;</span>
 </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7d;</span>
 </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span></div></div></pre></div></figure>
@@ -233,7 +244,7 @@
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;array&gt;</span>
 </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;dict&gt;</span>
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;key&gt;</span>condition<span class="nt">&lt;/key&gt;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;string&gt;</span>munki_version LIKE &#39;*2.4.0*&#39;<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;string&gt;</span>munki_version LIKE '*2.4.0*'<span class="nt">&lt;/string&gt;</span>
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;key&gt;</span>managed_installs<span class="nt">&lt;/key&gt;</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;array&gt;</span>
 </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;string&gt;</span>AdditionalMunkiHeaderProfile<span class="nt">&lt;/string&gt;</span>
@@ -246,8 +257,8 @@
 <p>The reason for the additional HTTP header is that we need to tell Nginx that the client is capable of following HTTP redirects. If we just redirected blindly, clients that aren’t running Munki 2.4.0 will fail to download anything (which is clearly not fantastic).</p>
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">map</span> <span class="nv">$http_x_supports_munki_redirects</span> <span class="nv">$supports_redirects</span> <span class="p">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="kn">default</span> <span class="s">&quot;0&quot;</span><span class="p">;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="kn">true</span>    <span class="s">&quot;1&quot;</span><span class="p">;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="kn">default</span> <span class="s">"0"</span><span class="p">;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="kn">true</span>    <span class="s">"1"</span><span class="p">;</span>
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">server</span> <span class="p">&#x7b;</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="kn">if</span> <span class="s">(</span><span class="nv">$supports_redirects</span><span class="s">)</span> <span class="p">&#x7b;</span>
@@ -289,11 +300,11 @@
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

@@ -20,6 +20,7 @@ So you’ve got the machine bound to AD. Great. What happens if the binding does
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Binding to Active Directory with Munki">
 <meta name="twitter:description" content="Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It’s quite  a straightforward process to automate this with Munki, although you do have a few options to consider.
@@ -87,7 +88,7 @@ So you’ve got the machine bound to AD. Great. What happens if the binding does
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -103,17 +104,27 @@ So you’ve got the machine bound to AD. Great. What happens if the binding does
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -177,17 +188,17 @@ So you’ve got the machine bound to AD. Great. What happens if the binding does
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">#!/bin/sh</span>
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># You need to change this.</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># The Domain we&#39;re supposed to be on</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">DOMAIN</span><span class="o">=</span><span class="s2">&quot;ad.company.com&quot;</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># The Domain we're supposed to be on</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">DOMAIN</span><span class="o">=</span><span class="s2">"ad.company.com"</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">## STOP EDITING ##</span>
 </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># The version from dsconfigad</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">ACTUAL_DOMAIN</span><span class="o">=</span><span class="sb">`</span>/usr/sbin/dsconfigad -show <span class="p">|</span> /usr/bin/grep -i <span class="s2">&quot;Active Directory Domain&quot;</span> <span class="p">|</span> /usr/bin/sed -n <span class="s1">&#39;s/[^.]*= //p&#39;</span><span class="sb">`</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$ACTUAL_DOMAIN&quot;</span> <span class="o">=</span> <span class="s2">&quot;$DOMAIN&quot;</span> <span class="o">]</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">ACTUAL_DOMAIN</span><span class="o">=</span><span class="sb">`</span>/usr/sbin/dsconfigad -show | /usr/bin/grep -i <span class="s2">"Active Directory Domain"</span> | /usr/bin/sed -n <span class="s1">'s/[^.]*= //p'</span><span class="sb">`</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$ACTUAL_DOMAIN</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"</span><span class="nv">$DOMAIN</span><span class="s2">"</span> <span class="o">]</span>
 </div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">then</span>
-</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># We&#39;re on the right domain, no need to install</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># We're on the right domain, no need to install</span>
 </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nb">exit </span>1
 </div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">else</span>
-</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># Domain isn&#39;t being returned from dsconfigad, need to install</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># Domain isn't being returned from dsconfigad, need to install</span>
 </div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nb">exit </span>0
 </div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">fi</span></div></div></pre></div></figure>
 
@@ -207,40 +218,43 @@ So you’ve got the machine bound to AD. Great. What happens if the binding does
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">#!/bin/sh</span>
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># You need to change these.</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># The Domain we&#39;re supposed to be on</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">DOMAIN</span><span class="o">=</span><span class="s2">&quot;ad.company.com&quot;</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># The version of the package (today&#39;s date if created using the usual Luggage Makefile)</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">PKG_VERSION</span><span class="o">=</span><span class="s2">&quot;20140401&quot;</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># The Domain we're supposed to be on</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">DOMAIN</span><span class="o">=</span><span class="s2">"ad.company.com"</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># The version of the package (today's date if created using the usual Luggage Makefile)</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">PKG_VERSION</span><span class="o">=</span><span class="s2">"20140401"</span>
 </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># The identifier of the package</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">PKG_ID</span><span class="o">=</span><span class="s2">&quot;com.grahamgilbert.ad-bind&quot;</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">PKG_ID</span><span class="o">=</span><span class="s2">"com.grahamgilbert.ad-bind"</span>
 </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">## STOP EDITING ##</span>
 </div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># The version from dsconfigad</span>
-</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">ACTUAL_DOMAIN</span><span class="o">=</span><span class="sb">`</span>/usr/sbin/dsconfigad -show <span class="p">|</span> /usr/bin/grep -i <span class="s2">&quot;Active Directory Domain&quot;</span> <span class="p">|</span> /usr/bin/sed -n <span class="s1">&#39;s/[^.]*= //p&#39;</span><span class="sb">`</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">ACTUAL_DOMAIN</span><span class="o">=</span><span class="sb">`</span>/usr/sbin/dsconfigad -show | /usr/bin/grep -i <span class="s2">"Active Directory Domain"</span> | /usr/bin/sed -n <span class="s1">'s/[^.]*= //p'</span><span class="sb">`</span>
 </div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># The version installed from pkgutil</span>
-</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">VERSION_INSTALLED</span><span class="o">=</span><span class="sb">`</span>/usr/sbin/pkgutil --pkg-info <span class="k">$&#x7b;</span><span class="nv">PKG_ID</span><span class="k">&#x7d;</span> <span class="p">|</span> /usr/bin/grep version <span class="p">|</span> /usr/bin/sed <span class="s1">&#39;s/^[^:]*: //&#39;</span><span class="sb">`</span>
-</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$ACTUAL_DOMAIN&quot;</span> <span class="o">=</span> <span class="s2">&quot;$DOMAIN&quot;</span> <span class="o">]</span>
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">VERSION_INSTALLED</span><span class="o">=</span><span class="sb">`</span>/usr/sbin/pkgutil --pkg-info <span class="k">$&#x7b;</span><span class="nv">PKG_ID</span><span class="k">&#x7d;</span> | /usr/bin/grep version | /usr/bin/sed <span class="s1">'s/^[^:]*: //'</span><span class="sb">`</span>
+</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$ACTUAL_DOMAIN</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"</span><span class="nv">$DOMAIN</span><span class="s2">"</span> <span class="o">]</span>
 </div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">then</span>
-</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># We&#39;re on the right domain, make sure we&#39;ve got the right version of the package</span>
-</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$VERSION_INSTALLED&quot;</span> <span class="o">=</span> <span class="s2">&quot;$PKG_VERSION&quot;</span> <span class="o">]</span>
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># We're on the right domain, make sure we've got the right version of the package</span>
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$VERSION_INSTALLED</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"</span><span class="nv">$PKG_VERSION</span><span class="s2">"</span> <span class="o">]</span>
 </div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">then</span>
-</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># Everything&#39;s ok, no need to install</span>
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># Everything's ok, no need to install</span>
 </div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nb">exit </span>1
 </div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">else</span>
 </div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># Package is out of date, need to install</span>
 </div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nb">exit </span>0
-</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">fi</span>
-</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">else</span>
-</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># Domain isn&#39;t being returned from dsconfigad, need to install</span>
+</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">fi
+<div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">else
+</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># Domain isn't being returned from dsconfigad, need to install</span>
 </div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nb">exit </span>0
-</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">fi</span></div></div></pre></div></figure>
+</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">fi</span></div></div>
 
-<p>This is a little more complicated, but not much. First off we’re doing the same check as before, making sure we’re actually bound to the domain. If we aren’t, we obviously need to install the package, so that’s the end of that. If we are bound, we next need to check which version of the package we have. As previously mentioned, Munki would usually do this for us, but by using the installcheck_script, we’ve engaged the “leave me alone, I know what the fuck I’m doing” mode in Munki, so we’re implementing that check ourselves. If the version or package identifier don’t match, we want our bind script installed, screw those other guys with their not-as-good-as-our-way of binding.</p>
 
-<p>All that’s left now is to <code>munkiimport</code> your package with your script as an <code>installcheck_script</code>:</p>
+This is a little more complicated, but not much. First off we're doing the same check as before, making sure we're actually bound to the domain. If we aren't, we obviously need to install the package, so that's the end of that. If we are bound, we next need to check which version of the package we have. As previously mentioned, Munki would usually do this for us, but by using the installcheck_script, we've engaged the "leave me alone, I know what the fuck I'm doing" mode in Munki, so we're implementing that check ourselves. If the version or package identifier don't match, we want our bind script installed, screw those other guys with their not-as-good-as-our-way of binding.
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>/usr/local/munki/munkiimport ad-bind.pkg --installcheck_script<span class="o">=</span>installcheck_script.sh</div></div></pre></div></figure>
+All that's left now is to ``munkiimport`` your package with your script as an ``installcheck_script``:
 
-<p>There you have it, how to keep a Mac bound to AD with Munki. You may wish to change some other settings later on (particularly if you have to do battle with a .local domain), but this will get you going with a basic AD bind.</p>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>/usr/local/munki/munkiimport ad-bind.pkg --installcheck_script<span class="o">=</span>installcheck_script.sh</div></div></pre></div></figure>
+
+
+There you have it, how to keep a Mac bound to AD with Munki. You may wish to change some other settings later on (particularly if you have to do battle with a .local domain), but this will get you going with a basic AD bind.
+</span></div></div></pre></div></figure>
 
       <hr />
       <footer role="contentinfo">
@@ -273,11 +287,11 @@ So you’ve got the machine bound to AD. Great. What happens if the binding does
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

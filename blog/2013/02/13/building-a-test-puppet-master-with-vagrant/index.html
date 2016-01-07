@@ -40,8 +40,10 @@ vagrant up
 If you don’t have the base box Ubuntu box downloaded, Vagrant will pull it down for you and cache the clean VM for you. It will then make a copy, run the script that installs the latest version of Puppet, then run through the Puppet code that will configure the VM to be a Puppet Master for you. Once the VM is running, you can place your modules and manifests in puppet/modules and puppet/manifests, respectively. The dashboard is accessible at http://192.168.33.10:3000.
 
 This VM is not suitable for production. I’ve made several tweaks to the configuration that makes it easier to test your code, but would be a security risk if used on a production server. Only use this configuration for testing. We’re also installing everything onto one VM - you probably want to separate this out into at least two boxes in production, maybe even three if you have a large deployment. Like I said, the idea here is to quickly set up a testing environment that behaves like our production environment.
+
 ">
 <meta name="keywords" content="">
+
 
 
 <!-- Twitter Cards -->
@@ -80,6 +82,7 @@ vagrant up
 If you don’t have the base box Ubuntu box downloaded, Vagrant will pull it down for you and cache the clean VM for you. It will then make a copy, run the script that installs the latest version of Puppet, then run through the Puppet code that will configure the VM to be a Puppet Master for you. Once the VM is running, you can place your modules and manifests in puppet/modules and puppet/manifests, respectively. The dashboard is accessible at http://192.168.33.10:3000.
 
 This VM is not suitable for production. I’ve made several tweaks to the configuration that makes it easier to test your code, but would be a security risk if used on a production server. Only use this configuration for testing. We’re also installing everything onto one VM - you probably want to separate this out into at least two boxes in production, maybe even three if you have a large deployment. Like I said, the idea here is to quickly set up a testing environment that behaves like our production environment.
+
 ">
 <meta name="twitter:site" content="@grahamgilbert">
 <meta name="twitter:creator" content="@grahamgilbert">
@@ -125,6 +128,7 @@ vagrant up
 If you don’t have the base box Ubuntu box downloaded, Vagrant will pull it down for you and cache the clean VM for you. It will then make a copy, run the script that installs the latest version of Puppet, then run through the Puppet code that will configure the VM to be a Puppet Master for you. Once the VM is running, you can place your modules and manifests in puppet/modules and puppet/manifests, respectively. The dashboard is accessible at http://192.168.33.10:3000.
 
 This VM is not suitable for production. I’ve made several tweaks to the configuration that makes it easier to test your code, but would be a security risk if used on a production server. Only use this configuration for testing. We’re also installing everything onto one VM - you probably want to separate this out into at least two boxes in production, maybe even three if you have a large deployment. Like I said, the idea here is to quickly set up a testing environment that behaves like our production environment.
+
 ">
 <meta property="og:url" content="http://grahamgilbert.com/blog/2013/02/13/building-a-test-puppet-master-with-vagrant/">
 <meta property="og:site_name" content="graham gilbert dot com">
@@ -159,7 +163,7 @@ This VM is not suitable for production. I’ve made several tweaks to the config
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -175,17 +179,27 @@ This VM is not suitable for production. I’ve made several tweaks to the config
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -299,11 +313,11 @@ vagrant up
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

@@ -14,6 +14,7 @@ Why is this a good thing? Do you NetBoot VMWare to test your builds? Or maybe yo
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Creating an OS X base box for Vagrant with Packer">
 <meta name="twitter:description" content="A while ago, the chaps over at the Vagrant project have recently released a plugin to let Vagrant work with VMWare Fusion - this means we can finally use Vagrant to provision OS X VMs.
@@ -69,7 +70,7 @@ Why is this a good thing? Do you NetBoot VMWare to test your builds? Or maybe yo
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -85,17 +86,27 @@ Why is this a good thing? Do you NetBoot VMWare to test your builds? Or maybe yo
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -164,91 +175,91 @@ Why is this a good thing? Do you NetBoot VMWare to test your builds? Or maybe yo
 
 <p>Assuming you’ve downloaded it to <code>~/Downloads</code>, extract the zip file so you will be left with something like this: <code>~/Downloads/0.3.1_darwin_amd</code>. Everything prefaced with a <code>$</code> should be entered in your terminal.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo mv ~/Downloads/0.3.1_darwin_amd64 /usr/local/packer
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo chown <span class="nv">$USER</span> /usr/local/packer</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo mv ~/Downloads/0.3.1_darwin_amd64 /usr/local/packer
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo chown <span class="nv">$USER</span> /usr/local/packer</div></div></pre></div></figure>
 
 <p>You now have a choice: you can refer to the <code>packer</code> binary by it’s full path every time (<code>/usr/local/packer/packer</code>), or you can modify your path. The next step is entirely optional, but I highly recommend it. You need to edit <code>~/.profile</code>.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>nano ~/.profile</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>nano ~/.profile</div></div></pre></div></figure>
 
 <p>And add this line to the file, then save it (<code>CTRL-O</code> then <code>CTRL-X</code>):</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/usr/local/packer:$PATH&quot;</span></div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"/usr/local/packer:</span><span class="nv">$PATH</span><span class="s2">"</span></div></div></pre></div></figure>
 
 <p>And then quit and re-open Terminal.app.</p>
 
 <h2 id="templates">Templates</h2>
 <p>Packer uses template files to define how it should build the VM for you. Fortunately, <a href="http://macops.ca">Tim Sutton</a> has created a template file that can be used with Packer.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># I keep other people&#39;s code in ~/src/Others</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git clone https://github.com/timsutton/osx-vm-templates.git ~/src/Others</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># I keep other people's code in ~/src/Others</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git clone https://github.com/timsutton/osx-vm-templates.git ~/src/Others</div></div></pre></div></figure>
 
 <p>There are a couple of prep steps we need to do before we can instruct Packer to make our box. First off it’s going to need installation media. There is a script that will prepare the Install OS X Mountain Lion.app so it can be used with Packer.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src/Others/osx-vm-templates
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo prepare_iso/prepare_iso.sh <span class="s2">&quot;/Applications/Install OS X Mountain Lion.app&quot;</span> out</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/src/Others/osx-vm-templates
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo prepare_iso/prepare_iso.sh <span class="s2">"/Applications/Install OS X Mountain Lion.app"</span> out</div></div></pre></div></figure>
 
 <p>You’ll see some activity in your terminal, and then you’ll be given the filename of your installation DMG and the checksum. You’ll need these in the next step.</p>
 
 <p>Open up <code>packer/template.json</code> in your favourite editor. Paste in the checksum you were given in the last step (yours will probably be different from mine), and specify the path to your installation DMG (obviously use the path to your home directory, not mine!). You can also edit the size of the disk, the memory etc in this file.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s2">&quot;iso_checksum&quot;</span><span class="err">:</span> <span class="s2">&quot;14cd20f75c7c0405198fa98006a4442e&quot;</span><span class="err">,</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s2">&quot;iso_url&quot;</span><span class="err">:</span> <span class="s2">&quot;file:///Users/grahamgilbert/src/Others/osx-vm-templates/out/OSX_InstallESD_10.8.4_12E55.dmg&quot;</span><span class="err">,</span></div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s2">"iso_checksum"</span><span class="err">:</span><span class="w"> </span><span class="s2">"14cd20f75c7c0405198fa98006a4442e"</span><span class="err">,</span><span class="w"></span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s2">"iso_url"</span><span class="err">:</span><span class="w"> </span><span class="s2">"file:///Users/grahamgilbert/src/Others/osx-vm-templates/out/OSX_InstallESD_10.8.4_12E55.dmg"</span><span class="err">,</span></div></div></pre></div></figure>
 
 <h2 id="prepare-the-build">Prepare the build!</h2>
 
 <p>You’re ready to go. This next step will take <strong>AGES</strong> so go and make a cup of coffee (or tea), as this is going to install OS X, run through the scripts to install the bits Vagrant needs (like Puppet), then make a Vagrant base box.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Make sure we&#39;re in the right directory</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src/Others/osx-vm-templates/packer
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>packer build template.json</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Make sure we're in the right directory</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/src/Others/osx-vm-templates/packer
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>packer build template.json</div></div></pre></div></figure>
 
 <p>After you hit return, VMware will open up and OS X will start installing. Once everything is done, and Packer tells you it’s done in your terminal window, you just need to add it to Vagrant and then you’re ready to use it.</p>
 
 <h2 id="adding-the-vm-to-vagrant">Adding the VM to Vagrant</h2>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>vagrant box add osx ~/src/Others/osx-vm-templates/packer/packer_vmware_vmware.box</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>vagrant box add osx ~/src/Others/osx-vm-templates/packer/packer_vmware_vmware.box</div></div></pre></div></figure>
 
 <h2 id="using-the-vm-in-vagrant">Using the VM in Vagrant</h2>
 
 <p>We’re going to make a quick Vagrant configuration using your newly built box.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir -p ~/Desktop/osx_test
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/Desktop/osx_test
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>vagrant init osx</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>mkdir -p ~/Desktop/osx_test
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/Desktop/osx_test
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>vagrant init osx</div></div></pre></div></figure>
 
 <p>You’re probaly going to want a GUI when it boots, so open up <code>~/Desktop/osx_test/Vagrantfile</code> in your text editor of choice and find the next section.</p>
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1"># config.vm.provider :virtualbox do |vb|</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">#   # Don&#39;t boot with headless mode</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">#   # Don't boot with headless mode</span>
 </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">#   vb.gui = true</span>
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">#</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">#   # Use VBoxManage to customize the VM. For example to change memory:</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">#   vb.customize [&quot;modifyvm&quot;, :id, &quot;--memory&quot;, &quot;1024&quot;]</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">#   vb.customize ["modifyvm", :id, "--memory", "1024"]</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1"># end</span></div></div></pre></div></figure>
 
 <p>And change it to read</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:vmware_fusion</span> <span class="k">do</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">#   # Don&#39;t boot with headless mode</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">   <span class="n">v</span><span class="o">.</span><span class="n">gui</span> <span class="o">=</span> <span class="kp">true</span>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">config</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">provider</span> <span class="ss">:vmware_fusion</span> <span class="k">do</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">#   # Don't boot with headless mode</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">   <span class="n">v</span><span class="p">.</span><span class="nf">gui</span> <span class="o">=</span> <span class="kp">true</span>
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">#</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">#   # Use VBoxManage to customize the VM. For example to change memory:</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">#   vb.customize [&quot;modifyvm&quot;, :id, &quot;--memory&quot;, &quot;1024&quot;]</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">#   vb.customize ["modifyvm", :id, "--memory", "1024"]</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">end</span></div></div></pre></div></figure>
 
 <p>Unfortunately there isn’t any support for OS X in the official Vagrant release (yet), but good old Tim Sutton has sorted that out for us. We’re going to clone his repository, switch to the branch with his changes and copy the needed files into the main Vagrant installation. Hopefully his changes will be merged into a future of Vagrant, but for now:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src/Others
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git clone https://github.com/timsutton/vagrant.git timsutton-vagrant
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src/Others/timsutton-vagrant
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git checkout guest-plugin-osx
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo cp -R ~/src/Others/timsutton-vagrant/plugins/guests/osx /Applications/Vagrant/embedded/gems/gems/vagrant-1.2.7/plugins/guests/osx</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/src/Others
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git clone https://github.com/timsutton/vagrant.git timsutton-vagrant
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/src/Others/timsutton-vagrant
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git checkout guest-plugin-osx
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo cp -R ~/src/Others/timsutton-vagrant/plugins/guests/osx /Applications/Vagrant/embedded/gems/gems/vagrant-1.2.7/plugins/guests/osx</div></div></pre></div></figure>
 
 <p>We’re ready to boot the thing now - make it so, number one.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/Desktop/osx_test
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>vagrant up --provider vmware_fusion</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/Desktop/osx_test
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>vagrant up --provider vmware_fusion</div></div></pre></div></figure>
 
 <p>You should see VMWare Fusion open if it’s not already running and your VM boot after a little while.</p>
 
@@ -286,11 +297,11 @@ Why is this a good thing? Do you NetBoot VMWare to test your builds? Or maybe yo
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

@@ -39,6 +39,7 @@ $ sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-de
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="ZNC: An IRC Bouncer">
 <meta name="twitter:description" content="Yes,  it’s true. The most interesting conversations in the Mac admin world take place using technology from the 1980’s - IRC (##osx-server on freenode). Those of you who know me will know that I’m borderline OCD. In this instance, my major annoyance was that I’d only get half of the conversation and I’d miss private messages when I had to put my laptop to sleep. I needed to somehow keep a persistient conenction to IRC without having to sit infront of my computer 24/7.
@@ -144,7 +145,7 @@ $ sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-de
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -160,17 +161,27 @@ $ sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-de
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -226,8 +237,8 @@ $ sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-de
 
 <p>Right, let’s get started. All of these commands are to be run as your normal user (<code>graham</code> in this case - <strong>not root</strong>). First we’re going to enable backports in Ubuntu. I like editing text files in <code>nano</code> so I’m going to install that first, but feel free to use Vi or whatever you like.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo apt-get install -y nano
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo nano /etc/apt/sources.list</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo apt-get install -y nano
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo nano /etc/apt/sources.list</div></div></pre></div></figure>
 
 <p>Find the two backports lines commented out (lines 44-45 on my test box) and unomment them.</p>
 
@@ -238,8 +249,8 @@ $ sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-de
 
 <p>To install ZNC, issue the following command:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo apt-get update
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-dev/precise-backports znc-extra/precise-backports znc-perl/precise-backports znc-python/precise-backports znc-tcl/precise-backports</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo apt-get update
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-dev/precise-backports znc-extra/precise-backports znc-perl/precise-backports znc-python/precise-backports znc-tcl/precise-backports</div></div></pre></div></figure>
 
 <!-- more -->
 
@@ -361,7 +372,7 @@ $ sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-de
 
 <p>Still with me? One last thing to do - make sure ZNC starts and keeps running. We’ll use Upstart (hat-tip to <a href="https://twitter.com/natewalck/status/389345376811356160">@natewalck</a>).</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo nano /etc/init/znc.conf</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo nano /etc/init/znc.conf</div></div></pre></div></figure>
 
 <p>And pop in the following, replacing <code>sudo -u graham</code> with your own username.</p>
 
@@ -377,7 +388,7 @@ $ sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-de
 
 <p>Then finally start it up:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo start znc</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo start znc</div></div></pre></div></figure>
 
 <p>Configuring each IRC client is different, but for Textual (my prefered client), it’s pretty straightforward. Go to the Server menu and choose Add Server. Make the settings look like below, obviously replaing the hostname and password with the ones you chose.</p>
 
@@ -414,11 +425,11 @@ $ sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-de
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

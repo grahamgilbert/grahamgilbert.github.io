@@ -19,6 +19,7 @@ We’re fortunate that we have a standard packaging format on OS X that virtuall
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Upgrading OS X using a package">
 <meta name="twitter:description" content="It’s the time of year where we start to think about upgrading our machines to the latest version of OS X. There are several ways of doing this, but assuming your users are unable to perform the upgrade themselves via the App Store (if they’re running as a standard user or your policies prohibit the use of the App Store), you might be wondering how you can use your management tool to get your machines upgraded and make sure they stay enrolled in your management tool.
@@ -84,7 +85,7 @@ We’re fortunate that we have a standard packaging format on OS X that virtuall
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -100,17 +101,27 @@ We’re fortunate that we have a standard packaging format on OS X that virtuall
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -185,15 +196,15 @@ We’re fortunate that we have a standard packaging format on OS X that virtuall
 
 <p>First off we’re going to need the script to build a first boot package. Assuming you’re going to keep your code in <code>~/src</code>:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git clone https://github.com/grahamgilbert/first-boot-pkg.git
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd </span>first-boot-pkg</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/src
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git clone https://github.com/grahamgilbert/first-boot-pkg.git
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd </span>first-boot-pkg</div></div></pre></div></figure>
 
 <p>You have two options for configuring the first boot package - you can pass it options on the command line or you can use a plist. We’re using a plist as it’s the most repeatable and sharable method. If you need further options, such as disabling the network check, see the <a href="https://github.com/grahamgilbert/first-boot-pkg">project on Github</a>.</p>
 
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">~/src/first-boot-pkg/first-boot-config.plist</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple Computer//DTD PLIST 1.0//EN&quot;      &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">~/src/first-boot-pkg/first-boot-config.plist</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"      "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">"1.0"</span><span class="nt">&gt;</span>
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;dict&gt;</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;key&gt;</span>Packages<span class="nt">&lt;/key&gt;</span>
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;array&gt;</span>
@@ -214,11 +225,11 @@ We’re fortunate that we have a standard packaging format on OS X that virtuall
 
 <p>Let’s make sure we’re in the right directory:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src/first-boot-pkg</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/src/first-boot-pkg</div></div></pre></div></figure>
 
 <p>And let’s build the package:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo ./first-boot-pkg --plist first-boot-config.plist
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo ./first-boot-pkg --plist first-boot-config.plist
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">Validating packages:
 </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">----------------------------------------------------------------
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">munkitools-2.3.1.2535.pkg looks good.
@@ -232,13 +243,13 @@ We’re fortunate that we have a standard packaging format on OS X that virtuall
 
 <p>As previously mentioned, we’re going to use createOSXinstallPkg, so let’s grab that:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git clone https://github.com/munki/createOSXinstallPkg.git
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd </span>createOSXinstallPkg</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/src
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git clone https://github.com/munki/createOSXinstallPkg.git
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd </span>createOSXinstallPkg</div></div></pre></div></figure>
 
 <p>And assuming your OS X Installer is saved to the usual place:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo ./createOSXinstallPkg --pkg ../first-boot-pkg/post-elcap-upgrade.pkg --source <span class="s2">&quot;/Applications/Install OS X El Capitan GM Candidate.app&quot;</span></div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo ./createOSXinstallPkg --pkg ../first-boot-pkg/post-elcap-upgrade.pkg --source <span class="s2">"/Applications/Install OS X El Capitan GM Candidate.app"</span></div></div></pre></div></figure>
 
 <p>createOSXinstallPkg will let you know how it’s doing:</p>
 
@@ -253,7 +264,7 @@ We’re fortunate that we have a standard packaging format on OS X that virtuall
 </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">----------------------------------------------------------------
 </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">post-elcap-upgrade.pkg
 </div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">----------------------------------------------------------------
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">Total additional package size: <span class="m">1856</span> Kbytes
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">Total additional package size: 1856 Kbytes
 </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">----------------------------------------------------------------
 </div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">Checking available space on /Applications/Install OS X El Capitan GM Candidate.app/Contents/SharedSupport/InstallESD.dmg...
 </div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">Creating package wrapper...
@@ -297,8 +308,8 @@ We’re fortunate that we have a standard packaging format on OS X that virtuall
 </div></div><div data-line="53" class="code-highlight-row numbered"><div class="code-highlight-line">Adding resources…
 </div></div><div data-line="54" class="code-highlight-row numbered"><div class="code-highlight-line">.................................................................................................
 </div></div><div data-line="55" class="code-highlight-row numbered"><div class="code-highlight-line">Elapsed Time:  1m 13.452s
-</div></div><div data-line="56" class="code-highlight-row numbered"><div class="code-highlight-line">File size: <span class="m">6060448966</span> bytes, Checksum: CRC32 <span class="nv">$613FF36A</span>
-</div></div><div data-line="57" class="code-highlight-row numbered"><div class="code-highlight-line">Sectors processed: 13002104, <span class="m">12518380</span> compressed
+</div></div><div data-line="56" class="code-highlight-row numbered"><div class="code-highlight-line">File size: 6060448966 bytes, Checksum: CRC32 <span class="nv">$613FF36A</span>
+</div></div><div data-line="57" class="code-highlight-row numbered"><div class="code-highlight-line">Sectors processed: 13002104, 12518380 compressed
 </div></div><div data-line="58" class="code-highlight-row numbered"><div class="code-highlight-line">Speed: 83.2Mbytes/sec
 </div></div><div data-line="59" class="code-highlight-row numbered"><div class="code-highlight-line">Savings: 9.0%
 </div></div><div data-line="60" class="code-highlight-row numbered"><div class="code-highlight-line">created: /Users/grahamgilbert/src/createOSXinstallPkg/InstallOSX_10.11_15A282b_custom.pkg/Contents/Resources/InstallESD.dmg
@@ -338,11 +349,11 @@ We’re fortunate that we have a standard packaging format on OS X that virtuall
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

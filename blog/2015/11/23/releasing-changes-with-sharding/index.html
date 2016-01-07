@@ -16,6 +16,7 @@ Using this condition as a base and a similar Facter Fact I’ve started using th
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Releasing Changes With Sharding">
 <meta name="twitter:description" content="Sharding is traditionally associated with databases - splitting up your dataset to make it more manageable. When using the term in this instance we are taking about splitting up our computers - there are several reasons you might want to do this. You might want to split them up for similar performance reasons - if you’re deploying large software updates your server might not be able to cope with all your clients pulling it at once. You might want a way to roll changes out to certain groups of machines.
@@ -75,7 +76,7 @@ Using this condition as a base and a similar Facter Fact I’ve started using th
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -91,17 +92,27 @@ Using this condition as a base and a similar Facter Fact I’ve started using th
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -186,23 +197,23 @@ Using this condition as a base and a similar Facter Fact I’ve started using th
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">Foundation</span> <span class="kn">import</span> <span class="n">CFPreferencesCopyAppValue</span>
 </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">MOD_VALUE</span> <span class="o">=</span> <span class="mi">10000</span>
 </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Read the location of the ManagedInstallDir from ManagedInstall.plist</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">BUNDLE_ID</span> <span class="o">=</span> <span class="s">&#39;ManagedInstalls&#39;</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">pref_name</span> <span class="o">=</span> <span class="s">&#39;ManagedInstallDir&#39;</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">BUNDLE_ID</span> <span class="o">=</span> <span class="s">'ManagedInstalls'</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">pref_name</span> <span class="o">=</span> <span class="s">'ManagedInstallDir'</span>
 </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">managedinstalldir</span> <span class="o">=</span> <span class="n">CFPreferencesCopyAppValue</span><span class="p">(</span><span class="n">pref_name</span><span class="p">,</span> <span class="n">BUNDLE_ID</span><span class="p">)</span>
-</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Make sure we&#39;re outputting our information to &quot;ConditionalItems.plist&quot;</span>
-</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">conditionalitemspath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">managedinstalldir</span><span class="p">,</span> <span class="s">&#39;ConditionalItems.plist&#39;</span><span class="p">)</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Make sure we're outputting our information to "ConditionalItems.plist"</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">conditionalitemspath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">managedinstalldir</span><span class="p">,</span> <span class="s">'ConditionalItems.plist'</span><span class="p">)</span>
 </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">get_serial</span><span class="p">():</span>
-</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="sd">&#39;&#39;&#39;Returns the serial number of this Mac&#39;&#39;&#39;</span>
-</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/sbin/ioreg&#39;</span><span class="p">,</span> <span class="s">&#39;-c&#39;</span><span class="p">,</span> <span class="s">&#39;IOPlatformExpertDevice&#39;</span><span class="p">,</span> <span class="s">&#39;-d&#39;</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">]</span>
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">'''Returns the serial number of this Mac'''</span>
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s">'/usr/sbin/ioreg'</span><span class="p">,</span> <span class="s">'-c'</span><span class="p">,</span> <span class="s">'IOPlatformExpertDevice'</span><span class="p">,</span> <span class="s">'-d'</span><span class="p">,</span> <span class="s">'2'</span><span class="p">]</span>
 </div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 </div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
-</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="s">&#39;IOPlatformSerialNumber&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="k">return</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39; = &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\&quot;</span><span class="s">&#39;</span><span class="p">,</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="s">'IOPlatformSerialNumber'</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="k">return</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">' = '</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'</span><span class="se">\"</span><span class="s">'</span><span class="p">,</span><span class="s">''</span><span class="p">)</span>
 </div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="bp">None</span>
 </div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">get_shard</span><span class="p">():</span>
-</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s">&#39;/usr/local/shard/production&#39;</span><span class="p">):</span>
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s">'/usr/local/shard/production'</span><span class="p">):</span>
 </div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">shard</span> <span class="o">=</span> <span class="mi">100</span>
-</div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s">&#39;/usr/local/shard/testing&#39;</span><span class="p">):</span>
+</div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s">'/usr/local/shard/testing'</span><span class="p">):</span>
 </div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">shard</span> <span class="o">=</span> <span class="mi">1</span>
 </div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">else</span><span class="p">:</span>
 </div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">serial</span> <span class="o">=</span> <span class="n">get_serial</span><span class="p">()</span>
@@ -211,15 +222,15 @@ Using this condition as a base and a similar Facter Fact I’ve started using th
 </div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="37" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">newdict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">shard</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">shard</span><span class="p">))</span>
 </div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="39" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># CRITICAL!</span>
 </div></div><div data-line="40" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">conditionalitemspath</span><span class="p">):</span>
-</div></div><div data-line="41" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># &quot;ConditionalItems.plist&quot; exists, so read it FIRST (existing_dict)</span>
+</div></div><div data-line="41" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># "ConditionalItems.plist" exists, so read it FIRST (existing_dict)</span>
 </div></div><div data-line="42" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">existing_dict</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlist</span><span class="p">(</span><span class="n">conditionalitemspath</span><span class="p">)</span>
 </div></div><div data-line="43" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># Create output_dict which joins new data generated in this script with existing data</span>
 </div></div><div data-line="44" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">output_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">existing_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="o">+</span> <span class="n">newdict</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 </div></div><div data-line="45" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">else</span><span class="p">:</span>
-</div></div><div data-line="46" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># &quot;ConditionalItems.plist&quot; does not exist,</span>
+</div></div><div data-line="46" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># "ConditionalItems.plist" does not exist,</span>
 </div></div><div data-line="47" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># output only consists of data generated in this script</span>
 </div></div><div data-line="48" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">output_dict</span> <span class="o">=</span> <span class="n">newdict</span>
-</div></div><div data-line="49" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="50" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># Write out data to &quot;ConditionalItems.plist&quot;</span>
+</div></div><div data-line="49" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="50" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># Write out data to "ConditionalItems.plist"</span>
 </div></div><div data-line="51" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">plistlib</span><span class="o">.</span><span class="n">writePlist</span><span class="p">(</span><span class="n">output_dict</span><span class="p">,</span> <span class="n">conditionalitemspath</span><span class="p">)</span>
 </div></div><div data-line="52" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="53" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">get_shard</span><span class="p">()</span></div></div></pre></div></figure>
 
@@ -231,26 +242,26 @@ Using this condition as a base and a similar Facter Fact I’ve started using th
 
 <p>Puppet is our primary configuration management tool for our OS X devices - and as we are quite literally using code to define our configuration, it’s really easy to use the shard value to limit who gets which configuration:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="nv">$shard</span> <span class="o">&lt;=</span> <span class="mi">25</span> <span class="p">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">notify</span><span class="p">&#x7b;</span><span class="s">&#39;shard value is less than or equal to 25&#39;</span><span class="p">:</span> <span class="p">&#x7d;</span>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="nv">$shard</span> <span class="o">&lt;=</span> <span class="m">25</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">notify</span><span class="p">&#x7b;</span><span class="s1">'shard value is less than or equal to 25'</span><span class="p">:</span> <span class="p">&#x7d;</span>
 </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span></div></div></pre></div></figure>
 
 <p>Or to use it for something more useful, let’s say we are going to use different <a href="https://github.com/wdas/reposado">Reposado</a> branches depending on which shard they fall into:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="nv">$shard</span> <span class="o">&lt;=</span> <span class="mi">25</span> <span class="p">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">$shard_sus_url</span> <span class="o">=</span> <span class="s">&#39;http://sus.company.com/sus/content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1_shard1.sucatalog&#39;</span>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="nv">$shard</span> <span class="o">&lt;=</span> <span class="m">25</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">$shard_sus_url</span> <span class="err">=</span> <span class="s1">'http://sus.company.com/sus/content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1_shard1.sucatalog'</span>
 </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">elsif</span> <span class="nv">$shard</span> <span class="o">&lt;=</span> <span class="mi">50</span> <span class="p">&#x7b;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">$shard_sus_url</span> <span class="o">=</span> <span class="s">&#39;http://sus.company.com/sus/content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1_shard2.sucatalog&#39;</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">elsif</span> <span class="nv">$shard</span> <span class="o">&lt;=</span> <span class="m">50</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">$shard_sus_url</span> <span class="err">=</span> <span class="s1">'http://sus.company.com/sus/content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1_shard2.sucatalog'</span>
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">elsif</span> <span class="nv">$shard</span> <span class="o">&lt;=</span> <span class="mi">75</span> <span class="p">&#x7b;</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">$shard_sus_url</span> <span class="o">=</span> <span class="s">&#39;http://sus.company.com/sus/content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1_shard3.sucatalog&#39;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">elsif</span> <span class="nv">$shard</span> <span class="o">&lt;=</span> <span class="m">75</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">$shard_sus_url</span> <span class="err">=</span> <span class="s1">'http://sus.company.com/sus/content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1_shard3.sucatalog'</span>
 </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span>
 </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">else</span> <span class="p">&#x7b;</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">$shard_sus_url</span> <span class="o">=</span> <span class="s">&#39;http://sus.company.com/sus/content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1_production.sucatalog&#39;</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">$shard_sus_url</span> <span class="err">=</span> <span class="s1">'http://sus.company.com/sus/content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1_production.sucatalog'</span>
 </div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span>
-</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">class</span> <span class="na">mac_admin</span><span class="p">::</span><span class="na">sus</span> <span class="p">&#x7b;</span>
-</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="na">sus_url_1011</span> <span class="o">=&gt;</span> <span class="nv">$shard_sus_url,</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">class</span> <span class="nc">mac_admin::sus</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="py">sus_url_1011</span> <span class="p">=&gt;</span> <span class="nv">$shard_sus_url</span><span class="p">,</span>
 </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span></div></div></pre></div></figure>
 
 <h2 id="using-sharding-with-munki">Using sharding with Munki</h2>
@@ -314,11 +325,11 @@ Using this condition as a base and a similar Facter Fact I’ve started using th
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

@@ -22,6 +22,7 @@ Over the next few posts, we are going to build an app using the Flask framework 
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Dynamic first boot scripts with Imagr and Flask">
 <meta name="twitter:description" content="Some may wonder why you would go to the trouble of dynamically generating first boot scripts. I mean, how many can you need?
@@ -93,7 +94,7 @@ Over the next few posts, we are going to build an app using the Flask framework 
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -109,17 +110,27 @@ Over the next few posts, we are going to build an app using the Flask framework 
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -183,32 +194,32 @@ Over the next few posts, we are going to build an app using the Flask framework 
 
 <p>The first thing we are going to do is to set up a virtual env. We are using Python to create our app and putting our dependencies in a virtual env means that we are not potentially messing up our system.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo easy_install virtualenv 
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir ~/virtualenvs
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/virtualenvs
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>virtualenv bootstrapapp</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo easy_install virtualenv 
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>mkdir ~/virtualenvs
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/virtualenvs
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>virtualenv bootstrapapp</div></div></pre></div></figure>
 
 <p>Now we can start building our app. Assuming you are going to keep your app in <code>~/src/bootstrapapp</code>:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir -p ~/src/bootstrapapp 
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src/bootstrapapp</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>mkdir -p ~/src/bootstrapapp 
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/src/bootstrapapp</div></div></pre></div></figure>
 
 <p>And now we need to switch to using the Python in the virtualenv rather than the system one</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">source</span> ~/virtualenvs/bootstrapapp/bin/activate</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">source</span> ~/virtualenvs/bootstrapapp/bin/activate </div></div></pre></div></figure>
 
 <p>Now we can install our first dependency - Flask itself. Pip is the package manager that is installed in every new virtualenv you create. It’s pretty easy to use:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>pip install flask</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>pip install flask </div></div></pre></div></figure>
 
 <p>Now Flask is installed, we can start on the web app. Crack open your favourite editor (not textedit! Python is picky about spaces) and create the following file:</p>
 
 <figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">~/src/bootstrapapp/bootstrap.py</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@app.route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="s">&#39;Hello World!&#39;</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="s">'Hello World!'</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
 </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div></div></pre></div></figure>
 
 <p>And now we can run it:</p>
@@ -225,16 +236,16 @@ Over the next few posts, we are going to build an app using the Flask framework 
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">DEBUG</span> <span class="o">=</span> <span class="bp">True</span>
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">check_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="sd">&quot;&quot;&quot;This function is called to check if a username /</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="sd">    password combination is valid.</span>
-</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="sd">    &quot;&quot;&quot;</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="s">&#39;admin&#39;</span> <span class="ow">and</span> <span class="n">password</span> <span class="o">==</span> <span class="s">&#39;secret&#39;</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">"""This function is called to check if a username /
+<div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">    password combination is valid.
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">    """
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="s">'admin'</span> <span class="ow">and</span> <span class="n">password</span> <span class="o">==</span> <span class="s">'secret'</span>
 </div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">authenticate</span><span class="p">():</span>
-</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="sd">&quot;&quot;&quot;Sends a 401 response that enables basic auth&quot;&quot;&quot;</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">"""Sends a 401 response that enables basic auth"""</span>
 </div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
-</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">&#39;Could not verify your access level for that URL.</span><span class="se">\n</span><span class="s">&#39;</span>
-</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">&#39;You have to login with proper credentials&#39;</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span>
-</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="s">&#39;WWW-Authenticate&#39;</span><span class="p">:</span> <span class="s">&#39;Basic realm=&quot;Login Required&quot;&#39;</span><span class="p">&#x7d;)</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">'Could not verify your access level for that URL.</span><span class="se">\n</span><span class="s">'</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">'You have to login with proper credentials'</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="s">'WWW-Authenticate'</span><span class="p">:</span> <span class="s">'Basic realm="Login Required"'</span><span class="p">&#x7d;)</span>
 </div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">requires_auth</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
 </div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">def</span> <span class="nf">decorated</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -243,43 +254,47 @@ Over the next few posts, we are going to build an app using the Flask framework 
 </div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="k">return</span> <span class="n">authenticate</span><span class="p">()</span>
 </div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">decorated</span>
-</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@app.route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
 </div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@requires_auth</span>
 </div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
-</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="s">&#39;Hello World!&#39;</span>
-</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">DEBUG</span><span class="p">)</span></div></div></pre></div></figure>
+</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="s">'Hello World!'</span>
+</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">'0.0.0.0'</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">DEBUG</span><span class="p">)</span></div></div>
 
-<p>We’ve made a couple of changes here. We’ve enabled debug mode - this throws up more useful errors in the unlikely event I make a mistake (ahem). When we move into production, we will want to disable this for security reasons.</p>
 
-<p>We have also added a few functions that will let us add basic authentication. If you would like to change the username from <code>admin</code> and password from <code>secret</code>, change the values at the end of <code>check_auth</code>).</p>
+We've made a couple of changes here. We've enabled debug mode - this throws up more useful errors in the unlikely event I make a mistake (ahem). When we move into production, we will want to disable this for security reasons.
 
-<p>When we run this with Docker, we’ll use environment variables to pass in the username and password, but for now we’ll use command line options. Add this in below <code>DEBUG=True</code> and above <code>def check_auth(username, password):</code></p>
+We have also added a few functions that will let us add basic authentication. If you would like to change the username from ``admin`` and password from ``secret``, change the values at the end of ``check_auth``).
+
+When we run this with Docker, we'll use environment variables to pass in the username and password, but for now we'll use command line options. Add this in below ``DEBUG=True`` and above ``def check_auth(username, password):``
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="k">try</span><span class="p">:</span>
 </div></div><div data-line="2" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="n">my_username</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </div></div><div data-line="3" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="k">except</span><span class="p">:</span>
-</div></div><div data-line="4" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="n">my_username</span> <span class="o">=</span> <span class="s">&#39;admin&#39;</span>
+</div></div><div data-line="4" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="n">my_username</span> <span class="o">=</span> <span class="s">'admin'</span>
 </div></div><div data-line="5" class="code-highlight-row unnumbered"><div class="code-highlight-line"> </div></div><div data-line="6" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="k">try</span><span class="p">:</span>
 </div></div><div data-line="7" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="n">my_password</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 </div></div><div data-line="8" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="k">except</span><span class="p">:</span>
-</div></div><div data-line="9" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="n">my_password</span> <span class="o">=</span> <span class="s">&#39;secret&#39;</span></div></div></pre></div></figure>
+</div></div><div data-line="9" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="n">my_password</span> <span class="o">=</span> <span class="s">'secret'</span></div></div></pre></div></figure>
 
-<p>And change <code>def check_auth</code> to look like:</p>
+
+And change ``def check_auth`` to look like:
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">check_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-</div></div><div data-line="2" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="sd">&quot;&quot;&quot;This function is called to check if a username /</span>
-</div></div><div data-line="3" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="sd">    password combination is valid.</span>
-</div></div><div data-line="4" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="sd">    &quot;&quot;&quot;</span>
-</div></div><div data-line="5" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="n">my_username</span> <span class="ow">and</span> <span class="n">password</span> <span class="o">==</span> <span class="n">my_password</span></div></div></pre></div></figure>
+</div></div><div data-line="2" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="s">"""This function is called to check if a username /
+<div data-line="3" class="code-highlight-row unnumbered"><div class="code-highlight-line">    password combination is valid.
+</div></div><div data-line="4" class="code-highlight-row unnumbered"><div class="code-highlight-line">    """
+</div></div><div data-line="5" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="n">my_username</span> <span class="ow">and</span> <span class="n">password</span> <span class="o">==</span> <span class="n">my_password</span></div></div>
 
-<p>Now you can pass in your own username and password when you run your development server:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>python bootstrap.py username password</div></div></pre></div></figure>
+Now you can pass in your own username and password when you run your development server:
 
-<p>That’s all there is to adding basic authentication to our app. Next time we’ll start looking at using headers sent by Imagr to serve up the customised script to our clients.</p>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>python bootstrap.py username password</div></div></pre></div></figure>
 
-<p>And for those following along at home, here’s our code after part 1:</p>
+
+That's all there is to adding basic authentication to our app. Next time we'll start looking at using headers sent by Imagr to serve up the customised script to our clients. 
+
+And for those following along at home, here's our code after part 1:
 
 <figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">~/src/bootstrapapp/bootstrap.py</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">abort</span><span class="p">,</span> <span class="n">Response</span>
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
@@ -289,22 +304,22 @@ Over the next few posts, we are going to build an app using the Flask framework 
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">try</span><span class="p">:</span>
 </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">my_username</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">except</span><span class="p">:</span>
-</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">my_username</span> <span class="o">=</span> <span class="s">&#39;admin&#39;</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">my_username</span> <span class="o">=</span> <span class="s">'admin'</span>
 </div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">try</span><span class="p">:</span>
 </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">my_password</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 </div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">except</span><span class="p">:</span>
-</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">my_password</span> <span class="o">=</span> <span class="s">&#39;secret&#39;</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">my_password</span> <span class="o">=</span> <span class="s">'secret'</span>
 </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">check_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="sd">&quot;&quot;&quot;This function is called to check if a username /</span>
-</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="sd">    password combination is valid.</span>
-</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="sd">    &quot;&quot;&quot;</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">"""This function is called to check if a username /
+<div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">    password combination is valid.
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">    """
 </div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="n">my_username</span> <span class="ow">and</span> <span class="n">password</span> <span class="o">==</span> <span class="n">my_password</span>
 </div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">authenticate</span><span class="p">():</span>
-</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="sd">&quot;&quot;&quot;Sends a 401 response that enables basic auth&quot;&quot;&quot;</span>
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">"""Sends a 401 response that enables basic auth"""</span>
 </div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
-</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">&#39;Could not verify your access level for that URL.</span><span class="se">\n</span><span class="s">&#39;</span>
-</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">&#39;You have to login with proper credentials&#39;</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span>
-</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="s">&#39;WWW-Authenticate&#39;</span><span class="p">:</span> <span class="s">&#39;Basic realm=&quot;Login Required&quot;&#39;</span><span class="p">&#x7d;)</span>
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">'Could not verify your access level for that URL.</span><span class="se">\n</span><span class="s">'</span>
+</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">'You have to login with proper credentials'</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span>
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="s">'WWW-Authenticate'</span><span class="p">:</span> <span class="s">'Basic realm="Login Required"'</span><span class="p">&#x7d;)</span>
 </div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">requires_auth</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
 </div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">def</span> <span class="nf">decorated</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -313,12 +328,13 @@ Over the next few posts, we are going to build an app using the Flask framework 
 </div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="k">return</span> <span class="n">authenticate</span><span class="p">()</span>
 </div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </div></div><div data-line="37" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">decorated</span>
-</div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="39" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+</div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="39" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@app.route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
 </div></div><div data-line="40" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@requires_auth</span>
 </div></div><div data-line="41" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
-</div></div><div data-line="42" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="s">&#39;Hello World!&#39;</span>
-</div></div><div data-line="43" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="44" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-</div></div><div data-line="45" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">DEBUG</span><span class="p">)</span></div></div></pre></div></figure>
+</div></div><div data-line="42" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="s">'Hello World!'</span>
+</div></div><div data-line="43" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="44" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+</div></div><div data-line="45" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">'0.0.0.0'</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">DEBUG</span><span class="p">)</span></div></div>
+</span></div></div></pre></div></figure></span></div></div></pre></div></figure></span></div></div></pre></div></figure>
 
       <hr />
       <footer role="contentinfo">
@@ -351,11 +367,11 @@ Over the next few posts, we are going to build an app using the Flask framework 
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/" title="Crypt 2 Alpha Release">Crypt 2 Alpha Release</a></li>
     
     </ul>
     <hr />

@@ -14,6 +14,7 @@ To do that, we’re going to use r10k. It’s a tool that uses a control git rep
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Running Puppet Server in Docker Part 2: r10k">
 <meta name="twitter:description" content="Last time we got our Puppet Server up and running - now we need to put some Puppet modules on it so we can use it.
@@ -69,7 +70,7 @@ To do that, we’re going to use r10k. It’s a tool that uses a control git rep
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -85,17 +86,27 @@ To do that, we’re going to use r10k. It’s a tool that uses a control git rep
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -161,64 +172,69 @@ To do that, we’re going to use r10k. It’s a tool that uses a control git rep
 
 <p>At its simplest, a Puppetfile is just a list of modules we want to use. As we’re just starting off, we can use pre-built ones from GitHub and the forge. We’re going to get Munki installed on a client, so we’ll use my MacAdmin module. One thing to note is that r10k won’t resolve dependencies for you, so be sure to specify any modules the module you need. A simple Puppetfile is below:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">mod</span> <span class="s1">&#39;mac_admin&#39;</span><span class="p">,</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/grahamgilbert/puppet-mac_admin&#39;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">mod</span> <span class="s1">&#39;mac_profiles_handler&#39;</span><span class="p">,</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/keeleysam/rcoleman-mac_profiles_handler&#39;</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">mod</span> <span class="s1">&#39;mac_facts&#39;</span><span class="p">,</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/grahamgilbert/grahamgilbert-mac_facts.git&#39;</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">mod</span> <span class="s1">&#39;repository&#39;</span><span class="p">,</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/boxen/puppet-repository&#39;</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">mod</span> <span class="s1">&#39;outset&#39;</span><span class="p">,</span>
-</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/grahamgilbert/puppet-outset&#39;</span>
-</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">mod</span> <span class="s1">&#39;stdlib&#39;</span><span class="p">,</span>
-</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://github.com/puppetlabs/puppetlabs-stdlib&#39;</span></div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">mod</span> <span class="s1">'mac_admin'</span><span class="p">,</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">'https://github.com/grahamgilbert/puppet-mac_admin'</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">mod</span> <span class="s1">'mac_profiles_handler'</span><span class="p">,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">'https://github.com/keeleysam/rcoleman-mac_profiles_handler'</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">mod</span> <span class="s1">'mac_facts'</span><span class="p">,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">'https://github.com/grahamgilbert/grahamgilbert-mac_facts.git'</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">mod</span> <span class="s1">'repository'</span><span class="p">,</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">'https://github.com/boxen/puppet-repository'</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">mod</span> <span class="s1">'outset'</span><span class="p">,</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">'https://github.com/grahamgilbert/puppet-outset'</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">mod</span> <span class="s1">'stdlib'</span><span class="p">,</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">'https://github.com/puppetlabs/puppetlabs-stdlib'</span></div></div></pre></div></figure>
 
 <h2 id="configuring-r10k">Configuring r10k</h2>
 
 <p>The next piece of the puzzle is to set up r10k to download our repository. I’m running r10k directly on my Docker host, but this could easily be (and probably should be) put into a Docker container. First off, let’s get r10k installed:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>gem install r10k</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>gem install r10k</div></div></pre></div></figure>
 
 <p>r10k get’s in configuration from <code>/etc/r1ok.yaml</code>, so let’s create that:</p>
 
 <figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/etc/r10k.yaml</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1"># The location to use for storing cached Git repos</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="l-Scalar-Plain">:cachedir</span><span class="p-Indicator">:</span> <span class="s">&#39;/var/cache/r10k&#39;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s">:cachedir</span><span class="pi">:</span> <span class="s1">'</span><span class="s">/var/cache/r10k'</span>
 </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1"># A list of git repositories to create</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="l-Scalar-Plain">:sources</span><span class="p-Indicator">:</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s">:sources</span><span class="pi">:</span>
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="c1"># This will clone the git repository and instantiate an environment per</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="c1"># branch in /etc/puppet/environments</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="l-Scalar-Plain">:personal-puppet</span><span class="p-Indicator">:</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="l-Scalar-Plain">remote</span><span class="p-Indicator">:</span> <span class="s">&#39;https://github.com/yourusername/yourcontrolrepo&#39;</span>
-</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="l-Scalar-Plain">basedir</span><span class="p-Indicator">:</span> <span class="s">&#39;/usr/local/docker/puppetserver/puppet/environments&#39;</span></div></div></pre></div></figure>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="s">:personal-puppet</span><span class="pi">:</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">remote</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://github.com/yourusername/yourcontrolrepo'</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">basedir</span><span class="pi">:</span> <span class="s1">'</span><span class="s">/usr/local/docker/puppetserver/puppet/environments'</span>
+</div></div></pre></div></figure>
 
 <h2 id="puppet-conf">Puppet Conf</h2>
 
 <p>The final piece of configuration for today will be to set our Puppet Server to use environments. Add the following to <code>/usr/local/docker/puppetserver/puppet/puppet.conf</code>:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">[main]</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="na">logdir</span><span class="o">=</span><span class="s">/var/log/puppet</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="na">vardir</span><span class="o">=</span><span class="s">/var/lib/puppet</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="na">ssldir</span><span class="o">=</span><span class="s">/var/lib/puppet/ssl</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="na">rundir</span><span class="o">=</span><span class="s">/var/run/puppet</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="na">factpath</span><span class="o">=</span><span class="s">$vardir/lib/facter</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="na">environmentpath</span><span class="o">=</span><span class="s">$confdir/environments</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="na">pluginsync</span><span class="o">=</span><span class="s">true</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">[master]</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1"># These are needed when the puppetmaster is run by passenger</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1"># and can safely be removed if webrick is used.</span>
-</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="na">ssl_client_header</span> <span class="o">=</span> <span class="s">SSL_CLIENT_S_DN</span>
-</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="na">ssl_client_verify_header</span> <span class="o">=</span> <span class="s">SSL_CLIENT_VERIFY</span>
-</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="na">autosign</span> <span class="o">=</span> <span class="s">true</span>
-</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="na">environmentpath</span> <span class="o">=</span> <span class="s">$confdir/environments</span></div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nn">[main]</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="py">logdir</span><span class="p">=</span><span class="s">/var/log/puppet</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="py">vardir</span><span class="p">=</span><span class="s">/var/lib/puppet</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="py">ssldir</span><span class="p">=</span><span class="s">/var/lib/puppet/ssl</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="py">rundir</span><span class="p">=</span><span class="s">/var/run/puppet</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="py">factpath</span><span class="p">=</span><span class="s">$vardir/lib/facter</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="py">environmentpath</span><span class="p">=</span><span class="s">$confdir/environments</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="py">pluginsync</span><span class="p">=</span><span class="s">true</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nn">[master]</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># These are needed when the puppetmaster is run by passenger
+<div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"># and can safely be removed if webrick is used.
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="py">ssl_client_header</span> <span class="p">=</span> <span class="s">SSL_CLIENT_S_DN</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="py">ssl_client_verify_header</span> <span class="p">=</span> <span class="s">SSL_CLIENT_VERIFY</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="py">autosign</span> <span class="p">=</span> <span class="s">true</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="py">environmentpath</span> <span class="p">=</span> <span class="s">$confdir/environments</span>
+</div></div>
 
-<h2 id="gimmie-some-modules">Gimmie some modules</h2>
 
-<p>We’re ready to get some modules installed on the Puppet Server:</p>
+## Gimmie some modules
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>r10k deploy environment -pv</div></div></pre></div></figure>
+We're ready to get some modules installed on the Puppet Server:
 
-<p>You’ll see all of the modules you specified in your Puppetfile download theselves to the right place. But of course, we’re not quite ready to use this for applying configuration to our Macs yet - we have modules, but we’ve not applied the config to specific machines. In the next post we’ll cover how we use Hiera to do this.</p>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>r10k deploy environment -pv</div></div></pre></div></figure>
+
+
+You'll see all of the modules you specified in your Puppetfile download theselves to the right place. But of course, we're not quite ready to use this for applying configuration to our Macs yet - we have modules, but we've not applied the config to specific machines. In the next post we'll cover how we use Hiera to do this.
+</span></div></div></pre></div></figure>
 
       <hr />
       <footer role="contentinfo">
@@ -251,11 +267,11 @@ To do that, we’re going to use r10k. It’s a tool that uses a control git rep
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

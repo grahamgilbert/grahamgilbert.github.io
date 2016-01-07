@@ -8,7 +8,7 @@
 <title>Location based printers with Puppet &#8211; graham gilbert dot com</title>
 <meta name="description" content="This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent mosen-puppet-cups module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).
 
-``` init.pp
+```
 case $operatingsystem{
 	Darwin:{
 		##London is on the 10.30.2.0 and 10.30.3.0 Subnets
@@ -41,15 +41,17 @@ case $operatingsystem{
 	}
 } } ```
 
+
 ">
 <meta name="keywords" content="">
+
 
 
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Location based printers with Puppet">
 <meta name="twitter:description" content="This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent mosen-puppet-cups module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).
 
-``` init.pp
+```
 case $operatingsystem{
 	Darwin:{
 		##London is on the 10.30.2.0 and 10.30.3.0 Subnets
@@ -81,6 +83,7 @@ case $operatingsystem{
 		}
 	}
 } } ```
+
 
 ">
 <meta name="twitter:site" content="@grahamgilbert">
@@ -95,7 +98,7 @@ case $operatingsystem{
 <meta property="og:title" content="Location based printers with Puppet">
 <meta property="og:description" content="This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent mosen-puppet-cups module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).
 
-``` init.pp
+```
 case $operatingsystem{
 	Darwin:{
 		##London is on the 10.30.2.0 and 10.30.3.0 Subnets
@@ -127,6 +130,7 @@ case $operatingsystem{
 		}
 	}
 } } ```
+
 
 ">
 <meta property="og:url" content="http://grahamgilbert.com/blog/2012/08/18/location-based-printers-with-puppet/">
@@ -162,7 +166,7 @@ case $operatingsystem{
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -178,17 +182,27 @@ case $operatingsystem{
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -270,6 +284,7 @@ case $operatingsystem{
 </div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">	&#x7d;
 </div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">&#x7d;</div></div></pre></div></figure>
 
+
       <hr />
       <footer role="contentinfo">
         <div class="social-share">
@@ -301,11 +316,11 @@ case $operatingsystem{
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

@@ -23,6 +23,7 @@ You might well be thinking “why would I want to use Puppet?” After all, you�
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Running Puppet Server in Docker">
 <meta name="twitter:description" content="Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like Passenger if you had any number of clients). Thankfully, the new Puppet Server simplifies things massively - it’s just one installation to get things working in a way that would be suitable for putting straight into production.
@@ -96,7 +97,7 @@ You might well be thinking “why would I want to use Puppet?” After all, you�
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -112,17 +113,27 @@ You might well be thinking “why would I want to use Puppet?” After all, you�
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -193,7 +204,7 @@ You might well be thinking “why would I want to use Puppet?” After all, you�
 
 <p>I’ve already made a Docker image that has Puppet Server in it. Let’s pull it down:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker pull grahamgilbert/puppetserver</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker pull grahamgilbert/puppetserver</div></div></pre></div></figure>
 
 <p>And fire it up:</p>
 
@@ -211,38 +222,38 @@ You might well be thinking “why would I want to use Puppet?” After all, you�
 
 <p>You’ll be looking at a bash prompt now. First off, check that <code>/etc/puppet</code> and <code>/etc/puppetserver</code> have <em>stuff</em> in them. What’s in there isn’t important at this stage. We also need to run the Puppet client on the server to move some supporting files in place. We first need to enable auto signing of certificates in <code>/etc/puppet/puppet.conf</code> (we’ll cover this more later):</p>
 
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/etc/puppet/puppet.conf</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">[</span>main<span class="o">]</span>
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/etc/puppet/puppet.conf</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">[</span>main]
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">logdir</span><span class="o">=</span>/var/log/puppet
 </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">vardir</span><span class="o">=</span>/var/lib/puppet
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">ssldir</span><span class="o">=</span>/var/lib/puppet/ssl
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">rundir</span><span class="o">=</span>/var/run/puppet
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">factpath</span><span class="o">=</span><span class="nv">$vardir</span>/lib/facter
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">templatedir</span><span class="o">=</span><span class="nv">$confdir</span>/templates
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">[</span>master<span class="o">]</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">[</span>master]
 </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># These are needed when the puppetmaster is run by passenger</span>
 </div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># and can safely be removed if webrick is used.</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">ssl_client_header</span> <span class="o">=</span> SSL_CLIENT_S_DN
-</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">ssl_client_verify_header</span> <span class="o">=</span> SSL_CLIENT_VERIFY
-</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">autosign</span> <span class="o">=</span> <span class="nb">true</span></div></div></pre></div></figure>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">ssl_client_header <span class="o">=</span> SSL_CLIENT_S_DN
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">ssl_client_verify_header <span class="o">=</span> SSL_CLIENT_VERIFY
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">autosign <span class="o">=</span> <span class="nb">true</span></div></div></pre></div></figure>
 
 <p>And then exit the container, stop it and start it up again:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">exit</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker stop puppetserver
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker start puppetserver</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">exit</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker stop puppetserver
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker start puppetserver</div></div></pre></div></figure>
 
 <p>Take a look at the container’s logs - Puppet Server can take a few seconds to be ready, so look for the line that says it’s ready to accept connections:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker logs puppetserver</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker logs puppetserver</div></div></pre></div></figure>
 
 <p>When it’s ready, enter the container again and run the puppet agent.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker <span class="nb">exec</span> -t -i puppetserver bash
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>puppet agent -t</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker <span class="nb">exec</span> -t -i puppetserver bash
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>puppet agent -t</div></div></pre></div></figure>
 
 <p>Provided that ran with no errors, we can exit out of the container.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">exit</span></div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">exit</span></div></div></pre></div></figure>
 
 <p>We’re now going to copy the parts we need to persist to the file system of the host machine - I like to keep my docker related things in <code>/usr/local/docker</code> but it’s up to you.</p>
 
@@ -250,52 +261,52 @@ You might well be thinking “why would I want to use Puppet?” After all, you�
 
 <p>We’re going to use <code>docker cp</code> to copy out of our container and onto our host filesystem. We want the configuration directories, any custom gems we install (required if we want to use modules such as <a href="https://github.com/dayglojesus/managedmac">managedmac</a>), as well as the SSL certificates and some other supporting files (these aren’t technically required, but will save having to run <code>puppet agent -t</code> after the container starts every time we update).</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker cp puppetserver:/etc/puppetserver /usr/local/docker/puppetserver/
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker cp puppetserver:/etc/puppet /usr/local/docker/puppetserver/
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker cp puppetserver:/var/lib/puppet/ssl /usr/local/docker/puppetserver/lib/
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker cp puppetserver:/var/lib/puppet/lib /usr/local/docker/puppetserver/lib/
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker cp puppetserver:/var/lib/puppet/jruby-gems /usr/local/docker/puppetserver/</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker cp puppetserver:/etc/puppetserver /usr/local/docker/puppetserver/
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker cp puppetserver:/etc/puppet /usr/local/docker/puppetserver/
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker cp puppetserver:/var/lib/puppet/ssl /usr/local/docker/puppetserver/lib/
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker cp puppetserver:/var/lib/puppet/lib /usr/local/docker/puppetserver/lib/
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker cp puppetserver:/var/lib/puppet/jruby-gems /usr/local/docker/puppetserver/</div></div></pre></div></figure>
 
 <p>Now we’re ready to run for real. Just a small piece of configuration to make our lives easier whilst we’re testing - enabling auto signing of certificates. By default you will need to sign a certificate for each client that tries to connect to your puppet master. Eventually we will want to sign certificates using some sort of external inventory service (I like Sal, but there are also connectors for Web Help Desk), but for now we’ll leave our configuration that tells Puppet to sign every certificate unconditionally.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>nano /usr/local/docker/puppetserver/puppet/puppet.conf</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>nano /usr/local/docker/puppetserver/puppet/puppet.conf</div></div></pre></div></figure>
 
 <p>And make sure your <code>puppet.conf</code> looks like:</p>
 
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/usr/local/docker/puppetserver/puppet/puppet.conf</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">[</span>main<span class="o">]</span>
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/usr/local/docker/puppetserver/puppet/puppet.conf</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">[</span>main]
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">logdir</span><span class="o">=</span>/var/log/puppet
 </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">vardir</span><span class="o">=</span>/var/lib/puppet
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">ssldir</span><span class="o">=</span>/var/lib/puppet/ssl
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">rundir</span><span class="o">=</span>/var/run/puppet
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">factpath</span><span class="o">=</span><span class="nv">$vardir</span>/lib/facter
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">pluginsync</span><span class="o">=</span><span class="nb">true</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">[</span>master<span class="o">]</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">[</span>master]
 </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># These are needed when the puppetmaster is run by passenger</span>
 </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># and can safely be removed if webrick is used.</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">ssl_client_header</span> <span class="o">=</span> SSL_CLIENT_S_DN
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">ssl_client_verify_header</span> <span class="o">=</span> SSL_CLIENT_VERIFY
-</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">autosign</span> <span class="o">=</span> <span class="nb">true</span></div></div></pre></div></figure>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">ssl_client_header <span class="o">=</span> SSL_CLIENT_S_DN
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">ssl_client_verify_header <span class="o">=</span> SSL_CLIENT_VERIFY
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">autosign <span class="o">=</span> <span class="nb">true</span></div></div></pre></div></figure>
 
 <p>Now all that remains is to fire up our final container and then we can hook up a client.</p>
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># remove our old container</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker rm -f puppetserver
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker run -d <span class="se">\</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">  --name<span class="o">=</span><span class="s2">&quot;puppetserver&quot;</span> <span class="se">\</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">  --restart<span class="o">=</span><span class="s2">&quot;always&quot;</span> <span class="se">\</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker rm -f puppetserver
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker run -d <span class="se">\</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">  --name<span class="o">=</span><span class="s2">"puppetserver"</span> <span class="se">\</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">  --restart<span class="o">=</span><span class="s2">"always"</span> <span class="se">\</span>
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">  -v /usr/local/docker/puppetserver/puppet:/etc/puppet <span class="se">\</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">  -v /usr/local/docker/puppetserver/puppetserver:/etc/puppetserver <span class="se">\</span>
 </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">  -v /usr/local/docker/puppetserver/lib/ssl:/var/lib/puppet/ssl <span class="se">\</span>
 </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">  -v /usr/local/docker/puppetserver/jruby-gems:/var/lib/puppet/jruby-gems <span class="se">\</span>
 </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">  -v /usr/local/docker/puppetserver/lib/lib:/var/lib/puppet/lib <span class="se">\</span>
 </div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">  -p 0.0.0.0:8140:8140 <span class="se">\</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">  -e <span class="nv">PUPPETSERVER_JAVA_ARGS</span><span class="o">=</span><span class="s2">&quot;-Xms384m -Xmx384m -XX:MaxPermSize=256m&quot;</span> <span class="se">\</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">  -e <span class="nv">PUPPETSERVER_JAVA_ARGS</span><span class="o">=</span><span class="s2">"-Xms384m -Xmx384m -XX:MaxPermSize=256m"</span> <span class="se">\</span>
 </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">  -h puppet.yourdomain.com <span class="se">\</span>
 </div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">  grahamgilbert/puppetserver</div></div></pre></div></figure>
 
 <p>Let’s make sure it’s finished starting up.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker logs -f puppetserver</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker logs -f puppetserver</div></div></pre></div></figure>
 
 <p>This works like tail would. Hit ctrl-c to exit once it says it’s ready to go.</p>
 
@@ -305,13 +316,13 @@ You might well be thinking “why would I want to use Puppet?” After all, you�
 
 <p>If we just ran Puppet now, it would use the Mac’s hostname as the certificate name (the unique identifier for the machine). If you have reliable hostnames, that will probably do you. I prefer to use the machine’s serial number (lower case, because that’s what Puppet likes). We’ll automate this in a later post, but for now we can do it by hand:</p>
 
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/etc/puppet/puppet.conf</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">[</span>main<span class="o">]</span>
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/etc/puppet/puppet.conf</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">[</span>main]
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">server</span><span class="o">=</span>puppet.yourdomain.com
 </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">certname</span><span class="o">=</span>abc123</div></div></pre></div></figure>
 
 <p>All that’s left now is to run puppet on the client:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>puppet agent -t --waitforcert 20</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>puppet agent -t --waitforcert 20</div></div></pre></div></figure>
 
 <p>In a later post, we will look at how we can use r10k to manage our modules and use Hiera to configure our clients without touching a line of Puppet code.</p>
 
@@ -346,11 +357,11 @@ You might well be thinking “why would I want to use Puppet?” After all, you�
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

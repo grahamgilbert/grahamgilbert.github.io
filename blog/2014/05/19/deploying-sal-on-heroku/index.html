@@ -72,8 +72,10 @@ $ heroku open
 
 
 As said earlier, the free version does have some limits. The most important with Sal is the number of rows you can have in the free database (10,000), so the more information you collect from each machine (Facter Facts and Munki Conditions), the larger your database is. It’s a measley $9 a month to upgrade your database to 10 million rows, so it’s easy to scale your database. For more information on upgrading your Heroku environment see their documentation.
+
 ">
 <meta name="keywords" content="">
+
 
 
 <!-- Twitter Cards -->
@@ -144,6 +146,7 @@ $ heroku open
 
 
 As said earlier, the free version does have some limits. The most important with Sal is the number of rows you can have in the free database (10,000), so the more information you collect from each machine (Facter Facts and Munki Conditions), the larger your database is. It’s a measley $9 a month to upgrade your database to 10 million rows, so it’s easy to scale your database. For more information on upgrading your Heroku environment see their documentation.
+
 ">
 <meta name="twitter:site" content="@grahamgilbert">
 <meta name="twitter:creator" content="@grahamgilbert">
@@ -221,6 +224,7 @@ $ heroku open
 
 
 As said earlier, the free version does have some limits. The most important with Sal is the number of rows you can have in the free database (10,000), so the more information you collect from each machine (Facter Facts and Munki Conditions), the larger your database is. It’s a measley $9 a month to upgrade your database to 10 million rows, so it’s easy to scale your database. For more information on upgrading your Heroku environment see their documentation.
+
 ">
 <meta property="og:url" content="http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku/">
 <meta property="og:site_name" content="graham gilbert dot com">
@@ -255,7 +259,7 @@ As said earlier, the free version does have some limits. The most important with
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -271,17 +275,27 @@ As said earlier, the free version does have some limits. The most important with
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -341,42 +355,42 @@ As said earlier, the free version does have some limits. The most important with
 
 <p>Now we need to get a copy of Sal and configure it. Assuming you keep your code in ~/src:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git clone https://github.com/grahamgilbert/sal
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd </span>sal</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/src
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git clone https://github.com/grahamgilbert/sal
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd </span>sal</div></div></pre></div></figure>
 
 <p>Now we need to make a copy of sal/example_settings.py</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>cp sal/example_settings.py sal/settings.py</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>cp sal/example_settings.py sal/settings.py</div></div></pre></div></figure>
 
 <p>And edit sal/settings.py in your favourite editor to your liking (probably time zone at least).</p>
 
 <p>Heroku uses git for deployment, so we need to commit our changes.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git add .
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git commit -m <span class="s2">&quot;initial commit to heroku&quot;</span></div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git add .
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git commit -m <span class="s2">"initial commit to heroku"</span></div></div></pre></div></figure>
 
 <p>We’re nearly there! Time to create our environment on Heroku</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>heroku create</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>heroku create</div></div></pre></div></figure>
 
 <p>Of course we haven’t pushed Sal to Heroku yet. Let’s fix that.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git push heroku master</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git push heroku master</div></div></pre></div></figure>
 
 <p>You’ll see Sal being pushed up to Heroku and Sal’s requirements being installed. A Postgres database will also automatically be created for you. The database will be empty though, so let’s populate it with what we need.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>heroku run python manage.py syncdb</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>heroku run python manage.py syncdb</div></div></pre></div></figure>
 
 <p>When asked, you certainly <em>do</em> want to create a super user. Use a strong username and password as this is the admin for your Sal application.</p>
 
 <p>One last command to run:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>heroku run python manage.py migrate</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>heroku run python manage.py migrate</div></div></pre></div></figure>
 
 <p>Your Sal installation is ready to use:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>heroku open</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>heroku open</div></div></pre></div></figure>
 
 <p>As said earlier, the free version does have some limits. The most important with Sal is the number of rows you can have in the free database (10,000), so the more information you collect from each machine (Facter Facts and Munki Conditions), the larger your database is. It’s a measley $9 a month to upgrade your database to 10 million rows, so it’s easy to scale your database. For more information on upgrading your Heroku environment see <a href="https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups">their documentation</a>.</p>
 
@@ -411,11 +425,11 @@ As said earlier, the free version does have some limits. The most important with
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

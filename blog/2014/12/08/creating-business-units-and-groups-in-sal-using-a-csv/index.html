@@ -27,6 +27,7 @@ We’re going to use a few of the parts that make Django and Docker awesome. We 
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Creating Business Units and Groups in Sal using a CSV">
 <meta name="twitter:description" content="Obviously I’m a little biased, but I love Sal. But, it can be a little tedious to get everything set up the first time if you have hundreds of Business Units and Machine Groups. I’ve quietly ignored the problem for a while, but then I saw this tweet pop up in my feed:
@@ -108,7 +109,7 @@ We’re going to use a few of the parts that make Django and Docker awesome. We 
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -124,17 +125,27 @@ We’re going to use a few of the parts that make Django and Docker awesome. We 
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -207,12 +218,12 @@ We’re going to use a few of the parts that make Django and Docker awesome. We 
 
 <p>To use it, first you’re going to need to clone the repository somewhere on your disk. I’m going to assume you’re working out of <code>/usr/local/docker</code>. There’s an example CSV included in the repo.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> /usr/local/docker
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git clone https://github.com/grahamgilbert/sal-import-example</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> /usr/local/docker
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git clone https://github.com/grahamgilbert/sal-import-example</div></div></pre></div></figure>
 
 <p>Next we’re going to run a temporary Docker container on the same host that our existing Sal container is running on. This container will run the import, and when it’s done it will delete itself (<code>--rm</code>). We’ve linked in the import data and the additional management command. So we can see the output, we’re running it in the foreground as well (<code>-i</code>). Finally, we run the custom management command and point it to the CSV.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker run -t -i -v /vagrant/sal/settings.py:/home/docker/sal/sal/settings.py <span class="se">\</span>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker run -t -i -v /vagrant/sal/settings.py:/home/docker/sal/sal/settings.py <span class="se">\</span>
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">  -e <span class="nv">ADMIN_PASS</span><span class="o">=</span>pass <span class="se">\</span>
 </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">  -e <span class="nv">DB_NAME</span><span class="o">=</span>sal <span class="se">\</span>
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">  -e <span class="nv">DB_USER</span><span class="o">=</span>admin <span class="se">\</span>
@@ -226,14 +237,16 @@ We’re going to use a few of the parts that make Django and Docker awesome. We 
 
 <p>And you’ll get the output reporting that your CSV did it’s job:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">Omni Mega Corp didn<span class="s1">&#39;t exist and has been created.</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s1">Machine Group 1 didn&#39;</span>t exist and has been created.
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">Omni Mega Corp didn<span class="s1">'t exist and has been created.
+<div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">Machine Group 1 didn't exist and has been created.
 </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">Omni Mega Corp already exists.
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">Machine Group <span class="m">2</span> didn<span class="s1">&#39;t exist and has been created.</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s1">Honest Bob&#39;</span>s Burgers didn<span class="s1">&#39;t exist and has been created.</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s1">Machine Group 3 didn&#39;</span>t exist and has been created.</div></div></pre></div></figure>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">Machine Group 2 didn<span class="s1">'t exist and has been created.
+<div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">Honest Bob's Burgers didn<span class="s1">'t exist and has been created.
+<div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">Machine Group 3 didn't exist and has been created.</div></div>
 
-<p>There it is - a simple management command to automate tasks with Sal and running it in a temporary Docker container. You can use the temporary container technique for many tasks - performing a <code>repo_sync</code> on a <a href="https://registry.hub.docker.com/u/macadmins/reposado/">Reposado container</a> is a good example.</p>
+
+There it is - a simple management command to automate tasks with Sal and running it in a temporary Docker container. You can use the temporary container technique for many tasks - performing a ``repo_sync`` on a [Reposado container](https://registry.hub.docker.com/u/macadmins/reposado/) is a good example.
+</span></div></div></span></div></div></span></div></div></pre></div></figure>
 
       <hr />
       <footer role="contentinfo">
@@ -266,11 +279,11 @@ We’re going to use a few of the parts that make Django and Docker awesome. We 
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

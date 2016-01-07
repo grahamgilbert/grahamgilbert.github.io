@@ -12,6 +12,7 @@
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Getting started with BSDPy on Docker">
 <meta name="twitter:description" content="Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you’re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we’re using that. Your Ubuntu box will also need a real IP address - if you are using VMware Fusion, this will be a Bridged Network Adapter - adjust the terminology if you’re using a different virtualization tool. You don’t need to worry about giving your machine a static IP unless you want to - Macs will NetBoot just fine when they’re on the same subnet.
@@ -63,7 +64,7 @@
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -79,17 +80,27 @@
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -143,16 +154,16 @@
 
 <p>Our first job is to install Docker. I’ve been as guilty as many with glossing over this step, so here’s the massively long and difficult method to install the latest version of Docker on Ubuntu 14. First we make sure <code>wget</code> is installed:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>which wget</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>which wget</div></div></pre></div></figure>
 
 <p>And if that returns nothing then we need to install <code>wget</code>:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo apt-get update
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo apt-get install wget</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo apt-get update
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo apt-get install wget</div></div></pre></div></figure>
 
 <p>And now we can install Docker:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">wget -qO- https://get.docker.com/ <span class="p">|</span> sh</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">wget -qO- https://get.docker.com/ | sh</div></div></pre></div></figure>
 
 <p>Pop your password in when you’re asked and you’re done.</p>
 
@@ -176,8 +187,8 @@
 
 <p>If you’re not made it already, we need to make the directory we’ll store our permanent bits:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo -i
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir -p /usr/local/docker/nbi</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo -i
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>mkdir -p /usr/local/docker/nbi</div></div></pre></div></figure>
 
 <p>And fire up your favourite editor and put in the first part of our script:</p>
 
@@ -188,8 +199,8 @@
 
 <p>Now we just need to make it executable and we can run it:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>chmod <span class="m">755</span> /usr/local/docker/startup.sh
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>/usr/local/docker/startup.sh</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>chmod 755 /usr/local/docker/startup.sh
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>/usr/local/docker/startup.sh</div></div></pre></div></figure>
 
 <p>If all goes well Docker will start pulling down the images you need.</p>
 
@@ -206,8 +217,8 @@
 <p>As previously alluded to, our NetBoot solution will comprise of three components. Add the following to the end of <code>/usr/local/docker/startup.sh</code> (if your server has more than one ethernet adapter, replace <code>eth0</code> with the name of the adapter you want to use for NetBoot):</p>
 
 <figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/usr/local/docker/startup.sh</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Other stuff is above here</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">chmod -R <span class="m">777</span> /usr/local/docker/nbi
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">IP</span><span class="o">=</span><span class="sb">`</span>ifconfig eth0 2&gt;/dev/null<span class="p">|</span>awk <span class="s1">&#39;/inet addr:/ &#x7b;print $2&#x7d;&#39;</span><span class="p">|</span>sed <span class="s1">&#39;s/addr://&#39;</span><span class="sb">`</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">chmod -R 777 /usr/local/docker/nbi
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">IP</span><span class="o">=</span><span class="sb">`</span>ifconfig eth0 2&gt;/dev/null|awk <span class="s1">'/inet addr:/ &#x7b;print $2&#x7d;'</span>|sed <span class="s1">'s/addr://'</span><span class="sb">`</span>
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nb">echo</span> <span class="nv">$IP</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">docker run -d <span class="se">\</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">  -v /usr/local/docker/nbi:/nbi <span class="se">\</span>
@@ -233,11 +244,11 @@
 
 <p>And run your startup script:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>/usr/local/docker/startup.sh</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>/usr/local/docker/startup.sh</div></div></pre></div></figure>
 
 <p>You’ll see your images being checked for updates, and then your containers will start. you can verify they’re running by running:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker ps -a</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker ps -a</div></div></pre></div></figure>
 
 <h2 id="using-the-thing">Using the thing</h2>
 
@@ -251,15 +262,15 @@
 
 <p>All that remains is to restart the <code>bsdpy</code> container on your Docker host:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>/usr/local/docker/startup.sh</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>/usr/local/docker/startup.sh</div></div></pre></div></figure>
 
 <p>And if you open up the <code>bsdpy</code> container’s logs, you’ll see it finding your NBI.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker logs bsdpy</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker logs bsdpy</div></div></pre></div></figure>
 
 <p>And if you want to keep the logs open whilst you’re testing, you can use <code>-f</code>.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker logs -f bsdpy</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker logs -f bsdpy</div></div></pre></div></figure>
 
 <h2 id="conclusion">Conclusion</h2>
 
@@ -296,11 +307,11 @@
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

@@ -12,6 +12,7 @@
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Facter 101">
 <meta name="twitter:description" content="Facter is what gives Puppet it’s brains. It collects information about the computer it is run on and then passes it to the Puppet Master for use in manifests and can optionally be stored. I know, it doesn’t sound like the most earth shattering revelation of all time, but stop for a moment. Every time your current scripts need to taget a specific OS version or a machine with a certain bit of hardware, you need to code it directly into the script. If the method of extracting that information changes, you need to modify every single script that uses that method. With Facter, you’re editing one file, which is always up to date on the client. Anyway, that’s enough waffle from me. Let’s get started.
@@ -63,7 +64,7 @@
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -79,17 +80,27 @@
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -150,30 +161,30 @@
 <h2 id="setup">Setup</h2>
 <p>We need a Puppet Master - fortunately there’s one pre-built that has everything we need. Make sure you’ve installed everything in the requirements, and then open up your trusty Terminal:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir ~/src
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git clone https://github.com/grahamgilbert/vagrant-puppetmaster.git facter-101
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd </span>facter-101
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>vagrant up</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>mkdir ~/src
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git clone https://github.com/grahamgilbert/vagrant-puppetmaster.git facter-101
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd </span>facter-101
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>vagrant up</div></div></pre></div></figure>
 
 <p>This will pull down the needed bits to get your own Puppet Master running and then <code>vagrant up</code> will start things going. If you get errors about Postgres, just issue a <code>vagrant reload</code></p>
 
 <p>Now for your test Mac: I’ve made a script to automate the process. If you <strong>don’t</strong> have a DNS entry for your Puppet Master, and you’re using the Vagrant setup described above, run this in your terminal:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>curl -o /tmp/install_puppet.py https://raw.github.com/grahamgilbert/macscripts/master/Puppet-Install/install_puppet.py<span class="p">;</span> sudo python /tmp/install_puppet.py --appendhosts</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>curl -o /tmp/install_puppet.py https://raw.github.com/grahamgilbert/macscripts/master/Puppet-Install/install_puppet.py; sudo python /tmp/install_puppet.py --appendhosts</div></div></pre></div></figure>
 
 <p>If you are using a different setup, please refer to the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Puppet-Install">script’s readme</a> for more information</p>
 
 <h2 id="learn-some-facts">Learn some Facts</h2>
 <p>On your client machine, run this in a Terminal</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo facter</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo facter</div></div></pre></div></figure>
 
 <p>Your test Mac will churn away for a minute and then spit out a ton of information - you’ll see everything from the uptime of the machine to the amount of RAM. Still not overly useful sitting on that one machine. We need this information somewhere central to make use of it.</p>
 
 <p>We need to make one small change to <code>~/src/facter-101/puppet/manifests/site.pp</code> to get the puppet run working:</p>
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1"># comment out the next line by putting a hash in front of it</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1"># import &quot;classes/*&quot;</span></div></div></pre></div></figure>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1"># import "classes/*"</span></div></div></pre></div></figure>
 
 <p>This is to stop Puppet complaining that there’s nothing to import - which there isn’t yet.</p>
 
@@ -193,14 +204,14 @@
 
 <p>First we’ll install the extra Facts onto our Master from the Forge.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src/facter-101
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>vagrant ssh
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># You&#39;re on the Puppet Master now</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo puppet module install grahamgilbert/mac_facts
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/src/facter-101
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>vagrant ssh
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># You're on the Puppet Master now</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo puppet module install grahamgilbert/mac_facts
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Get out of the Puppet Master</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">exit</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">exit</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Restart the Puppet Master to pick up the new module</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>vagrant reload</div></div></pre></div></figure>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>vagrant reload</div></div></pre></div></figure>
 
 <p>Now we’ll write a class that will:</p>
 
@@ -213,29 +224,29 @@
 <p>Create your <code>~/src/facter-101/puppet/manifests/classes/design.pp</code>and make it look like the following.</p>
 
 <figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">~/src/facter-101/puppet/manifests/classes/design.pp</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">class</span> <span class="n">design</span> <span class="p">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="k">if</span> <span class="vg">$:</span><span class="ss">:operatingsystem</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span> <span class="ow">and</span> <span class="vg">$:</span><span class="ss">:mac_memory_in_gb</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">&#x7b;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">		<span class="n">package</span> <span class="p">&#x7b;</span> <span class="s1">&#39;Firefox&#39;</span><span class="p">:</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="k">if</span> <span class="vg">$:</span><span class="ss">:operatingsystem</span> <span class="o">==</span> <span class="s2">"Darwin"</span> <span class="n">and</span> <span class="vg">$:</span><span class="ss">:mac_memory_in_gb</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">&#x7b;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">		<span class="n">package</span> <span class="p">&#x7b;</span> <span class="s1">'Firefox'</span><span class="p">:</span>
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="k">ensure</span> <span class="o">=&gt;</span> <span class="n">installed</span><span class="p">,</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="n">provider</span> <span class="o">=&gt;</span> <span class="n">appdmg</span><span class="p">,</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="n">source</span> <span class="o">=&gt;</span> <span class="s2">&quot;http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/19.0.2/mac/en-US/Firefox%2019.0.2.dmg&quot;</span><span class="p">,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="n">source</span> <span class="o">=&gt;</span> <span class="s2">"http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/19.0.2/mac/en-US/Firefox%2019.0.2.dmg"</span><span class="p">,</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">		<span class="p">&#x7d;</span>
 </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="p">&#x7d;</span>
 </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span></div></div></pre></div></figure>
 
 <p>Puppet has a default node - all machines checking into the Master get anything that’s declared in this node by default. Open up <code>~/src/facter-101/puppet/manifests/site.pp</code> and make it look like:</p>
 
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">~/src/facter-101/puppet/manifests/site.pp</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">import</span> <span class="s2">&quot;classes/*&quot;</span>
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">~/src/facter-101/puppet/manifests/site.pp</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">import</span> <span class="s2">"classes/*"</span>
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">node</span> <span class="n">default</span> <span class="p">&#x7b;</span>
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="kp">include</span> <span class="n">design</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span></div></div></pre></div></figure>
 
 <p>We’ve added some classes, so the Puppet Master process needs to be restarted - rebooting the whole VM is probably quicker.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>vagrant reload</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>vagrant reload</div></div></pre></div></figure>
 
 <p>On your Test Mac, perform a Puppet run.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo puppet agent -t</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo puppet agent -t</div></div></pre></div></figure>
 
 <p><img class="center" src="/images/posts/2013-04-02/Firefox_Installed.png" alt="" /></p>
 
@@ -244,21 +255,21 @@
 <p>So that’s Facter - you’re not limited to using this with the default node, this technique can be used anywhere you write Puppet code. Try changing your design.pp file to look like the following - we’re using Facter Facts directly within our manifest to write data to the test Mac.</p>
 
 <figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">~/src/facter-101/puppet/manifests/classes/design.pp</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">class</span> <span class="n">design</span> <span class="p">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="k">if</span> <span class="vg">$:</span><span class="ss">:operatingsystem</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span> <span class="ow">and</span> <span class="vg">$:</span><span class="ss">:mac_memory_in_gb</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">&#x7b;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">		<span class="n">package</span> <span class="p">&#x7b;</span> <span class="s1">&#39;Firefox&#39;</span><span class="p">:</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="k">if</span> <span class="vg">$:</span><span class="ss">:operatingsystem</span> <span class="o">==</span> <span class="s2">"Darwin"</span> <span class="n">and</span> <span class="vg">$:</span><span class="ss">:mac_memory_in_gb</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">&#x7b;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">		<span class="n">package</span> <span class="p">&#x7b;</span> <span class="s1">'Firefox'</span><span class="p">:</span>
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="k">ensure</span> <span class="o">=&gt;</span> <span class="n">installed</span><span class="p">,</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="n">provider</span> <span class="o">=&gt;</span> <span class="n">appdmg</span><span class="p">,</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="n">source</span> <span class="o">=&gt;</span> <span class="s2">&quot;http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/19.0.2/mac/en-US/Firefox%2019.0.2.dmg&quot;</span><span class="p">,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="n">source</span> <span class="o">=&gt;</span> <span class="s2">"http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/19.0.2/mac/en-US/Firefox%2019.0.2.dmg"</span><span class="p">,</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">		<span class="p">&#x7d;</span>
 </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="p">&#x7d;</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="n">file</span> <span class="p">&#x7b;</span> <span class="s1">&#39;/tmp/mac_ver&#39;</span><span class="p">:</span> 
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">		<span class="n">content</span> <span class="o">=&gt;</span> <span class="s2">&quot;This Mac is running $&#x7b;::sp_os_version&#x7d;&quot;</span><span class="p">,</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="n">file</span> <span class="p">&#x7b;</span> <span class="s1">'/tmp/mac_ver'</span><span class="p">:</span> 
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">		<span class="n">content</span> <span class="o">=&gt;</span> <span class="s2">"This Mac is running $&#x7b;::sp_os_version&#x7d;"</span><span class="p">,</span>
 </div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="p">&#x7d;</span>
 </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span></div></div></pre></div></figure>
 
 <p>Which gives us</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>less /tmp/mac_ver
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>less /tmp/mac_ver
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">This Mac is running OS X 10.8.3 <span class="o">(</span>12D78<span class="o">)</span></div></div></pre></div></figure>
 
 <p>This is a very simple example of how you can use Facter to configure your machines. Facter can be used anywhere you’d set a variable manually - the <a href="http://docs.puppetlabs.com/puppet/latest/reference/lang_conditional.html">Puppet documentation on Conditional Statements</a> is an excellent next step with dynamically assigning configuration to your machines.</p>
@@ -294,11 +305,11 @@
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

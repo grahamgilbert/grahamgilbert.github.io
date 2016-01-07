@@ -14,6 +14,7 @@ For a full explanation of what Hiera is, see the Puppetlabs documentation, but e
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Running Puppet Server in Docker Part 3: Hiera">
 <meta name="twitter:description" content="In the previous two parts, we went over how to get a basic Puppet Server up and running in Docker and how to deploy your modules using r10k. This time we’ll assign some configuration to our nodes using Hiera.
@@ -69,7 +70,7 @@ For a full explanation of what Hiera is, see the Puppetlabs documentation, but e
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -85,17 +86,27 @@ For a full explanation of what Hiera is, see the Puppetlabs documentation, but e
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -150,16 +161,16 @@ For a full explanation of what Hiera is, see the Puppetlabs documentation, but e
 <p>Let’s get things set up. First off, you need to tell your server what order it should be looking things up in. Restart the Puppet Server container when you’ve made the change. This is mine, yours will likely be different:</p>
 
 <figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/usr/local/docker/puppetserver/puppet/hiera.yaml</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nn">---</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="l-Scalar-Plain">:backends</span><span class="p-Indicator">:</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">yaml</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="l-Scalar-Plain">:yaml</span><span class="p-Indicator">:</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="l-Scalar-Plain">:datadir</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/etc/puppet/environments/%&#x7b;::environment&#x7d;/hieradata/</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="l-Scalar-Plain">:hierarchy</span><span class="p-Indicator">:</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p-Indicator">-</span> <span class="s">&quot;certs/%&#x7b;::clean_certname&#x7d;&quot;</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p-Indicator">-</span> <span class="s">&quot;osfamily/%&#x7b;::osfamily&#x7d;&quot;</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p-Indicator">-</span> <span class="s">&quot;virtual/%&#x7b;::osfamily&#x7d;/%&#x7b;::virtual&#x7d;&quot;</span>
-</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p-Indicator">-</span> <span class="s">&quot;virtual/%&#x7b;::virtual&#x7d;&quot;</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">common</span></div></div></pre></div></figure>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s">:backends</span><span class="pi">:</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="pi">-</span> <span class="s">yaml</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s">:yaml</span><span class="pi">:</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="s">:datadir</span><span class="pi">:</span> <span class="s">/etc/puppet/environments/%&#x7b;::environment&#x7d;/hieradata/</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s">:hierarchy</span><span class="pi">:</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="pi">-</span> <span class="s2">"</span><span class="s">certs/%&#x7b;::clean_certname&#x7d;"</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="pi">-</span> <span class="s2">"</span><span class="s">osfamily/%&#x7b;::osfamily&#x7d;"</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="pi">-</span> <span class="s2">"</span><span class="s">virtual/%&#x7b;::osfamily&#x7d;/%&#x7b;::virtual&#x7d;"</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="pi">-</span> <span class="s2">"</span><span class="s">virtual/%&#x7b;::virtual&#x7d;"</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="pi">-</span> <span class="s">common</span></div></div></pre></div></figure>
 
 <p>From top to bottom:</p>
 
@@ -171,34 +182,34 @@ For a full explanation of what Hiera is, see the Puppetlabs documentation, but e
 
 <p>In your control repo, create the following files:</p>
 
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">environment.conf</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">manifest</span> <span class="o">=</span> site.pp
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">modulepath</span> <span class="o">=</span> modules:site</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">environment.conf</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">manifest <span class="o">=</span> site.pp
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">modulepath <span class="o">=</span> modules:site</div></div></pre></div></figure>
 
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">site.pp</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">hiera_include<span class="o">(</span><span class="s1">&#39;classes&#39;</span><span class="o">)</span></div></div></pre></div></figure>
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">site.pp</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">hiera_include<span class="o">(</span><span class="s1">'classes'</span><span class="o">)</span></div></div></pre></div></figure>
 
 <p>Woah, hold on - what just happened there? In three lines, we told Puppet where to find our <code>site.pp</code> file - the file that is read first during a Puppet run, and then in <code>site.pp</code> that is should include our classes from Hiera. Let’s do that now. We’re going to make our most general configuration - <code>common.yaml</code> that came at the bottom of <code>hiera.yaml</code> above.</p>
 
 <figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">hieradata/common.yaml</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nn">---</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="l-Scalar-Plain">classes</span><span class="p-Indicator">:</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">puppet_run</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s">&quot;puppet_run::server_name&quot;</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">puppet.example.com</span></div></div></pre></div></figure>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s">classes</span><span class="pi">:</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="pi">-</span> <span class="s">puppet_run</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s2">"</span><span class="s">puppet_run::server_name"</span><span class="pi">:</span> <span class="s">puppet.example.com</span></div></div></pre></div></figure>
 
 <p>We want all of our clients to run Puppet periodically - so we’ve included the <code>puppet_run</code> class and have set the <code>puppet_run::server_name</code> variable. Where did we find that variable? All of a classes variables are <a href="https://github.com/grahamgilbert/puppet-puppet_run/blob/master/manifests/init.pp#L2">listed at the top of the file</a>.</p>
 
 <p>But let’s say we want Munki on all of our Macs. We don’t want it being installed on Linux, so we need to be a bit more specific in our hierachy:</p>
 
 <figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">hieradata/osfamily/Darwin.yaml</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nn">---</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="l-Scalar-Plain">classes</span><span class="p-Indicator">:</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">mac_admin::munki</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">mac_admin::munki::munkitools</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="l-Scalar-Plain">mac_admin::munki::repourl</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">https://munki.example.com</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="l-Scalar-Plain">mac_admin::munki::install_apple_updates</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span></div></div></pre></div></figure>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s">classes</span><span class="pi">:</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="pi">-</span> <span class="s">mac_admin::munki</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="pi">-</span> <span class="s">mac_admin::munki::munkitools</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s">mac_admin::munki::repourl</span><span class="pi">:</span> <span class="s">https://munki.example.com</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="s">mac_admin::munki::install_apple_updates</span><span class="pi">:</span> <span class="s">true</span></div></div></pre></div></figure>
 
 <p>This will only be applied to nodes that have their <code>osfamily</code> fact equal to <code>Darwin</code>.</p>
 
 <p>Now all of that is commited to your control git repository, all that remains is to deploy it on your Puppet Server:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>r10k deploy environment -pv</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>r10k deploy environment -pv</div></div></pre></div></figure>
 
       <hr />
       <footer role="contentinfo">
@@ -231,11 +242,11 @@ For a full explanation of what Hiera is, see the Puppetlabs documentation, but e
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

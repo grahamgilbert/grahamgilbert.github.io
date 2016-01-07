@@ -14,6 +14,7 @@ If you’ve not read the previous article, you will need to before carrying on w
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="The Luggage: Further automation">
 <meta name="twitter:description" content="As promised in my previous post, today we’re going to look at how we can further refine our workflow, with the aim of cutting out as many manual steps as possible (every IT person knows it’s not computer that make mistakes, it’s the idiots in front of them) and making as much of our code re-usable in other packages.
@@ -69,7 +70,7 @@ If you’ve not read the previous article, you will need to before carrying on w
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -85,17 +86,27 @@ If you’ve not read the previous article, you will need to before carrying on w
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -204,20 +215,21 @@ If you’ve not read the previous article, you will need to before carrying on w
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">#!/bin/bash</span>
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="o">[</span> -e ~/Desktop/File<span class="se">\ </span>Server.afploc <span class="o">]</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">then</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">    rm -f ~/Desktop/File<span class="se">\ </span>Server.afploc
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">then
+<div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">    rm -f ~/Desktop/File<span class="se">\ </span>Server.afploc
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">fi</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">cp /Library/Management/Desktop_Icons/File<span class="se">\ </span>Server.afploc ~/Desktop/File<span class="se">\ </span>Server.afploc</div></div></pre></div></figure>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">cp /Library/Management/Desktop_Icons/File<span class="se">\ </span>Server.afploc ~/Desktop/File<span class="se">\ </span>Server.afploc</div></div>
 
-<p>The script is pretty simple - if the shortcut already exists (maybe they’ve got a previous version pointing to an old server) it gets removed, and then a new one is copied onto the desktop. I’ve dated the script as scriptRunner only stores the name of the script to know what it’s run - if you replace the script with an updated version but keep the same name, it won’t run again (obviously this only applies to scripts that are in the ‘once’ directory).</p>
 
-<p>Great, it works. But what happens if you want to put another script on the machine to run with scriptRunner? Or maybe you want some more icons - you’re about to do a lot of copying and pasting. Wouldn’t it be great if we could store the parts that are creating directories and performing common operations in a shared place so multiple Makefiles could use them?</p>
+The script is pretty simple - if the shortcut already exists (maybe they've got a previous version pointing to an old server) it gets removed, and then a new one is copied onto the desktop. I've dated the script as scriptRunner only stores the name of the script to know what it's run - if you replace the script with an updated version but keep the same name, it won't run again (obviously this only applies to scripts that are in the 'once' directory).
 
-<p>Enter <code>/usr/local/share/luggage/luggage.local</code> .</p>
+Great, it works. But what happens if you want to put another script on the machine to run with scriptRunner? Or maybe you want some more icons - you're about to do a lot of copying and pasting. Wouldn't it be great if we could store the parts that are creating directories and performing common operations in a shared place so multiple Makefiles could use them?
 
-<p>When you run <code>make pkg</code>, The Luggage will check for the existence of <code>/usr/local/share/luggage/luggage.local</code>, and use any additions you’ve put in there. We’re definitely going to be putting scripts into <code>/Library/Management/scriptRunner/once</code> and <code>/Library/Management/scriptRunner/every</code>quite often, so we should automate this.</p>
+Enter ``/usr/local/share/luggage/luggage.local`` .
 
-<p>Here’s what my <code>luggage.local</code> file looks like:</p>
+When you run ``make pkg``, The Luggage will check for the existence of ``/usr/local/share/luggage/luggage.local``, and use any additions you've put in there. We're definitely going to be putting scripts into ``/Library/Management/scriptRunner/once`` and ``/Library/Management/scriptRunner/every``quite often, so we should automate this.
+
+Here's what my ``luggage.local`` file looks like:
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">l_Library_Management: l_Library
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	@sudo mkdir -p $&#x7b;WORK_D&#x7d;/Library/Management
@@ -240,7 +252,8 @@ If you’ve not read the previous article, you will need to before carrying on w
 </div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">pack-Library-Management-scriptRunner-every-%: % l_Library_Management_scriptRunner_every
 </div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">	@sudo $&#x7b;INSTALL&#x7d; -m 755 -g wheel -o root "$&#x7b;&lt;&#x7d;" $&#x7b;WORK_D&#x7d;/Library/Management/scriptRunner/every</div></div></pre></div></figure>
 
-<p>The first few parts should be pretty obvious to you - we’re just making some directories and setting ownership and permissions. The last two sections are of more interest. We’re using the <code>INSTALL</code> variable, which is set to <code>/usr/bin/install</code> in <code>luggage.make</code> to move a file and set ownership and permissions. We’re using the same technique as we used last time to install the Launch Agent. This means that our Makefile can become:</p>
+
+The first few parts should be pretty obvious to you - we're just making some directories and setting ownership and permissions. The last two sections are of more interest. We're using the ``INSTALL`` variable, which is set to ``/usr/bin/install`` in ``luggage.make`` to move a file and set ownership and permissions. We're using the same technique as we used last time to install the Launch Agent. This means that our Makefile can become:
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">USE_PKGBUILD=1
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">include /usr/local/share/luggage/luggage.make
@@ -256,9 +269,11 @@ If you’ve not read the previous article, you will need to before carrying on w
 </div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">	@sudo chown root:wheel $&#x7b;WORK_D&#x7d;/Library/Management/Desktop_Icons/File\ Server.afploc
 </div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">	@sudo chmod 644 $&#x7b;WORK_D&#x7d;/Library/Management/Desktop_Icons/File\ Server.afploc</div></div></pre></div></figure>
 
-<p>So we’re not only cutting out cruft from our Makefile for this package, but it makes future packages much faster to create, eliminating the problem between the keyboard and chair. You could (should!) even put your <code>luggage.local</code> file under source control (mine is <a href="https://github.com/grahamgilbert/luggage_local">on my Github account</a>), so your changes are tracked, and you can collaborate with your colleagues .</p>
 
-<p>You’ll notice there is still the section for copying the .afploc. You have two choices here: maybe this is the only time you’re ever going to install a file in this directory, in which case this is perfectly fine to leave in the Makefile. However, if you are going to be putting lots of files here, as we are with <code>/Library/Management/scriptRunner</code>, you might want to move this into your <code>luggage.local</code> file so it is available across all of your Makefiles. You homework, should you choose to accept it, is to generalise that section so it can be reused and move it to <code>luggage.local</code>.</p>
+So we're not only cutting out cruft from our Makefile for this package, but it makes future packages much faster to create, eliminating the problem between the keyboard and chair. You could (should!) even put your ``luggage.local`` file under source control (mine is [on my Github account](https://github.com/grahamgilbert/luggage_local)), so your changes are tracked, and you can collaborate with your colleagues .
+
+You'll notice there is still the section for copying the .afploc. You have two choices here: maybe this is the only time you're ever going to install a file in this directory, in which case this is perfectly fine to leave in the Makefile. However, if you are going to be putting lots of files here, as we are with ``/Library/Management/scriptRunner``, you might want to move this into your ``luggage.local`` file so it is available across all of your Makefiles. You homework, should you choose to accept it, is to generalise that section so it can be reused and move it to ``luggage.local``.
+</span></div></div></pre></div></figure>
 
       <hr />
       <footer role="contentinfo">
@@ -291,11 +306,11 @@ If you’ve not read the previous article, you will need to before carrying on w
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />

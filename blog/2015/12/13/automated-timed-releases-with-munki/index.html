@@ -14,6 +14,7 @@ So I started looking at how to automate this process. First I looked at force_in
 <meta name="keywords" content="">
 
 
+
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Automated timed releases with Munki">
 <meta name="twitter:description" content="In my environment, we have software that needs to be deployed at the same time across all of our sites. Previously, this meant someone had to pull their computer out on a Sunday and promote the item from the testing catalog to the production catalog. Which is fine, but to be honest I’d rather be doing something else on a Sunday!
@@ -69,7 +70,7 @@ So I started looking at how to automate this process. First I looked at force_in
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -85,17 +86,27 @@ So I started looking at how to automate this process. First I looked at force_in
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -164,26 +175,26 @@ So I started looking at how to automate this process. First I looked at force_in
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">import</span> <span class="nn">time</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">Foundation</span> <span class="kn">import</span> <span class="n">CFPreferencesCopyAppValue</span>
 </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Read the location of the ManagedInstallDir from ManagedInstall.plist</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">BUNDLE_ID</span> <span class="o">=</span> <span class="s">&#39;ManagedInstalls&#39;</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">pref_name</span> <span class="o">=</span> <span class="s">&#39;ManagedInstallDir&#39;</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">BUNDLE_ID</span> <span class="o">=</span> <span class="s">'ManagedInstalls'</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">pref_name</span> <span class="o">=</span> <span class="s">'ManagedInstallDir'</span>
 </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">managedinstalldir</span> <span class="o">=</span> <span class="n">CFPreferencesCopyAppValue</span><span class="p">(</span><span class="n">pref_name</span><span class="p">,</span> <span class="n">BUNDLE_ID</span><span class="p">)</span>
-</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Make sure we&#39;re outputting our information to &quot;ConditionalItems.plist&quot;</span>
-</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">conditionalitemspath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">managedinstalldir</span><span class="p">,</span> <span class="s">&#39;ConditionalItems.plist&#39;</span><span class="p">)</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Make sure we're outputting our information to "ConditionalItems.plist"</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">conditionalitemspath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">managedinstalldir</span><span class="p">,</span> <span class="s">'ConditionalItems.plist'</span><span class="p">)</span>
 </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
 </div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">newdict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">utctime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span> <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
 </div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># CRITICAL!</span>
 </div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">conditionalitemspath</span><span class="p">):</span>
-</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># &quot;ConditionalItems.plist&quot; exists, so read it FIRST (existing_dict)</span>
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># "ConditionalItems.plist" exists, so read it FIRST (existing_dict)</span>
 </div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">existing_dict</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlist</span><span class="p">(</span><span class="n">conditionalitemspath</span><span class="p">)</span>
 </div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># Create output_dict which joins new data generated in this script with existing data</span>
 </div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">output_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">existing_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="o">+</span> <span class="n">newdict</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 </div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">else</span><span class="p">:</span>
-</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># &quot;ConditionalItems.plist&quot; does not exist,</span>
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># "ConditionalItems.plist" does not exist,</span>
 </div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c"># output only consists of data generated in this script</span>
 </div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">output_dict</span> <span class="o">=</span> <span class="n">newdict</span>
-</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># Write out data to &quot;ConditionalItems.plist&quot;</span>
+</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># Write out data to "ConditionalItems.plist"</span>
 </div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">plistlib</span><span class="o">.</span><span class="n">writePlist</span><span class="p">(</span><span class="n">output_dict</span><span class="p">,</span> <span class="n">conditionalitemspath</span><span class="p">)</span>
-</div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+</div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
 </div></div><div data-line="37" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">main</span><span class="p">()</span></div></div></pre></div></figure>
 
 <p>Just deploy that to <code>/usr/local/munki/conditions/utctime</code> and you’re good to go - if you’d like to use a pre-built package, you’ll find one up on <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki/Condtion%20Packages/utctime">GitHub</a>.</p>
@@ -219,11 +230,11 @@ So I started looking at how to automate this process. First I looked at force_in
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/" title="Crypt 2 Alpha Release">Crypt 2 Alpha Release</a></li>
     
     </ul>
     <hr />

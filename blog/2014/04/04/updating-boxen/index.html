@@ -61,8 +61,10 @@ At this point, you might want to go through the custom modules you’ve added to
 bash
 $ boxen
 
+
 ">
 <meta name="keywords" content="">
+
 
 
 <!-- Twitter Cards -->
@@ -121,6 +123,7 @@ At this point, you might want to go through the custom modules you’ve added to
 
 bash
 $ boxen
+
 
 ">
 <meta name="twitter:site" content="@grahamgilbert">
@@ -188,6 +191,7 @@ At this point, you might want to go through the custom modules you’ve added to
 bash
 $ boxen
 
+
 ">
 <meta property="og:url" content="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">
 <meta property="og:site_name" content="graham gilbert dot com">
@@ -222,7 +226,7 @@ $ boxen
 
 <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
-<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
 <body class="post">
@@ -238,17 +242,27 @@ $ boxen
 		    <ul>
 		        
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
 				
 				    
+				        
+				    
 				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
 				
 				    
+				        
+				        
 				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
 				
+				    
+				        
 				    
 				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
 				
@@ -308,17 +322,17 @@ $ boxen
 
 <p>As Boxen is made by GitHub, updating it is much like updating any other project on there that you’ve made a fork of.  First we’re going to add it as a remote repository:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src/our-boxen
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git remote add upstream https://github.com/boxen/our-boxen.git</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/src/our-boxen
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git remote add upstream https://github.com/boxen/our-boxen.git</div></div></pre></div></figure>
 
 <p>Then we’re going to fetch the stuff from the upstream repository:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git fetch upstream</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git fetch upstream</div></div></pre></div></figure>
 
 <p>Now we’re going to merge the updated repository with our own:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git checkout master
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git merge upstream/master</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git checkout master
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git merge upstream/master</div></div></pre></div></figure>
 
 <p>If you haven’t modified any of the core Boxen files (<code>Puppetfile</code>, <code>Gemfile</code> or <code>manifests/site.pp</code> in my case), you might get away without having to fix any conflicts (you can ignore any in <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>, we’ll deal with those next). I had conflicts as I had previously:</p>
 
@@ -330,16 +344,16 @@ $ boxen
 
 <p>None of these were particularly arduous to fix, but annoying none the less. If you find you have loads, you might want to run:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git mergetool</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>git mergetool</div></div></pre></div></figure>
 
 <p>The next step is to update your Puppet modules and RubyGems. First delete <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>. Now go back to your trusty Terminal and:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>bundle install --without development
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>bundle <span class="nb">exec </span>librarian-puppet install --clean</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>bundle install --without development
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>bundle <span class="nb">exec </span>librarian-puppet install --clean</div></div></pre></div></figure>
 
 <p>At this point, you might want to go through the custom modules you’ve added to your <code>Puppetfile</code> and update those, although this is by no means required - some apps I’ve installed through Boxen don’t have a built in updater, so Boxen is more convenient than hunting for installers on various vendor’s websites. Once your modules are up to date in your <code>Puppetfile</code>,  you’re done! You can now get your Mac back to how you like it by issuing the usual:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>boxen</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>boxen</div></div></pre></div></figure>
 
       <hr />
       <footer role="contentinfo">
@@ -372,11 +386,11 @@ $ boxen
   <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
     <ul>
     
+      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
+    
       <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
     
       <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
     
     </ul>
     <hr />
