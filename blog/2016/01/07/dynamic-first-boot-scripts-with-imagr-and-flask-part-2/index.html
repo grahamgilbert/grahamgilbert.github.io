@@ -1,4 +1,149 @@
-<p>If you are just starting with this series, it is highly recommended you start with <a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">Part 1</a>.</p>
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Dynamic first boot scripts with Imagr and Flask&#58; Part 2 &#8211; graham gilbert dot com</title>
+<meta name="description" content="If you are just starting with this series, it is highly recommended you start with Part 1.
+
+Last time we built a basic app that will ask for a username and password to access it. Now we’re going to add in some other data that will eventually be sent by Imagr to let our script be dynamically generated.
+
+">
+<meta name="keywords" content="">
+
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">
+<meta name="twitter:description" content="If you are just starting with this series, it is highly recommended you start with Part 1.
+
+Last time we built a basic app that will ask for a username and password to access it. Now we’re going to add in some other data that will eventually be sent by Imagr to let our script be dynamically generated.
+
+">
+<meta name="twitter:site" content="@grahamgilbert">
+<meta name="twitter:creator" content="@grahamgilbert">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://grahamgilbert.com/images/about.jpg">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_GB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">
+<meta property="og:description" content="If you are just starting with this series, it is highly recommended you start with Part 1.
+
+Last time we built a basic app that will ask for a username and password to access it. Now we’re going to add in some other data that will eventually be sent by Imagr to let our script be dynamically generated.
+
+">
+<meta property="og:url" content="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/">
+<meta property="og:site_name" content="graham gilbert dot com">
+
+<meta property="og:image" content="http://grahamgilbert.com/images/about.jpg">
+
+
+
+
+
+<link rel="canonical" href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/">
+<link href="http://grahamgilbert.com/atom.xml" type="application/atom+xml" rel="alternate" title="graham gilbert dot com Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://grahamgilbert.com/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+	<script src="http://grahamgilbert.com/assets/js/vendor/html5shiv.min.js"></script>
+	<script src="http://grahamgilbert.com/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="http://grahamgilbert.com/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+
+<link href='/stylesheets/all-d4c4470555e49423ba1d5d6cce3777a2.css' media='all' rel='stylesheet' type='text/css'>
+</head>
+
+<body class="post">
+
+<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+
+<div class="navigation-wrapper">
+	<div class="site-name">
+		<input type="text" class="st-default-search-input" style="width: 150px;">
+	</div><!-- /.site-name -->
+	<div class="top-navigation">
+		<nav role="navigation" id="site-nav" class="nav">
+		    <ul>
+		        
+				    
+				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
+				
+				    
+				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
+				
+				    
+				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
+				
+				    
+				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
+				
+				    
+				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
+				
+		    </ul>
+		</nav>
+	</div><!-- /.top-navigation -->
+</div><!-- /.navigation-wrapper -->
+
+
+
+<div id="main" role="main">
+  <div class="article-author-side">
+    <div itemscope itemtype="http://schema.org/Person">
+
+	<img src="http://grahamgilbert.com/images/about.jpg" class="bio-photo" alt="Graham Gilbert bio photo">
+
+
+  <h3 itemprop="name">Graham Gilbert</h3>
+  <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
+  <a href="http://twitter.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-twitter-square"></i> Twitter</a>
+  
+  
+  <a href="http://linkedin.com/in/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-linkedin-square"></i> LinkedIn</a>
+  
+  
+  
+  <a href="http://github.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-github"></i> Github</a>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</div>
+  </div>
+  <article class="post">
+    <div class="headline-wrap">
+      
+        <h1><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" rel="bookmark" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></h1>
+      
+    </div><!--/ .headline-wrap -->
+    <div class="article-wrap">
+      <p>If you are just starting with this series, it is highly recommended you start with <a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">Part 1</a>.</p>
 
 <p>Last time we built a basic app that will ask for a username and password to access it. Now we’re going to add in some other data that will eventually be sent by Imagr to let our script be dynamically generated. <!-- more --></p>
 
@@ -185,3 +330,103 @@ And here's our code at the end of part 2:
 </div></div><div data-line="94" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="95" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
 </div></div><div data-line="96" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">'0.0.0.0'</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">DEBUG</span><span class="p">)</span></div></div>
 </span></div></div></span></div></div></pre></div></figure></span></div></div></pre></div></figure>
+
+      <hr />
+      <footer role="contentinfo">
+        <div class="social-share">
+  <h4>Share on</h4>
+  <ul>
+    <li>
+      <a href="https://twitter.com/intent/tweet?text=http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
+    </li>
+    <li>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
+    </li>
+    <li>
+      <a href="https://plus.google.com/share?url=http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
+    </li>
+  </ul>
+</div><!-- /.social-share -->
+        <p class="byline"><strong>Dynamic first boot scripts with Imagr and Flask&#58; Part 2</strong> was published on <time datetime="2016-01-07T09:33:31+00:00">January 07, 2016</time>.</p>
+      </footer>
+    </div><!-- /.article-wrap -->
+  
+    <section id="disqus_thread"></section><!-- /#disqus_thread -->
+  
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrap">
+  
+  <div class="related-articles">
+  <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
+    <ul>
+    
+      <li><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></li>
+    
+      <li><a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/" title="Imagr 0.0.5">Imagr 0.0.5</a></li>
+    
+      <li><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/" title="Automated timed releases with Munki">Automated timed releases with Munki</a></li>
+    
+    </ul>
+    <hr />
+  </div><!-- /.related-articles -->
+  
+  <footer>
+    <span>&copy; 2016 Graham Gilbert.</span>
+  </footer>
+</div><!-- /.footer-wrap -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://grahamgilbert.com/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://grahamgilbert.com/assets/js/scripts.min.js"></script>
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  var _gaq = _gaq || [];
+  var pluginUrl =
+ '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-27233739-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','sFQe2UApMaKvCdHMFL6r','2.0.0');
+</script>
+          
+
+
+  <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'grahamgilbert'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+</body>
+</html>
