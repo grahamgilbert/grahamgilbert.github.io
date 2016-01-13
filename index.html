@@ -139,6 +139,31 @@
     
     
       
+        <h1><a href="http://grahamgilbert.com/blog/2016/01/13/dynamic-first-boot-scripts-with-imagr-and-flask-part-3/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 3">Dynamic first boot scripts with Imagr and Flask&#58; Part 3</a></h1>
+          <article>
+          
+            <p>If you are just starting with this series, it is highly recommended you start with <a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">Part 1</a>.</p>
+
+<p>Last time around we got our app returning something useful to Imagr. This time around we’ll make our second endpoint - the one that will create the machine’s individual Munki manifest on the server.</p>
+
+<p>Our fictional setup is making use of the default manifests Munki looks for - eventually it will request the machine’s serial number if no client identifier is set. Our manifest will contain three other included manifests:</p>
+
+<ul>
+  <li>One for the site where the machine is located.</li>
+  <li>One for the machine’s build.</li>
+  <li>A general one for all machines (the site default).</li>
+</ul>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2016/01/13/dynamic-first-boot-scripts-with-imagr-and-flask-part-3/">Continue reading...</a></b></p>
+          
+          </article>
+          <hr />
+      
+
+    
+    
+      
         <h1><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></h1>
           <article>
           
@@ -205,23 +230,6 @@
 
 
             <p><b><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/">Continue reading...</a></b></p>
-          
-          </article>
-          <hr />
-      
-
-    
-    
-      
-        <h1><a href="http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/" title="Crypt 2 Alpha Release">Crypt 2 Alpha Release</a></h1>
-          <article>
-          
-            <p>A few months ago at PSU, Tom Burgin and Jeremy Baker <a href="https://youtu.be/tcmql5byA_I?list=PLRUboZUQxbyVydhdMcxGGfEaZc2sFdQk8">spoke about using Authorization Plugins</a>. I sat there watching this talk thinking about how cool it would be to use this method for Crypt. And then I had a go at it. And it was <em>hard</em>. So I put it to one side.</p>
-
-<p>Then in November, I met up with Tom at MacTech. He very kindly donated a few hours of his time to get me started with re-writing Crypt as an authorization plugin in Swift.</p>
-
-
-            <p><b><a href="http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/">Continue reading...</a></b></p>
           
           </article>
           <hr />
