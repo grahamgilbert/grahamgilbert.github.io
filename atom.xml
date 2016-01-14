@@ -4,13 +4,36 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://grahamgilbert.com/feed.xml" />
 <link rel="alternate" type="text/html" href="http://grahamgilbert.com" />
-<updated>2016-01-13T08:58:00+00:00</updated>
+<updated>2016-01-14T16:56:36+00:00</updated>
 <id>http://grahamgilbert.com/</id>
 <author>
   <name>Graham Gilbert</name>
   <uri>http://grahamgilbert.com/</uri>
   <email>graham@grahamgilbert.com</email>
 </author>
+
+
+  
+
+<entry>
+  <title type="html"><![CDATA[Imagr 1.0.0 Released]]></title>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2016/01/14/imagr-1-0-0-released/" />
+  <id>http://grahamgilbert.com/blog/2016/01/14/imagr-1-0-0-released</id>
+  <published>2016-01-14T16:53:47+00:00</published>
+  <updated>2016-01-14T16:53:47+00:00</updated>
+  <author>
+    <name>Graham Gilbert</name>
+    <uri>http://grahamgilbert.com</uri>
+    <email>graham@grahamgilbert.com</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;It’s been a lot of work, but I’m pleased to say that Imagr has grown up and as I now consider it to have everything I originally intended it to have, I’m calling this a 1.0.0 release.&lt;/p&gt;
+
+&lt;p&gt;You can get hold of it on &lt;a href=&quot;https://github.com/grahamgilbert/imagr/releases/tag/1.0.0&quot;&gt;GitHub&lt;/a&gt;, and if you want to get started with it, there is a load of information on the &lt;a href=&quot;https://github.com/grahamgilbert/imagr/wiki&quot;&gt;Wiki&lt;/a&gt;.&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2016/01/14/imagr-1-0-0-released/&quot;&gt;Imagr 1.0.0 Released&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on January 14, 2016.&lt;/p&gt;
+  </content>
+</entry>
 
 
   
@@ -1827,55 +1850,6 @@ You&#39;ll see all of the modules you specified in your Puppetfile download thes
 &lt;p&gt;In a later post, we will look at how we can use r10k to manage our modules and use Hiera to configure our clients without touching a line of Puppet code.&lt;/p&gt;
 
     &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/&quot;&gt;Running Puppet Server in Docker&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on June 22, 2015.&lt;/p&gt;
-  </content>
-</entry>
-
-
-  
-
-<entry>
-  <title type="html"><![CDATA[Using munki-trello with Git]]></title>
-  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git/" />
-  <id>http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git</id>
-  <published>2015-06-16T11:21:58+01:00</published>
-  <updated>2015-06-16T11:21:58+01:00</updated>
-  <author>
-    <name>Graham Gilbert</name>
-    <uri>http://grahamgilbert.com</uri>
-    <email>graham@grahamgilbert.com</email>
-  </author>
-  <content type="html">
-    &lt;p&gt;So you’re managing your catalogs with &lt;a href=&quot;http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/&quot;&gt;munki-trello&lt;/a&gt;, but you also want to use git and &lt;a href=&quot;https://www.afp548.com/2014/12/01/git-fat-intro-part-two-setup-and-migration/&quot;&gt;git-fat&lt;/a&gt; to track the changes - what do you do?&lt;/p&gt;
-
-&lt;p&gt;If you were using the script that I posted previously, your changes would be mangled when you pull in changes  - it turned out the solution was simple. I’m going to assume your Munki server has commit access to your Munki git repository. We’re pulling down the latest version of the git repo before performing any work, and then we’re git adding just the &lt;code&gt;catalogs&lt;/code&gt; and &lt;code&gt;pkgsinfo&lt;/code&gt; directories - the only directories munki-trello will modify. And if there aren’t any changes, git won’t commit anything, so we can just run &lt;code&gt;git commit&lt;/code&gt; and &lt;code&gt;git push&lt;/code&gt; without worrying about it.&lt;/p&gt;
-
-&lt;p&gt;If we schedule the below script to happen regularly (via cron), we also get our git changes deployed automagically.&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;figcaption class=&quot;code-highlight-caption&quot;&gt;&lt;span class=&quot;code-highlight-caption-title&quot;&gt;/usr/local/bin/munki-trello.sh&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Cron doesn&#39;t have $PATH set as we do, need to find git fat&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;4&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;5&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;6&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Change this to wherever your Munki repository is on disk&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;7&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /usr/local/docker/munki
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;8&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;9&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Pull down changes&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;10&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;git pull
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;11&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;12&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;# and the &#39;fat&#39; files&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;13&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;git fat pull
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;14&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;15&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;docker pull pebbleit/munki-trello
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;16&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;17&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;docker run --rm -v /usr/local/docker/munki:/munki_repo &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;18&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;-e &lt;span class=&quot;nv&quot;&gt;DOCKER_TRELLO_KEY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mytrellokey &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;19&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;-e &lt;span class=&quot;nv&quot;&gt;DOCKER_TRELLO_TOKEN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mytrellotoken &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;20&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;-e &lt;span class=&quot;nv&quot;&gt;DOCKER_TRELLO_BOARDID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;myboardid &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;21&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;pebbleit/munki-trello
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;22&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;23&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;24&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;git add catalogs
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;25&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;git add manifests
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;26&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;git add pkgsinfo
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;27&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;28&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Change the following line if you want to change the git commit message&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;29&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;nv&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;date&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;30&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&quot;Munki Trello commit &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$now&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;31&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;32&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;git push&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-
-    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git/&quot;&gt;Using munki-trello with Git&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on June 16, 2015.&lt;/p&gt;
   </content>
 </entry>
 
