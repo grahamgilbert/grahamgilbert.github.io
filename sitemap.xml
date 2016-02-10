@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://grahamgilbert.com/blog/2016/02/10/macad-uk-2016-puppet-on-os-x/</loc>
+    <lastmod>2016-02-10T09:09:09+00:00</lastmod>
+  </url>
+  <url>
     <loc>http://grahamgilbert.com/blog/2016/01/20/dynamic-first-boot-scripts-with-imagr-and-flask-part-4/</loc>
     <lastmod>2016-01-20T05:49:05+00:00</lastmod>
   </url>

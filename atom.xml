@@ -4,13 +4,34 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="http://grahamgilbert.com/feed.xml" />
 <link rel="alternate" type="text/html" href="http://grahamgilbert.com" />
-<updated>2016-01-20T09:44:46+00:00</updated>
+<updated>2016-02-10T09:33:25+00:00</updated>
 <id>http://grahamgilbert.com/</id>
 <author>
   <name>Graham Gilbert</name>
   <uri>http://grahamgilbert.com/</uri>
   <email>graham@grahamgilbert.com</email>
 </author>
+
+
+  
+
+<entry>
+  <title type="html"><![CDATA[MacAD.UK 2016&#58; Puppet on OS X]]></title>
+  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2016/02/10/macad-uk-2016-puppet-on-os-x/" />
+  <id>http://grahamgilbert.com/blog/2016/02/10/macad-uk-2016-puppet-on-os-x</id>
+  <published>2016-02-10T09:09:09+00:00</published>
+  <updated>2016-02-10T09:09:09+00:00</updated>
+  <author>
+    <name>Graham Gilbert</name>
+    <uri>http://grahamgilbert.com</uri>
+    <email>graham@grahamgilbert.com</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;First off, thanks for coming (if you did indeed come - if you didn’t, you can go away). All of the code I used in my talk is &lt;a href=&quot;https://github.com/grahamgilbert/macaduk_2016&quot;&gt;up on Github&lt;/a&gt;, and you can &lt;a href=&quot;/images/posts/2016-02-09/Puppet_On_OS_X.pdf&quot;&gt;grab the slides as well&lt;/a&gt; if you feel so inclined.&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2016/02/10/macad-uk-2016-puppet-on-os-x/&quot;&gt;MacAD.UK 2016&amp;#58; Puppet on OS X&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on February 10, 2016.&lt;/p&gt;
+  </content>
+</entry>
 
 
   
@@ -1799,107 +1820,6 @@ And for those following along at home, here&#39;s our code after part 1:
 &lt;p&gt;It’s exciting times for users of all the projects I’m working on - in addition to these changes, I have some changes planned for &lt;a href=&quot;https://github.com/grahamgilbert/Crypt&quot;&gt;Crypt&lt;/a&gt;, and of course &lt;a href=&quot;https://github.com/grahamgilbert/imagr&quot;&gt;Imagr&lt;/a&gt; is still on the development rollercoaster.&lt;/p&gt;
 
     &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/06/26/the-future-of-sal/&quot;&gt;The future of Sal&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on June 26, 2015.&lt;/p&gt;
-  </content>
-</entry>
-
-
-  
-
-<entry>
-  <title type="html"><![CDATA[Running Puppet Server in Docker Part 2: r10k]]></title>
-  <link rel="alternate" type="text/html" href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/" />
-  <id>http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k</id>
-  <published>2015-06-24T14:49:31+01:00</published>
-  <updated>2015-06-24T14:49:31+01:00</updated>
-  <author>
-    <name>Graham Gilbert</name>
-    <uri>http://grahamgilbert.com</uri>
-    <email>graham@grahamgilbert.com</email>
-  </author>
-  <content type="html">
-    &lt;p&gt;Last time we got our Puppet Server up and running - now we need to put some Puppet modules on it so we can use it.&lt;/p&gt;
-
-&lt;p&gt;To do that, we’re going to use r10k. It’s a tool that uses a control git repository that contains something called a puppetfile- a file that lists all of the puppet modules you want to use, either from the puppet forge or from git repositories. You may want to keep this module private by using a paid account on GitHub if your configuration contains secrets, but  it doesn’t have to be - mine doesn’t have anything particularly sensitive in, so here it is: &lt;a href=&quot;https://github.com/grahamgilbert/personal-puppet&quot;&gt;grahamgilbert/personal-puppet&lt;/a&gt;. &lt;!-- more --&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;the-control-module&quot;&gt;The Control module&lt;/h2&gt;
-
-&lt;p&gt;Puppet recommends the use of environments - a way of separating your clients into groups - usually this is test and production groups. r10k uses git branches to determine which environments you have, so we’re going to set up our repository. The default branch is called &lt;code&gt;master&lt;/code&gt;, but we want ours to be called &lt;code&gt;production&lt;/code&gt; - Github has some excellent &lt;a href=&quot;https://help.github.com/articles/setting-the-default-branch/&quot;&gt;documentation&lt;/a&gt; on the subject. I recommend accepting GitHub’s suggestion of putting a README in your repository so you can clone it right away.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-puppetfile&quot;&gt;The Puppetfile&lt;/h2&gt;
-
-&lt;p&gt;Now we’ve got our control repo set up, we can clone it so we can work on it.&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;$ git clone https://github.com/yourusername/yourcontolrepo&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;If you’re familiar with Puppet, this will be familiar - an environment is what you would have once put at &lt;code&gt;/etc/puppet&lt;/code&gt; - the only change is that you can override options on a per-environment basis by using &lt;code&gt;environment.conf&lt;/code&gt;. In my control repo, I have a default manifest at the top of the environment rather than in &lt;code&gt;manifests&lt;/code&gt; for example. (&lt;a href=&quot;https://docs.puppetlabs.com/puppet/latest/reference/config_file_environment.html&quot;&gt;more information&lt;/a&gt;)&lt;/p&gt;
-
-&lt;p&gt;At its simplest, a Puppetfile is just a list of modules we want to use. As we’re just starting off, we can use pre-built ones from GitHub and the forge. We’re going to get Munki installed on a client, so we’ll use my MacAdmin module. One thing to note is that r10k won’t resolve dependencies for you, so be sure to specify any modules the module you need. A simple Puppetfile is below:&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;n&quot;&gt;mod&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;mac_admin&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;ss&quot;&gt;:git&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;https://github.com/grahamgilbert/puppet-mac_admin&#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;4&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;n&quot;&gt;mod&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;mac_profiles_handler&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;5&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;ss&quot;&gt;:git&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;https://github.com/keeleysam/rcoleman-mac_profiles_handler&#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;6&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;7&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;n&quot;&gt;mod&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;mac_facts&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;8&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;ss&quot;&gt;:git&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;https://github.com/grahamgilbert/grahamgilbert-mac_facts.git&#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;9&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;10&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;n&quot;&gt;mod&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;repository&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;11&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;ss&quot;&gt;:git&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;https://github.com/boxen/puppet-repository&#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;12&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;13&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;n&quot;&gt;mod&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;outset&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;14&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;ss&quot;&gt;:git&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;https://github.com/grahamgilbert/puppet-outset&#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;15&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;16&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;n&quot;&gt;mod&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;stdlib&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;17&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;ss&quot;&gt;:git&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;https://github.com/puppetlabs/puppetlabs-stdlib&#39;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;configuring-r10k&quot;&gt;Configuring r10k&lt;/h2&gt;
-
-&lt;p&gt;The next piece of the puzzle is to set up r10k to download our repository. I’m running r10k directly on my Docker host, but this could easily be (and probably should be) put into a Docker container. First off, let’s get r10k installed:&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gem install r10k&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;r10k get’s in configuration from &lt;code&gt;/etc/r1ok.yaml&lt;/code&gt;, so let’s create that:&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;figcaption class=&quot;code-highlight-caption&quot;&gt;&lt;span class=&quot;code-highlight-caption-title&quot;&gt;/etc/r10k.yaml&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c1&quot;&gt;# The location to use for storing cached Git repos&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;s&quot;&gt;:cachedir&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/var/cache/r10k&#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;4&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c1&quot;&gt;# A list of git repositories to create&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;5&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;s&quot;&gt;:sources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;6&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;  &lt;span class=&quot;c1&quot;&gt;# This will clone the git repository and instantiate an environment per&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;7&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;  &lt;span class=&quot;c1&quot;&gt;# branch in /etc/puppet/environments&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;8&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;  &lt;span class=&quot;s&quot;&gt;:personal-puppet&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;9&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;s&quot;&gt;remote&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;https://github.com/yourusername/yourcontrolrepo&#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;10&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;s&quot;&gt;basedir&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/usr/local/docker/puppetserver/puppet/environments&#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;puppet-conf&quot;&gt;Puppet Conf&lt;/h2&gt;
-
-&lt;p&gt;The final piece of configuration for today will be to set our Puppet Server to use environments. Add the following to &lt;code&gt;/usr/local/docker/puppetserver/puppet/puppet.conf&lt;/code&gt;:&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;nn&quot;&gt;[main]&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;py&quot;&gt;logdir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/var/log/puppet&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;py&quot;&gt;vardir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/var/lib/puppet&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;4&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;py&quot;&gt;ssldir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/var/lib/puppet/ssl&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;5&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;py&quot;&gt;rundir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/var/run/puppet&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;6&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;py&quot;&gt;factpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;$vardir/lib/facter&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;7&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;py&quot;&gt;environmentpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;$confdir/environments&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;8&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;py&quot;&gt;pluginsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;true&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;9&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;10&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;nn&quot;&gt;[master]&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;11&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;# These are needed when the puppetmaster is run by passenger
-&lt;div data-line=&quot;12&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;# and can safely be removed if webrick is used.
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;13&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;py&quot;&gt;ssl_client_header&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;SSL_CLIENT_S_DN&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;14&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;py&quot;&gt;ssl_client_verify_header&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;SSL_CLIENT_VERIFY&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;15&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;py&quot;&gt;autosign&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;true&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;16&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;py&quot;&gt;environmentpath&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;$confdir/environments&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;
-
-
-## Gimmie some modules
-
-We&#39;re ready to get some modules installed on the Puppet Server:
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;r10k deploy environment -pv&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-
-You&#39;ll see all of the modules you specified in your Puppetfile download theselves to the right place. But of course, we&#39;re not quite ready to use this for applying configuration to our Macs yet - we have modules, but we&#39;ve not applied the config to specific machines. In the next post we&#39;ll cover how we use Hiera to do this.
-&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-    &lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/&quot;&gt;Running Puppet Server in Docker Part 2: r10k&lt;/a&gt; was originally published by Graham Gilbert at &lt;a href=&quot;http://grahamgilbert.com&quot;&gt;graham gilbert dot com&lt;/a&gt; on June 24, 2015.&lt;/p&gt;
   </content>
 </entry>
 
