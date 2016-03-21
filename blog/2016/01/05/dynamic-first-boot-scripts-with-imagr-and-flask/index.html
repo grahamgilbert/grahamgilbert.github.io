@@ -1,192 +1,199 @@
-<!doctype html>
-<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
-<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
-<head>
-<meta charset="utf-8">
-<title>Dynamic first boot scripts with Imagr and Flask &#8211; graham gilbert dot com</title>
-<meta name="description" content="Some may wonder why you would go to the trouble of dynamically generating first boot scripts. I mean, how many can you need?
+<!DOCTYPE html>
+<html lang="en-us">
 
-Let’s say you have ten sites, each with five builds - that fifty first boot scripts to maintain already. It’s entirely possible that they’re all the same, so you could use Imagr’s ability to use a script from a central URL. But you also may need to make slight tweaks depending on what type of machine it is and where it is located.
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-Over the next few posts, we are going to build an app using the Flask framework that will:
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
+  <title>
+    
+      Dynamic first boot scripts with Imagr and Flask &middot; graham gilbert dot com
+    
+  </title>
 
-  Read in headers sent by Imagr to return a dynamically generated first boot script
-  Create a Munki manifest for the Mac
-  Wrap up the application into a Docker image so it can be easily deployed
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
 
-">
-<meta name="keywords" content="">
-
-
-
-<!-- Twitter Cards -->
-<meta name="twitter:title" content="Dynamic first boot scripts with Imagr and Flask">
-<meta name="twitter:description" content="Some may wonder why you would go to the trouble of dynamically generating first boot scripts. I mean, how many can you need?
-
-Let’s say you have ten sites, each with five builds - that fifty first boot scripts to maintain already. It’s entirely possible that they’re all the same, so you could use Imagr’s ability to use a script from a central URL. But you also may need to make slight tweaks depending on what type of machine it is and where it is located.
-
-Over the next few posts, we are going to build an app using the Flask framework that will:
-
-
-  Read in headers sent by Imagr to return a dynamically generated first boot script
-  Create a Munki manifest for the Mac
-  Wrap up the application into a Docker image so it can be easily deployed
-
-
-">
-<meta name="twitter:site" content="@grahamgilbert">
-<meta name="twitter:creator" content="@grahamgilbert">
-
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://grahamgilbert.com/images/about.jpg">
-
-<!-- Open Graph -->
-<meta property="og:locale" content="en_GB">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Dynamic first boot scripts with Imagr and Flask">
-<meta property="og:description" content="Some may wonder why you would go to the trouble of dynamically generating first boot scripts. I mean, how many can you need?
-
-Let’s say you have ten sites, each with five builds - that fifty first boot scripts to maintain already. It’s entirely possible that they’re all the same, so you could use Imagr’s ability to use a script from a central URL. But you also may need to make slight tweaks depending on what type of machine it is and where it is located.
-
-Over the next few posts, we are going to build an app using the Flask framework that will:
-
-
-  Read in headers sent by Imagr to return a dynamically generated first boot script
-  Create a Munki manifest for the Mac
-  Wrap up the application into a Docker image so it can be easily deployed
-
-
-">
-<meta property="og:url" content="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">
-<meta property="og:site_name" content="graham gilbert dot com">
-
-<meta property="og:image" content="http://grahamgilbert.com/images/about.jpg">
-
-
-
-
-
-<link rel="canonical" href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">
-<link href="http://grahamgilbert.com/atom.xml" type="application/atom+xml" rel="alternate" title="graham gilbert dot com Feed">
-
-<!-- http://t.co/dKP3o1e -->
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- For all browsers -->
-<link rel="stylesheet" href="http://grahamgilbert.com/assets/css/main.css">
-
-<meta http-equiv="cleartype" content="on">
-
-<!-- HTML5 Shiv and Media Query Support -->
-<!--[if lt IE 9]>
-	<script src="http://grahamgilbert.com/assets/js/vendor/html5shiv.min.js"></script>
-	<script src="http://grahamgilbert.com/assets/js/vendor/respond.min.js"></script>
-<![endif]-->
-
-<!-- Modernizr -->
-<script src="http://grahamgilbert.com/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
-
-<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-
-<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
-<style>
-#index article p a {
-    text-decoration: underline;
-}
-a, body a {
-    text-decoration: none;
-}
-</style>
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 </head>
 
-<body class="post">
+  <body class="theme-base-0d">
 
-<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
 
-<div class="navigation-wrapper">
-	<div class="site-name">
-		<input type="text" class="st-default-search-input" style="width: 150px;">
-	</div><!-- /.site-name -->
-	<div class="top-navigation">
-		<nav role="navigation" id="site-nav" class="nav">
-		    <ul>
-		        
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
-				
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
-				
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
-				
-				    
-				        
-				        
-				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
-				
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
-				
-		    </ul>
-		</nav>
-	</div><!-- /.top-navigation -->
-</div><!-- /.navigation-wrapper -->
-
-
-
-<div id="main" role="main">
-  <div class="article-author-side">
-    <div itemscope itemtype="http://schema.org/Person">
-
-	<img src="http://grahamgilbert.com/images/about.jpg" class="bio-photo" alt="Graham Gilbert bio photo">
-
-
-  <h3 itemprop="name">Graham Gilbert</h3>
-  <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
-  <a href="http://twitter.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-twitter-square"></i> Twitter</a>
-  
-  
-  <a href="http://linkedin.com/in/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-linkedin-square"></i> LinkedIn</a>
-  
-  
-  
-  <a href="http://github.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-github"></i> Github</a>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-</div>
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
   </div>
-  <article class="post">
-    <div class="headline-wrap">
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+    
       
-        <h1><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" rel="bookmark" title="Dynamic first boot scripts with Imagr and Flask">Dynamic first boot scripts with Imagr and Flask</a></h1>
+        
       
-    </div><!--/ .headline-wrap -->
-    <div class="article-wrap">
-      <p>Some may wonder why you would go to the trouble of dynamically generating first boot scripts. I mean, how many can you need?</p>
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+    
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/talks/">Talks</a>
+        
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/grahamgilbert">Twitter</a>
+    <a class="sidebar-nav-item" href="https://github.com/grahamgilbert">Github</a>
+
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">graham gilbert dot com</a>
+            <small>Mac administration and assorted nerdity</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">
+        Dynamic first boot scripts with Imagr and Flask
+      </a>
+    </h1>
+  <span class="post-date">05 Jan 2016</span>
+  <p>Some may wonder why you would go to the trouble of dynamically generating first boot scripts. I mean, how many can you need?</p>
 
 <p>Let’s say you have ten sites, each with five builds - that fifty first boot scripts to maintain already. It’s entirely possible that they’re all the same, so you could use <a href="https://github.com/grahamgilbert/imagr/wiki/Workflow-Config#scripts">Imagr’s ability to use a script from a central URL</a>. But you also may need to make slight tweaks depending on what type of machine it is and where it is located.</p>
 
@@ -202,32 +209,32 @@ a, body a {
 
 <p>The first thing we are going to do is to set up a virtual env. We are using Python to create our app and putting our dependencies in a virtual env means that we are not potentially messing up our system.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo easy_install virtualenv 
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>mkdir ~/virtualenvs
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/virtualenvs
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>virtualenv bootstrapapp</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo easy_install virtualenv 
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir ~/virtualenvs
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/virtualenvs
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>virtualenv bootstrapapp</div></div></pre></div></figure>
 
 <p>Now we can start building our app. Assuming you are going to keep your app in <code>~/src/bootstrapapp</code>:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>mkdir -p ~/src/bootstrapapp 
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">cd</span> ~/src/bootstrapapp</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir -p ~/src/bootstrapapp 
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src/bootstrapapp</div></div></pre></div></figure>
 
 <p>And now we need to switch to using the Python in the virtualenv rather than the system one</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span><span class="nb">source</span> ~/virtualenvs/bootstrapapp/bin/activate </div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">source</span> ~/virtualenvs/bootstrapapp/bin/activate</div></div></pre></div></figure>
 
 <p>Now we can install our first dependency - Flask itself. Pip is the package manager that is installed in every new virtualenv you create. It’s pretty easy to use:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>pip install flask </div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>pip install flask</div></div></pre></div></figure>
 
 <p>Now Flask is installed, we can start on the web app. Crack open your favourite editor (not textedit! Python is picky about spaces) and create the following file:</p>
 
 <figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">~/src/bootstrapapp/bootstrap.py</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@app.route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="s">'Hello World!'</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="s">&#39;Hello World!&#39;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
 </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div></div></pre></div></figure>
 
 <p>And now we can run it:</p>
@@ -244,16 +251,16 @@ a, body a {
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">DEBUG</span> <span class="o">=</span> <span class="bp">True</span>
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">check_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">"""This function is called to check if a username /
-<div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">    password combination is valid.
-</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">    """
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="s">'admin'</span> <span class="ow">and</span> <span class="n">password</span> <span class="o">==</span> <span class="s">'secret'</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="sd">&quot;&quot;&quot;This function is called to check if a username /</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="sd">    password combination is valid.</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="sd">    &quot;&quot;&quot;</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="s">&#39;admin&#39;</span> <span class="ow">and</span> <span class="n">password</span> <span class="o">==</span> <span class="s">&#39;secret&#39;</span>
 </div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">authenticate</span><span class="p">():</span>
-</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">"""Sends a 401 response that enables basic auth"""</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="sd">&quot;&quot;&quot;Sends a 401 response that enables basic auth&quot;&quot;&quot;</span>
 </div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
-</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">'Could not verify your access level for that URL.</span><span class="se">\n</span><span class="s">'</span>
-</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">'You have to login with proper credentials'</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span>
-</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="s">'WWW-Authenticate'</span><span class="p">:</span> <span class="s">'Basic realm="Login Required"'</span><span class="p">&#x7d;)</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">&#39;Could not verify your access level for that URL.</span><span class="se">\n</span><span class="s">&#39;</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">&#39;You have to login with proper credentials&#39;</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="s">&#39;WWW-Authenticate&#39;</span><span class="p">:</span> <span class="s">&#39;Basic realm=&quot;Login Required&quot;&#39;</span><span class="p">&#x7d;)</span>
 </div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">requires_auth</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
 </div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">def</span> <span class="nf">decorated</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -262,47 +269,43 @@ a, body a {
 </div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="k">return</span> <span class="n">authenticate</span><span class="p">()</span>
 </div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">decorated</span>
-</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@app.route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
 </div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@requires_auth</span>
 </div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
-</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="s">'Hello World!'</span>
-</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
-</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">'0.0.0.0'</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">DEBUG</span><span class="p">)</span></div></div>
+</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="s">&#39;Hello World!&#39;</span>
+</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">DEBUG</span><span class="p">)</span></div></div></pre></div></figure>
 
+<p>We’ve made a couple of changes here. We’ve enabled debug mode - this throws up more useful errors in the unlikely event I make a mistake (ahem). When we move into production, we will want to disable this for security reasons.</p>
 
-We've made a couple of changes here. We've enabled debug mode - this throws up more useful errors in the unlikely event I make a mistake (ahem). When we move into production, we will want to disable this for security reasons.
+<p>We have also added a few functions that will let us add basic authentication. If you would like to change the username from <code>admin</code> and password from <code>secret</code>, change the values at the end of <code>check_auth</code>).</p>
 
-We have also added a few functions that will let us add basic authentication. If you would like to change the username from ``admin`` and password from ``secret``, change the values at the end of ``check_auth``).
-
-When we run this with Docker, we'll use environment variables to pass in the username and password, but for now we'll use command line options. Add this in below ``DEBUG=True`` and above ``def check_auth(username, password):``
+<p>When we run this with Docker, we’ll use environment variables to pass in the username and password, but for now we’ll use command line options. Add this in below <code>DEBUG=True</code> and above <code>def check_auth(username, password):</code></p>
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="k">try</span><span class="p">:</span>
 </div></div><div data-line="2" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="n">my_username</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </div></div><div data-line="3" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="k">except</span><span class="p">:</span>
-</div></div><div data-line="4" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="n">my_username</span> <span class="o">=</span> <span class="s">'admin'</span>
+</div></div><div data-line="4" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="n">my_username</span> <span class="o">=</span> <span class="s">&#39;admin&#39;</span>
 </div></div><div data-line="5" class="code-highlight-row unnumbered"><div class="code-highlight-line"> </div></div><div data-line="6" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="k">try</span><span class="p">:</span>
 </div></div><div data-line="7" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="n">my_password</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 </div></div><div data-line="8" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="k">except</span><span class="p">:</span>
-</div></div><div data-line="9" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="n">my_password</span> <span class="o">=</span> <span class="s">'secret'</span></div></div></pre></div></figure>
+</div></div><div data-line="9" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="n">my_password</span> <span class="o">=</span> <span class="s">&#39;secret&#39;</span></div></div></pre></div></figure>
 
-
-And change ``def check_auth`` to look like:
+<p>And change <code>def check_auth</code> to look like:</p>
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">check_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-</div></div><div data-line="2" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="s">"""This function is called to check if a username /
-<div data-line="3" class="code-highlight-row unnumbered"><div class="code-highlight-line">    password combination is valid.
-</div></div><div data-line="4" class="code-highlight-row unnumbered"><div class="code-highlight-line">    """
-</div></div><div data-line="5" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="n">my_username</span> <span class="ow">and</span> <span class="n">password</span> <span class="o">==</span> <span class="n">my_password</span></div></div>
+</div></div><div data-line="2" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="sd">&quot;&quot;&quot;This function is called to check if a username /</span>
+</div></div><div data-line="3" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="sd">    password combination is valid.</span>
+</div></div><div data-line="4" class="code-highlight-row unnumbered"><div class="code-highlight-line"><span class="sd">    &quot;&quot;&quot;</span>
+</div></div><div data-line="5" class="code-highlight-row unnumbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="n">my_username</span> <span class="ow">and</span> <span class="n">password</span> <span class="o">==</span> <span class="n">my_password</span></div></div></pre></div></figure>
 
+<p>Now you can pass in your own username and password when you run your development server:</p>
 
-Now you can pass in your own username and password when you run your development server:
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>python bootstrap.py username password</div></div></pre></div></figure>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>python bootstrap.py username password</div></div></pre></div></figure>
+<p>That’s all there is to adding basic authentication to our app. Next time we’ll start looking at using headers sent by Imagr to serve up the customised script to our clients.</p>
 
-
-That's all there is to adding basic authentication to our app. Next time we'll start looking at using headers sent by Imagr to serve up the customised script to our clients. 
-
-And for those following along at home, here's our code after part 1:
+<p>And for those following along at home, here’s our code after part 1:</p>
 
 <figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">~/src/bootstrapapp/bootstrap.py</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">abort</span><span class="p">,</span> <span class="n">Response</span>
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
@@ -312,22 +315,22 @@ And for those following along at home, here's our code after part 1:
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">try</span><span class="p">:</span>
 </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">my_username</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">except</span><span class="p">:</span>
-</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">my_username</span> <span class="o">=</span> <span class="s">'admin'</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">my_username</span> <span class="o">=</span> <span class="s">&#39;admin&#39;</span>
 </div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">try</span><span class="p">:</span>
 </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">my_password</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 </div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">except</span><span class="p">:</span>
-</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">my_password</span> <span class="o">=</span> <span class="s">'secret'</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">my_password</span> <span class="o">=</span> <span class="s">&#39;secret&#39;</span>
 </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">check_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">"""This function is called to check if a username /
-<div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">    password combination is valid.
-</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">    """
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="sd">&quot;&quot;&quot;This function is called to check if a username /</span>
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="sd">    password combination is valid.</span>
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="sd">    &quot;&quot;&quot;</span>
 </div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="n">my_username</span> <span class="ow">and</span> <span class="n">password</span> <span class="o">==</span> <span class="n">my_password</span>
 </div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">authenticate</span><span class="p">():</span>
-</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">"""Sends a 401 response that enables basic auth"""</span>
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="sd">&quot;&quot;&quot;Sends a 401 response that enables basic auth&quot;&quot;&quot;</span>
 </div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
-</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">'Could not verify your access level for that URL.</span><span class="se">\n</span><span class="s">'</span>
-</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">'You have to login with proper credentials'</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span>
-</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="s">'WWW-Authenticate'</span><span class="p">:</span> <span class="s">'Basic realm="Login Required"'</span><span class="p">&#x7d;)</span>
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">&#39;Could not verify your access level for that URL.</span><span class="se">\n</span><span class="s">&#39;</span>
+</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s">&#39;You have to login with proper credentials&#39;</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span>
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="s">&#39;WWW-Authenticate&#39;</span><span class="p">:</span> <span class="s">&#39;Basic realm=&quot;Login Required&quot;&#39;</span><span class="p">&#x7d;)</span>
 </div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">requires_auth</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
 </div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">def</span> <span class="nf">decorated</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -336,110 +339,92 @@ And for those following along at home, here's our code after part 1:
 </div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="k">return</span> <span class="n">authenticate</span><span class="p">()</span>
 </div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </div></div><div data-line="37" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="n">decorated</span>
-</div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="39" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@app.route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
+</div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="39" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
 </div></div><div data-line="40" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nd">@requires_auth</span>
 </div></div><div data-line="41" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
-</div></div><div data-line="42" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="s">'Hello World!'</span>
-</div></div><div data-line="43" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="44" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
-</div></div><div data-line="45" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">'0.0.0.0'</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">DEBUG</span><span class="p">)</span></div></div>
-</span></div></div></pre></div></figure></span></div></div></pre></div></figure></span></div></div></pre></div></figure>
+</div></div><div data-line="42" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">return</span> <span class="s">&#39;Hello World!&#39;</span>
+</div></div><div data-line="43" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="44" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+</div></div><div data-line="45" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">DEBUG</span><span class="p">)</span></div></div></pre></div></figure>
 
-      <hr />
-      <footer role="contentinfo">
-        <div class="social-share">
-  <h4>Share on</h4>
-  <ul>
-    <li>
-      <a href="https://twitter.com/intent/tweet?text=http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
-    </li>
-    <li>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
-    </li>
-    <li>
-      <a href="https://plus.google.com/share?url=http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
-    </li>
-  </ul>
-</div><!-- /.social-share -->
-        <p class="byline"><strong>Dynamic first boot scripts with Imagr and Flask</strong> was published on <time datetime="2016-01-05T10:22:31+00:00">January 05, 2016</time>.</p>
-      </footer>
-    </div><!-- /.article-wrap -->
-  
-    <section id="disqus_thread"></section><!-- /#disqus_thread -->
-  
-  </article>
-</div><!-- /#main -->
-
-<div class="footer-wrap">
-  
-  <div class="related-articles">
-  <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
-    <ul>
-    
-      <li><a href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 2">Dynamic first boot scripts with Imagr and Flask&#58; Part 2</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2016/01/13/dynamic-first-boot-scripts-with-imagr-and-flask-part-3/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 3">Dynamic first boot scripts with Imagr and Flask&#58; Part 3</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2016/01/20/dynamic-first-boot-scripts-with-imagr-and-flask-part-4/" title="Dynamic first boot scripts with Imagr and Flask&#58; Part 4">Dynamic first boot scripts with Imagr and Flask&#58; Part 4</a></li>
-    
-    </ul>
-    <hr />
-  </div><!-- /.related-articles -->
-  
-  <footer>
-    <span>&copy; 2016 Graham Gilbert.</span>
-  </footer>
-</div><!-- /.footer-wrap -->
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="http://grahamgilbert.com/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
-<script src="http://grahamgilbert.com/assets/js/scripts.min.js"></script>
-
-<!-- Asynchronous Google Analytics snippet -->
+  <div id="disqus_thread"></div>
 <script>
-  var _gaq = _gaq || [];
-  var pluginUrl =
- '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
-  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
-  _gaq.push(['_setAccount', 'UA-27233739-1']);
-  _gaq.push(['_trackPageview']);
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
-<script type="text/javascript">
-  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
-  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
-  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
-  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+        s.src = '//grahamgilbert.disqus.com/embed.js';
 
-  _st('install','sFQe2UApMaKvCdHMFL6r','2.0.0');
-</script>
-          
-
-
-  <script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'grahamgilbert'; // required: replace example with your forum shortname
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
     })();
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
 </script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
 
-</body>
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/02/10/macad-uk-2016-puppet-on-os-x/">
+            MacAD.UK 2016&#58; Puppet on OS X
+            <small>10 Feb 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/01/20/dynamic-first-boot-scripts-with-imagr-and-flask-part-4/">
+            Dynamic first boot scripts with Imagr and Flask&#58; Part 4
+            <small>20 Jan 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/01/14/imagr-1-0-0-released/">
+            Imagr 1.0.0 Released
+            <small>14 Jan 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
 </html>

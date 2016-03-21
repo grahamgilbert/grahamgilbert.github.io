@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      graham gilbert dot com &middot; Mac administration and assorted nerdity
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+  <body class="theme-base-0d">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+    
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/talks/">Talks</a>
+        
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/grahamgilbert">Twitter</a>
+    <a class="sidebar-nav-item" href="https://github.com/grahamgilbert">Github</a>
+
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">graham gilbert dot com</a>
+            <small>Mac administration and assorted nerdity</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/01/18/crypt-a-filevault-2-escrow-solution/">
+        Crypt: A FileVault 2 escrow solution
+      </a>
+    </h1>
+
+    <span class="post-date">18 Jan 2013</span>
+    
+            <p>Although it’s been blogged about over at <a href="http://afp548.com/2013/01/02/crypt-a-client-and-web-app-for-filevault-2-encryption-and-escrow/">afp548</a> and <a href="http://derflounder.wordpress.com/2012/12/31/first-look-at-crypt/">Rich Trouton’s blog</a>, I’d like to introduce you all to <a href="https://github.com/grahamgilbert/Crypt">Crypt</a>.</p>
+
+<p><img class="center" src="/images/posts/2013-01-18/Crypt-Screenshot.png" /></p>
+
+<p>Crypt is a solution for enabling FileVault 2 on Macs running either 10.7 or 10.8 and securely storing those keys, using no outside infrastructure like other solutions do (Cauliflower Vest’s requirement of Google App Engine). It’s only requirement is a web server that can run a Django app (which is pretty much anything - the example setup uses Apache on Ubuntu 12, but you can use anything you want).</p>
+
+<p>Crypt is made up of two parts: A <a href="https://github.com/grahamgilbert/Crypt-Server">web app</a>, which stores the recovery keys and a <a href="https://github.com/grahamgilbert/Crypt">client app</a> for enabling FileVault 2 on a Mac which then sends the recovery key to the server. The server has two user levels, so access to keys can be restricted, and all key access is logged for auditing.</p>
+
+<p>We’ve been using it at <a href="http://pebbleit.com">pebble.it</a> for a few weeks now and haven’t found any issues during use, but please be aware that this is what I’d call “beta” software. You might be happy using beta software in production, but that’s up to you! I’d welcome all feedback, both good and bad. Planned features include AD authentication and emails to admins when new requests come in. Please file bugs and feature requests over at <a href="https://github.com/grahamgilbert/Crypt">GitHub</a> so I can keep track of them all.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/01/13/casper-vs-munki/">
+        Casper Vs Munki
+      </a>
+    </h1>
+
+    <span class="post-date">13 Jan 2013</span>
+    
+            <p>Next up in the battle of Casper vs the rest of the Mac admin toolset looking to reign supreme in the contest of software installation is Munki.</p>
+
+<h2 id="setup">Setup</h2>
+<p>The setup process for a Munki server can seem to be very daunting at first if you’ve not configured a web server before. If you are happy setting one up, it’s the easiest server install you’ll ever do! Munki’s requirement of just a basic web server means it can run on literally anything (although Casper will also run on anything you’re likely to use - I’ve had both running on Windows boxes for example).</p>
+
+<p>The setup of a Casper server can be quite involved, but chances are if you don’t know what you’re doing, it’s already been done for you during your jump start.</p>
+
+<p>Winner: Casper - if you’ve paid for the Casper Suite, you’re ready to go after your jump start (in theory!). That being said, there are people who can configure Munki for you if you need it (<a href="http://pebbleit.com">shameless plug for my employers here!</a>)</p>
+
+<h2 id="getting-software-into-the-system">Getting software into the system</h2>
+<p>A streamlined workflow for Munki takes a little setup. Our Munki repository lives on an Ubuntu box, with the actual repo being shared out via SMB. This could just as easily be configured on a Windows server or an OS X server if you still have them in your server room.</p>
+
+<p>With the sharepoint set up, I can just mount the repo and then run munkiimport to get the software into Munki. Yes, a lot of people will be put off with having to use a command line interface - thats something all Mac admins will need to get over at some point in their career, it might as well be now!</p>
+
+<p>Casper’s method of getting software into the system is simple, but incredibly long winded. You seem to be expected to repackage nearly everything, which is a major pain in the ass. Your JAMF rep will point you towards the pre-made templates in Composer - ironically, most of the apps listed in there, shouldn’t need repackaging in the first place as they’re either distributed in reasonable packages (like Office) or have tools available to make a package (like Creative Suite).  Once you’ve got the package, it’s super simple to get the package into Casper - crack open Casper Admin and drag the package into it. You need to then make a policy which somehow installs the software (more on that in the next section).</p>
+
+<p>Winner: Draw. Munki is more work up front, and doesn’t have a GUI which will be an issue for some. Casper is really easy to use, but a complete faff every time you need to get new software onto your macs. You shouldn’t need to repackage. Ever. Especially for drag and drop app installations.</p>
+
+<h2 id="configuration-options">Configuration options</h2>
+<p>The two systems are fairly feature comparable (pre and post flight scripts, ways to limit who gets what software etc), but it’s how they present those options to the admin that differentiates them.</p>
+
+<p>Let’s take a common example: installing an Office 2011 update. We have the 14.2.5 update that requires the installation to be at 14.2.3 to start off with. 
+Some might be, others won’t for one reason or another.</p>
+
+<p>We’ve already got the packages in our respective systems - let’s start off with Casper. We need to differentiate the macs that need the update first - we’ll do this with a smart group. We make a smart group that has Word at version 14.2.3 and apply the policy to that- great, done right? But what about those users that slipped through the net and only have 14.2?  So at that point you need to refine your smart group to target a range of versions. You also need to change this <em>every time there’s an update</em>. If you only have Office to worry about this might not be too much of a problem, but as soon as you get a few more packages to look after, this rapidly becomes tedious.</p>
+
+<p>Lets look at the same scenario Munki. I just need to mark the update as being an update for Office 2011 (this direct relationship between software and delta updates doesn’t exist within Casper) and that the update requires a particular version of Office to be installed within it’s pkginfo file - two minutes work in a text editor at worst once you know the syntax.</p>
+
+<p>Winner: Munki - the direct relationship between updates and their parent package is invaluable. As ever, Munki is a lot more work up front, but it pays off in a much easier workflow after that.</p>
+
+<h2 id="installing-software-on-client-machines">Installing software on client machines</h2>
+
+<p>By default, this is what a client sees when Munki wants to install something:</p>
+
+<p><img src="/images/posts/2013-01-13/Munki.png" /></p>
+
+<p>And this is what you see with Casper.</p>
+
+<p><img src="/images/posts/2013-01-13/Blank_Desktop.png" /></p>
+
+<p>No, I’ve not made a mistake. No warning, no option to delay to a more convenient time, nothing. Nada. Zilch. And you better hope that the app isn’t running! It’s crash time otherwise.</p>
+
+<p>Munki will warn the user when apps you want to update are running, will warn them when a forced install is coming (several times), will let the user know that a reboot will be needed <em>before</em> the software gets installed.</p>
+
+<p>I know that these things can be done with Casper, I had a demo from a nice chap from JAMF during the week showing me all of this (as a side note, kudos to JAMF for reaching out to me following my last post in this). The issue is, I don’t particularly want to write a bash script ever time I deploy software to check if the app is running, warn the user etc etc. We spend on average an hour a week updating our Munki repo - I dread to think how long it would take if I had to do that level of scripting for each package.</p>
+
+<p>The one place Casper does excel on the client side is Self Service. The pretty icons and familiar app store look are much easier for end users to use than Munki’s optional installs - that being said, optional installs with Munki aren’t exactly hard to use.</p>
+
+<p>Winner: Munki - someone at JAMF told me their goal is to make administrators lives easier. Unfortunately my goal is to make my client’s mac experience as awesome as possible, and random reboots with only five minute warnings aren’t exactly awesome in my book.</p>
+
+<h2 id="reporting">Reporting</h2>
+<p>This is the area where Casper excels. Out of the box, the reporting is fantastic. You know who has installed what, when, how many licenses you have left, pretty much anything you need to now is there out of the box.</p>
+
+<p>Munki does have MunkiWebAdmin, but it’s an extra install, and can be quite tricky if you’re not used to configuring a Django app. It does provide a fair bit of info on what’s happening with your Munki-d macs, but nowhere near what you’d get out of Casper. The stats you can get out of Casper are truly immense.</p>
+
+<h2 id="auditing-admin-actions">Auditing Admin actions</h2>
+<p>This should really come with the post when Casper goes head to head with Puppet, but it affected me in real life a couple of weeks ago, so it can come in today. I came to a Casper install and noticed that the policy that was due to install an Office update had been deleted. Had this happened with our Munki setup, we would just look at the Git history (you are using Git to track your Munki config, right?), see who made the change, find out why, and roll it back if needed.</p>
+
+<p>In this particular instance, I had no idea if it had been done by mistake or on purpose by their internal IT team. I raised this is JAMF this week, and was shown the database log. Whilst this is better than nothing at all, it’s still woefully inadequate for a solution that is marketed at the enterprise.</p>
+
+<p>Winner - Munki (or any solution that can have its history tracked effectively)</p>
+
+<p>So for those who stopped keeping count, Munki pips it. On the face of it, depending on your priorities, it’s quite a close thing. But as my clients pay my wages, the user experience is of paramount importance to me, so personally, Munki is a clear winner. If my users aren’t able to work, they can’t earn money. If they can’t earn money, they can’t pay their IT bill.</p>
+
+<p>Munki offers the greatest flexibility between letting users carry on with their work when there’s a not so important update until it’s convenient for them to stop and forcing the update (but still warning them appropriately) when it’s critical.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/01/07/updating-instadmg-based-netrestore-images/">
+        Updating InstaDMG based NetRestore images
+      </a>
+    </h1>
+
+    <span class="post-date">07 Jan 2013</span>
+    
+            <p>This probably isn’t news to anyone else, but I made a discovery last week that will save me a fair bit of time.</p>
+
+<p>Whilst staring at System Image Utility after yet another change to the build, I thought that there must be a better way of doing this, bearing in mind that the basic InstaDMG process is:</p>
+
+<ul>
+  <li>Install the OS</li>
+  <li>Install Packages</li>
+  <li><strong>Make a read-only DMG</strong></li>
+  <li><strong>Prep the DMG for ASR</strong></li>
+</ul>
+
+<p>And SIU’s process is:</p>
+
+<ul>
+  <li><strong>Make a read-only DMG</strong></li>
+  <li><strong>Prep the DMG for ASR</strong></li>
+  <li>Copy it into a writable disk image with a stripped down OS to restore the image.</li>
+</ul>
+
+<p>So, two steps are duplicated. This inefficiency must be stopped!</p>
+
+<p>After a 30 second hunt in the NetInstall.dmg file that SIU spits out, I saw a file called System.dmg in the Packages folder - sure enough, it was my InstaDMG image. I replaced it with my new build, and it worked flawlessly.</p>
+
+<p>If your new image is larger than the one you’re replacing, you just need to expand the NetInstall.dmg image to a size large enough to accomodate the new image.</p>
+
+<pre><code>hdiutil resize -growonly -size 15g /path/to/your/NetRestore.nbi/NetInstall.dmg
+</code></pre>
+
+<p>Replace the 15g with whatever size you want, 15 GB was plenty to accomodate my updated image.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/01/05/instadmg-tips/">
+        InstaDMG Tips
+      </a>
+    </h1>
+
+    <span class="post-date">05 Jan 2013</span>
+    
+            <p>I’ve been using <a href="http://code.google.com/p/instadmg/">InstaDMG</a> for nearly two years now. We all know it’s awesome (if you aren’t aware of it’s awesomeness, I suggest taking a look at <a href="http://www.youtube.com/watch?v=o8xtO5E4MzE">Allister Banks’ talk at PSU MacAdmins last year</a>). I’m almost ashamed to admit that I was happily making my Golden Master images on my test iMac and hoping for the best when I cleaned them up by hand and pushed them out. Anyway, that’s enough of my admissions. Over these two years, I’ve picked up a few tips and tricks for working effectively with InstaDMG.</p>
+
+<h2 id="put-an-ssd-in-your-laptop">Put an SSD in your laptop</h2>
+<p>Seriously, just do it. If your boss complains at how much it costs, then they’re not charging enough for you. The price of the SSD was covered by the time I saved when doing one particularly chunky build (around 30GB including packages). InstaDMG is primarily I/O bound, so an SSD will change your InstaDMG life.</p>
+
+<h2 id="keep-your-instaup2datepackages-on-a-web-server">Keep your InstaUp2DatePackages on a web server</h2>
+<p>If you’ve got more than one person building images in your organisation, you’ll soon find that your packages will get out of sync with each other. One person will be using 0.8.2 of Munki, another 0.8.3, it all goes horribly wrong. As InstaDMG can pull packages from a web server, this lends itself to having a central repository for packages in your oganisation. Remember to keep it safely behind your firewall if you’ve got sensitive info in your packages (like one that creates your admin user, for example).</p>
+
+<h2 id="keep-our-catalogfiles-in-source-control">Keep our CatalogFiles in source control</h2>
+<p>Now that everyone has access to your InstaUp2DatePackages, we ought to get our CatalogFiles in check too. Keep them in some sort of source control like <a href="http://grahamgilbert.com/blog/2012/09/21/five-reasons-sysadmins-should-use-git/">Git</a> and be happy. Mine can be found on my <a href="https://github.com/grahamgilbert/InstaDMG-Catalogs">GitHub</a>.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/01/01/macscripts/">
+        MacScripts
+      </a>
+    </h1>
+
+    <span class="post-date">01 Jan 2013</span>
+    
+            <p>I’ve had my Mac scripts dotted around my Macs over the years, so after spending twenty minutes looking for my script to add a login item to a user, I decided to put them all in one place on GitHub. Hopefully someone will find them useful, I’ll be adding the rest as soon as I work out where I put them.</p>
+
+<p><a href="https://github.com/grahamgilbert/macscripts">MacScripts on GitHub</a></p>
+
+          
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="http://grahamgilbert.com/page15">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="http://grahamgilbert.com/page13">Newer</a>
+    
+  
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

@@ -1,177 +1,214 @@
-<!doctype html>
-<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
-<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
-<head>
-<meta charset="utf-8">
-<title>Getting started with BSDPy on Docker &#8211; graham gilbert dot com</title>
-<meta name="description" content="Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you’re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we’re using that. Your Ubuntu box will also need a real IP address - if you are using VMware Fusion, this will be a Bridged Network Adapter - adjust the terminology if you’re using a different virtualization tool. You don’t need to worry about giving your machine a static IP unless you want to - Macs will NetBoot just fine when they’re on the same subnet.
+<!DOCTYPE html>
+<html lang="en-us">
 
-">
-<meta name="keywords" content="">
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
+  <title>
+    
+      Getting started with BSDPy on Docker &middot; graham gilbert dot com
+    
+  </title>
 
-<!-- Twitter Cards -->
-<meta name="twitter:title" content="Getting started with BSDPy on Docker">
-<meta name="twitter:description" content="Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you’re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we’re using that. Your Ubuntu box will also need a real IP address - if you are using VMware Fusion, this will be a Bridged Network Adapter - adjust the terminology if you’re using a different virtualization tool. You don’t need to worry about giving your machine a static IP unless you want to - Macs will NetBoot just fine when they’re on the same subnet.
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
-">
-<meta name="twitter:site" content="@grahamgilbert">
-<meta name="twitter:creator" content="@grahamgilbert">
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
 
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://grahamgilbert.com/images/about.jpg">
-
-<!-- Open Graph -->
-<meta property="og:locale" content="en_GB">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Getting started with BSDPy on Docker">
-<meta property="og:description" content="Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you’re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we’re using that. Your Ubuntu box will also need a real IP address - if you are using VMware Fusion, this will be a Bridged Network Adapter - adjust the terminology if you’re using a different virtualization tool. You don’t need to worry about giving your machine a static IP unless you want to - Macs will NetBoot just fine when they’re on the same subnet.
-
-">
-<meta property="og:url" content="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/">
-<meta property="og:site_name" content="graham gilbert dot com">
-
-<meta property="og:image" content="http://grahamgilbert.com/images/about.jpg">
-
-
-
-
-
-<link rel="canonical" href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/">
-<link href="http://grahamgilbert.com/atom.xml" type="application/atom+xml" rel="alternate" title="graham gilbert dot com Feed">
-
-<!-- http://t.co/dKP3o1e -->
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- For all browsers -->
-<link rel="stylesheet" href="http://grahamgilbert.com/assets/css/main.css">
-
-<meta http-equiv="cleartype" content="on">
-
-<!-- HTML5 Shiv and Media Query Support -->
-<!--[if lt IE 9]>
-	<script src="http://grahamgilbert.com/assets/js/vendor/html5shiv.min.js"></script>
-	<script src="http://grahamgilbert.com/assets/js/vendor/respond.min.js"></script>
-<![endif]-->
-
-<!-- Modernizr -->
-<script src="http://grahamgilbert.com/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
-
-<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-
-<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
-<style>
-#index article p a {
-    text-decoration: underline;
-}
-a, body a {
-    text-decoration: none;
-}
-</style>
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 </head>
 
-<body class="post">
+  <body class="theme-base-0d">
 
-<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
 
-<div class="navigation-wrapper">
-	<div class="site-name">
-		<input type="text" class="st-default-search-input" style="width: 150px;">
-	</div><!-- /.site-name -->
-	<div class="top-navigation">
-		<nav role="navigation" id="site-nav" class="nav">
-		    <ul>
-		        
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
-				
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
-				
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
-				
-				    
-				        
-				        
-				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
-				
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
-				
-		    </ul>
-		</nav>
-	</div><!-- /.top-navigation -->
-</div><!-- /.navigation-wrapper -->
-
-
-
-<div id="main" role="main">
-  <div class="article-author-side">
-    <div itemscope itemtype="http://schema.org/Person">
-
-	<img src="http://grahamgilbert.com/images/about.jpg" class="bio-photo" alt="Graham Gilbert bio photo">
-
-
-  <h3 itemprop="name">Graham Gilbert</h3>
-  <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
-  <a href="http://twitter.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-twitter-square"></i> Twitter</a>
-  
-  
-  <a href="http://linkedin.com/in/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-linkedin-square"></i> LinkedIn</a>
-  
-  
-  
-  <a href="http://github.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-github"></i> Github</a>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-</div>
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
   </div>
-  <article class="post">
-    <div class="headline-wrap">
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+    
       
-        <h1><a href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/" rel="bookmark" title="Getting started with BSDPy on Docker">Getting started with BSDPy on Docker</a></h1>
+        
       
-    </div><!--/ .headline-wrap -->
-    <div class="article-wrap">
-      <p>Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you’re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we’re using that. Your Ubuntu box will also need a real IP address - if you are using VMware Fusion, this will be a Bridged Network Adapter - adjust the terminology if you’re using a different virtualization tool. You don’t need to worry about giving your machine a static IP unless you want to - Macs will NetBoot just fine when they’re on the same subnet. <!-- more --></p>
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+    
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/talks/">Talks</a>
+        
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/grahamgilbert">Twitter</a>
+    <a class="sidebar-nav-item" href="https://github.com/grahamgilbert">Github</a>
+
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">graham gilbert dot com</a>
+            <small>Mac administration and assorted nerdity</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/">
+        Getting started with BSDPy on Docker
+      </a>
+    </h1>
+  <span class="post-date">22 Apr 2015</span>
+  <p>Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you’re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we’re using that. Your Ubuntu box will also need a real IP address - if you are using VMware Fusion, this will be a Bridged Network Adapter - adjust the terminology if you’re using a different virtualization tool. You don’t need to worry about giving your machine a static IP unless you want to - Macs will NetBoot just fine when they’re on the same subnet. <!-- more --></p>
 
 <h2 id="baby-steps">Baby Steps</h2>
 
 <p>Our first job is to install Docker. I’ve been as guilty as many with glossing over this step, so here’s the massively long and difficult method to install the latest version of Docker on Ubuntu 14. First we make sure <code>wget</code> is installed:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>which wget</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>which wget</div></div></pre></div></figure>
 
 <p>And if that returns nothing then we need to install <code>wget</code>:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo apt-get update
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo apt-get install wget</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo apt-get update
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo apt-get install wget</div></div></pre></div></figure>
 
 <p>And now we can install Docker:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">wget -qO- https://get.docker.com/ | sh</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">wget -qO- https://get.docker.com/ <span class="p">|</span> sh</div></div></pre></div></figure>
 
 <p>Pop your password in when you’re asked and you’re done.</p>
 
@@ -195,8 +232,8 @@ a, body a {
 
 <p>If you’re not made it already, we need to make the directory we’ll store our permanent bits:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>sudo -i
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>mkdir -p /usr/local/docker/nbi</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo -i
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir -p /usr/local/docker/nbi</div></div></pre></div></figure>
 
 <p>And fire up your favourite editor and put in the first part of our script:</p>
 
@@ -207,8 +244,8 @@ a, body a {
 
 <p>Now we just need to make it executable and we can run it:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>chmod 755 /usr/local/docker/startup.sh
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>/usr/local/docker/startup.sh</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>chmod <span class="m">755</span> /usr/local/docker/startup.sh
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>/usr/local/docker/startup.sh</div></div></pre></div></figure>
 
 <p>If all goes well Docker will start pulling down the images you need.</p>
 
@@ -225,8 +262,8 @@ a, body a {
 <p>As previously alluded to, our NetBoot solution will comprise of three components. Add the following to the end of <code>/usr/local/docker/startup.sh</code> (if your server has more than one ethernet adapter, replace <code>eth0</code> with the name of the adapter you want to use for NetBoot):</p>
 
 <figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/usr/local/docker/startup.sh</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Other stuff is above here</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">chmod -R 777 /usr/local/docker/nbi
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">IP</span><span class="o">=</span><span class="sb">`</span>ifconfig eth0 2&gt;/dev/null|awk <span class="s1">'/inet addr:/ &#x7b;print $2&#x7d;'</span>|sed <span class="s1">'s/addr://'</span><span class="sb">`</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">chmod -R <span class="m">777</span> /usr/local/docker/nbi
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">IP</span><span class="o">=</span><span class="sb">`</span>ifconfig eth0 2&gt;/dev/null<span class="p">|</span>awk <span class="s1">&#39;/inet addr:/ &#x7b;print $2&#x7d;&#39;</span><span class="p">|</span>sed <span class="s1">&#39;s/addr://&#39;</span><span class="sb">`</span>
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nb">echo</span> <span class="nv">$IP</span>
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">docker run -d <span class="se">\</span>
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">  -v /usr/local/docker/nbi:/nbi <span class="se">\</span>
@@ -252,11 +289,11 @@ a, body a {
 
 <p>And run your startup script:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>/usr/local/docker/startup.sh</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>/usr/local/docker/startup.sh</div></div></pre></div></figure>
 
 <p>You’ll see your images being checked for updates, and then your containers will start. you can verify they’re running by running:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker ps -a</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker ps -a</div></div></pre></div></figure>
 
 <h2 id="using-the-thing">Using the thing</h2>
 
@@ -270,116 +307,99 @@ a, body a {
 
 <p>All that remains is to restart the <code>bsdpy</code> container on your Docker host:</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>/usr/local/docker/startup.sh</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>/usr/local/docker/startup.sh</div></div></pre></div></figure>
 
 <p>And if you open up the <code>bsdpy</code> container’s logs, you’ll see it finding your NBI.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker logs bsdpy</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker logs bsdpy</div></div></pre></div></figure>
 
 <p>And if you want to keep the logs open whilst you’re testing, you can use <code>-f</code>.</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="gp">$ </span>docker logs -f bsdpy</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>docker logs -f bsdpy</div></div></pre></div></figure>
 
 <h2 id="conclusion">Conclusion</h2>
 
 <p>If you’ve made it all the way down here, congratulations! You’ve now managed to move another service off that silly little Mac Mini and onto Linux - and hopefully you now see how easy it is to get things up and running with Docker.</p>
 
-      <hr />
-      <footer role="contentinfo">
-        <div class="social-share">
-  <h4>Share on</h4>
-  <ul>
-    <li>
-      <a href="https://twitter.com/intent/tweet?text=http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
-    </li>
-    <li>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
-    </li>
-    <li>
-      <a href="https://plus.google.com/share?url=http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
-    </li>
-  </ul>
-</div><!-- /.social-share -->
-        <p class="byline"><strong>Getting started with BSDPy on Docker</strong> was published on <time datetime="2015-04-22T07:07:23+01:00">April 22, 2015</time>.</p>
-      </footer>
-    </div><!-- /.article-wrap -->
-  
-    <section id="disqus_thread"></section><!-- /#disqus_thread -->
-  
-  </article>
-</div><!-- /#main -->
-
-<div class="footer-wrap">
-  
-  <div class="related-articles">
-  <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
-    <ul>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/" title="Running Puppet Server in Docker">Running Puppet Server in Docker</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2013/01/13/casper-vs-munki/" title="Casper Vs Munki">Casper Vs Munki</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2013/04/02/facter-101/" title="Facter 101">Facter 101</a></li>
-    
-    </ul>
-    <hr />
-  </div><!-- /.related-articles -->
-  
-  <footer>
-    <span>&copy; 2016 Graham Gilbert.</span>
-  </footer>
-</div><!-- /.footer-wrap -->
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="http://grahamgilbert.com/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
-<script src="http://grahamgilbert.com/assets/js/scripts.min.js"></script>
-
-<!-- Asynchronous Google Analytics snippet -->
+  <div id="disqus_thread"></div>
 <script>
-  var _gaq = _gaq || [];
-  var pluginUrl =
- '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
-  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
-  _gaq.push(['_setAccount', 'UA-27233739-1']);
-  _gaq.push(['_trackPageview']);
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
-<script type="text/javascript">
-  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
-  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
-  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
-  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+        s.src = '//grahamgilbert.disqus.com/embed.js';
 
-  _st('install','sFQe2UApMaKvCdHMFL6r','2.0.0');
-</script>
-          
-
-
-  <script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'grahamgilbert'; // required: replace example with your forum shortname
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
     })();
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
 </script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
 
-</body>
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/02/10/macad-uk-2016-puppet-on-os-x/">
+            MacAD.UK 2016&#58; Puppet on OS X
+            <small>10 Feb 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/01/20/dynamic-first-boot-scripts-with-imagr-and-flask-part-4/">
+            Dynamic first boot scripts with Imagr and Flask&#58; Part 4
+            <small>20 Jan 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/01/14/imagr-1-0-0-released/">
+            Imagr 1.0.0 Released
+            <small>14 Jan 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
 </html>

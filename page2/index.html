@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      graham gilbert dot com &middot; Mac administration and assorted nerdity
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+  <body class="theme-base-0d">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+    
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/talks/">Talks</a>
+        
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/grahamgilbert">Twitter</a>
+    <a class="sidebar-nav-item" href="https://github.com/grahamgilbert">Github</a>
+
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">graham gilbert dot com</a>
+            <small>Mac administration and assorted nerdity</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">
+        Dynamic first boot scripts with Imagr and Flask
+      </a>
+    </h1>
+
+    <span class="post-date">05 Jan 2016</span>
+    
+            <p>Some may wonder why you would go to the trouble of dynamically generating first boot scripts. I mean, how many can you need?</p>
+
+<p>Let’s say you have ten sites, each with five builds - that fifty first boot scripts to maintain already. It’s entirely possible that they’re all the same, so you could use <a href="https://github.com/grahamgilbert/imagr/wiki/Workflow-Config#scripts">Imagr’s ability to use a script from a central URL</a>. But you also may need to make slight tweaks depending on what type of machine it is and where it is located.</p>
+
+<p>Over the next few posts, we are going to build an app using the <a href="http://flask.pocoo.org">Flask</a> framework that will:</p>
+
+<ul>
+  <li>Read in headers sent by <a href="https://github.com/grahamgilbert/">Imagr</a> to return a dynamically generated first boot script</li>
+  <li>Create a Munki manifest for the Mac</li>
+  <li>Wrap up the application into a Docker image so it can be easily deployed</li>
+</ul>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/">
+        Imagr 0.0.5
+      </a>
+    </h1>
+
+    <span class="post-date">15 Dec 2015</span>
+    
+            <p>It’s been 246 days and 290 commits since I started working on Imagr, and today is it’s <a href="https://github.com/grahamgilbert/imagr/releases/tag/0.0.5">0.0.5 release</a>. It’s been a while since I blogged about Imagr, so in case you have forgotten that I make it, go and take a look!</p>
+
+<p><a href="https://github.com/grahamgilbert/imagr/releases/tag/0.0.5"><img class="center" src="/images/posts/2015-12-15/imagr.png" /></a></p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/">
+        Automated timed releases with Munki
+      </a>
+    </h1>
+
+    <span class="post-date">13 Dec 2015</span>
+    
+            <p>In my environment, we have software that needs to be deployed at the same time across all of our sites. Previously, this meant someone had to pull their computer out on a Sunday and promote the item from the testing catalog to the production catalog. Which is fine, but to be honest I’d rather be doing something else on a Sunday!</p>
+
+<p>So I started looking at how to automate this process. First I looked at <a href="https://github.com/munki/munki/wiki/Pkginfo-Files#force-install-after-date"><code>force_install_after_date</code></a>, but this install the item at a specified time in the client’s local time - I needed this to be installed at the same time globally. Next was <a href="https://github.com/munki/munki/wiki/Conditional-Items#built-in-conditions">Munki’s <code>date</code> condition</a> and using <code>installable_conditon</code> in the item’s pkgsinfo file similarly to how we <a href="http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/">shard our updates</a> - but despite the time object looking like it’s UTC, it’s still just the client’s local time.</p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/">
+        Crypt 2 Alpha Release
+      </a>
+    </h1>
+
+    <span class="post-date">03 Dec 2015</span>
+    
+            <p>A few months ago at PSU, Tom Burgin and Jeremy Baker <a href="https://youtu.be/tcmql5byA_I?list=PLRUboZUQxbyVydhdMcxGGfEaZc2sFdQk8">spoke about using Authorization Plugins</a>. I sat there watching this talk thinking about how cool it would be to use this method for Crypt. And then I had a go at it. And it was <em>hard</em>. So I put it to one side.</p>
+
+<p>Then in November, I met up with Tom at MacTech. He very kindly donated a few hours of his time to get me started with re-writing Crypt as an authorization plugin in Swift.</p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/">
+        Redirecting Munki Downloads
+      </a>
+    </h1>
+
+    <span class="post-date">01 Dec 2015</span>
+    
+            <p>Munki 2.4.0 brought the option to have Munki follow http redirects (<a href="https://github.com/munki/munki/pull/530">my first contribution to Munki</a>). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done.</p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/">Continue reading...</a></b></p>
+          
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="http://grahamgilbert.com/page3">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="http://grahamgilbert.com/">Newer</a>
+    
+  
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

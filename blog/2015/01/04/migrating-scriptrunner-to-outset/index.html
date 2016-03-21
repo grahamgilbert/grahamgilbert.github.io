@@ -1,207 +1,199 @@
-<!doctype html>
-<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
-<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
-<head>
-<meta charset="utf-8">
-<title>Migrating scriptRunner to Outset &#8211; graham gilbert dot com</title>
-<meta name="description" content="A while back, Nate Walck wrote scriptRunner. It’s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released Outset. It has all of the functionality of scriptRunner, but it can also install packages at the Mac’s first boot, and run scripts as root at either the first boot or every boot. This comes into it’s own when you’re trying to do things like skipping the iCloud screens on 10.10 using Rich Trouton’s script - this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.
+<!DOCTYPE html>
+<html lang="en-us">
 
-If you’ve been using scriptRunner and want to move to Outset, you have two options:
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  Just move your scripts into the appropriate Outset directories and hope your users don’t mind the ‘once’ scripts running a second time.
-  Or, you could pre-populate Outset’s ‘once’ plist so it won’t try to run a script previously run by scriptRunner again.
+  <title>
+    
+      Migrating scriptRunner to Outset &middot; graham gilbert dot com
+    
+  </title>
 
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
-The first option isn’t acceptable to me, so I wrote a script that will populate Outset’s plist. It’s up on my Github. One caveat is that Outset requires that your scripts end .sh, .rb or .py. scriptRunner didn’t care about this. When you’re moving your scripts into the Outset directory, you will need to ensure your scripts have the correct extension. This script will read the first line and try to work out what kind of script it is if the file doesn’t have the right extension - if it can’t work it out, it will append .sh to the filename.
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
 
-scriptRunner had a few options you could configure. The first is where your actual scripts live - you will need to edit line 8 of the script to where you put your scriptRunner scripts. Secondly, you might have changed the name of the plist scriptRunner uses - edit line 11 if you did this.
-
-Now all that remains is to put this script into /usr/local/outset/login-once. A Luggage Makefile that will make a package that will do this is included in the repository.
-
-I’ve assumed that you can move your scripts into the new Outset directories using your configuration management tool (Munki, Puppet, Capser, whatever), but if you need a tool that can do this for you (with the previously stated caveat about the file extensions of the scripts), you’ll find a script that can be dropped into Outset’s firstboot directory.
-
-">
-<meta name="keywords" content="">
-
-
-
-<!-- Twitter Cards -->
-<meta name="twitter:title" content="Migrating scriptRunner to Outset">
-<meta name="twitter:description" content="A while back, Nate Walck wrote scriptRunner. It’s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released Outset. It has all of the functionality of scriptRunner, but it can also install packages at the Mac’s first boot, and run scripts as root at either the first boot or every boot. This comes into it’s own when you’re trying to do things like skipping the iCloud screens on 10.10 using Rich Trouton’s script - this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.
-
-If you’ve been using scriptRunner and want to move to Outset, you have two options:
-
-
-  Just move your scripts into the appropriate Outset directories and hope your users don’t mind the ‘once’ scripts running a second time.
-  Or, you could pre-populate Outset’s ‘once’ plist so it won’t try to run a script previously run by scriptRunner again.
-
-
-The first option isn’t acceptable to me, so I wrote a script that will populate Outset’s plist. It’s up on my Github. One caveat is that Outset requires that your scripts end .sh, .rb or .py. scriptRunner didn’t care about this. When you’re moving your scripts into the Outset directory, you will need to ensure your scripts have the correct extension. This script will read the first line and try to work out what kind of script it is if the file doesn’t have the right extension - if it can’t work it out, it will append .sh to the filename.
-
-scriptRunner had a few options you could configure. The first is where your actual scripts live - you will need to edit line 8 of the script to where you put your scriptRunner scripts. Secondly, you might have changed the name of the plist scriptRunner uses - edit line 11 if you did this.
-
-Now all that remains is to put this script into /usr/local/outset/login-once. A Luggage Makefile that will make a package that will do this is included in the repository.
-
-I’ve assumed that you can move your scripts into the new Outset directories using your configuration management tool (Munki, Puppet, Capser, whatever), but if you need a tool that can do this for you (with the previously stated caveat about the file extensions of the scripts), you’ll find a script that can be dropped into Outset’s firstboot directory.
-
-">
-<meta name="twitter:site" content="@grahamgilbert">
-<meta name="twitter:creator" content="@grahamgilbert">
-
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://grahamgilbert.com/images/about.jpg">
-
-<!-- Open Graph -->
-<meta property="og:locale" content="en_GB">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Migrating scriptRunner to Outset">
-<meta property="og:description" content="A while back, Nate Walck wrote scriptRunner. It’s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released Outset. It has all of the functionality of scriptRunner, but it can also install packages at the Mac’s first boot, and run scripts as root at either the first boot or every boot. This comes into it’s own when you’re trying to do things like skipping the iCloud screens on 10.10 using Rich Trouton’s script - this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.
-
-If you’ve been using scriptRunner and want to move to Outset, you have two options:
-
-
-  Just move your scripts into the appropriate Outset directories and hope your users don’t mind the ‘once’ scripts running a second time.
-  Or, you could pre-populate Outset’s ‘once’ plist so it won’t try to run a script previously run by scriptRunner again.
-
-
-The first option isn’t acceptable to me, so I wrote a script that will populate Outset’s plist. It’s up on my Github. One caveat is that Outset requires that your scripts end .sh, .rb or .py. scriptRunner didn’t care about this. When you’re moving your scripts into the Outset directory, you will need to ensure your scripts have the correct extension. This script will read the first line and try to work out what kind of script it is if the file doesn’t have the right extension - if it can’t work it out, it will append .sh to the filename.
-
-scriptRunner had a few options you could configure. The first is where your actual scripts live - you will need to edit line 8 of the script to where you put your scriptRunner scripts. Secondly, you might have changed the name of the plist scriptRunner uses - edit line 11 if you did this.
-
-Now all that remains is to put this script into /usr/local/outset/login-once. A Luggage Makefile that will make a package that will do this is included in the repository.
-
-I’ve assumed that you can move your scripts into the new Outset directories using your configuration management tool (Munki, Puppet, Capser, whatever), but if you need a tool that can do this for you (with the previously stated caveat about the file extensions of the scripts), you’ll find a script that can be dropped into Outset’s firstboot directory.
-
-">
-<meta property="og:url" content="http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/">
-<meta property="og:site_name" content="graham gilbert dot com">
-
-<meta property="og:image" content="http://grahamgilbert.com/images/about.jpg">
-
-
-
-
-
-<link rel="canonical" href="http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/">
-<link href="http://grahamgilbert.com/atom.xml" type="application/atom+xml" rel="alternate" title="graham gilbert dot com Feed">
-
-<!-- http://t.co/dKP3o1e -->
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- For all browsers -->
-<link rel="stylesheet" href="http://grahamgilbert.com/assets/css/main.css">
-
-<meta http-equiv="cleartype" content="on">
-
-<!-- HTML5 Shiv and Media Query Support -->
-<!--[if lt IE 9]>
-	<script src="http://grahamgilbert.com/assets/js/vendor/html5shiv.min.js"></script>
-	<script src="http://grahamgilbert.com/assets/js/vendor/respond.min.js"></script>
-<![endif]-->
-
-<!-- Modernizr -->
-<script src="http://grahamgilbert.com/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
-
-<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-
-<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
-<style>
-#index article p a {
-    text-decoration: underline;
-}
-a, body a {
-    text-decoration: none;
-}
-</style>
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 </head>
 
-<body class="post">
+  <body class="theme-base-0d">
 
-<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
 
-<div class="navigation-wrapper">
-	<div class="site-name">
-		<input type="text" class="st-default-search-input" style="width: 150px;">
-	</div><!-- /.site-name -->
-	<div class="top-navigation">
-		<nav role="navigation" id="site-nav" class="nav">
-		    <ul>
-		        
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
-				
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
-				
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
-				
-				    
-				        
-				        
-				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
-				
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
-				
-		    </ul>
-		</nav>
-	</div><!-- /.top-navigation -->
-</div><!-- /.navigation-wrapper -->
-
-
-
-<div id="main" role="main">
-  <div class="article-author-side">
-    <div itemscope itemtype="http://schema.org/Person">
-
-	<img src="http://grahamgilbert.com/images/about.jpg" class="bio-photo" alt="Graham Gilbert bio photo">
-
-
-  <h3 itemprop="name">Graham Gilbert</h3>
-  <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
-  <a href="http://twitter.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-twitter-square"></i> Twitter</a>
-  
-  
-  <a href="http://linkedin.com/in/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-linkedin-square"></i> LinkedIn</a>
-  
-  
-  
-  <a href="http://github.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-github"></i> Github</a>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-</div>
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
   </div>
-  <article class="post">
-    <div class="headline-wrap">
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+    
       
-        <h1><a href="http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/" rel="bookmark" title="Migrating scriptRunner to Outset">Migrating scriptRunner to Outset</a></h1>
+        
       
-    </div><!--/ .headline-wrap -->
-    <div class="article-wrap">
-      <p>A while back, Nate Walck wrote <a href="https://github.com/natewalck/Scripts/blob/master/scriptRunner.py">scriptRunner</a>. It’s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released <a href="https://github.com/chilcote/outset">Outset</a>. It has all of the functionality of scriptRunner, but it can also install packages at the Mac’s first boot, and run scripts as root at either the first boot or every boot. This comes into it’s own when you’re trying to do things like skipping the iCloud screens on 10.10 using <a href="https://derflounder.wordpress.com/2014/10/16/disabling-the-icloud-and-diagnostics-pop-up-windows-in-yosemite/">Rich Trouton’s script</a> - this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.</p>
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+    
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/talks/">Talks</a>
+        
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/grahamgilbert">Twitter</a>
+    <a class="sidebar-nav-item" href="https://github.com/grahamgilbert">Github</a>
+
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">graham gilbert dot com</a>
+            <small>Mac administration and assorted nerdity</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/">
+        Migrating scriptRunner to Outset
+      </a>
+    </h1>
+  <span class="post-date">04 Jan 2015</span>
+  <p>A while back, Nate Walck wrote <a href="https://github.com/natewalck/Scripts/blob/master/scriptRunner.py">scriptRunner</a>. It’s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released <a href="https://github.com/chilcote/outset">Outset</a>. It has all of the functionality of scriptRunner, but it can also install packages at the Mac’s first boot, and run scripts as root at either the first boot or every boot. This comes into it’s own when you’re trying to do things like skipping the iCloud screens on 10.10 using <a href="https://derflounder.wordpress.com/2014/10/16/disabling-the-icloud-and-diagnostics-pop-up-windows-in-yosemite/">Rich Trouton’s script</a> - this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.</p>
 
 <p>If you’ve been using scriptRunner and want to move to Outset, you have two options:</p>
 
@@ -218,102 +210,85 @@ a, body a {
 
 <p>I’ve assumed that you can move your scripts into the new Outset directories using your configuration management tool (Munki, Puppet, Capser, whatever), but if you need a tool that can do this for you (with the previously stated caveat about the file extensions of the scripts), you’ll find a script that can be dropped into Outset’s firstboot directory.</p>
 
-      <hr />
-      <footer role="contentinfo">
-        <div class="social-share">
-  <h4>Share on</h4>
-  <ul>
-    <li>
-      <a href="https://twitter.com/intent/tweet?text=http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
-    </li>
-    <li>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
-    </li>
-    <li>
-      <a href="https://plus.google.com/share?url=http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
-    </li>
-  </ul>
-</div><!-- /.social-share -->
-        <p class="byline"><strong>Migrating scriptRunner to Outset</strong> was published on <time datetime="2015-01-04T11:40:41+00:00">January 04, 2015</time>.</p>
-      </footer>
-    </div><!-- /.article-wrap -->
-  
-    <section id="disqus_thread"></section><!-- /#disqus_thread -->
-  
-  </article>
-</div><!-- /#main -->
-
-<div class="footer-wrap">
-  
-  <div class="related-articles">
-  <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
-    <ul>
-    
-      <li><a href="http://grahamgilbert.com/blog/2013/01/13/casper-vs-munki/" title="Casper Vs Munki">Casper Vs Munki</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation/" title="The Luggage: Further automation">The Luggage: Further automation</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/" title="The Luggage: An Introduction">The Luggage: An Introduction</a></li>
-    
-    </ul>
-    <hr />
-  </div><!-- /.related-articles -->
-  
-  <footer>
-    <span>&copy; 2016 Graham Gilbert.</span>
-  </footer>
-</div><!-- /.footer-wrap -->
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="http://grahamgilbert.com/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
-<script src="http://grahamgilbert.com/assets/js/scripts.min.js"></script>
-
-<!-- Asynchronous Google Analytics snippet -->
+  <div id="disqus_thread"></div>
 <script>
-  var _gaq = _gaq || [];
-  var pluginUrl =
- '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
-  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
-  _gaq.push(['_setAccount', 'UA-27233739-1']);
-  _gaq.push(['_trackPageview']);
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
-<script type="text/javascript">
-  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
-  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
-  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
-  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+        s.src = '//grahamgilbert.disqus.com/embed.js';
 
-  _st('install','sFQe2UApMaKvCdHMFL6r','2.0.0');
-</script>
-          
-
-
-  <script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'grahamgilbert'; // required: replace example with your forum shortname
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
     })();
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
 </script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
 
-</body>
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/02/10/macad-uk-2016-puppet-on-os-x/">
+            MacAD.UK 2016&#58; Puppet on OS X
+            <small>10 Feb 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/01/20/dynamic-first-boot-scripts-with-imagr-and-flask-part-4/">
+            Dynamic first boot scripts with Imagr and Flask&#58; Part 4
+            <small>20 Jan 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/01/14/imagr-1-0-0-released/">
+            Imagr 1.0.0 Released
+            <small>14 Jan 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
 </html>

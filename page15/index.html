@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      graham gilbert dot com &middot; Mac administration and assorted nerdity
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+  <body class="theme-base-0d">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+    
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/talks/">Talks</a>
+        
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/grahamgilbert">Twitter</a>
+    <a class="sidebar-nav-item" href="https://github.com/grahamgilbert">Github</a>
+
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">graham gilbert dot com</a>
+            <small>Mac administration and assorted nerdity</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2012/12/15/casper-versus-deploystudio/">
+        Casper versus DeployStudio
+      </a>
+    </h1>
+
+    <span class="post-date">15 Dec 2012</span>
+    
+            <p>I’ll preface this with one thing - I’m not a Casper Suite expert. I don’t use it reguarly, and at what it costs, I probably won’t! It’s this price that gave me high expectations for this last install. Unfortunately they were unfounded.</p>
+
+<p>I’m hoping to write a series of articles comparing the various aspects of Casper against the free tools I use every day. First up is DeployStudio.</p>
+
+<h2 id="workflow-creation">Workflow creation</h2>
+<p>Both Casper Imaging and DeployStudio have a nice GUI for creating the workflow. It’s just a drag and drop to place the tasks you need. The DeployStudio interface feels a bit more polished, but that’s probably just my bias showing though. The only real differentiator here are the package groups that DeployStudio offers. If you had a standard group of packages that you deploy over several different workflows, DeployStudio makes it easy to maintain - yes, this should probably be done elsewhere, but it can be handy to install a certain set of applications at imaging time. I couldn’t see a direct replacement for this in Casper Imaging.</p>
+
+<p><strong>Winner: Draw (just! if pushed, I’d say DeployStudio just edged it)</strong></p>
+
+<h2 id="netboot">NetBoot</h2>
+<p>This is where DeployStudio really starts to poop on Casper Imaging from a great height. With Casper, the chap doing the jump start told me that I had to manually build up a NetBoot image with Casper Imaging set up. Hilarious. Surely he was joking, right? No. DeployStudio, a <em>free product</em>, has a wizard for making a customised NetBoot set that offers an iTunes like interface that is so simple, I’ve regularly taken an office manager through imaging a Mac. I dread to think how that same person would cope with the random UI elements that have been thrown at the screen when making the casper imaging app.</p>
+
+<p><strong>Winner: DeployStudio, hands down. Casper didn’t even turn up</strong></p>
+
+<h2 id="imaging-process">Imaging process</h2>
+<p>So, you’ve managed to get past the lovely Casper Imaging interface, and now you’re installing a package that’s best installed when running from the target system - like an Adobe CS package. One that is likely to be the biggest package you’re installing. With DeployStudio, you at least get some indication that <em>something</em> is happening - you have the log scrolling by in the background. With Casper Imaging you get nothing other than a back window, and the nice Casper logo. No idea if it’s going to take five minutes or two hours.</p>
+
+<p><strong>Winner: DeployStudio</strong></p>
+
+<p>I’ll finish this post with an admission: I don’t use DeployStudio either. I’ve been trying to get rid of OS X in my server rooms, so as I mentioned in my last post, we’re using JAMF’s NetSUS appliance (dear JAMF, why can you make an awesome free product like NetSUS, but your flagship product be so poor?) and NetRestore with a InstaDMG made image with just an OS and a package to hook it into Puppet. I chose to compare Casper Imaging with DeployStudio as they’re closer competitors than the one trick pony of NetRestore.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2012/12/12/macnamer/">
+        MacNamer
+      </a>
+    </h1>
+
+    <span class="post-date">12 Dec 2012</span>
+    
+            <p>A few months ago, we decided to move away from DeployStudio for imaging our Macs to reduce the OS X footprint in the server room (a plain old NetRestore can be run from <a href="https://jamfnation.jamfsoftware.com/viewProduct.html?id=180&amp;view=info">NetSUS</a>). This left us with a problem - how are we going to name our Macs now (a task previously performed by DeployStudio)?</p>
+
+<p>Enter <a href="https://github.com/grahamgilbert/macnamer">MacNamer</a>. It’s usage and installation is detailled in the Readme file, please fork, try to break, file pull requests. This has been in production for several months at work, but I’m sure someone will manage to make it break!</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2012/11/12/meraki-systems-manager/">
+        Meraki Systems Manager
+      </a>
+    </h1>
+
+    <span class="post-date">12 Nov 2012</span>
+    
+            <p>Maintaining visibility over your fleet of machines is always difficult. It’s even more difficult when you’ve got Macs. It gets nearly impossible when you decide you’d like something hosted in the cloud.</p>
+
+<p>We’ve been looking for a good solution for ages now - we even resorted to using <a href="http://www.ocsinventory-ng.org/en/">OCS Inventory</a> for a while. We then discovered <a href="http://www.meraki.com/products/systems-manager/">Meraki’s Systems Manager</a>.</p>
+
+<p>This isn’t going to be one of those fancy review type things - you can go and look at it’s features yourself. This is more an overview of the factors that came into our decision:
+##Pros
+* It’s cloud based! No servers for us to deploy, no VPNs between sites for clients to communicate over
+* It does basic iOS MDM. It’s not the best in the world, but it does a lot of what we wanted (basically configuring email and Wi-Fi settings)
+* It has SSH over the Internet. If all else fails, we have a way into a machine, no matter where it is.
+* It’s free! It’s hard to argue with a price like that!</p>
+
+<h2 id="cons">Cons</h2>
+<ul>
+  <li>It’s free! If you’re not paying for something, you have no SLA, no guarantee it will be working tomorrow</li>
+  <li>It’s location services suck in the UK. My home network is in Sheffield apparently. We supposedly have clients in Bath (we don’t).</li>
+  <li>It’s not particuarly customisable. With Puppet, Facter, Puppet Dashboard and the inventory service configured, you can pull out practically any information you require (for example, we have a Fact that tells us if there are any admin users on a Mac other than our own).</li>
+</ul>
+
+<h2 id="summary">Summary</h2>
+<p>For what it does, Meraki Systems Manager is hard to beat. If you need more than basic system information, or something that runs on Linux, you’re going to need to look elsewhere. It’s a great compliment to Puppet Inventory, but it’s not a total replacement.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2012/09/21/five-reasons-sysadmins-should-use-git/">
+        Five reasons sysadmins should use Git
+      </a>
+    </h1>
+
+    <span class="post-date">21 Sep 2012</span>
+    
+            <p>This post could also be called “Things we could learn from our developer brethren, but I digress, to the list! (Lists are awesome, aren’t they?)</p>
+
+<p>I’m not going to try and tell you how to get started with Git (<a href="http://glarizza.posterous.com/using-git-for-mac-sysadmins-part-1">go here instead for that</a>), I’m merely going to get on my soapbox.</p>
+
+<ol>
+  <li><strong>Branches</strong> - need to test something? No need to spend all day making a test setup, just make a branch and clone it to the test server. If it turns out that I wasn’t mad and my changes were a good idea, they can be merged back into the main branch just as easily.</li>
+  <li><strong>Accountability</strong> - who made that strange config change? A quick look at the commit history is all you need.</li>
+  <li><strong>Diff</strong> - what actually changed? It’s easy to see the exact changes</li>
+  <li><strong>Change history</strong> - why was that random change even made? Hopefully it’s in the commit message! (Your commit messages are useful, aren’t they?!)</li>
+  <li><strong>You can be a nice sysadmin</strong> - if you use GitHub it’s simple to take your repo public and share your awesomeness.</li>
+</ol>
+
+<p>So there you go - I hope this goes some way to answering the question “why shuold I be using Git?”</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2012/08/18/location-based-printers-with-puppet/">
+        Location based printers with Puppet
+      </a>
+    </h1>
+
+    <span class="post-date">18 Aug 2012</span>
+    
+            <p>This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent <a href="https://github.com/mosen/puppet-cups">mosen-puppet-cups</a> module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">case $operatingsystem&#x7b;
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	Darwin:&#x7b;
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">		##London is on the 10.30.2.0 and 10.30.3.0 Subnets
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">		if ($network_en0 == '10.30.2.0') or ($network_en1 == '10.30.2.0') or ($network_en0 == '10.30.3.0') or ($network_en1 == '10.30.3.0')&#x7b;
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">            	printer &#x7b; "Sharp_ARM316":
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">                	ensure      =&gt; present,
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">			uri         =&gt; "lpd://sharparm316.ldn.example.com",
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">			description =&gt; "Sharp ARM316",
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">			shared      =&gt; false,
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">			ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/SHARP AR-M316.PPD.gz", # PPD file will be autorequired
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">			&#x7d;
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">		printer &#x7b; "Xerox_WorkCentre_7120":
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">			ensure      =&gt; present,
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">			uri         =&gt; "lpd://xeroxwc7120.ldn.example.com",
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">			description =&gt; "Xerox WorkCentre 7120",
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">			shared      =&gt; false,
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">			ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/Xerox WorkCentre 7120.gz", # PPD file will be autorequired
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">			&#x7d;
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">		&#x7d;
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">		##San Francisco is on the 10.30.10.0 Subnet
+</div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">		if ($network_en0 == '10.30.10.0') or ($network_en1 == '10.30.10.0')&#x7b;
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line"> 		printer &#x7b; "Xerox_550":
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">			ensure      =&gt; present,
+</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">			uri         =&gt; "lpd://xerox550.sf.example.com",
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">			description =&gt; "Xerox 550",
+</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">			shared      =&gt; false,
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">			ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/en.lproj/Xerox 550-560 Integrated Fiery", # PPD file will be autorequired
+</div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line">			&#x7d;
+</div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">		&#x7d;
+</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">	&#x7d;
+</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">&#x7d;</div></div></pre></div></figure>
+
+
+          
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="http://grahamgilbert.com/page16">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="http://grahamgilbert.com/page14">Newer</a>
+    
+  
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

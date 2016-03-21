@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      graham gilbert dot com &middot; Mac administration and assorted nerdity
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+  <body class="theme-base-0d">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+    
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/talks/">Talks</a>
+        
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/grahamgilbert">Twitter</a>
+    <a class="sidebar-nav-item" href="https://github.com/grahamgilbert">Github</a>
+
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">graham gilbert dot com</a>
+            <small>Mac administration and assorted nerdity</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/">
+        Personal Automation (Part 1)
+      </a>
+    </h1>
+
+    <span class="post-date">26 Jul 2014</span>
+    
+            <p><a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">Earlier this year</a>, I professed my love of Boxen - the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was designed for internal use at Github, it set some things up how they liked them - which wasn’t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.</p>
+
+<p>Then I updated Boxen. All of my modules were out of date, so I spent a good couple of hours updating all of them so they worked again. Ugh.</p>
+
+<p>So I started looking at moving to my own solution. One of my major irritations when using Boxen was that it didn’t really handle updating your apps - you got whatever version the module author decided to install and then you had to hope that there was an updatng mechanism built in. I’ve said before that there is no better method of getting software onto your Mac then Munki, so the first decison was straightforward. The rest took a little thought.</p>
+
+<h2 id="the-six-ps">The six P’s</h2>
+
+<p>My first requirement was that I shouldn’t need to run anything to get my configuration to apply. Boxen requires that you run the <code>boxen</code> command periodically across each of your Macs to get the configuration applied. This wasn’t always practical. I needed something that would run in the background and keep itself up to date.</p>
+
+<p>As I said before, I really disliked how Boxen installs software. Munki does a much better job, and AutoPkg makes it trivial to make sure you have the latest software version. Being a sysadmin, I need more than simple drag and drop apps and packages though - I make extensive use of <a href="http://brew.sh">Homebrew</a> to install command line tools like <a href="http://packer.io">Packer</a>, so I needed to come up with a way of installing these with Munki.</p>
+
+<p>However, Munki isn’t the best tool for managing my configuration. I’ve been using Puppet to manage the Macs  I look after for nearly three years now, and I wanted to base my system on it as I’ve already done a lot of the work with making OS X specific modules. I also wanted to use the modules made for Boxen as much as possible (some made too many assumptions about where they were running, so couldn’t be re-used.</p>
+
+<p>So to recap:</p>
+
+<ul>
+  <li>Munki for software deployment.</li>
+  <li>Puppet must run in the background periodically</li>
+  <li>The configuration must update itself - I don’t want to have to sync code across machines.</li>
+  <li>Where possible, re-use existing Puppet modules</li>
+</ul>
+
+<p>Over the next few posts, I’ll go over the different parts of this solution, how I put it together and how you might be able to use this.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2014/07/10/automate-yourself-out-of-a-job/">
+        Automate yourself out of a job
+      </a>
+    </h1>
+
+    <span class="post-date">10 Jul 2014</span>
+    
+            <p>A massive thanks to everyone who came to my talk today, and thanks to everyone who helped out with the Q&amp;A at the end. All of the code I used in the talk is <a href="https://github.com/grahamgilbert/automate_psu_2014">up on GitHub</a> and <a href="http://grahamgilbert.com/images/posts/2014-07-10/Automate_yourself_out_of_a_job.pdf">here are the slides</a>. Hopefully the video will convey how much fun it actually was - it could have been a disaster, so I’m hugely grateful to everyone who contributed to the discussion at the end.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/">
+        Multi tenanted Munki with Puppet and Sal
+      </a>
+    </h1>
+
+    <span class="post-date">09 Jul 2014</span>
+    
+            <p>Thanks for everyone that came to my talk today, it was fun to finally show off what I’ve been working on for the last year or so. I’m sure the video will be up soon, but in the meantime, <a href="http://grahamgilbert.com/images/posts/2014-07-09/Multi_site_Munki.pdf">here are the slides from the talk</a>.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg/">
+        Making packages with AutoPkg
+      </a>
+    </h1>
+
+    <span class="post-date">30 Jun 2014</span>
+    
+            <p>Over the past few weeks, I’ve had the same conversation over and over:
+people telling me that once they get started using Munki, their next
+step will be to start using AutoPkg. I gave each person the same
+response: “you’re doing it wrong”.</p>
+
+<p>AutoPkg a has a reputation of being difficult to use. This is totally
+unjustfied. You don’t need to be using Munki for it to be useful, you
+don’t need to set it up to run automatically via Jenkins or a
+LaunchDaemon. If you need to get software into a package,  AutoPkg is
+the easiest way.</p>
+
+<h2 id="installing-autopkg">Installing AutoPkg</h2>
+
+<p>Head over to the <a href="https://github.com/autopkg/autopkg/releases/latest">releases page on AutoPkg’s GitHub repository</a> and
+download the latest version  (0.3.0 at the time of writing). It’s an
+Apple package, so double click it and get it installed. If you have Gate Keeper enabled, you’ll need to right-click on the package and choose to install it from there, as it’s not been signed.</p>
+
+<h2 id="recipes">Recipes</h2>
+
+<p>AutoPkg is useless without recipes. Fortunately, there are hundreds
+that have already been made by the community.</p>
+
+<p>We’ll add the set of recipes maintained by AutoPkg’s authors, which
+contains some of the most common software. Open up a terminal window
+and enter :</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>autopkg repo-add https://github.com/autopkg/recipes</div></div></pre></div></figure>
+
+<p>You’ll see AutoPkg downloading and adding the recipes to your Mac.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">Attempting git clone...
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">Adding /Users/grahamgilbert/Library/AutoPkg/RecipeRepos/com.github.autopkg.recipes to RECIPE_SEARCH_DIRS...
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">Updated search path:
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="s1">&#39;.&#39;</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="s1">&#39;~/Library/AutoPkg/Recipes&#39;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="s1">&#39;/Library/AutoPkg/Recipes&#39;</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="s1">&#39;/Users/vagrant/Library/AutoPkg/RecipeRepos/com.github.autopkg.recipes&#39;</span></div></div></pre></div></figure>
+
+<h2 id="using-the-thing">Using the thing</h2>
+
+<p>Let’s see what recipes we just added. Still in your terminal, enter:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>autopkg list-recipes</div></div></pre></div></figure>
+
+<p>You’ll see a whole load of output like:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">Adium.download
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">Adium.munki
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">Adium.pkg
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeAIR.pkg
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeAcrobatPro9Update.download
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeAcrobatPro9Update.munki
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeAcrobatProXUpdate.download
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeAcrobatProXUpdate.munki
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeAir.munki
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeFlashPlayer.download
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeFlashPlayer.munki
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeFlashPlayer.pkg
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeFlashPlayerExtractPackage.munki
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">...</div></div></pre></div></figure>
+
+<p>The naming convention in AutoPKG is SoftwareName.output. For for
+example, to run a recipe that downloads Google Chrome and adds it to
+Munki, you would use the GoogleChrome.munki recipe, but if you just
+wanted to download it an make a package, you’d use the GoogleChrome.pkg recipe. It just so happens that making a package of Chrome is exactly what we want to do.</p>
+
+<p>Back into your terminal and enter:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>autopkg run GoogleChrome.pkg</div></div></pre></div></figure>
+
+<p>The AutoPkg robot will churn away and you’ll get some output similar to:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">Processing GoogleChrome.pkg...
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">The following new items were downloaded:
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">    /Users/grahamgilbert/Library/AutoPkg/Cache/com.github.autopkg.pkg.googlechrome/downloads/GoogleChrome.dmg
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">The following packages were built:
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">    Identifier               Version          Pkg path                        
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    ----------               -------          --------                        
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">    com.google.Chrome        35.0.1916.153    /Users/grahamgilbert/Library/AutoPkg/Cache/com.github.autopkg.pkg.googlechrome/GoogleChrome-35.0.1916.153.pkg</div></div></pre></div></figure>
+
+<p>And when it’s all finished, you’ll be left with a nice package that
+you can use anywhere you’d use finely crafted packages - ARD, AutoDMG or even Casper if you’re that way inclined (although Allister Banks has been
+working on a way of automating importing packages into the JSS - see
+his <a href="http://tmblr.co/ZHT_Wy1J-Hk5I">recent talk</a> for more on that subject).</p>
+
+<h2 id="doing-it-all-again">Doing it all again</h2>
+
+<p>What happens next time you want to build an updated package?</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>autopkg run GoogleChrome.pkg</div></div></pre></div></figure>
+
+<p>Right?</p>
+
+<p>Well, kinda.</p>
+
+<p>What happens if Google changes the URL AutoPkg uses to download
+Chrome? Fortunately we’re using the community provided recipes, and if
+something’s broken they usually get fixed pretty quickly. We just need
+to tell AutoPkg to update the installed recipes.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>autopkg update-repo all</div></div></pre></div></figure>
+
+<p>And then we’re able to build our package safe in the knowledge that
+someone else has done all of the hard work for us.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku/">
+        Deploying Sal on Heroku
+      </a>
+    </h1>
+
+    <span class="post-date">19 May 2014</span>
+    
+            <p>Setting up everything you need for Sal can be difficult, especially if you only have an OS X server available. Thankfully, Sal is built on top of a very common Python framework, Django. And even more thankfully, you can run Django on a whole host of <a href="http://en.wikipedia.org/wiki/Platform_as_a_service">PaaS</a> providers, including <a href="https://www.heroku.com">Heroku</a>.</p>
+
+<p>Heroku has a very generous <a href="https://www.heroku.com/pricing">free tier</a> that will easily handle a small Sal installation, so let’s get started.</p>
+
+<h2 id="heroku-toolbelt">Heroku toolbelt</h2>
+
+<p>If you’ve never used Heroku before, you’re going to need to head over to <a href="http://heroku.com">their site</a> and sign up for a free account. Whilst you’re there, you’re also going to need to install their toolbelt. <a href="http://toolbelt.herokuapp.com/">Grab the package</a> and follow their instructions for linking it to your account.</p>
+
+<h2 id="configure">Configure</h2>
+
+<p>Now we need to get a copy of Sal and configure it. Assuming you keep your code in ~/src:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git clone https://github.com/grahamgilbert/sal
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd </span>sal</div></div></pre></div></figure>
+
+<p>Now we need to make a copy of sal/example_settings.py</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>cp sal/example_settings.py sal/settings.py</div></div></pre></div></figure>
+
+<p>And edit sal/settings.py in your favourite editor to your liking (probably time zone at least).</p>
+
+<p>Heroku uses git for deployment, so we need to commit our changes.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git add .
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git commit -m <span class="s2">&quot;initial commit to heroku&quot;</span></div></div></pre></div></figure>
+
+<p>We’re nearly there! Time to create our environment on Heroku</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>heroku create</div></div></pre></div></figure>
+
+<p>Of course we haven’t pushed Sal to Heroku yet. Let’s fix that.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git push heroku master</div></div></pre></div></figure>
+
+<p>You’ll see Sal being pushed up to Heroku and Sal’s requirements being installed. A Postgres database will also automatically be created for you. The database will be empty though, so let’s populate it with what we need.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>heroku run python manage.py syncdb</div></div></pre></div></figure>
+
+<p>When asked, you certainly <em>do</em> want to create a super user. Use a strong username and password as this is the admin for your Sal application.</p>
+
+<p>One last command to run:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>heroku run python manage.py migrate</div></div></pre></div></figure>
+
+<p>Your Sal installation is ready to use:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>heroku open</div></div></pre></div></figure>
+
+<p>As said earlier, the free version does have some limits. The most important with Sal is the number of rows you can have in the free database (10,000), so the more information you collect from each machine (Facter Facts and Munki Conditions), the larger your database is. It’s a measley $9 a month to upgrade your database to 10 million rows, so it’s easy to scale your database. For more information on upgrading your Heroku environment see <a href="https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups">their documentation</a>.</p>
+
+          
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="http://grahamgilbert.com/page9">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="http://grahamgilbert.com/page7">Newer</a>
+    
+  
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

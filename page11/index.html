@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      graham gilbert dot com &middot; Mac administration and assorted nerdity
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+  <body class="theme-base-0d">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+    
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/talks/">Talks</a>
+        
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/grahamgilbert">Twitter</a>
+    <a class="sidebar-nav-item" href="https://github.com/grahamgilbert">Github</a>
+
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">graham gilbert dot com</a>
+            <small>Mac administration and assorted nerdity</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/">
+        Setting a desktop picture in Mavericks
+      </a>
+    </h1>
+
+    <span class="post-date">28 Oct 2013</span>
+    
+            <p>Sometimes we are asked by clients to set a default desktop picture for new users - sometimes we are deleting home directories on logout, so need to warn the users, other times the client just wants their corporate wallpaper to be the default.</p>
+
+<p>If you are lazy and don’t want to read this post then the script that changes the desktop picture <a href="https://github.com/grahamgilbert/macscripts/tree/master/set_desktops">is on GitHub</a>.</p>
+
+<p>Whatever, here’s what we used to do:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">/usr/bin/defaults write com.apple.desktop Background <span class="s1">&#39;&#x7b;default = &#x7b;ImageFilePath = &quot;/Library/Desktop Pictures/Black &amp; White/Lightning.jpg&quot;; &#x7d;;&#x7d;&#39;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">/usr/bin/killall Dock</div></div></pre></div></figure>
+
+<p>Nothing earth shattering there if you’ve managed Macs for any length of time.</p>
+
+<p>But then 10.9 changed things - this stopped working.</p>
+
+<p>I ran fs_usage to see what was happening whilst I changed the desktop picture on my machine:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo fs_usage -w <span class="p">|</span> grep desktop</div></div></pre></div></figure>
+
+<p>Obviously there was a metic buttload of information, but this line caught my eye.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">15:25:06.884820    WrData[A]       D=0x0b2d1d90  B=0x1000   /dev/disk1  /Users/grahamgilbert/Library/Application Support/Dock/desktoppicture.db</div></div></pre></div></figure>
+
+<p>Bingo! I opened up the database in the <a href="https://addons.mozilla.org/en-US/firefox/addon/sqlite-manager/">SQLite Manager Firefox extension</a> (the only thing I use Firefox for these days) and had a peek. And then I got half a brain and googled the path of the desktoppicture.db file and found that there was a <a href="https://gist.github.com/gregneagle/6225747">gist from Greg Neagle</a>. Perfect!</p>
+
+<p>Of course, he’d already improved upon this script and written a proof of concept to <a href="https://gist.github.com/gregneagle/6957826">set a random desktop picture using PyObjC</a>. This got me 90% of the way there, so this is my modified version of his script. The full code and usage instructions are <a href="https://github.com/grahamgilbert/macscripts/tree/master/set_desktops">over on GitHub</a>.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer/">
+        ZNC: An IRC Bouncer
+      </a>
+    </h1>
+
+    <span class="post-date">13 Oct 2013</span>
+    
+            <p>Yes,  it’s true. The most interesting conversations in the Mac admin world take place using technology from the 1980’s - <a href="http://en.wikipedia.org/wiki/Internet_Relay_Chat">IRC</a> (##osx-server on <a href="http://freenode.net/">freenode</a>). Those of you who know me will know that I’m borderline OCD. In this instance, my major annoyance was that I’d only get half of the conversation and I’d miss private messages when I had to put my laptop to sleep. I needed to somehow keep a persistient conenction to IRC without having to sit infront of my computer 24/7.</p>
+
+<p>I’d heard of IRC bouncers before - an app that runs on a server, saving the messages in the rooms you specify for you until you are able to read them, but always assumed they were much more difficult to set up than it turned out to be.</p>
+
+<p>This is set up on a box running Ubuntu 12.04, with port 6666 opened on your firewall and forwarded to the box if you want to access it from outside the network. Mine is running on an <a href="http://aws.amazon.com/free/">Amazon EC2 Micro instance</a> - available for free for one year if you don’t already have a server to run it on.</p>
+
+<p>Right, let’s get started. All of these commands are to be run as your normal user (<code>graham</code> in this case - <strong>not root</strong>). First we’re going to enable backports in Ubuntu. I like editing text files in <code>nano</code> so I’m going to install that first, but feel free to use Vi or whatever you like.</p>
+
+<p><code>bash
+$ sudo apt-get install -y nano
+$ sudo nano /etc/apt/sources.list
+</code></p>
+
+<p>Find the two backports lines commented out (lines 44-45 on my test box) and unomment them.</p>
+
+<p><code>bash
+deb http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse
+deb-src http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse
+</code></p>
+
+<p>If you are using nano, hit <code>CTRL+O</code> and press return to save it, then <code>CTRL-X</code> to exit.</p>
+
+<p>To install ZNC, issue the following command:</p>
+
+<p><code>bash
+$ sudo apt-get update
+$ sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-dev/precise-backports znc-extra/precise-backports znc-perl/precise-backports znc-python/precise-backports znc-tcl/precise-backports
+</code></p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/">
+        Creating an OS X base box for Vagrant with Packer
+      </a>
+    </h1>
+
+    <span class="post-date">23 Aug 2013</span>
+    
+            <p>A while ago, the chaps over at the <a href="http://www.vagrantup.com/">Vagrant</a> project have recently released a <a href="http://www.vagrantup.com/vmware">plugin to let Vagrant work with VMWare Fusion</a> - this means we can finally use Vagrant to provision OS X VMs.</p>
+
+<p>Why is this a good thing? Do you NetBoot VMWare to test your builds? Or maybe you still have that test Mac on your desk to test your builds. Either way, it’s going to be several minutes to restore an image, even if you’re thin imaging. With the VM already on your machine, you’re ready to go in seconds. Another bonus is that Vagrant isn’t only limited to OS X virtual machines - for example, I have a Vagrant configuration that spins up an Ubuntu box configured as a Munki server, with a copy of my repository on an external drive. This allows me to test deployments from anywhere, with everything local to my Mac (have you ever tried testing a Final Cut Studio package from home? 48GB takes a while to download.). I’ll go into more detail on this setup in a future post, but for now here’s how to get a Mac base box into Vagrant.</p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation/">
+        The Luggage: Further automation
+      </a>
+    </h1>
+
+    <span class="post-date">19 Aug 2013</span>
+    
+            <p>As promised in my previous post, today we’re going to look at how we can further refine our workflow, with the aim of cutting out as many manual steps as possible (every IT person knows it’s not computer that make mistakes, it’s the idiots in front of them) and making as much of our code re-usable in other packages.</p>
+
+<p>If you’ve not read the <a href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/">previous article</a>, you will need to before carrying on with this, unless you’re already familiar with The Luggage. If you get stuck, all of the code from this post is <a href="https://github.com/grahamgilbert/the-luggage-post-201308">up on Github</a>.</p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/">
+        The Luggage: An Introduction
+      </a>
+    </h1>
+
+    <span class="post-date">09 Aug 2013</span>
+    
+            <p>If you’ve managed OS X for any amount of time, chances are you’ve needed to deploy software. And chances also are that you’ve come across a vendor (I’m looking at you, Adobe) that seems to be incapable of distributing their software in a useful manner. Or maybe you’ve got your own scripts or software that you need to get installed on the machines that you look after - either way, you’re going to want to build a package.</p>
+
+<p>You’ve got a few options - Iceberg, Packages, Composer, you’ve even got Package Maker. However, my personal choice is The Luggage. It has a few advantages over the alternatives:</p>
+
+<ul>
+  <li><strong>It’s all text files:</strong> You’re building software distributions, you should be checking the files in to build the packages into version control, such as Git. Text files are ideal for checking into version control.</li>
+  <li><strong>It’s free:</strong> if it costs nothing, there’s no reason it can’t be installed on everyone’s machine.</li>
+  <li><strong>It’s (still) all text files:</strong> Want to see what will be in the package without any extra work? Crack open the Makefile and you can see straight away what will be in the package.</li>
+  <li><strong>The Luggage has a metric buttload of shortcuts built in:</strong> it does the hard work, so you don’t have to.</li>
+  <li><strong>It’s repeatable:</strong> Have you ever tried to talk someone through a series of windows and buttons to get the same result as you’re getting? Every time you run The Luggage, you will get the same result.</li>
+  <li><strong>It’s (really, still) all text files:</strong> It’s the most precise tool I’ve used - you only package exactly what you need, no cruft is left behind.</li>
+  <li><strong>Your workflow is limited only by your imagination:</strong> Seriously, you can do pretty much anything you can think of. We’ll be going through more advanced workflows in future posts, but let’s get started with using The Luggage.</li>
+</ul>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/">Continue reading...</a></b></p>
+          
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="http://grahamgilbert.com/page12">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="http://grahamgilbert.com/page10">Newer</a>
+    
+  
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

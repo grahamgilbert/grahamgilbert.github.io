@@ -1,219 +1,199 @@
-<!doctype html>
-<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
-<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
-<head>
-<meta charset="utf-8">
-<title>Casper versus DeployStudio &#8211; graham gilbert dot com</title>
-<meta name="description" content="I’ll preface this with one thing - I’m not a Casper Suite expert. I don’t use it reguarly, and at what it costs, I probably won’t! It’s this price that gave me high expectations for this last install. Unfortunately they were unfounded.
+<!DOCTYPE html>
+<html lang="en-us">
 
-I’m hoping to write a series of articles comparing the various aspects of Casper against the free tools I use every day. First up is DeployStudio.
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-Workflow creation
-Both Casper Imaging and DeployStudio have a nice GUI for creating the workflow. It’s just a drag and drop to place the tasks you need. The DeployStudio interface feels a bit more polished, but that’s probably just my bias showing though. The only real differentiator here are the package groups that DeployStudio offers. If you had a standard group of packages that you deploy over several different workflows, DeployStudio makes it easy to maintain - yes, this should probably be done elsewhere, but it can be handy to install a certain set of applications at imaging time. I couldn’t see a direct replacement for this in Casper Imaging.
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-Winner: Draw (just! if pushed, I’d say DeployStudio just edged it)
+  <title>
+    
+      Casper versus DeployStudio &middot; graham gilbert dot com
+    
+  </title>
 
-NetBoot
-This is where DeployStudio really starts to poop on Casper Imaging from a great height. With Casper, the chap doing the jump start told me that I had to manually build up a NetBoot image with Casper Imaging set up. Hilarious. Surely he was joking, right? No. DeployStudio, a free product, has a wizard for making a customised NetBoot set that offers an iTunes like interface that is so simple, I’ve regularly taken an office manager through imaging a Mac. I dread to think how that same person would cope with the random UI elements that have been thrown at the screen when making the casper imaging app.
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
-Winner: DeployStudio, hands down. Casper didn’t even turn up
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
 
-Imaging process
-So, you’ve managed to get past the lovely Casper Imaging interface, and now you’re installing a package that’s best installed when running from the target system - like an Adobe CS package. One that is likely to be the biggest package you’re installing. With DeployStudio, you at least get some indication that something is happening - you have the log scrolling by in the background. With Casper Imaging you get nothing other than a back window, and the nice Casper logo. No idea if it’s going to take five minutes or two hours.
-
-Winner: DeployStudio
-
-I’ll finish this post with an admission: I don’t use DeployStudio either. I’ve been trying to get rid of OS X in my server rooms, so as I mentioned in my last post, we’re using JAMF’s NetSUS appliance (dear JAMF, why can you make an awesome free product like NetSUS, but your flagship product be so poor?) and NetRestore with a InstaDMG made image with just an OS and a package to hook it into Puppet. I chose to compare Casper Imaging with DeployStudio as they’re closer competitors than the one trick pony of NetRestore.
-
-">
-<meta name="keywords" content="">
-
-
-
-<!-- Twitter Cards -->
-<meta name="twitter:title" content="Casper versus DeployStudio">
-<meta name="twitter:description" content="I’ll preface this with one thing - I’m not a Casper Suite expert. I don’t use it reguarly, and at what it costs, I probably won’t! It’s this price that gave me high expectations for this last install. Unfortunately they were unfounded.
-
-I’m hoping to write a series of articles comparing the various aspects of Casper against the free tools I use every day. First up is DeployStudio.
-
-Workflow creation
-Both Casper Imaging and DeployStudio have a nice GUI for creating the workflow. It’s just a drag and drop to place the tasks you need. The DeployStudio interface feels a bit more polished, but that’s probably just my bias showing though. The only real differentiator here are the package groups that DeployStudio offers. If you had a standard group of packages that you deploy over several different workflows, DeployStudio makes it easy to maintain - yes, this should probably be done elsewhere, but it can be handy to install a certain set of applications at imaging time. I couldn’t see a direct replacement for this in Casper Imaging.
-
-Winner: Draw (just! if pushed, I’d say DeployStudio just edged it)
-
-NetBoot
-This is where DeployStudio really starts to poop on Casper Imaging from a great height. With Casper, the chap doing the jump start told me that I had to manually build up a NetBoot image with Casper Imaging set up. Hilarious. Surely he was joking, right? No. DeployStudio, a free product, has a wizard for making a customised NetBoot set that offers an iTunes like interface that is so simple, I’ve regularly taken an office manager through imaging a Mac. I dread to think how that same person would cope with the random UI elements that have been thrown at the screen when making the casper imaging app.
-
-Winner: DeployStudio, hands down. Casper didn’t even turn up
-
-Imaging process
-So, you’ve managed to get past the lovely Casper Imaging interface, and now you’re installing a package that’s best installed when running from the target system - like an Adobe CS package. One that is likely to be the biggest package you’re installing. With DeployStudio, you at least get some indication that something is happening - you have the log scrolling by in the background. With Casper Imaging you get nothing other than a back window, and the nice Casper logo. No idea if it’s going to take five minutes or two hours.
-
-Winner: DeployStudio
-
-I’ll finish this post with an admission: I don’t use DeployStudio either. I’ve been trying to get rid of OS X in my server rooms, so as I mentioned in my last post, we’re using JAMF’s NetSUS appliance (dear JAMF, why can you make an awesome free product like NetSUS, but your flagship product be so poor?) and NetRestore with a InstaDMG made image with just an OS and a package to hook it into Puppet. I chose to compare Casper Imaging with DeployStudio as they’re closer competitors than the one trick pony of NetRestore.
-
-">
-<meta name="twitter:site" content="@grahamgilbert">
-<meta name="twitter:creator" content="@grahamgilbert">
-
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://grahamgilbert.com/images/about.jpg">
-
-<!-- Open Graph -->
-<meta property="og:locale" content="en_GB">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Casper versus DeployStudio">
-<meta property="og:description" content="I’ll preface this with one thing - I’m not a Casper Suite expert. I don’t use it reguarly, and at what it costs, I probably won’t! It’s this price that gave me high expectations for this last install. Unfortunately they were unfounded.
-
-I’m hoping to write a series of articles comparing the various aspects of Casper against the free tools I use every day. First up is DeployStudio.
-
-Workflow creation
-Both Casper Imaging and DeployStudio have a nice GUI for creating the workflow. It’s just a drag and drop to place the tasks you need. The DeployStudio interface feels a bit more polished, but that’s probably just my bias showing though. The only real differentiator here are the package groups that DeployStudio offers. If you had a standard group of packages that you deploy over several different workflows, DeployStudio makes it easy to maintain - yes, this should probably be done elsewhere, but it can be handy to install a certain set of applications at imaging time. I couldn’t see a direct replacement for this in Casper Imaging.
-
-Winner: Draw (just! if pushed, I’d say DeployStudio just edged it)
-
-NetBoot
-This is where DeployStudio really starts to poop on Casper Imaging from a great height. With Casper, the chap doing the jump start told me that I had to manually build up a NetBoot image with Casper Imaging set up. Hilarious. Surely he was joking, right? No. DeployStudio, a free product, has a wizard for making a customised NetBoot set that offers an iTunes like interface that is so simple, I’ve regularly taken an office manager through imaging a Mac. I dread to think how that same person would cope with the random UI elements that have been thrown at the screen when making the casper imaging app.
-
-Winner: DeployStudio, hands down. Casper didn’t even turn up
-
-Imaging process
-So, you’ve managed to get past the lovely Casper Imaging interface, and now you’re installing a package that’s best installed when running from the target system - like an Adobe CS package. One that is likely to be the biggest package you’re installing. With DeployStudio, you at least get some indication that something is happening - you have the log scrolling by in the background. With Casper Imaging you get nothing other than a back window, and the nice Casper logo. No idea if it’s going to take five minutes or two hours.
-
-Winner: DeployStudio
-
-I’ll finish this post with an admission: I don’t use DeployStudio either. I’ve been trying to get rid of OS X in my server rooms, so as I mentioned in my last post, we’re using JAMF’s NetSUS appliance (dear JAMF, why can you make an awesome free product like NetSUS, but your flagship product be so poor?) and NetRestore with a InstaDMG made image with just an OS and a package to hook it into Puppet. I chose to compare Casper Imaging with DeployStudio as they’re closer competitors than the one trick pony of NetRestore.
-
-">
-<meta property="og:url" content="http://grahamgilbert.com/blog/2012/12/15/casper-versus-deploystudio/">
-<meta property="og:site_name" content="graham gilbert dot com">
-
-<meta property="og:image" content="http://grahamgilbert.com/images/about.jpg">
-
-
-
-
-
-<link rel="canonical" href="http://grahamgilbert.com/blog/2012/12/15/casper-versus-deploystudio/">
-<link href="http://grahamgilbert.com/atom.xml" type="application/atom+xml" rel="alternate" title="graham gilbert dot com Feed">
-
-<!-- http://t.co/dKP3o1e -->
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- For all browsers -->
-<link rel="stylesheet" href="http://grahamgilbert.com/assets/css/main.css">
-
-<meta http-equiv="cleartype" content="on">
-
-<!-- HTML5 Shiv and Media Query Support -->
-<!--[if lt IE 9]>
-	<script src="http://grahamgilbert.com/assets/js/vendor/html5shiv.min.js"></script>
-	<script src="http://grahamgilbert.com/assets/js/vendor/respond.min.js"></script>
-<![endif]-->
-
-<!-- Modernizr -->
-<script src="http://grahamgilbert.com/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
-
-<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
-
-<link href='/stylesheets/all-e0260dc5ae0daef003df9eded89731d4.css' media='all' rel='stylesheet' type='text/css'>
-<style>
-#index article p a {
-    text-decoration: underline;
-}
-a, body a {
-    text-decoration: none;
-}
-</style>
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 </head>
 
-<body class="post">
+  <body class="theme-base-0d">
 
-<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
 
-<div class="navigation-wrapper">
-	<div class="site-name">
-		<input type="text" class="st-default-search-input" style="width: 150px;">
-	</div><!-- /.site-name -->
-	<div class="top-navigation">
-		<nav role="navigation" id="site-nav" class="nav">
-		    <ul>
-		        
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/" >Home</a></li>
-				
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/about/" >About</a></li>
-				
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/talks/" >Talks</a></li>
-				
-				    
-				        
-				        
-				    <li><a href="http://twitter.com/grahamgilbert" target="_blank">Twitter</a></li>
-				
-				    
-				        
-				    
-				    <li><a href="http://grahamgilbert.com/posts/" >Archives</a></li>
-				
-		    </ul>
-		</nav>
-	</div><!-- /.top-navigation -->
-</div><!-- /.navigation-wrapper -->
-
-
-
-<div id="main" role="main">
-  <div class="article-author-side">
-    <div itemscope itemtype="http://schema.org/Person">
-
-	<img src="http://grahamgilbert.com/images/about.jpg" class="bio-photo" alt="Graham Gilbert bio photo">
-
-
-  <h3 itemprop="name">Graham Gilbert</h3>
-  <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
-  <a href="http://twitter.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-twitter-square"></i> Twitter</a>
-  
-  
-  <a href="http://linkedin.com/in/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-linkedin-square"></i> LinkedIn</a>
-  
-  
-  
-  <a href="http://github.com/grahamgilbert" class="author-social" target="_blank"><i class="fa fa-fw fa-github"></i> Github</a>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-</div>
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
   </div>
-  <article class="post">
-    <div class="headline-wrap">
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+    
       
-        <h1><a href="http://grahamgilbert.com/blog/2012/12/15/casper-versus-deploystudio/" rel="bookmark" title="Casper versus DeployStudio">Casper versus DeployStudio</a></h1>
+        
       
-    </div><!--/ .headline-wrap -->
-    <div class="article-wrap">
-      <p>I’ll preface this with one thing - I’m not a Casper Suite expert. I don’t use it reguarly, and at what it costs, I probably won’t! It’s this price that gave me high expectations for this last install. Unfortunately they were unfounded.</p>
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+    
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/talks/">Talks</a>
+        
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/grahamgilbert">Twitter</a>
+    <a class="sidebar-nav-item" href="https://github.com/grahamgilbert">Github</a>
+
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">graham gilbert dot com</a>
+            <small>Mac administration and assorted nerdity</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2012/12/15/casper-versus-deploystudio/">
+        Casper versus DeployStudio
+      </a>
+    </h1>
+  <span class="post-date">15 Dec 2012</span>
+  <p>I’ll preface this with one thing - I’m not a Casper Suite expert. I don’t use it reguarly, and at what it costs, I probably won’t! It’s this price that gave me high expectations for this last install. Unfortunately they were unfounded.</p>
 
 <p>I’m hoping to write a series of articles comparing the various aspects of Casper against the free tools I use every day. First up is DeployStudio.</p>
 
@@ -234,102 +214,85 @@ a, body a {
 
 <p>I’ll finish this post with an admission: I don’t use DeployStudio either. I’ve been trying to get rid of OS X in my server rooms, so as I mentioned in my last post, we’re using JAMF’s NetSUS appliance (dear JAMF, why can you make an awesome free product like NetSUS, but your flagship product be so poor?) and NetRestore with a InstaDMG made image with just an OS and a package to hook it into Puppet. I chose to compare Casper Imaging with DeployStudio as they’re closer competitors than the one trick pony of NetRestore.</p>
 
-      <hr />
-      <footer role="contentinfo">
-        <div class="social-share">
-  <h4>Share on</h4>
-  <ul>
-    <li>
-      <a href="https://twitter.com/intent/tweet?text=http://grahamgilbert.com/blog/2012/12/15/casper-versus-deploystudio/" class="twitter" title="Share on Twitter"><i class="fa fa-twitter"></i><span> Twitter</span></a>
-    </li>
-    <li>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=http://grahamgilbert.com/blog/2012/12/15/casper-versus-deploystudio/" class="facebook" title="Share on Facebook"><i class="fa fa-facebook"></i><span> Facebook</span></a>
-    </li>
-    <li>
-      <a href="https://plus.google.com/share?url=http://grahamgilbert.com/blog/2012/12/15/casper-versus-deploystudio/" class="google-plus" title="Share on Google Plus"><i class="fa fa-google-plus"></i><span> Google+</span></a>
-    </li>
-  </ul>
-</div><!-- /.social-share -->
-        <p class="byline"><strong>Casper versus DeployStudio</strong> was published on <time datetime="2012-12-15T13:00:00+00:00">December 15, 2012</time>.</p>
-      </footer>
-    </div><!-- /.article-wrap -->
-  
-    <section id="disqus_thread"></section><!-- /#disqus_thread -->
-  
-  </article>
-</div><!-- /#main -->
-
-<div class="footer-wrap">
-  
-  <div class="related-articles">
-  <h4>You might also enjoy <small class="pull-right">(<a href="http://grahamgilbert.com/posts/">View all posts</a>)</small></h4>
-    <ul>
-    
-      <li><a href="http://grahamgilbert.com/blog/2013/01/13/casper-vs-munki/" title="Casper Vs Munki">Casper Vs Munki</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/" title="Running Puppet Server in Docker">Running Puppet Server in Docker</a></li>
-    
-      <li><a href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/" title="Getting started with BSDPy on Docker">Getting started with BSDPy on Docker</a></li>
-    
-    </ul>
-    <hr />
-  </div><!-- /.related-articles -->
-  
-  <footer>
-    <span>&copy; 2016 Graham Gilbert.</span>
-  </footer>
-</div><!-- /.footer-wrap -->
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="http://grahamgilbert.com/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
-<script src="http://grahamgilbert.com/assets/js/scripts.min.js"></script>
-
-<!-- Asynchronous Google Analytics snippet -->
+  <div id="disqus_thread"></div>
 <script>
-  var _gaq = _gaq || [];
-  var pluginUrl =
- '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
-  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
-  _gaq.push(['_setAccount', 'UA-27233739-1']);
-  _gaq.push(['_trackPageview']);
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
-<script type="text/javascript">
-  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
-  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
-  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
-  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+        s.src = '//grahamgilbert.disqus.com/embed.js';
 
-  _st('install','sFQe2UApMaKvCdHMFL6r','2.0.0');
-</script>
-          
-
-
-  <script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'grahamgilbert'; // required: replace example with your forum shortname
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
     })();
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
 </script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
 
-</body>
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/02/10/macad-uk-2016-puppet-on-os-x/">
+            MacAD.UK 2016&#58; Puppet on OS X
+            <small>10 Feb 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/01/20/dynamic-first-boot-scripts-with-imagr-and-flask-part-4/">
+            Dynamic first boot scripts with Imagr and Flask&#58; Part 4
+            <small>20 Jan 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/01/14/imagr-1-0-0-released/">
+            Imagr 1.0.0 Released
+            <small>14 Jan 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
 </html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      graham gilbert dot com &middot; Mac administration and assorted nerdity
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+  <body class="theme-base-0d">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+    
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/talks/">Talks</a>
+        
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/grahamgilbert">Twitter</a>
+    <a class="sidebar-nav-item" href="https://github.com/grahamgilbert">Github</a>
+
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">graham gilbert dot com</a>
+            <small>Mac administration and assorted nerdity</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">
+        Running Puppet Server in Docker Part 2: r10k
+      </a>
+    </h1>
+
+    <span class="post-date">24 Jun 2015</span>
+    
+            <p>Last time we got our Puppet Server up and running - now we need to put some Puppet modules on it so we can use it.</p>
+
+<p>To do that, we’re going to use r10k. It’s a tool that uses a control git repository that contains something called a puppetfile- a file that lists all of the puppet modules you want to use, either from the puppet forge or from git repositories. You may want to keep this module private by using a paid account on GitHub if your configuration contains secrets, but  it doesn’t have to be - mine doesn’t have anything particularly sensitive in, so here it is: <a href="https://github.com/grahamgilbert/personal-puppet">grahamgilbert/personal-puppet</a>.</p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/">
+        Running Puppet Server in Docker
+      </a>
+    </h1>
+
+    <span class="post-date">22 Jun 2015</span>
+    
+            <p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively - it’s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
+
+<p>Over the next few posts, I’ll take you through setting up the Puppet Server (running on Docker, naturally!), using r10k and git for managing your modules and using Hiera to configure your Macs - we’ll apply some configuration to a Mac without writing a single line of Puppet code .</p>
+
+<h1 id="why">Why?</h1>
+
+<p>You might well be thinking “why would I want to use Puppet?” After all, you’ve already got Munki. There are two main reasons I’ve chosen to go back to using a Puppet Server in conjunction with Munki.</p>
+
+<ol>
+  <li>It’s nice to have a fallback. If I manage to do something stupid and nuke my Munki install, or my customers manage to do the same, I’ve got some way of getting the machines back under control.</li>
+  <li>“Free” SSL certs - this might not be a priority now, but it gives you an easy to to secure your Munki repository later on (which we may cover in a later post).</li>
+</ol>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git/">
+        Using munki-trello with Git
+      </a>
+    </h1>
+
+    <span class="post-date">16 Jun 2015</span>
+    
+            <p>So you’re managing your catalogs with <a href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/">munki-trello</a>, but you also want to use git and <a href="https://www.afp548.com/2014/12/01/git-fat-intro-part-two-setup-and-migration/">git-fat</a> to track the changes - what do you do?</p>
+
+<p>If you were using the script that I posted previously, your changes would be mangled when you pull in changes  - it turned out the solution was simple. I’m going to assume your Munki server has commit access to your Munki git repository. We’re pulling down the latest version of the git repo before performing any work, and then we’re git adding just the <code>catalogs</code> and <code>pkgsinfo</code> directories - the only directories munki-trello will modify. And if there aren’t any changes, git won’t commit anything, so we can just run <code>git commit</code> and <code>git push</code> without worrying about it.</p>
+
+<p>If we schedule the below script to happen regularly (via cron), we also get our git changes deployed automagically.</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/usr/local/bin/munki-trello.sh</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">#!/bin/bash</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Cron doesn&#39;t have $PATH set as we do, need to find git fat</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">PATH</span><span class="o">=</span>/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:<span class="nv">$PATH</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Change this to wherever your Munki repository is on disk</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nb">cd</span> /usr/local/docker/munki
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Pull down changes</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">git pull
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># and the &#39;fat&#39; files</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">git fat pull
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">docker pull pebbleit/munki-trello
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">docker run --rm -v /usr/local/docker/munki:/munki_repo <span class="se">\</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">-e <span class="nv">DOCKER_TRELLO_KEY</span><span class="o">=</span>mytrellokey <span class="se">\</span>
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">-e <span class="nv">DOCKER_TRELLO_TOKEN</span><span class="o">=</span>mytrellotoken <span class="se">\</span>
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">-e <span class="nv">DOCKER_TRELLO_BOARDID</span><span class="o">=</span>myboardid <span class="se">\</span>
+</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">pebbleit/munki-trello
+</div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">git add catalogs
+</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">git add manifests
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">git add pkgsinfo
+</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># Change the following line if you want to change the git commit message</span>
+</div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">now</span><span class="o">=</span><span class="s2">&quot;$(date)&quot;</span>
+</div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">git commit -m <span class="s2">&quot;Munki Trello commit $now&quot;</span>
+</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">git push</div></div></pre></div></figure>
+
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/05/08/introducing-imagr/">
+        Introducing Imagr
+      </a>
+    </h1>
+
+    <span class="post-date">08 May 2015</span>
+    
+            <p>For the past few weeks, I’ve been working with some other Mac admins on a new application that can aid with the deployment of Macs - say hi to <a href="https://github.com/grahamgilbert/imagr">Imagr</a>.</p>
+
+<p><img src="/images/posts/2015-05-08/Imagr.png" /></p>
+
+<p>It’s not intended to be a full replacement for Deploystudio, but it’s now got all of the features I need to use Imagr full time. If you’d like to get started with Imagr, head on over to the <a href="https://github.com/grahamgilbert/imagr/wiki/Getting-Started">Wiki</a> - the only requirement is a web server, so the barrier to entry is pretty low (if you followed my guide on how to set up <a href="/blog/2015/04/22/getting-started-with-bsdpy-on-docker/">BSDPy</a>, you can use that web server).</p>
+
+<p>I hope you’ll give it a go and maybe, just maybe, we can get rid of those little Mac Minis for good!</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/">
+        Testing BSDPy in Vagrant
+      </a>
+    </h1>
+
+    <span class="post-date">28 Apr 2015</span>
+    
+            <p>Last time, we looked at how to spin up a Docker host and run BSDPy on it. That’s great for production, but might be a bit of a faff to do every time you want to test your NBI at home.</p>
+
+<p>Inspired by <a href="https://grpugh.wordpress.com/2015/04/28/a-test-docker-bsdpy-environment/">Dr Graham R Pugh</a>, here’s my Vagrant setup for this.</p>
+
+<p>You will need:</p>
+
+<ul>
+  <li><a href="https://www.vagrantup.com/">Vagrant</a></li>
+  <li>Either <a href="https://www.virtualbox.org/">VirtualBox</a> or <a href="http://www.vmware.com/uk/products/fusion">VMware Fusion</a> (if you use Fusion with Vagrant, you will need to purchase the <a href="http://www.vagrantup.com/vmware">VMware plugin</a> - this will allow you to create OS X Vagrantboxes as well as enjoy the much greater performance of VMware, but that’s another post)</li>
+  <li>Xcode, or at the very least the command line tools from Xcode so you have git available.</li>
+  <li>Something to NetBoot - either a physical Mac or a VM in VMware Fusion. A VM configured as per <a href="https://derflounder.wordpress.com/2013/01/23/building-mac-test-environments-with-vmware-fusion-netboot-and-deploystudio/">Rich Trouton’s post</a> will do nicely.</li>
+</ul>
+
+<p>Get all of that installed and you’re ready to go. Next we need to get the Vagrantfile:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git clone https://github.com/grahamgilbert/docker-vagrant.git</div></div></pre></div></figure>
+
+<p>You will obviously need an NBI - I’ve <a href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/">covered how to use AutoNBI before</a>, or you could use an existing one. Just make sure you’ve edited <code>NBImageInfo.plist</code> to make <code>enabled</code> be <code>true</code> and that the Mac (or VM) you’re NetBooting isn’t in <code>DisabledSystemIdentifiers</code> (I leave this as an empty <code>&lt;array /&gt;</code>). Put your NBI in the <code>nbi</code> directory.</p>
+
+<p>Now there’s one thing left to do:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd </span>docker-vagrant
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>vagrant up</div></div></pre></div></figure>
+
+<p>Give it 20 seconds to finish booting and you will see your NBI in the startup pane of your Mac.</p>
+
+          
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="http://grahamgilbert.com/page6">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="http://grahamgilbert.com/page4">Newer</a>
+    
+  
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

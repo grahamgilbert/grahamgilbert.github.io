@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      graham gilbert dot com &middot; Mac administration and assorted nerdity
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+  <body class="theme-base-0d">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+    
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+      
+    
+    
+      
+        
+          <a class="sidebar-nav-item" href="/talks/">Talks</a>
+        
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/grahamgilbert">Twitter</a>
+    <a class="sidebar-nav-item" href="https://github.com/grahamgilbert">Github</a>
+
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">graham gilbert dot com</a>
+            <small>Mac administration and assorted nerdity</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">
+        Creating Business Units and Groups in Sal using a CSV
+      </a>
+    </h1>
+
+    <span class="post-date">08 Dec 2014</span>
+    
+            <p>Obviously I’m a little biased, but I love Sal. But, it can be a little tedious to get everything set up the first time if you have hundreds of Business Units and Machine Groups. I’ve quietly ignored the problem for a while, but then I saw this tweet pop up in my feed:</p>
+
+<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/hunty1er">@hunty1er</a> Pretty sure you could automate BU/MG creation through the DB backend. What say you <a href="https://twitter.com/grahamgilbert">@grahamgilbert</a> ?</p>&mdash; Pepijn Bruienne (@bruienne) <a href="https://twitter.com/bruienne/status/541811445512830976">December 8, 2014</a></blockquote>
+<script async="" src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>What say I Mr Bruienne? Like the <a href="https://www.youtube.com/watch?v=mjB9Chw_6FE">man from Del Monte</a>, I say YES!</p>
+
+<h2 id="the-plan">The plan</h2>
+
+<p>We’re going to use a few of the parts that make Django and Docker awesome. We will:</p>
+
+<ul>
+  <li>Make a custom management command that will read in a CSV</li>
+  <li>The command will make the Business Units and Groups if they don’t exist</li>
+  <li>We’re than going to run it in a temporary Docker container when we’re ready to do the actual import. This is one of the strengths of Docker - we can spin up a linked container that will operate on the main database, but won’t interfere with your container serving the app.</li>
+</ul>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki/">
+        Slides and notes from Twisting Munki
+      </a>
+    </h1>
+
+    <span class="post-date">07 Nov 2014</span>
+    
+            <p>Firstly, thanks if you came to my talk and putting up with me! You can get my slides and code from the <a href="https://github.com/grahamgilbert/mactech_2014">GitHub repository</a>.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/">
+        first-boot-pkg updated for Yosemite
+      </a>
+    </h1>
+
+    <span class="post-date">21 Oct 2014</span>
+    
+            <p>It seems like Yosemite introduced an <a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">undocumented change</a> that requires any packages that are added an OS X installer (e.g. Netinstall or createOSXinstallPkg) be distribution style packages, or you get a nasty failure acompanied by one of the most unhelpful error messages ever.</p>
+
+<p>To fix this, <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> now builds distribution style packages.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2014/08/24/london-apple-admins/">
+        London Apple Admins
+      </a>
+    </h1>
+
+    <span class="post-date">24 Aug 2014</span>
+    
+            <p>I’m delighted to say that the first (first meet that isn’t “let’s go to the pub and get drunk”, anyway!) <a href="http://www.londonappleadmins.org.uk">London Apple Admins</a> meetup is happening on the 3rd September at <a href="http://theredherring.co.uk/">The Red Herring in St Pauls</a>. I’d like to take all of the credit for organising it, but it was down to the hard work of <a href="http://macmule.com">Ben Toms</a>. The theme this time is “this is what I’m working on at the moment”, so I’ll be talking about my new favourite toy, <a href="https://www.docker.com">Docker</a>.</p>
+
+<p>If you’ll be in or around London on the 3rd September, <a href="https://www.eventbrite.com/e/london-apple-admins-sept-2014-tickets-12545591201">please get yourself a ticket</a> (they’re free) and come and have a beer or two whilst listening to some awesome talks by London based Mac Admins.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2/">
+        Personal Automation: Munki (Part 2)
+      </a>
+    </h1>
+
+    <span class="post-date">27 Jul 2014</span>
+    
+            <p>The first step to getting any Mac set up is to get some software onto it. I’m not going to cover how to set up <a href="https://code.google.com/p/munki/wiki/GettingStartedWithMunki">Munki</a> or <a href="https://github.com/autopkg/autopkg/wiki/Getting-Started">AutoPkg</a> - there are lots of other places for that information.</p>
+
+<p>As a sysadmin, I’m forever testing things. Rather than destroy my own machine, I like to do this in Virtual Machines. My preferred virtualisation solution is VMware Fusion, but unfortunately it’s not very easy to deploy out of the box. You need to do a little bit of work to get it into a package that you can import into Munki, but fortunately the process is <a href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2058680">well documented on VMware’s site</a>.</p>
+
+<p>The next piece of ‘non standard’ software I need is <a href="http://brew.sh">Homebrew</a>. The installation method listed on their site is to run a terminal command as the current user. The first part of this is obviously fine - Munki has several methods to run scripts (payload free packages, nopkg), but it runs everything as root. Fortunately, as I’m deploying my own machine, I can make some assumptions about where Homebrew will be installed. The first assumption I can make is that there will only be one user on the machine, and the second is that I’m going to be logged in most of the time (as my laptop is encrypted, it’s either off or logged in).</p>
+
+<p>I’m going to utilise a <code>nopkg</code> pkginfo file to perform the installation. The first part of our script to install Homebrew is to make sure that a user (me!) is logged in. Homebrew doesn’t like being owned by root, so first we need to make sure that there is a user logged in.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">#!/bin/bash</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">CURRENT_USER</span><span class="o">=</span><span class="sb">`</span>/bin/ls -l /dev/console <span class="p">|</span> /usr/bin/awk <span class="s1">&#39;&#x7b; print $3 &#x7d;&#39;</span><span class="sb">`</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$CURRENT_USER&quot;</span> <span class="o">==</span> <span class="s1">&#39;root&#39;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># this can&#39;t run at the login window, we need the current user</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nb">exit </span>1
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">fi</span></div></div></pre></div></figure>
+
+<p>So now we know that there’s a user logged in, and who that user is. Time to install Homebrew as the current user.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">mkdir -p /usr/local
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">mkdir -p /usr/local/homebrew
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">mkdir -p /usr/local/bin
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">chown <span class="nv">$CURRENT_USER</span>:_developer /usr/local/homebrew
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">chown <span class="nv">$CURRENT_USER</span>:_developer /usr/local/bin
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">#download and install homebrew</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">su <span class="nv">$CURRENT_USER</span> -c <span class="s2">&quot;/bin/bash -o pipefail -c &#39;/usr/bin/curl -skSfL https://github.com/mxcl/homebrew/tarball/master | (cd /usr/local ; /usr/bin/tar xz -m --strip 1 -C homebrew; ln -s /usr/local/homebrew/bin/brew /usr/local/bin/brew)&#39;&quot;</span></div></div></pre></div></figure>
+
+<p>As we’re using a <code>nopkg</code> with Munki rather than a payload free package, we’ve not left any receipts, so Munki doesn’t know if Homebrew is installed. We’re going to use an installs array to tell Munki what to look for when determining whether Homebrew is installed or not.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;key&gt;</span>installs<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="nt">&lt;array&gt;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">		<span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="nt">&lt;key&gt;</span>path<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="nt">&lt;string&gt;</span>/usr/local/bin/brew<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="nt">&lt;key&gt;</span>type<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="nt">&lt;string&gt;</span>file<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">		<span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="nt">&lt;/array&gt;</span></div></div></pre></div></figure>
+
+<p>You might be crying “but Homebrew needs the Xcode Command Line Tools installed!” - and you’d be 100% correct. You have the option of importing the downloaded package into Munki, but I have adapted <a href="https://github.com/timsutton/osx-vm-templates/blob/master/scripts/xcode-cli-tools.sh">Tim Sutton’s script</a> into a <code>nopkg</code>. To find out what’s installed, I ran <a href="http://www.fernlightning.com/doku.php?id=software%3afseventer%3astart">fseventer</a> and chose a random file to act as my installs array. I’ve posted the pkginfos for both the <a href="https://github.com/grahamgilbert/macscripts/blob/master/Munki/pkginfos/Xcode/XcodeCLITools-2014.07.15.plist">Xcode CLI tools</a> and all of the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki/pkginfos/Homebrew">Homebrew installs</a> on Github.</p>
+
+          
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="http://grahamgilbert.com/page8">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="http://grahamgilbert.com/page6">Newer</a>
+    
+  
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
