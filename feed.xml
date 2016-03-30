@@ -4,7 +4,7 @@
  <title>graham gilbert dot com</title>
  <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
  <link href="http://grahamgilbert.com/"/>
- <updated>2016-03-30T12:13:22+01:00</updated>
+ <updated>2016-03-30T12:59:37+01:00</updated>
  <id>http://grahamgilbert.com</id>
  <author>
    <name>Graham Gilbert</name>
@@ -27,7 +27,7 @@
 
 &lt;p&gt;Before you do anything, you’re going to need a profile. There are &lt;a href=&quot;https://github.com/nmcspadden/Profiles&quot;&gt;plenty&lt;/a&gt; &lt;a href=&quot;https://github.com/gregneagle/profiles&quot;&gt;of&lt;/a&gt; &lt;a href=&quot;https://github.com/golbiga/Profiles&quot;&gt;the&lt;/a&gt; &lt;a href=&quot;https://github.com/rtrouton/profiles&quot;&gt;things&lt;/a&gt; on Github, or you could run Profile Manager in a VM (please don’t use it for anything more than this, it should never be managing your devices directly), or in the future you’ll be able to use Erik Berglund’s &lt;a href=&quot;https://github.com/ProfileCreator/ProfileCreator&quot;&gt;ProfileCreator&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;This time I’m going to be an evil admin and enforce a desktop picture on my users - there are a couple of profiles on the repositories I linked to above that have an example of this.&lt;/p&gt;
+&lt;p&gt;Today I’m going to be an evil admin and enforce a desktop picture on my users - there are a couple of profiles on the repositories I linked to above that have an example of this.&lt;/p&gt;
 
 &lt;p&gt;We are going to keep our module in git - we’ll use GitHub today, as you can get a free repository and the GUI app is really simple. This is not a git tutorial, so all you will need to do it ‘commit’ your code and sync it to Github. Go ahead and get the &lt;a href=&quot;https://desktop.github.com&quot;&gt;application&lt;/a&gt; and create a new git repository (File -&amp;gt; New in the app once you’ve logged in). It doesn’t matter what you call the repo, but I like to keep my Puppet modules prefixed with &lt;code&gt;puppet-&lt;/code&gt; so they line up nicely in the Finder.&lt;/p&gt;
 
