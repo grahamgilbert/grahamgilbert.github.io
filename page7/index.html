@@ -39,6 +39,7 @@
 <!-- Toggleable sidebar -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-item">
+      <p><input type="text" class="st-default-search-input"></p>
     <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
   </div>
 
@@ -194,6 +195,35 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/">
+        Migrating scriptRunner to Outset
+      </a>
+    </h1>
+
+    <span class="post-date">04 Jan 2015</span>
+    
+            <p>A while back, Nate Walck wrote <a href="https://github.com/natewalck/Scripts/blob/master/scriptRunner.py">scriptRunner</a>. It’s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released <a href="https://github.com/chilcote/outset">Outset</a>. It has all of the functionality of scriptRunner, but it can also install packages at the Mac’s first boot, and run scripts as root at either the first boot or every boot. This comes into it’s own when you’re trying to do things like skipping the iCloud screens on 10.10 using <a href="https://derflounder.wordpress.com/2014/10/16/disabling-the-icloud-and-diagnostics-pop-up-windows-in-yosemite/">Rich Trouton’s script</a> - this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.</p>
+
+<p>If you’ve been using scriptRunner and want to move to Outset, you have two options:</p>
+
+<ul>
+  <li>Just move your scripts into the appropriate Outset directories and hope your users don’t mind the ‘once’ scripts running a second time.</li>
+  <li>Or, you could pre-populate Outset’s ‘once’ plist so it won’t try to run a script previously run by scriptRunner again.</li>
+</ul>
+
+<p>The first option isn’t acceptable to me, so I wrote a script that will populate Outset’s plist. It’s <a href="https://github.com/grahamgilbert/macscripts/tree/master/scriptRunnerToOutset">up on my Github</a>. One caveat is that Outset requires that your scripts end <code>.sh</code>, <code>.rb</code> or <code>.py</code>. scriptRunner didn’t care about this. When you’re moving your scripts into the Outset directory, you will need to ensure your scripts have the correct extension. This script will read the first line and try to work out what kind of script it is if the file doesn’t have the right extension - if it can’t work it out, it will append <code>.sh</code> to the filename.</p>
+
+<p>scriptRunner had a few options you could configure. The first is where your actual scripts live - you will need to edit line 8 of the script to where you put your scriptRunner scripts. Secondly, you might have changed the name of the plist scriptRunner uses - edit line 11 if you did this.</p>
+
+<p>Now all that remains is to put this script into <code>/usr/local/outset/login-once</code>. A <a href="https://github.com/unixorn/luggage">Luggage</a> Makefile that will make a package that will do this is included in the repository.</p>
+
+<p>I’ve assumed that you can move your scripts into the new Outset directories using your configuration management tool (Munki, Puppet, Capser, whatever), but if you need a tool that can do this for you (with the previously stated caveat about the file extensions of the scripts), you’ll find a script that can be dropped into Outset’s firstboot directory.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">
         Creating Business Units and Groups in Sal using a CSV
       </a>
@@ -269,57 +299,6 @@
           
   </div>
   
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2/">
-        Personal Automation: Munki (Part 2)
-      </a>
-    </h1>
-
-    <span class="post-date">27 Jul 2014</span>
-    
-            <p>The first step to getting any Mac set up is to get some software onto it. I’m not going to cover how to set up <a href="https://code.google.com/p/munki/wiki/GettingStartedWithMunki">Munki</a> or <a href="https://github.com/autopkg/autopkg/wiki/Getting-Started">AutoPkg</a> - there are lots of other places for that information.</p>
-
-<p>As a sysadmin, I’m forever testing things. Rather than destroy my own machine, I like to do this in Virtual Machines. My preferred virtualisation solution is VMware Fusion, but unfortunately it’s not very easy to deploy out of the box. You need to do a little bit of work to get it into a package that you can import into Munki, but fortunately the process is <a href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2058680">well documented on VMware’s site</a>.</p>
-
-<p>The next piece of ‘non standard’ software I need is <a href="http://brew.sh">Homebrew</a>. The installation method listed on their site is to run a terminal command as the current user. The first part of this is obviously fine - Munki has several methods to run scripts (payload free packages, nopkg), but it runs everything as root. Fortunately, as I’m deploying my own machine, I can make some assumptions about where Homebrew will be installed. The first assumption I can make is that there will only be one user on the machine, and the second is that I’m going to be logged in most of the time (as my laptop is encrypted, it’s either off or logged in).</p>
-
-<p>I’m going to utilise a <code>nopkg</code> pkginfo file to perform the installation. The first part of our script to install Homebrew is to make sure that a user (me!) is logged in. Homebrew doesn’t like being owned by root, so first we need to make sure that there is a user logged in.</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">#!/bin/bash</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">CURRENT_USER</span><span class="o">=</span><span class="sb">`</span>/bin/ls -l /dev/console <span class="p">|</span> /usr/bin/awk <span class="s1">&#39;&#x7b; print $3 &#x7d;&#39;</span><span class="sb">`</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$CURRENT_USER&quot;</span> <span class="o">==</span> <span class="s1">&#39;root&#39;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># this can&#39;t run at the login window, we need the current user</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nb">exit </span>1
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">fi</span></div></div></pre></div></figure>
-
-<p>So now we know that there’s a user logged in, and who that user is. Time to install Homebrew as the current user.</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">mkdir -p /usr/local
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">mkdir -p /usr/local/homebrew
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">mkdir -p /usr/local/bin
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">chown <span class="nv">$CURRENT_USER</span>:_developer /usr/local/homebrew
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">chown <span class="nv">$CURRENT_USER</span>:_developer /usr/local/bin
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">#download and install homebrew</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">su <span class="nv">$CURRENT_USER</span> -c <span class="s2">&quot;/bin/bash -o pipefail -c &#39;/usr/bin/curl -skSfL https://github.com/mxcl/homebrew/tarball/master | (cd /usr/local ; /usr/bin/tar xz -m --strip 1 -C homebrew; ln -s /usr/local/homebrew/bin/brew /usr/local/bin/brew)&#39;&quot;</span></div></div></pre></div></figure>
-
-<p>As we’re using a <code>nopkg</code> with Munki rather than a payload free package, we’ve not left any receipts, so Munki doesn’t know if Homebrew is installed. We’re going to use an installs array to tell Munki what to look for when determining whether Homebrew is installed or not.</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;key&gt;</span>installs<span class="nt">&lt;/key&gt;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="nt">&lt;array&gt;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">		<span class="nt">&lt;dict&gt;</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="nt">&lt;key&gt;</span>path<span class="nt">&lt;/key&gt;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="nt">&lt;string&gt;</span>/usr/local/bin/brew<span class="nt">&lt;/string&gt;</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="nt">&lt;key&gt;</span>type<span class="nt">&lt;/key&gt;</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">			<span class="nt">&lt;string&gt;</span>file<span class="nt">&lt;/string&gt;</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">		<span class="nt">&lt;/dict&gt;</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="nt">&lt;/array&gt;</span></div></div></pre></div></figure>
-
-<p>You might be crying “but Homebrew needs the Xcode Command Line Tools installed!” - and you’d be 100% correct. You have the option of importing the downloaded package into Munki, but I have adapted <a href="https://github.com/timsutton/osx-vm-templates/blob/master/scripts/xcode-cli-tools.sh">Tim Sutton’s script</a> into a <code>nopkg</code>. To find out what’s installed, I ran <a href="http://www.fernlightning.com/doku.php?id=software%3afseventer%3astart">fseventer</a> and chose a random file to act as my installs array. I’ve posted the pkginfos for both the <a href="https://github.com/grahamgilbert/macscripts/blob/master/Munki/pkginfos/Xcode/XcodeCLITools-2014.07.15.plist">Xcode CLI tools</a> and all of the <a href="https://github.com/grahamgilbert/macscripts/tree/master/Munki/pkginfos/Homebrew">Homebrew installs</a> on Github.</p>
-
-          
-  </div>
-  
 </div>
 
 <div class="pagination">
@@ -355,5 +334,13 @@
         }, false);
       })(document);
     </script>
+  <script type="text/javascript">
+   (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+   (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+   e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+   })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+   _st('install','sFQe2UApMaKvCdHMFL6r','2.0.0');
+ </script>
   </body>
 </html>

@@ -39,6 +39,7 @@
 <!-- Toggleable sidebar -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-item">
+      <p><input type="text" class="st-default-search-input"></p>
     <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
   </div>
 
@@ -194,6 +195,22 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/">
+        Redirecting Munki Downloads
+      </a>
+    </h1>
+
+    <span class="post-date">01 Dec 2015</span>
+    
+            <p>Munki 2.4.0 brought the option to have Munki follow http redirects (<a href="https://github.com/munki/munki/pull/530">my first contribution to Munki</a>). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done.</p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/">
         Releasing Changes With Sharding
       </a>
@@ -265,22 +282,6 @@
           
   </div>
   
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">
-        Using a proxy container with Docker for virtualhosts
-      </a>
-    </h1>
-
-    <span class="post-date">26 Aug 2015</span>
-    
-            <p>I’ve been asked a few times over the last few weeks about how you can have multiple services (for example, Munki and Sal) running on the same port on the same server - how we used to do Virtual Hosting when we ran our apps on the host OS. My usual four word answer has been ‘use a proxy container’. How you actually do that has been undocumented - this post hopes to recitfy that.</p>
-
-
-            <p><b><a href="http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Continue reading...</a></b></p>
-          
-  </div>
-  
 </div>
 
 <div class="pagination">
@@ -316,5 +317,13 @@
         }, false);
       })(document);
     </script>
+  <script type="text/javascript">
+   (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+   (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+   e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+   })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+   _st('install','sFQe2UApMaKvCdHMFL6r','2.0.0');
+ </script>
   </body>
 </html>

@@ -39,6 +39,7 @@
 <!-- Toggleable sidebar -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-item">
+      <p><input type="text" class="st-default-search-input"></p>
     <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
   </div>
 
@@ -194,6 +195,22 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/01/01/macscripts/">
+        MacScripts
+      </a>
+    </h1>
+
+    <span class="post-date">01 Jan 2013</span>
+    
+            <p>I’ve had my Mac scripts dotted around my Macs over the years, so after spending twenty minutes looking for my script to add a login item to a user, I decided to put them all in one place on GitHub. Hopefully someone will find them useful, I’ll be adding the rest as soon as I work out where I put them.</p>
+
+<p><a href="https://github.com/grahamgilbert/macscripts">MacScripts on GitHub</a></p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2012/12/15/casper-versus-deploystudio/">
         Casper versus DeployStudio
       </a>
@@ -300,53 +317,6 @@
           
   </div>
   
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2012/08/18/location-based-printers-with-puppet/">
-        Location based printers with Puppet
-      </a>
-    </h1>
-
-    <span class="post-date">18 Aug 2012</span>
-    
-            <p>This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent <a href="https://github.com/mosen/puppet-cups">mosen-puppet-cups</a> module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">case $operatingsystem&#x7b;
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	Darwin:&#x7b;
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">		##London is on the 10.30.2.0 and 10.30.3.0 Subnets
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">		if ($network_en0 == '10.30.2.0') or ($network_en1 == '10.30.2.0') or ($network_en0 == '10.30.3.0') or ($network_en1 == '10.30.3.0')&#x7b;
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">            	printer &#x7b; "Sharp_ARM316":
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">                	ensure      =&gt; present,
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">			uri         =&gt; "lpd://sharparm316.ldn.example.com",
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">			description =&gt; "Sharp ARM316",
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">			shared      =&gt; false,
-</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">			ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/SHARP AR-M316.PPD.gz", # PPD file will be autorequired
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">			&#x7d;
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">		printer &#x7b; "Xerox_WorkCentre_7120":
-</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">			ensure      =&gt; present,
-</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">			uri         =&gt; "lpd://xeroxwc7120.ldn.example.com",
-</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">			description =&gt; "Xerox WorkCentre 7120",
-</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">			shared      =&gt; false,
-</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">			ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/Xerox WorkCentre 7120.gz", # PPD file will be autorequired
-</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">			&#x7d;
-</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">		&#x7d;
-</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">		##San Francisco is on the 10.30.10.0 Subnet
-</div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">		if ($network_en0 == '10.30.10.0') or ($network_en1 == '10.30.10.0')&#x7b;
-</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line"> 		printer &#x7b; "Xerox_550":
-</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">			ensure      =&gt; present,
-</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">			uri         =&gt; "lpd://xerox550.sf.example.com",
-</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">			description =&gt; "Xerox 550",
-</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">			shared      =&gt; false,
-</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">			ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/en.lproj/Xerox 550-560 Integrated Fiery", # PPD file will be autorequired
-</div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line">			&#x7d;
-</div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">		&#x7d;
-</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">	&#x7d;
-</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">&#x7d;</div></div></pre></div></figure>
-
-
-          
-  </div>
-  
 </div>
 
 <div class="pagination">
@@ -382,5 +352,13 @@
         }, false);
       })(document);
     </script>
+  <script type="text/javascript">
+   (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+   (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+   e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+   })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+   _st('install','sFQe2UApMaKvCdHMFL6r','2.0.0');
+ </script>
   </body>
 </html>

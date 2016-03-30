@@ -39,6 +39,7 @@
 <!-- Toggleable sidebar -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-item">
+      <p><input type="text" class="st-default-search-input"></p>
     <p>A Mac admin, automating the hell out of things in London.<br /><br />The opinions on this site are my own, and are not necessarily shared by my employer.</p>
   </div>
 
@@ -194,6 +195,33 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2012/04/06/profile-manager-enrollment-package/">
+        Profile Manager Enrollment Package
+      </a>
+    </h1>
+
+    <span class="post-date">06 Apr 2012</span>
+    
+            <p>Over the past week or so, we had a need to enroll macs automagically with a Lion Profile Manager server. My first plan was to do what Charles Edge did in his recent <a href="http://krypted.com/mac-os-x/automating-profile-manager-enrollment-through-deploystudio/">blog post</a> and use DeployStudio. Then I remembered another post by Charles on <a href="http://krypted.com/iphone/profile-manager-and-profiles/">/usr/bin/profiles</a> and wondered if I could make a workflow that can be used throughout our deployment and system maintenance process - yup, the humble pkg, that can be popped into Munki for existing macs, installed with DeployStudio for imaging and pushed out with ARD if need be.</p>
+
+<p><a href="https://github.com/grahamgilbert/Profile-Manager-Enrollment">Get the code from GitHub</a></p>
+
+<p>Assuming you’ve got <a href="https://github.com/unixorn/luggage">The Luggage</a> set up, first off you’ll need your enrollment and trust profiles:
+
+1.	Create a new enrollment profile
+2. Give your enrollement profile a name
+3. Download the trust profile
+4. Download the enrollment profile</p>
+
+<p><a href="/images/posts/2012-04-06/profile_enrollment_and_trust-full.jpg"><img class="center" src="/images/posts/2012-04-06/profile_enrollment_and_trust-thumb.jpg" /></a></p>
+
+<p>If your attachments auto open, click cancel when you’re asked if you want to install the profiles so they stay in ~/Downloads. Rename them to enroll.mobileconfig and trust.mobileconfig and pop them into the directory you cloned from GitHub. A quick <code>make pkg</code> and you’ve got your package.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2012/04/03/hello-octopress/">
         Hello Octopress
       </a>
@@ -260,33 +288,6 @@
           
   </div>
   
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2012/01/01/web-server-on-linode-part-1/">
-        Web server on Linode part 1
-      </a>
-    </h1>
-
-    <span class="post-date">01 Jan 2012</span>
-    
-            <p>Recently, I was tasked with moving a client’s web server from a box in their office, to something a little more robust when they put something up there that caused the server to go nuts (30 mb/s nuts!).</p>
-
-<p>The main goals were:</p>
-
-<ul>
-  <li>Fast, scalable web server</li>
-  <li>Multiple FTP users for the client’s web team to modify the site</li>
-  <li>Integrates with their existing CrashPlan PROe backup system.</li>
-  <li>Use GUI’s as much as possible for admin so lower level techs could make changes on the server.</li>
-</ul>
-
-<p>After considering several options, we decided to go with Linode. I’ve had great success hosting my own site with them, and as we had full access to the box, we could install anything we wanted - including CrashPlan.</p>
-
-
-            <p><b><a href="http://grahamgilbert.com/blog/2012/01/01/web-server-on-linode-part-1/">Continue reading...</a></b></p>
-          
-  </div>
-  
 </div>
 
 <div class="pagination">
@@ -322,5 +323,13 @@
         }, false);
       })(document);
     </script>
+  <script type="text/javascript">
+   (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+   (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+   e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+   })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+   _st('install','sFQe2UApMaKvCdHMFL6r','2.0.0');
+ </script>
   </body>
 </html>
