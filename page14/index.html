@@ -195,6 +195,30 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">
+        Getting started with Puppet on OS X (part 2)
+      </a>
+    </h1>
+
+    <span class="post-date">27 Jan 2013</span>
+    
+            <p>Before reading this post, you really need to read <a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">part 1</a> - none of this will make sense without it!</p>
+
+<p>Still with me? Let’s do finally do something with Puppet. SSH into your Puppet Master (if it’s IP has changed since you first did the setup, make sure you reflect this change in the Mac client’s /etc/hosts file) and navigate to /etc/puppet and list the directory’s contents:</p>
+
+<pre><code>cd /etc/puppet
+ls -la
+</code></pre>
+
+<p>You’ll see a few directories here - we’re interested in two today - manifests and modules. Manifests will be where you describe your nodes, and the modules are the functional Puppet code.</p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">
         Getting started with Puppet on OS X (part 1)
       </a>
@@ -347,29 +371,6 @@ Some might be, others won’t for one reason or another.</p>
 </code></pre>
 
 <p>Replace the 15g with whatever size you want, 15 GB was plenty to accomodate my updated image.</p>
-
-          
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2013/01/05/instadmg-tips/">
-        InstaDMG Tips
-      </a>
-    </h1>
-
-    <span class="post-date">05 Jan 2013</span>
-    
-            <p>I’ve been using <a href="http://code.google.com/p/instadmg/">InstaDMG</a> for nearly two years now. We all know it’s awesome (if you aren’t aware of it’s awesomeness, I suggest taking a look at <a href="http://www.youtube.com/watch?v=o8xtO5E4MzE">Allister Banks’ talk at PSU MacAdmins last year</a>). I’m almost ashamed to admit that I was happily making my Golden Master images on my test iMac and hoping for the best when I cleaned them up by hand and pushed them out. Anyway, that’s enough of my admissions. Over these two years, I’ve picked up a few tips and tricks for working effectively with InstaDMG.</p>
-
-<h2 id="put-an-ssd-in-your-laptop">Put an SSD in your laptop</h2>
-<p>Seriously, just do it. If your boss complains at how much it costs, then they’re not charging enough for you. The price of the SSD was covered by the time I saved when doing one particularly chunky build (around 30GB including packages). InstaDMG is primarily I/O bound, so an SSD will change your InstaDMG life.</p>
-
-<h2 id="keep-your-instaup2datepackages-on-a-web-server">Keep your InstaUp2DatePackages on a web server</h2>
-<p>If you’ve got more than one person building images in your organisation, you’ll soon find that your packages will get out of sync with each other. One person will be using 0.8.2 of Munki, another 0.8.3, it all goes horribly wrong. As InstaDMG can pull packages from a web server, this lends itself to having a central repository for packages in your oganisation. Remember to keep it safely behind your firewall if you’ve got sensitive info in your packages (like one that creates your admin user, for example).</p>
-
-<h2 id="keep-our-catalogfiles-in-source-control">Keep our CatalogFiles in source control</h2>
-<p>Now that everyone has access to your InstaUp2DatePackages, we ought to get our CatalogFiles in check too. Keep them in some sort of source control like <a href="http://grahamgilbert.com/blog/2012/09/21/five-reasons-sysadmins-should-use-git/">Git</a> and be happy. Mine can be found on my <a href="https://github.com/grahamgilbert/InstaDMG-Catalogs">GitHub</a>.</p>
 
           
   </div>

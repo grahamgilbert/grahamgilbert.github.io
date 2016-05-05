@@ -195,6 +195,29 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package/">
+        Upgrading OS X using a package
+      </a>
+    </h1>
+
+    <span class="post-date">28 Sep 2015</span>
+    
+            <p>It’s the time of year where we start to think about upgrading our machines to the latest version of OS X. There are several ways of doing this, but assuming your users are unable to perform the upgrade themselves via the App Store (if they’re running as a standard user or your policies prohibit the use of the App Store), you might be wondering how you can use your management tool to get your machines upgraded and make sure they stay enrolled in your management tool.</p>
+
+<p>We’re fortunate that we have a standard packaging format on OS X that virtually all management tools can install, so this is the most universal way of distributing software. Greg Neagle wrote <a href="https://github.com/munki/createOSXinstallPkg">createOSXinstallPkg</a> a few years ago that has several nice features for mac admins:</p>
+
+<ul>
+  <li>It wraps up an OS X Installer into a standard package.</li>
+  <li>It allows you to add in additional packages - perhaps you want to make sure your admin user is installed or make sure that a version of Munki that is compatible with the new OS is installed.</li>
+</ul>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">
         Using a proxy container with Docker for virtualhosts
       </a>
@@ -289,29 +312,6 @@
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo python sal_package_generator.py</div></div></pre></div></figure>
 
 <p>And you’ll get a directory full of packages that will get your fleet reporting into Sal.</p>
-
-          
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2015/07/07/munki-dnd/">
-        Munki DND
-      </a>
-    </h1>
-
-    <span class="post-date">07 Jul 2015</span>
-    
-            <p>I’ve been wanting to get stuck in with a simple Swift project for a while, but couldn’t think of anything suitable for a first project (<a href="https://github.com/grahamgilbert/imagr">Imagr</a> was originally going to be that project, but I don’t think it would ever have been made if I chose Swift), until I saw <a href="https://grpugh.wordpress.com/2015/07/03/a-do-not-disturb-application-for-munki/">Dr Graham R Pugh’s Do Not Disturb application</a>. I thought it was an excellent idea that could be made even better by being a manu bar app.</p>
-
-<p><img class="center" src="/images/posts/2015-07-07/active.png" /></p>
-
-<p>Enter <a href="https://github.com/grahamgilbert/munki-dnd">Munki DND</a> - it extends Graham’s idea by allowing the administrator to configure the number of hours the user is allowed to suppress notifications for, as well as living in the menu bar so the user can check how long they’ve got until notifications become active again.</p>
-
-<p><img class="center" src="/images/posts/2015-07-07/disabled.png" /></p>
-
-<p>You can grab version 0.0.1 of Munki DND from the <a href="https://github.com/grahamgilbert/munki-dnd/releases/tag/v0.0.1">Releases page on GitHub</a>.</p>
-
 
           
   </div>

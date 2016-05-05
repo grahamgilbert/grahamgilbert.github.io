@@ -195,6 +195,123 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg/">
+        Making packages with AutoPkg
+      </a>
+    </h1>
+
+    <span class="post-date">30 Jun 2014</span>
+    
+            <p>Over the past few weeks, I’ve had the same conversation over and over:
+people telling me that once they get started using Munki, their next
+step will be to start using AutoPkg. I gave each person the same
+response: “you’re doing it wrong”.</p>
+
+<p>AutoPkg a has a reputation of being difficult to use. This is totally
+unjustfied. You don’t need to be using Munki for it to be useful, you
+don’t need to set it up to run automatically via Jenkins or a
+LaunchDaemon. If you need to get software into a package,  AutoPkg is
+the easiest way.</p>
+
+<h2 id="installing-autopkg">Installing AutoPkg</h2>
+
+<p>Head over to the <a href="https://github.com/autopkg/autopkg/releases/latest">releases page on AutoPkg’s GitHub repository</a> and
+download the latest version  (0.3.0 at the time of writing). It’s an
+Apple package, so double click it and get it installed. If you have Gate Keeper enabled, you’ll need to right-click on the package and choose to install it from there, as it’s not been signed.</p>
+
+<h2 id="recipes">Recipes</h2>
+
+<p>AutoPkg is useless without recipes. Fortunately, there are hundreds
+that have already been made by the community.</p>
+
+<p>We’ll add the set of recipes maintained by AutoPkg’s authors, which
+contains some of the most common software. Open up a terminal window
+and enter :</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>autopkg repo-add https://github.com/autopkg/recipes</div></div></pre></div></figure>
+
+<p>You’ll see AutoPkg downloading and adding the recipes to your Mac.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">Attempting git clone...
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">Adding /Users/grahamgilbert/Library/AutoPkg/RecipeRepos/com.github.autopkg.recipes to RECIPE_SEARCH_DIRS...
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">Updated search path:
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="s1">&#39;.&#39;</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="s1">&#39;~/Library/AutoPkg/Recipes&#39;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="s1">&#39;/Library/AutoPkg/Recipes&#39;</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="s1">&#39;/Users/vagrant/Library/AutoPkg/RecipeRepos/com.github.autopkg.recipes&#39;</span></div></div></pre></div></figure>
+
+<h2 id="using-the-thing">Using the thing</h2>
+
+<p>Let’s see what recipes we just added. Still in your terminal, enter:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>autopkg list-recipes</div></div></pre></div></figure>
+
+<p>You’ll see a whole load of output like:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">Adium.download
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">Adium.munki
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">Adium.pkg
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeAIR.pkg
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeAcrobatPro9Update.download
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeAcrobatPro9Update.munki
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeAcrobatProXUpdate.download
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeAcrobatProXUpdate.munki
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeAir.munki
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeFlashPlayer.download
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeFlashPlayer.munki
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeFlashPlayer.pkg
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">AdobeFlashPlayerExtractPackage.munki
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">...</div></div></pre></div></figure>
+
+<p>The naming convention in AutoPKG is SoftwareName.output. For for
+example, to run a recipe that downloads Google Chrome and adds it to
+Munki, you would use the GoogleChrome.munki recipe, but if you just
+wanted to download it an make a package, you’d use the GoogleChrome.pkg recipe. It just so happens that making a package of Chrome is exactly what we want to do.</p>
+
+<p>Back into your terminal and enter:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>autopkg run GoogleChrome.pkg</div></div></pre></div></figure>
+
+<p>The AutoPkg robot will churn away and you’ll get some output similar to:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">Processing GoogleChrome.pkg...
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">The following new items were downloaded:
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">    /Users/grahamgilbert/Library/AutoPkg/Cache/com.github.autopkg.pkg.googlechrome/downloads/GoogleChrome.dmg
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">The following packages were built:
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">    Identifier               Version          Pkg path                        
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    ----------               -------          --------                        
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">    com.google.Chrome        35.0.1916.153    /Users/grahamgilbert/Library/AutoPkg/Cache/com.github.autopkg.pkg.googlechrome/GoogleChrome-35.0.1916.153.pkg</div></div></pre></div></figure>
+
+<p>And when it’s all finished, you’ll be left with a nice package that
+you can use anywhere you’d use finely crafted packages - ARD, AutoDMG or even Casper if you’re that way inclined (although Allister Banks has been
+working on a way of automating importing packages into the JSS - see
+his <a href="http://tmblr.co/ZHT_Wy1J-Hk5I">recent talk</a> for more on that subject).</p>
+
+<h2 id="doing-it-all-again">Doing it all again</h2>
+
+<p>What happens next time you want to build an updated package?</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>autopkg run GoogleChrome.pkg</div></div></pre></div></figure>
+
+<p>Right?</p>
+
+<p>Well, kinda.</p>
+
+<p>What happens if Google changes the URL AutoPkg uses to download
+Chrome? Fortunately we’re using the community provided recipes, and if
+something’s broken they usually get fixed pretty quickly. We just need
+to tell AutoPkg to update the installed recipes.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>autopkg update-repo all</div></div></pre></div></figure>
+
+<p>And then we’re able to build our package safe in the knowledge that
+someone else has done all of the hard work for us.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku/">
         Deploying Sal on Heroku
       </a>
@@ -362,76 +479,6 @@
 
 
             <p><b><a href="http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki/">Continue reading...</a></b></p>
-          
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3/">
-        Writing Plugins for Sal: Part 3
-      </a>
-    </h1>
-
-    <span class="post-date">17 Feb 2014</span>
-    
-            <p>We’ve already got a fairly decent plugin - it shows us how many machines we have that aren’t able to run 10.9. However, quite a few people won’t have any machines that fall into this category, and just want to know when one manages to sneak under the radar, so let’s hide the plugin if we don’t need to see it.</p>
-
-<h2 id="previously-on-lost">Previously on Lost</h2>
-
-<p>In the first part, you might remember that we had to tell Sal how much space our plugin needed. Well, we’re going to cover the eventuality of it not needing any space. First off, <code>mavcompatibility.py</code>.</p>
-
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">grahamgilbert/mavcompatibility/mavcompatibility.py</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
-</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
-</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">not_compatible</span><span class="p">:</span>
-</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">size</span> <span class="o">=</span> <span class="mi">3</span>
-</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">else</span><span class="p">:</span>
-</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
-</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">(&#x7b;</span>
-</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
-</div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
-</div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
-</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
-</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="p">&#x7d;)</span>
-</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">size</span>
-</div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">def</span> <span class="nf">filter_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-</div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&#39;notcompatible&#39;</span><span class="p">:</span>
-</div></div><div data-line="37" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">machines</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span>
-</div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Macs not compatible with OS X 10.9&#39;</span>
-</div></div><div data-line="39" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">else</span><span class="p">:</span>
-</div></div><div data-line="40" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">machines</span> <span class="o">=</span> <span class="bp">None</span>
-</div></div><div data-line="41" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">title</span> <span class="o">=</span> <span class="bp">None</span>
-</div></div><div data-line="42" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="43" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">return</span> <span class="n">machines</span><span class="p">,</span> <span class="n">title</span></div></div></pre></div></figure>
-
-<p>Take a look at lines 22 - 25. If we get any results from the query on line 20, we’re going to be showing the plugin. If there aren’t any applicable machines in our inventory, we don’t need to show the plugin. We are returning the size to Sal on line 33.  Easy so far.</p>
-
-<p>All that’s left to do now is make our templates not do anything if they don’t need to.</p>
-
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">grahamgilbert/mavcompatibility/templates/front.html</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&#x7b;%</span> <span class="k">if</span> <span class="nv">not_compatible</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="cp">%&#x7d;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;legend&gt;</span><span class="cp">&#x7b;&#x7b;</span> <span class="nv">title</span> <span class="cp">&#x7d;&#x7d;</span><span class="nt">&lt;/legend&gt;</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">&#x7b;%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_front&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="cp">%&#x7d;</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">&#x7b;&#x7b;</span> <span class="nv">not_compatible</span> <span class="cp">&#x7d;&#x7d;</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">            Not Compatible
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;/a&gt;</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;/div&gt;</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&#x7b;%</span> <span class="k">endif</span> <span class="cp">%&#x7d;</span></div></div></pre></div></figure>
-
-<p>Notice the if statement on line 1? If the number of machines is 0, we don’t need to show anything. You’ll need to make a similar change on <code>grahamgilbert/mavcompatibility/templates/id.html</code>.</p>
-
-<p>That’s it - a simple plugin for Sal. You can find this completed plugin in my <a href="https://github.com/grahamgilbert/sal-plugins">sal-plugins repository</a>.</p>
-
           
   </div>
   
