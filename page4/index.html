@@ -161,6 +161,11 @@
     
       
         
+      
+    
+    
+      
+        
           <a class="sidebar-nav-item" href="/talks/">Talks</a>
         
       
@@ -192,6 +197,22 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/">
+        Detecting when a Munki client is on the corporate network
+      </a>
+    </h1>
+
+    <span class="post-date">15 Oct 2015</span>
+    
+            <p>Sometimes it is useful to know whether a Munki client is on your corporate network - you might have a package or script that will only work when able to access an internal resource, or you might just want statistics on which users are accessing your internal infrastructure and external infrastructure.</p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/">Continue reading...</a></b></p>
+          
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -261,58 +282,6 @@
 
 
             <p><b><a href="http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/">Continue reading...</a></b></p>
-          
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api/">
-        Using the Sal API
-      </a>
-    </h1>
-
-    <span class="post-date">10 Jul 2015</span>
-    
-            <p>As previously mentioned, Sal now has an <a href="https://github.com/salopensource/sal/blob/master/docs/API.md">API</a>. You might be wondering what you can do with this wonderous API. This is a simple example of using it to automate building packages to enrol Macs into Sal.</p>
-
-<p>The basic workflow of this script is:</p>
-
-<ul>
-  <li>Use the API to get a list of all Machine Groups in Sal - this will return JSON (a markup language that is easily parsable with languages like Python)</li>
-  <li>Download the Sal postflight scripts</li>
-  <li>Download the latest Facter installer</li>
-  <li>For each machine group, build a package that will install all of the packages and then set the correct Sal preferences.</li>
-</ul>
-
-<p><a href="https://gist.github.com/grahamgilbert/8ccba318d3ecadee02b1">You can find the script in this Gist</a>. I’m not going to go through the script line by line, but we’ll cover how to configure it.</p>
-
-<p>First off you will need an API key configuring. Log into Sal as a user with Global Admin privelages and choose the ‘person’ menu at the top right and then choose Settings. From the sidebar, choose API keys and then choose to make a new one. Give it a name so you can recognise it - I called this one “PKG Generator”. You will then be given a public key and a private key. Make a note of them, we’ll need them in the next section.</p>
-
-<h2 id="configuring-the-script">Configuring the script</h2>
-
-<p>Edit the variables at the top to match your environment:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c"># No trailing slash on this one - I was lazy and didn&#39;t check for it</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">SAL_URL</span> <span class="o">=</span> <span class="s">&quot;https://sal.yourcompany.com&quot;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">PUBLIC_KEY</span> <span class="o">=</span> <span class="s">&quot;yourpublickeyhere&quot;</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">PRIVATE_KEY</span> <span class="o">=</span> <span class="s">&quot;yourreallyreallyreallylongprivatekeyhere&quot;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">PKG_IDENTIFIER</span> <span class="o">=</span> <span class="s">&quot;com.yourcompany.sal_enrol&quot;</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">SAL_PKG</span> <span class="o">=</span> <span class="s">&quot;https://github.com/salopensource/sal/releases/download/v0.4.0/sal_scripts.pkg&quot;</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">FACTER_PKG</span> <span class="o">=</span> <span class="s">&quot;https://downloads.puppetlabs.com/mac/facter-latest.dmg&quot;</span></div></div></pre></div></figure>
-
-<p>There are some caveats with this script:</p>
-
-<ul>
-  <li>It will spit the packages out in your current directory. Make sure you’ve <code>cd</code>-ed into where you want the packages to be generated.</li>
-  <li>It uses <code>urllib2</code> to request the information from Sal and to download the packages - this means that there is no verification of the SSL certificates, so make sure you know where you’re connecting to.</li>
-</ul>
-
-<p>All ready to run it?</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo python sal_package_generator.py</div></div></pre></div></figure>
-
-<p>And you’ll get a directory full of packages that will get your fleet reporting into Sal.</p>
-
           
   </div>
   
