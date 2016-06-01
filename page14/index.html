@@ -200,6 +200,134 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3/">
+        Getting Started With Puppet on OS X (Part 3)
+      </a>
+    </h1>
+
+    <span class="post-date">24 Feb 2013</span>
+    
+            <p>In this post, we’ll do something pretty much all Mac admins will need to do - set up their admin user. Bust first, a little housekeeping.</p>
+
+<p>Before reading this post, you really need to read <a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">part 1</a>, <a href="http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">part 2</a> and most importantly my post on <a href="http://grahamgilbert.com/blog/2013/02/13/building-a-test-puppet-master-with-vagrant/">building a Puppet Master with Vagrant</a>. The Puppet Labs provided VM won’t cut it here, we need the latest version of Puppet on our Master. If you are using the same Mac / OS X VM that was previously hooked up to the Puppet Master VM, you will need to run the following command on the client - don’t worry, it will get new certificates from your very own Puppet Master:</p>
+
+<pre><code>sudo rm -rf /var/lib/puppet/ssl
+</code></pre>
+
+<p>Make sure your test Mac is pointing to the right server - unless you’ve changed your Vagrantfile, your Puppet Master’s IP address will be 192.168.33.10 - you will need to change your test Mac’s /etc/hosts file to reflect this change.</p>
+
+<p><strong>Updates from the previous post:</strong> Since the last post was published, Puppet version 3.1 has been released - the main bonus to Mac users is that the Puppet user and group are now created, so the manual Puppet run command is a little shorter. What was this:</p>
+
+<pre><code>sudo puppet agent --test --group 0
+</code></pre>
+
+<p>Can now be shortened to:</p>
+
+<pre><code>sudo puppet agent --test
+</code></pre>
+
+<p>As the Puppet user and group now exist, you no longer need to run Puppet as root. This creates another issue (the Puppet user is visible at the login screen despite it not being able to log in), but we’ll get around that in this article. Regardless, you want to install <a href="http://downloads.puppetlabs.com/mac/">Puppet 3.1</a>. Back to the main event.</p>
+
+<p>First thing’s first, create your admin user. I’ve called mine “Local Administrator”, with a short name of “ladmin” and the very imaginative passord of “password”. Next open up a Terminal window on your puppetclient Mac and issue the following command:</p>
+
+<pre><code>sudo puppet resource user ladmin
+</code></pre>
+
+<p>You’ll see output similar to this:</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">site.pp</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">user</span> <span class="p">&#x7b;</span> <span class="s1">&#39;ladmin&#39;</span><span class="p">:</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="k">ensure</span>     <span class="o">=&gt;</span> <span class="s1">&#39;present&#39;</span><span class="p">,</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="n">comment</span>    <span class="o">=&gt;</span> <span class="s1">&#39;Local Admin&#39;</span><span class="p">,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="n">gid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="n">groups</span>     <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;_appserveradm&#39;</span><span class="p">,</span> <span class="s1">&#39;_appserverusr&#39;</span><span class="p">,</span> <span class="s1">&#39;_lpadmin&#39;</span><span class="p">,</span> <span class="s1">&#39;admin&#39;</span><span class="o">]</span><span class="p">,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="n">home</span>       <span class="o">=&gt;</span> <span class="s1">&#39;/Users/ladmin&#39;</span><span class="p">,</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="n">iterations</span> <span class="o">=&gt;</span> <span class="s1">&#39;21881&#39;</span><span class="p">,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="n">password</span>   <span class="o">=&gt;</span> <span class="s1">&#39;401e3aa796b3bfff2c8e929a003b727be1bd548aa0f0b0e131f0d11f3953162be210200a70872734a28be747a933e12e2458ffdcc60d209eab9e006a9f4042dc883148070e6e8ad05f4a5e5d44bd0ddfc9494482f0d16c9d5eb1de086183db1b89df9982d2856eeed431d65e03ff99177c3185aa61bc926b1a0020c49621ddd8&#39;</span><span class="p">,</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="n">salt</span>       <span class="o">=&gt;</span> <span class="s1">&#39;0c3cd42b97d0b0df45542fcb5961a2920f2fd6204aa151bf08d762d9dd44fd0c&#39;</span><span class="p">,</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="n">shell</span>      <span class="o">=&gt;</span> <span class="s1">&#39;/bin/bash&#39;</span><span class="p">,</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="n">uid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;502&#39;</span><span class="p">,</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<p>That looks suspiciously like Puppet code. Let’s try it.</p>
+
+<p>With the Vagrant based Puppet Master, the manifests file that previously lived at /etc/puppet/manifests is now located on your Mac at puppet/manifests (as is the modules folder, Vagrant takes care of linking it to the right place on the VM). Open up puppet/manifests/sites.pp in your favourite text editor (for the love of all that’s holy, please don’t use TextEdit. Try TextWrangler, or my current favourite <a href="http://www.chocolatapp.com/">Chocolat</a>).</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">site.pp</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">node</span> <span class="n">puppetclient</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="n">user</span> <span class="p">&#x7b;</span> <span class="s1">&#39;ladmin&#39;</span><span class="p">:</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="k">ensure</span>     <span class="o">=&gt;</span> <span class="s1">&#39;present&#39;</span><span class="p">,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">comment</span>    <span class="o">=&gt;</span> <span class="s1">&#39;Local Admin&#39;</span><span class="p">,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">gid</span>    <span class="o">=&gt;</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">groups</span>     <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;_appserveradm&#39;</span><span class="p">,</span> <span class="s1">&#39;_appserverusr&#39;</span><span class="p">,</span> <span class="s1">&#39;_lpadmin&#39;</span><span class="p">,</span> <span class="s1">&#39;admin&#39;</span><span class="o">]</span><span class="p">,</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">home</span>       <span class="o">=&gt;</span> <span class="s1">&#39;/Users/ladmin&#39;</span><span class="p">,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">iterations</span> <span class="o">=&gt;</span> <span class="s1">&#39;21881&#39;</span><span class="p">,</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">password</span>   <span class="o">=&gt;</span> <span class="s1">&#39;401e3aa796b3bfff2c8e929a003b727be1bd548aa0f0b0e131f0d11f3953162be210200a70872734a28be747a933e12e2458ffdcc60d209eab9e006a9f4042dc883148070e6e8ad05f4a5e5d44bd0ddfc9494482f0d16c9d5eb1de086183db1b89df9982d2856eeed431d65e03ff99177c3185aa61bc926b1a0020c49621ddd8&#39;</span><span class="p">,</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">salt</span>       <span class="o">=&gt;</span> <span class="s1">&#39;0c3cd42b97d0b0df45542fcb5961a2920f2fd6204aa151bf08d762d9dd44fd0c&#39;</span><span class="p">,</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">shell</span>      <span class="o">=&gt;</span> <span class="s1">&#39;/bin/bash&#39;</span><span class="p">,</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">uid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;502&#39;</span><span class="p">,</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="p">&#x7d;</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<p>Save it, and then back on your client perform a Puppet run:</p>
+
+<pre><code>sudo puppet agent --test
+</code></pre>
+
+<p>Of course nothing has changed - that’s because your client’s configuration is how you have described it in site.pp. Try changing ladmin’s password in system preferences, then perform another Puppet run. You’ll see Puppet change the password right back.</p>
+
+<p>Now we’ve got our Local Admin user working, it might be nice to hide it away from inquisitive users. The first step is to change our Local Admin’s UID to something lower than 500 - I like 404 (nerd joke), and then for good measure, we’ll move the home folder out of /Users and into /var.</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">site.pp</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">node</span> <span class="n">puppetclient</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="n">user</span> <span class="p">&#x7b;</span> <span class="s1">&#39;ladmin&#39;</span><span class="p">:</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="k">ensure</span>     <span class="o">=&gt;</span> <span class="s1">&#39;present&#39;</span><span class="p">,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">comment</span>    <span class="o">=&gt;</span> <span class="s1">&#39;Local Admin&#39;</span><span class="p">,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">gid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">groups</span>     <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;_appserveradm&#39;</span><span class="p">,</span> <span class="s1">&#39;_appserverusr&#39;</span><span class="p">,</span> <span class="s1">&#39;_lpadmin&#39;</span><span class="p">,</span> <span class="s1">&#39;admin&#39;</span><span class="o">]</span><span class="p">,</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">home</span>       <span class="o">=&gt;</span> <span class="s1">&#39;/var/ladmin&#39;</span><span class="p">,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">iterations</span> <span class="o">=&gt;</span> <span class="s1">&#39;21881&#39;</span><span class="p">,</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">password</span>   <span class="o">=&gt;</span> <span class="s1">&#39;401e3aa796b3bfff2c8e929a003b727be1bd548aa0f0b0e131f0d11f3953162be210200a70872734a28be747a933e12e2458ffdcc60d209eab9e006a9f4042dc883148070e6e8ad05f4a5e5d44bd0ddfc9494482f0d16c9d5eb1de086183db1b89df9982d2856eeed431d65e03ff99177c3185aa61bc926b1a0020c49621ddd8&#39;</span><span class="p">,</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">salt</span>       <span class="o">=&gt;</span> <span class="s1">&#39;0c3cd42b97d0b0df45542fcb5961a2920f2fd6204aa151bf08d762d9dd44fd0c&#39;</span><span class="p">,</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">shell</span>      <span class="o">=&gt;</span> <span class="s1">&#39;/bin/bash&#39;</span><span class="p">,</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">uid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;404&#39;</span><span class="p">,</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="p">&#x7d;</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<p>That gets the home folder moved, now to actually hide the home folder. Add this just before the closing } (curly bracket) in your site.pp:</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">site.pp</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nb">exec</span> <span class="p">&#x7b;</span><span class="s1">&#39;Hide sub-500 users&#39;</span><span class="p">:</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">command</span> <span class="o">=&gt;</span> <span class="s2">&quot;/usr/bin/defaults write /Library/Preferences/com.apple.loginwindow Hide500Users -bool TRUE&quot;</span><span class="p">,</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<p>When you perform a Puppet run, you’ll notice that your command is run every time, regardless of whether it needs to. We only really need to run that when we change our Local Admin user. To do that, we’ll change two lines. When the Admin User changes, we’ll send a signal to the exec, and we’ll change the exec to only run when it is told to.</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">site.pp</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">node</span> <span class="n">puppetclient</span> <span class="p">&#x7b;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="n">user</span> <span class="p">&#x7b;</span> <span class="s1">&#39;ladmin&#39;</span><span class="p">:</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="k">ensure</span>     <span class="o">=&gt;</span> <span class="s1">&#39;present&#39;</span><span class="p">,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">comment</span>    <span class="o">=&gt;</span> <span class="s1">&#39;Local Admin&#39;</span><span class="p">,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">		<span class="n">gid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">groups</span>     <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;_appserveradm&#39;</span><span class="p">,</span> <span class="s1">&#39;_appserverusr&#39;</span><span class="p">,</span> <span class="s1">&#39;_lpadmin&#39;</span><span class="p">,</span> <span class="s1">&#39;admin&#39;</span><span class="o">]</span><span class="p">,</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">home</span>       <span class="o">=&gt;</span> <span class="s1">&#39;/var/ladmin&#39;</span><span class="p">,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">iterations</span> <span class="o">=&gt;</span> <span class="s1">&#39;21881&#39;</span><span class="p">,</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">password</span>   <span class="o">=&gt;</span> <span class="s1">&#39;401e3aa796b3bfff2c8e929a003b727be1bd548aa0f0b0e131f0d11f3953162be210200a70872734a28be747a933e12e2458ffdcc60d209eab9e006a9f4042dc883148070e6e8ad05f4a5e5d44bd0ddfc9494482f0d16c9d5eb1de086183db1b89df9982d2856eeed431d65e03ff99177c3185aa61bc926b1a0020c49621ddd8&#39;</span><span class="p">,</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">salt</span>       <span class="o">=&gt;</span> <span class="s1">&#39;0c3cd42b97d0b0df45542fcb5961a2920f2fd6204aa151bf08d762d9dd44fd0c&#39;</span><span class="p">,</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">shell</span>      <span class="o">=&gt;</span> <span class="s1">&#39;/bin/bash&#39;</span><span class="p">,</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">uid</span>        <span class="o">=&gt;</span> <span class="s1">&#39;404&#39;</span><span class="p">,</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">  		<span class="n">notify</span>     <span class="o">=&gt;</span> <span class="no">Exec</span><span class="o">[</span><span class="s1">&#39;Hide sub-500 users&#39;</span><span class="o">]</span><span class="p">,</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">	<span class="p">&#x7d;</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">	    <span class="nb">exec</span> <span class="p">&#x7b;</span><span class="s1">&#39;Hide sub-500 users&#39;</span><span class="p">:</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">command</span> <span class="o">=&gt;</span> <span class="s2">&quot;/usr/bin/defaults write /Library/Preferences/com.apple.loginwindow Hide500Users -bool TRUE&quot;</span><span class="p">,</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">refreshonly</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="p">&#x7d;</span>
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<p>Save it, and perform a Puppet run on your client.You’ll notice that the defaults command is now only run when Puppet needs to modify the user.</p>
+
+<p>Next time, we’ll be taking a look at Modules - pre-built bits of Puppet code that you can plug into your workflow to save you re-inventing the wheel.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2013/02/13/building-a-test-puppet-master-with-vagrant/">
         Building a test Puppet Master with Vagrant
       </a>
@@ -303,84 +431,6 @@ ls -la
 <p>Crypt is made up of two parts: A <a href="https://github.com/grahamgilbert/Crypt-Server">web app</a>, which stores the recovery keys and a <a href="https://github.com/grahamgilbert/Crypt">client app</a> for enabling FileVault 2 on a Mac which then sends the recovery key to the server. The server has two user levels, so access to keys can be restricted, and all key access is logged for auditing.</p>
 
 <p>We’ve been using it at <a href="http://pebbleit.com">pebble.it</a> for a few weeks now and haven’t found any issues during use, but please be aware that this is what I’d call “beta” software. You might be happy using beta software in production, but that’s up to you! I’d welcome all feedback, both good and bad. Planned features include AD authentication and emails to admins when new requests come in. Please file bugs and feature requests over at <a href="https://github.com/grahamgilbert/Crypt">GitHub</a> so I can keep track of them all.</p>
-
-          
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2013/01/13/casper-vs-munki/">
-        Casper Vs Munki
-      </a>
-    </h1>
-
-    <span class="post-date">13 Jan 2013</span>
-    
-            <p>Next up in the battle of Casper vs the rest of the Mac admin toolset looking to reign supreme in the contest of software installation is Munki.</p>
-
-<h2 id="setup">Setup</h2>
-<p>The setup process for a Munki server can seem to be very daunting at first if you’ve not configured a web server before. If you are happy setting one up, it’s the easiest server install you’ll ever do! Munki’s requirement of just a basic web server means it can run on literally anything (although Casper will also run on anything you’re likely to use - I’ve had both running on Windows boxes for example).</p>
-
-<p>The setup of a Casper server can be quite involved, but chances are if you don’t know what you’re doing, it’s already been done for you during your jump start.</p>
-
-<p>Winner: Casper - if you’ve paid for the Casper Suite, you’re ready to go after your jump start (in theory!). That being said, there are people who can configure Munki for you if you need it (<a href="http://pebbleit.com">shameless plug for my employers here!</a>)</p>
-
-<h2 id="getting-software-into-the-system">Getting software into the system</h2>
-<p>A streamlined workflow for Munki takes a little setup. Our Munki repository lives on an Ubuntu box, with the actual repo being shared out via SMB. This could just as easily be configured on a Windows server or an OS X server if you still have them in your server room.</p>
-
-<p>With the sharepoint set up, I can just mount the repo and then run munkiimport to get the software into Munki. Yes, a lot of people will be put off with having to use a command line interface - thats something all Mac admins will need to get over at some point in their career, it might as well be now!</p>
-
-<p>Casper’s method of getting software into the system is simple, but incredibly long winded. You seem to be expected to repackage nearly everything, which is a major pain in the ass. Your JAMF rep will point you towards the pre-made templates in Composer - ironically, most of the apps listed in there, shouldn’t need repackaging in the first place as they’re either distributed in reasonable packages (like Office) or have tools available to make a package (like Creative Suite).  Once you’ve got the package, it’s super simple to get the package into Casper - crack open Casper Admin and drag the package into it. You need to then make a policy which somehow installs the software (more on that in the next section).</p>
-
-<p>Winner: Draw. Munki is more work up front, and doesn’t have a GUI which will be an issue for some. Casper is really easy to use, but a complete faff every time you need to get new software onto your macs. You shouldn’t need to repackage. Ever. Especially for drag and drop app installations.</p>
-
-<h2 id="configuration-options">Configuration options</h2>
-<p>The two systems are fairly feature comparable (pre and post flight scripts, ways to limit who gets what software etc), but it’s how they present those options to the admin that differentiates them.</p>
-
-<p>Let’s take a common example: installing an Office 2011 update. We have the 14.2.5 update that requires the installation to be at 14.2.3 to start off with. 
-Some might be, others won’t for one reason or another.</p>
-
-<p>We’ve already got the packages in our respective systems - let’s start off with Casper. We need to differentiate the macs that need the update first - we’ll do this with a smart group. We make a smart group that has Word at version 14.2.3 and apply the policy to that- great, done right? But what about those users that slipped through the net and only have 14.2?  So at that point you need to refine your smart group to target a range of versions. You also need to change this <em>every time there’s an update</em>. If you only have Office to worry about this might not be too much of a problem, but as soon as you get a few more packages to look after, this rapidly becomes tedious.</p>
-
-<p>Lets look at the same scenario Munki. I just need to mark the update as being an update for Office 2011 (this direct relationship between software and delta updates doesn’t exist within Casper) and that the update requires a particular version of Office to be installed within it’s pkginfo file - two minutes work in a text editor at worst once you know the syntax.</p>
-
-<p>Winner: Munki - the direct relationship between updates and their parent package is invaluable. As ever, Munki is a lot more work up front, but it pays off in a much easier workflow after that.</p>
-
-<h2 id="installing-software-on-client-machines">Installing software on client machines</h2>
-
-<p>By default, this is what a client sees when Munki wants to install something:</p>
-
-<p><img src="/images/posts/2013-01-13/Munki.png" /></p>
-
-<p>And this is what you see with Casper.</p>
-
-<p><img src="/images/posts/2013-01-13/Blank_Desktop.png" /></p>
-
-<p>No, I’ve not made a mistake. No warning, no option to delay to a more convenient time, nothing. Nada. Zilch. And you better hope that the app isn’t running! It’s crash time otherwise.</p>
-
-<p>Munki will warn the user when apps you want to update are running, will warn them when a forced install is coming (several times), will let the user know that a reboot will be needed <em>before</em> the software gets installed.</p>
-
-<p>I know that these things can be done with Casper, I had a demo from a nice chap from JAMF during the week showing me all of this (as a side note, kudos to JAMF for reaching out to me following my last post in this). The issue is, I don’t particularly want to write a bash script ever time I deploy software to check if the app is running, warn the user etc etc. We spend on average an hour a week updating our Munki repo - I dread to think how long it would take if I had to do that level of scripting for each package.</p>
-
-<p>The one place Casper does excel on the client side is Self Service. The pretty icons and familiar app store look are much easier for end users to use than Munki’s optional installs - that being said, optional installs with Munki aren’t exactly hard to use.</p>
-
-<p>Winner: Munki - someone at JAMF told me their goal is to make administrators lives easier. Unfortunately my goal is to make my client’s mac experience as awesome as possible, and random reboots with only five minute warnings aren’t exactly awesome in my book.</p>
-
-<h2 id="reporting">Reporting</h2>
-<p>This is the area where Casper excels. Out of the box, the reporting is fantastic. You know who has installed what, when, how many licenses you have left, pretty much anything you need to now is there out of the box.</p>
-
-<p>Munki does have MunkiWebAdmin, but it’s an extra install, and can be quite tricky if you’re not used to configuring a Django app. It does provide a fair bit of info on what’s happening with your Munki-d macs, but nowhere near what you’d get out of Casper. The stats you can get out of Casper are truly immense.</p>
-
-<h2 id="auditing-admin-actions">Auditing Admin actions</h2>
-<p>This should really come with the post when Casper goes head to head with Puppet, but it affected me in real life a couple of weeks ago, so it can come in today. I came to a Casper install and noticed that the policy that was due to install an Office update had been deleted. Had this happened with our Munki setup, we would just look at the Git history (you are using Git to track your Munki config, right?), see who made the change, find out why, and roll it back if needed.</p>
-
-<p>In this particular instance, I had no idea if it had been done by mistake or on purpose by their internal IT team. I raised this is JAMF this week, and was shown the database log. Whilst this is better than nothing at all, it’s still woefully inadequate for a solution that is marketed at the enterprise.</p>
-
-<p>Winner - Munki (or any solution that can have its history tracked effectively)</p>
-
-<p>So for those who stopped keeping count, Munki pips it. On the face of it, depending on your priorities, it’s quite a close thing. But as my clients pay my wages, the user experience is of paramount importance to me, so personally, Munki is a clear winner. If my users aren’t able to work, they can’t earn money. If they can’t earn money, they can’t pay their IT bill.</p>
-
-<p>Munki offers the greatest flexibility between letting users carry on with their work when there’s a not so important update until it’s convenient for them to stop and forcing the update (but still warning them appropriately) when it’s critical.</p>
 
           
   </div>

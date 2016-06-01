@@ -4,13 +4,26 @@
  <title>graham gilbert dot com</title>
  <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
  <link href="http://grahamgilbert.com/"/>
- <updated>2016-05-11T19:04:48+01:00</updated>
+ <updated>2016-06-01T15:37:57+01:00</updated>
  <id>http://grahamgilbert.com</id>
  <author>
    <name>Graham Gilbert</name>
    <email>graham@grahamgilbert.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Imagr 1.1.1</title>
+   <link href="http://grahamgilbert.com/blog/2016/06/01/imagr-1-1-1/"/>
+   <updated>2016-06-01T15:33:37+01:00</updated>
+   <id>http://grahamgilbert.com/blog/2016/06/01/imagr-1-1-1</id>
+   <content type="html">&lt;p&gt;I’m pleased to announce that &lt;a href=&quot;https://github.com/grahamgilbert/imagr/releases/tag/1.1.1&quot;&gt;Imagr 1.1.1 is out&lt;/a&gt;! Why am I so happy? This is the first release that’s made up nearly all of community contributions. So many thanks to everyone who has helped out with code, documentation and filing bugs.&lt;/p&gt;
+
+&lt;p&gt;And if you’re going to be at &lt;a href=&quot;http://www.macdevops.ca/&quot;&gt;MacDevOps:YVR&lt;/a&gt; in a few weeks, we’ll be taking a look at how to use some of these new features.&lt;/p&gt;
+
+&lt;p&gt;Find out more about this &lt;a href=&quot;https://github.com/grahamgilbert/imagr/releases/tag/1.1.1&quot;&gt;release over on GitHub&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Conference Season 2016</title>

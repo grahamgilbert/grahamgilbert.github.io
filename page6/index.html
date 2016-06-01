@@ -200,6 +200,33 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/">
+        Running Puppet Server in Docker
+      </a>
+    </h1>
+
+    <span class="post-date">22 Jun 2015</span>
+    
+            <p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively - it’s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
+
+<p>Over the next few posts, I’ll take you through setting up the Puppet Server (running on Docker, naturally!), using r10k and git for managing your modules and using Hiera to configure your Macs - we’ll apply some configuration to a Mac without writing a single line of Puppet code .</p>
+
+<h1 id="why">Why?</h1>
+
+<p>You might well be thinking “why would I want to use Puppet?” After all, you’ve already got Munki. There are two main reasons I’ve chosen to go back to using a Puppet Server in conjunction with Munki.</p>
+
+<ol>
+  <li>It’s nice to have a fallback. If I manage to do something stupid and nuke my Munki install, or my customers manage to do the same, I’ve got some way of getting the machines back under control.</li>
+  <li>“Free” SSL certs - this might not be a priority now, but it gives you an easy to to secure your Munki repository later on (which we may cover in a later post).</li>
+</ol>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git/">
         Using munki-trello with Git
       </a>
@@ -311,24 +338,6 @@
 
 
             <p><b><a href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/">Continue reading...</a></b></p>
-          
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/">
-        More fun with AutoNBI
-      </a>
-    </h1>
-
-    <span class="post-date">13 Apr 2015</span>
-    
-            <p>Last time we saw our heroes, there was the unfuffilled promise of making small NetInstall sets. Now is the time to deliver on that promise. We’re going to make a small NetInstall that will open up Terminal.app.</p>
-
-<p>If you’ve not read the <a href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/">previous post</a> (and have got AutoNBI), go and do it now. I’ll wait. All done?</p>
-
-
-            <p><b><a href="http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/">Continue reading...</a></b></p>
           
   </div>
   

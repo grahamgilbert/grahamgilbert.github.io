@@ -200,6 +200,26 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet/">
+        Sal: The Munki Puppet
+      </a>
+    </h1>
+
+    <span class="post-date">17 Jan 2014</span>
+    
+            <p>At <a href="http://pebbleit.com">pebble.it</a>, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a few options, but didn’t like any of them, so we made our own.</p>
+
+<p>Say hi to Sal - the Munki Puppet. It’s a multi-tenanted reporting solution for Munki and optionally, Facter.  You can find all of the details <a href="https://github.com/grahamgilbert/sal">over on GitHub</a>, including installation instructions and a package to send out to your clients.</p>
+
+<p><img class="center" src="/images/posts/2014-01-17/Sal.png" /></p>
+
+<p>There is a plugin system built in to Sal, and over the next few days I will have a couple of posts covering how to make your own.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki/">
         Managing the Authorization Database with Munki
       </a>
@@ -490,49 +510,6 @@
 
 <p>Of course, he’d already improved upon this script and written a proof of concept to <a href="https://gist.github.com/gregneagle/6957826">set a random desktop picture using PyObjC</a>. This got me 90% of the way there, so this is my modified version of his script. The full code and usage instructions are <a href="https://github.com/grahamgilbert/macscripts/tree/master/set_desktops">over on GitHub</a>.</p>
 
-          
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer/">
-        ZNC: An IRC Bouncer
-      </a>
-    </h1>
-
-    <span class="post-date">13 Oct 2013</span>
-    
-            <p>Yes,  it’s true. The most interesting conversations in the Mac admin world take place using technology from the 1980’s - <a href="http://en.wikipedia.org/wiki/Internet_Relay_Chat">IRC</a> (##osx-server on <a href="http://freenode.net/">freenode</a>). Those of you who know me will know that I’m borderline OCD. In this instance, my major annoyance was that I’d only get half of the conversation and I’d miss private messages when I had to put my laptop to sleep. I needed to somehow keep a persistient conenction to IRC without having to sit infront of my computer 24/7.</p>
-
-<p>I’d heard of IRC bouncers before - an app that runs on a server, saving the messages in the rooms you specify for you until you are able to read them, but always assumed they were much more difficult to set up than it turned out to be.</p>
-
-<p>This is set up on a box running Ubuntu 12.04, with port 6666 opened on your firewall and forwarded to the box if you want to access it from outside the network. Mine is running on an <a href="http://aws.amazon.com/free/">Amazon EC2 Micro instance</a> - available for free for one year if you don’t already have a server to run it on.</p>
-
-<p>Right, let’s get started. All of these commands are to be run as your normal user (<code>graham</code> in this case - <strong>not root</strong>). First we’re going to enable backports in Ubuntu. I like editing text files in <code>nano</code> so I’m going to install that first, but feel free to use Vi or whatever you like.</p>
-
-<p><code>bash
-$ sudo apt-get install -y nano
-$ sudo nano /etc/apt/sources.list
-</code></p>
-
-<p>Find the two backports lines commented out (lines 44-45 on my test box) and unomment them.</p>
-
-<p><code>bash
-deb http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse
-deb-src http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse
-</code></p>
-
-<p>If you are using nano, hit <code>CTRL+O</code> and press return to save it, then <code>CTRL-X</code> to exit.</p>
-
-<p>To install ZNC, issue the following command:</p>
-
-<p><code>bash
-$ sudo apt-get update
-$ sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-dev/precise-backports znc-extra/precise-backports znc-perl/precise-backports znc-python/precise-backports znc-tcl/precise-backports
-</code></p>
-
-
-            <p><b><a href="http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer/">Continue reading...</a></b></p>
           
   </div>
   
