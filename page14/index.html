@@ -200,6 +200,28 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4/">
+        Getting Started With Puppet on OS X (Part 4)
+      </a>
+    </h1>
+
+    <span class="post-date">05 Mar 2013</span>
+    
+            <p>We’ve made quite a bit of progress with our Puppet install. We’ve already made Puppet do something useful with setting up an admin user, but let’s get back to being lazy - let’s get someone else to write the code.</p>
+
+<p>Before reading this post, you really need to read <a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">part 1</a>, <a href="http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">part 2</a> and <a href="http://grahamgilbert.com/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3/">part 3</a> of the series.</p>
+
+<p>Modules are little pre-built bits of Puppet code. They’re a good example of Puppet’s philosophy of convention over configuration - Puppet will assume your modules follow a set pattern. We’ll be using two of the available folders in modules today: files and manifests. Files are static files that Puppet will copy over to our client machine, and manifests will contain the Puppet code we’ve previously been putting into <code>/etc/puppet/manifests/site.pp</code> - whilst it’s been easy to put code into this file, it can become unwieldy when you have a few nodes to manage.</p>
+
+<p>There are also loads of pre-built modules on the <a href="http://forge.puppetlabs.com/">Puppet Forge</a> - it’s one of these modules we’ll be using today.</p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3/">
         Getting Started With Puppet on OS X (Part 3)
       </a>
@@ -410,28 +432,6 @@ ls -la
 
 
             <p><b><a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">Continue reading...</a></b></p>
-          
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2013/01/18/crypt-a-filevault-2-escrow-solution/">
-        Crypt: A FileVault 2 escrow solution
-      </a>
-    </h1>
-
-    <span class="post-date">18 Jan 2013</span>
-    
-            <p>Although it’s been blogged about over at <a href="http://afp548.com/2013/01/02/crypt-a-client-and-web-app-for-filevault-2-encryption-and-escrow/">afp548</a> and <a href="http://derflounder.wordpress.com/2012/12/31/first-look-at-crypt/">Rich Trouton’s blog</a>, I’d like to introduce you all to <a href="https://github.com/grahamgilbert/Crypt">Crypt</a>.</p>
-
-<p><img class="center" src="/images/posts/2013-01-18/Crypt-Screenshot.png" /></p>
-
-<p>Crypt is a solution for enabling FileVault 2 on Macs running either 10.7 or 10.8 and securely storing those keys, using no outside infrastructure like other solutions do (Cauliflower Vest’s requirement of Google App Engine). It’s only requirement is a web server that can run a Django app (which is pretty much anything - the example setup uses Apache on Ubuntu 12, but you can use anything you want).</p>
-
-<p>Crypt is made up of two parts: A <a href="https://github.com/grahamgilbert/Crypt-Server">web app</a>, which stores the recovery keys and a <a href="https://github.com/grahamgilbert/Crypt">client app</a> for enabling FileVault 2 on a Mac which then sends the recovery key to the server. The server has two user levels, so access to keys can be restricted, and all key access is logged for auditing.</p>
-
-<p>We’ve been using it at <a href="http://pebbleit.com">pebble.it</a> for a few weeks now and haven’t found any issues during use, but please be aware that this is what I’d call “beta” software. You might be happy using beta software in production, but that’s up to you! I’d welcome all feedback, both good and bad. Planned features include AD authentication and emails to admins when new requests come in. Please file bugs and feature requests over at <a href="https://github.com/grahamgilbert/Crypt">GitHub</a> so I can keep track of them all.</p>
-
           
   </div>
   

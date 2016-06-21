@@ -200,6 +200,22 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2015/04/21/getting-started-with-bsdpy-on-docker/">
+        Getting started with BSDPy on Docker
+      </a>
+    </h1>
+
+    <span class="post-date">21 Apr 2015</span>
+    
+            <p>Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you’re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we’re using that. Your Ubuntu box will also need a real IP address - if you are using VMware Fusion, this will be a Bridged Network Adapter - adjust the terminology if you’re using a different virtualization tool. You don’t need to worry about giving your machine a static IP unless you want to - Macs will NetBoot just fine when they’re on the same subnet.</p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2015/04/21/getting-started-with-bsdpy-on-docker/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/">
         More fun with AutoNBI
       </a>
@@ -305,37 +321,6 @@
 
 <p>I’ve assumed that you can move your scripts into the new Outset directories using your configuration management tool (Munki, Puppet, Capser, whatever), but if you need a tool that can do this for you (with the previously stated caveat about the file extensions of the scripts), you’ll find a script that can be dropped into Outset’s firstboot directory.</p>
 
-          
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">
-        Creating Business Units and Groups in Sal using a CSV
-      </a>
-    </h1>
-
-    <span class="post-date">08 Dec 2014</span>
-    
-            <p>Obviously I’m a little biased, but I love Sal. But, it can be a little tedious to get everything set up the first time if you have hundreds of Business Units and Machine Groups. I’ve quietly ignored the problem for a while, but then I saw this tweet pop up in my feed:</p>
-
-<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/hunty1er">@hunty1er</a> Pretty sure you could automate BU/MG creation through the DB backend. What say you <a href="https://twitter.com/grahamgilbert">@grahamgilbert</a> ?</p>&mdash; Pepijn Bruienne (@bruienne) <a href="https://twitter.com/bruienne/status/541811445512830976">December 8, 2014</a></blockquote>
-<script async="" src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<p>What say I Mr Bruienne? Like the <a href="https://www.youtube.com/watch?v=mjB9Chw_6FE">man from Del Monte</a>, I say YES!</p>
-
-<h2 id="the-plan">The plan</h2>
-
-<p>We’re going to use a few of the parts that make Django and Docker awesome. We will:</p>
-
-<ul>
-  <li>Make a custom management command that will read in a CSV</li>
-  <li>The command will make the Business Units and Groups if they don’t exist</li>
-  <li>We’re than going to run it in a temporary Docker container when we’re ready to do the actual import. This is one of the strengths of Docker - we can spin up a linked container that will operate on the main database, but won’t interfere with your container serving the app.</li>
-</ul>
-
-
-            <p><b><a href="http://grahamgilbert.com/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/">Continue reading...</a></b></p>
           
   </div>
   

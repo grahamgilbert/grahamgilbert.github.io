@@ -200,6 +200,33 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg/">
+        buildCrankPkg
+      </a>
+    </h1>
+
+    <span class="post-date">17 Jul 2013</span>
+    
+            <p>In my <a href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/">last post</a> I promised a tool I’ve been working on to automate the building of a package for crankd.</p>
+
+<p><a href="https://github.com/grahamgilbert/buildCrankPkg">buildCrankPkg</a> is a small script that will:</p>
+
+<ul>
+  <li>Pull down the latest version of crankd (or use a local or remote repository if you specify one)</li>
+  <li>Build a package that includes crankd and your custom settings and scripts.</li>
+</ul>
+
+<p>I’ve included two examples, one that implements calling Munki and Puppet as detailed in the last post, and one to run a Casper policy.</p>
+
+<p>If you’re happy with what crankd does and using the command line, head on over to the <a href="https://github.com/grahamgilbert/buildCrankPkg">repository</a> and enjoy. If you need a bit more help to get started, read on.</p>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/">
         Using crankd to react to network events
       </a>
@@ -305,28 +332,6 @@
 
 
             <p><b><a href="http://grahamgilbert.com/blog/2013/04/02/facter-101/">Continue reading...</a></b></p>
-          
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4/">
-        Getting Started With Puppet on OS X (Part 4)
-      </a>
-    </h1>
-
-    <span class="post-date">05 Mar 2013</span>
-    
-            <p>We’ve made quite a bit of progress with our Puppet install. We’ve already made Puppet do something useful with setting up an admin user, but let’s get back to being lazy - let’s get someone else to write the code.</p>
-
-<p>Before reading this post, you really need to read <a href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/">part 1</a>, <a href="http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/">part 2</a> and <a href="http://grahamgilbert.com/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3/">part 3</a> of the series.</p>
-
-<p>Modules are little pre-built bits of Puppet code. They’re a good example of Puppet’s philosophy of convention over configuration - Puppet will assume your modules follow a set pattern. We’ll be using two of the available folders in modules today: files and manifests. Files are static files that Puppet will copy over to our client machine, and manifests will contain the Puppet code we’ve previously been putting into <code>/etc/puppet/manifests/site.pp</code> - whilst it’s been easy to put code into this file, it can become unwieldy when you have a few nodes to manage.</p>
-
-<p>There are also loads of pre-built modules on the <a href="http://forge.puppetlabs.com/">Puppet Forge</a> - it’s one of these modules we’ll be using today.</p>
-
-
-            <p><b><a href="http://grahamgilbert.com/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4/">Continue reading...</a></b></p>
           
   </div>
   

@@ -200,6 +200,32 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">
+        Dynamic first boot scripts with Imagr and Flask
+      </a>
+    </h1>
+
+    <span class="post-date">05 Jan 2016</span>
+    
+            <p>Some may wonder why you would go to the trouble of dynamically generating first boot scripts. I mean, how many can you need?</p>
+
+<p>Let’s say you have ten sites, each with five builds - that fifty first boot scripts to maintain already. It’s entirely possible that they’re all the same, so you could use <a href="https://github.com/grahamgilbert/imagr/wiki/Workflow-Config#scripts">Imagr’s ability to use a script from a central URL</a>. But you also may need to make slight tweaks depending on what type of machine it is and where it is located.</p>
+
+<p>Over the next few posts, we are going to build an app using the <a href="http://flask.pocoo.org">Flask</a> framework that will:</p>
+
+<ul>
+  <li>Read in headers sent by <a href="https://github.com/grahamgilbert/">Imagr</a> to return a dynamically generated first boot script</li>
+  <li>Create a Munki manifest for the Mac</li>
+  <li>Wrap up the application into a Docker image so it can be easily deployed</li>
+</ul>
+
+
+            <p><b><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">Continue reading...</a></b></p>
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/">
         Imagr 0.0.5
       </a>
@@ -252,37 +278,17 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/">
+      <a href="http://grahamgilbert.com/blog/2015/11/30/redirecting-munki-downloads/">
         Redirecting Munki Downloads
       </a>
     </h1>
 
-    <span class="post-date">01 Dec 2015</span>
+    <span class="post-date">30 Nov 2015</span>
     
             <p>Munki 2.4.0 brought the option to have Munki follow http redirects (<a href="https://github.com/munki/munki/pull/530">my first contribution to Munki</a>). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done.</p>
 
 
-            <p><b><a href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/">Continue reading...</a></b></p>
-          
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/">
-        Releasing Changes With Sharding
-      </a>
-    </h1>
-
-    <span class="post-date">23 Nov 2015</span>
-    
-            <p>Sharding is traditionally associated with databases - splitting up your dataset to make it more manageable. When using the term in this instance we are taking about splitting up our computers - there are several reasons you might want to do this. You might want to split them up for similar performance reasons - if you’re deploying large software updates your server might not be able to cope with all your clients pulling it at once. You might want a way to roll changes out to certain groups of machines.</p>
-
-<p>Facebook spoke about sharding at <a href="http://macbrained.org/recap-may-quantcast/">macbrained in May 2015</a>, but they weren’t clear on how they use it (<strong>edit:</strong> they actually first spoke about it at <a href="https://macsysadmin.se/2014/Thursday.html">MacSysAdmin</a>). A few people were pretty interested in using this method of rolling out changes to their machines, but it was <a href="http://groob.io/">Victor Vrantchan</a> who came up with a <a href="https://github.com/whitby/mac-scripts/tree/master/munki_condition_shard">method of deriving a value between one and 100 based on the machines serial number</a> (<strong>edit:</strong> this was based on <a href="https://github.com/facebook/IT-CPE/blob/master/code/lib/modules/sys_tools.py#L161">Facebook’s</a> and <a href="https://github.com/google/macops/blob/master/gmacpyutil/gmacpyutil/experiments.py">Google’s</a> code. Elliot Jordan also came up with something <a href="https://gist.github.com/homebysix/b35f1979d5b11e00602c">similar for Casper</a>).</p>
-
-<p>Using this condition as a base and a similar Facter Fact I’ve started using the method outlined below to release changes to the macs I look after.</p>
-
-
-            <p><b><a href="http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/">Continue reading...</a></b></p>
+            <p><b><a href="http://grahamgilbert.com/blog/2015/11/30/redirecting-munki-downloads/">Continue reading...</a></b></p>
           
   </div>
   

@@ -200,12 +200,40 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/">
+      <a href="http://grahamgilbert.com/blog/2014/04/21/first-boot-pkg/">
+        first-boot-pkg
+      </a>
+    </h1>
+
+    <span class="post-date">21 Apr 2014</span>
+    
+            <p>There are some packages that can’t be deployed to an unbooted OS, such as when building an image with AutoDMG. If you are using Greg Neagle’s <a href="http://managingosx.wordpress.com/2012/07/25/son-of-installlion-pkg/">createOSXinstallPkg</a>, the OS X installer environment doesn’t have everything a full OS X install has. For times like this, you need to install the packages at first boot. For a long time, I’ve used Rich Trouton’s <a href="http://derflounder.wordpress.com/2014/04/17/first-boot-package-install-revisited/">First Boot Package Install</a>, however I found myself repeating things quite a bit and having a folder full of first boot packages.</p>
+
+<p>So, I made my own. The main features of <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> are:</p>
+
+<ul>
+  <li>It is designed with scripting and automation in mind, with options able to be configured with a configuration plist or via options on the command line (or a mixture of both)</li>
+  <li>It will re-try failed packages a specified number of times (in case of Active Directory not being available, for example)</li>
+  <li>Will wait for the network to be available before installing (optional, can be disabled if desired just in case your package is going to let the Mac get onto the network)</li>
+</ul>
+
+<p><a href="/images/posts/2014-04-21/first-boot-pkg.png"><img class="center" src="/images/posts/2014-04-21/first-boot-pkg.png" width="578" height="433" /></a></p>
+
+<p>If you’re happy with using Git, I’d recommend just making a clone of the repository and doing a <code>git pull</code> to keep the script updated. If the thought of all those gits and pulls makes you run away, you can <a href="https://github.com/grahamgilbert/first-boot-pkg/archive/master.zip">download a zip</a> of the project.</p>
+
+<p>This script makes use of Per Olofsson’s <a href="https://github.com/MagerValp/LoginLog">LoginLog</a> for displaying the log file whilst the script is running, so massive thanks to him for releasing it.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://grahamgilbert.com/blog/2014/04/03/updating-boxen/">
         Updating Boxen
       </a>
     </h1>
 
-    <span class="post-date">04 Apr 2014</span>
+    <span class="post-date">03 Apr 2014</span>
     
             <p>As you might know, I’m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn’t on the Mac I was working on. Then there came the time when I wanted to do a clean install - that was easily a day down the drain there!</p>
 
@@ -425,104 +453,6 @@
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;/div&gt;</span></div></div></pre></div></figure>
 
 <p>There you go - a simple plugin for Sal. But don’t go away thinking we’re done. Whilst this is functional, it certainly leaves a fair bit to be desired. In the last part of this series, we’ll tidy everything up.</p>
-
-          
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1/">
-        Writing plugins for Sal: Part 1
-      </a>
-    </h1>
-
-    <span class="post-date">26 Jan 2014</span>
-    
-            <p>Writing a plugin for Sal isn’t hard. In fact, I’d go so far as to say it’s easy. We’re going to make a plugin that will flag up any machines that aren’t compatible with Mavericks, by using <a href="https://github.com/timsutton/munki-conditions/blob/master/supported_major_os_upgrades">Tim Sutton’s script</a>. To start off with, you’re going to need to get that script onto your Macs at <code>/usr/local/munki/conditions</code>. I’d personally use Puppet for that, but if you’re a purely Munki shop, you’ll be using a package. <a href="https://github.com/grahamgilbert/macscripts/raw/master/Munki/Condtion%20Packages/supported_major_os_upgrades/supported_major_os_upgrades.pkg">And handily, I’ve made one</a>.</p>
-
-<p><img class="center" src="/images/posts/2014-01-26/mavcompatibility.png" width="297" height="131" /></p>
-
-<p>The convention I’d like everyone to follow is to drop your plugins into the <code>plugins</code> directory, in a subdirectory named after yourself - mine are going in <code>plugins/grahamgilbert</code>. The plugin we’re making today is going in <code>plugins/grahamgilbert/mavcompatibility</code>.</p>
-
-<h2 id="metadata">Metadata</h2>
-
-<p>The first piece you’ll need is a <code>.yapsy-plugin</code> file. This contains the metadata for your plugin. It’s all pretty self explanatory. This is <code>plugins/grahamgilbert/mavcompatibility/mavcompatibility.yapsy-plugin</code>.</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">[Core]
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">Name = MavCompatibility
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">Module = mavcompatibility
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">[Documentation]
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">Author = Graham Gilbert
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">Version = 0.1
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">Website = http://grahamgilbert.com
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">Description = Displays macs that aren't compatible with 10.9.</div></div></pre></div></figure>
-
-<h2 id="now-for-the-meat">Now for the meat</h2>
-
-<p>Onto the actual plugin. Your plugin is going to be sent at least two pieces of information, possibly three.</p>
-
-<ul>
-  <li><code>page</code>: This will be the page the plugin is going to be shown on. This will either be <code>front</code>, <code>bu_dashboard</code> or <code>group_dashboard</code>. You will need this information later on.</li>
-  <li><code>machines</code>: This a collection of machines you are going to need to work on. Depending on the page, this might be all of them, or just a subset from a Business Unit or Machine Group.</li>
-  <li><code>theid</code>: If you are displaying your plugin on either a Business Unit page or a Machine Group page, this is the unique ID of that Business Unit or Machine Group.</li>
-</ul>
-
-<p>And in return, your plugin is expected to return two things:</p>
-
-<ul>
-  <li>Some HTML: You plugin needs to return it’s output.</li>
-  <li>The width of the output: Sal uses <a href="http://getbootstrap.com/2.3.2/">Bootstrap</a>, and it uses a grid system. So Sal can wrap lines properly, you need to tell Sal how many columns your plugin needs. This should be an integer.</li>
-</ul>
-
-<p>That’s the 50,000 ft view of a Sal plugin, let’s make one. The main thing to remember is that Sal is written in Django, so if you have any problems, looking at <a href="https://docs.djangoproject.com/en/1.5/">their documentation</a> will help. You can also enable debug logging on your Sal install by uncommenting lines 24 and 25 in <code>server/views.py</code> (turn it off when you’re done though, it is VERY verbose).</p>
-
-<p>First off, a little about how Sal stores the data you send it. Sal stores Munki’s conditions in the Condition table, and for each one, the name and it’s data is stored (this is the same for Facts). Munki’s conditions can consist of a variety of data types (strings, dates, arrays), so Sal will flatten any arrays it is given into a comma separated list. Each machine will have multiple Conditions and Facts associated with it.</p>
-
-<p>When displaying the plugin, Sal will look for a function called show_widget, passing the information mentioned previously. Don’t worry too much about the templates, we’ll cover them later.</p>
-
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">grahamgilbert/mavcompatibility/mavcompatibility.py</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
-</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
-</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">(&#x7b;</span>
-</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
-</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
-</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
-</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
-</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="p">&#x7d;)</span>
-</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="mi">3</span></div></div></pre></div></figure>
-
-<p>Skip to line 20 - this is where the real work starts. All we’re doing is taking the machines we were passed and first off finding the machines that have the condition we’re looking for. We then want to remove those that contain 10.9 in that data.</p>
-
-<h2 id="templates">Templates</h2>
-
-<p>Then it’s just a case of passing those variables to our template. As we aren’t linking our buttons to anything for now, both of our templates will be the same, but we will still make two separate ones as we’re going to need them next time.</p>
-
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">grahamgilbert/mavcompatibility/templates/front.html</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;legend&gt;</span><span class="cp">&#x7b;&#x7b;</span> <span class="nv">title</span> <span class="cp">&#x7d;&#x7d;</span><span class="nt">&lt;/legend&gt;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">&#x7b;&#x7b;</span> <span class="nv">not_compatible</span> <span class="cp">&#x7d;&#x7d;</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">            Not Compatible
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;/a&gt;</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;/div&gt;</span></div></div></pre></div></figure>
-
-<p>Make a file in <code>templates</code> called <code>id.html</code> with the same content for now - we’ll make them different in part two.</p>
-
-<p>We return our plugin on line 28 of <code>mavcompatibility.py</code>. First we render the appropriate template, passing it our data, and we return how wide our plugin is - in this case it will take up three columns.</p>
-
-<p>That’s it for a basic plugin - we’ve taken a bunch of machines, filtered them based on a Munki condition, and we’ve returned the data. But this obviously is lacking - the button doesn’t do anything and we still see a big fat zero when all of our machines are 10.9 capable. Anyway, you can get the code so far in my <a href="https://github.com/grahamgilbert/sal-plugins/tree/master/mavcompatibility">sal-plugins repository</a>.</p>
-
-<p>Tune in to part two for the thrilling conclusion!</p>
 
           
   </div>
