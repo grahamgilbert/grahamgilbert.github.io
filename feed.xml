@@ -4,7 +4,7 @@
  <title>graham gilbert dot com</title>
  <link href="http://grahamgilbert.com/atom.xml" rel="self"/>
  <link href="http://grahamgilbert.com/"/>
- <updated>2016-06-21T09:12:39-07:00</updated>
+ <updated>2016-07-12T17:31:36+01:00</updated>
  <id>http://grahamgilbert.com</id>
  <author>
    <name>Graham Gilbert</name>
@@ -15,7 +15,7 @@
  <entry>
    <title>Hands on with Imagr at MacDevOps:YVR</title>
    <link href="http://grahamgilbert.com/blog/2016/06/21/hands-on-with-imagr-at-macdevops-yvr/"/>
-   <updated>2016-06-21T09:00:45-07:00</updated>
+   <updated>2016-06-21T17:00:45+01:00</updated>
    <id>http://grahamgilbert.com/blog/2016/06/21/hands-on-with-imagr-at-macdevops-yvr</id>
    <content type="html">&lt;p&gt;Thanks to Mat and everyone else who put so much effort into &lt;a href=&quot;http://www.macdevops.ca&quot;&gt;MacDevOps:YVR&lt;/a&gt; - it’s been awesome, and I can’t wait to come back next year. &lt;a href=&quot;/images/posts/2016-06-21/Imagr.pdf&quot;&gt;Here are my slides&lt;/a&gt;, and I’ll slim down the handout for use in the real world where you don’t have a room full of nerds hammering a single access point shortly and update this post.&lt;/p&gt;
 </content>
@@ -24,7 +24,7 @@
  <entry>
    <title>Imagr 1.1.1</title>
    <link href="http://grahamgilbert.com/blog/2016/06/01/imagr-1-1-1/"/>
-   <updated>2016-06-01T07:33:37-07:00</updated>
+   <updated>2016-06-01T15:33:37+01:00</updated>
    <id>http://grahamgilbert.com/blog/2016/06/01/imagr-1-1-1</id>
    <content type="html">&lt;p&gt;I’m pleased to announce that &lt;a href=&quot;https://github.com/grahamgilbert/imagr/releases/tag/1.1.1&quot;&gt;Imagr 1.1.1 is out&lt;/a&gt;! Why am I so happy? This is the first release that’s made up nearly all of community contributions. So many thanks to everyone who has helped out with code, documentation and filing bugs.&lt;/p&gt;
 
@@ -37,7 +37,7 @@
  <entry>
    <title>Conference Season 2016</title>
    <link href="http://grahamgilbert.com/blog/2016/05/11/conference-season-2016/"/>
-   <updated>2016-05-11T10:56:46-07:00</updated>
+   <updated>2016-05-11T18:56:46+01:00</updated>
    <id>http://grahamgilbert.com/blog/2016/05/11/conference-season-2016</id>
    <content type="html">&lt;p&gt;For one reason or another, I may need to stay out of the US for a bit this year, but that doesn’t mean I’m not going to be giving any talks - no siree!&lt;/p&gt;
 
@@ -52,7 +52,7 @@
  <entry>
    <title>Getting started as a Mac admin</title>
    <link href="http://grahamgilbert.com/blog/2016/05/05/getting-started-as-a-mac-admin/"/>
-   <updated>2016-05-05T05:47:16-07:00</updated>
+   <updated>2016-05-05T13:47:16+01:00</updated>
    <id>http://grahamgilbert.com/blog/2016/05/05/getting-started-as-a-mac-admin</id>
    <content type="html">&lt;p&gt;I’ve been wanting to write this post ever since &lt;a href=&quot;https://derflounder.wordpress.com/2016/02/11/getting-started-as-a-mac-admin/&quot;&gt;Rich Trouton wrote a similar one&lt;/a&gt; after &lt;a href=&quot;http://www.macad.uk/&quot;&gt;MacADUK&lt;/a&gt;, but I finally got the kick to finally write it after I saw this &lt;a href=&quot;http://jobs.recruitsosimple.com/job/1337/75&quot;&gt;job advert&lt;/a&gt;. That’s right, they want an experienced Mac admin who is willing to work for around what &lt;a href=&quot;http://www.mcdonalds.co.uk/ukhome/whatmakesmcdonalds/questions/work-with-us/wages/what-is-the-average-salary-of-a-mcdonalds-restaurant-employee.html&quot;&gt;McDonald’s pay a trainee manager&lt;/a&gt;. If you are indeed starting out in your career supporting OS X, know that you don’t have to settle for appalling renumeration like that!&lt;/p&gt;
 
@@ -91,9 +91,9 @@
  
  <entry>
    <title>Managing OS X Profiles with Puppet</title>
-   <link href="http://grahamgilbert.com/blog/2016/03/29/managing-os-x-profiles-with-puppet/"/>
-   <updated>2016-03-29T23:17:51-07:00</updated>
-   <id>http://grahamgilbert.com/blog/2016/03/29/managing-os-x-profiles-with-puppet</id>
+   <link href="http://grahamgilbert.com/blog/2016/03/30/managing-os-x-profiles-with-puppet/"/>
+   <updated>2016-03-30T07:17:51+01:00</updated>
+   <id>http://grahamgilbert.com/blog/2016/03/30/managing-os-x-profiles-with-puppet</id>
    <content type="html">&lt;p&gt;There are many ways of managing configuration profiles on OS X - you can use MDM, Munki or any one of the other many great tools. My preferred method however is using Puppet.&lt;/p&gt;
 
 &lt;p&gt;By using Puppet, I get access to it’s templating features, and I can let others in my team adjust exposed settings through Hiera.&lt;/p&gt;
@@ -252,7 +252,7 @@
  <entry>
    <title>MacAD.UK 2016&#58; Puppet on OS X</title>
    <link href="http://grahamgilbert.com/blog/2016/02/10/macad-uk-2016-puppet-on-os-x/"/>
-   <updated>2016-02-10T01:09:09-08:00</updated>
+   <updated>2016-02-10T09:09:09+00:00</updated>
    <id>http://grahamgilbert.com/blog/2016/02/10/macad-uk-2016-puppet-on-os-x</id>
    <content type="html">&lt;p&gt;First off, thanks for coming (if you did indeed come - if you didn’t, you can go away). All of the code I used in my talk is &lt;a href=&quot;https://github.com/grahamgilbert/macaduk_2016&quot;&gt;up on Github&lt;/a&gt;, and you can &lt;a href=&quot;/images/posts/2016-02-09/Puppet_On_OS_X.pdf&quot;&gt;grab the slides as well&lt;/a&gt; if you feel so inclined.&lt;/p&gt;
 </content>
@@ -260,9 +260,9 @@
  
  <entry>
    <title>Dynamic first boot scripts with Imagr and Flask&#58; Part 4</title>
-   <link href="http://grahamgilbert.com/blog/2016/01/19/dynamic-first-boot-scripts-with-imagr-and-flask-part-4/"/>
-   <updated>2016-01-19T21:49:05-08:00</updated>
-   <id>http://grahamgilbert.com/blog/2016/01/19/dynamic-first-boot-scripts-with-imagr-and-flask-part-4</id>
+   <link href="http://grahamgilbert.com/blog/2016/01/20/dynamic-first-boot-scripts-with-imagr-and-flask-part-4/"/>
+   <updated>2016-01-20T05:49:05+00:00</updated>
+   <id>http://grahamgilbert.com/blog/2016/01/20/dynamic-first-boot-scripts-with-imagr-and-flask-part-4</id>
    <content type="html">&lt;p&gt;If you are just starting with this series, it is highly recommended you start with &lt;a href=&quot;http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/&quot;&gt;Part 1&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;The last part of this series is making it work in a Docker container. This is &lt;strong&gt;not&lt;/strong&gt; a Docker tutorial - please head over to Docker’s &lt;a href=&quot;https://docs.docker.com/mac/&quot;&gt;getting started&lt;/a&gt; pages to get yourself set up with the Docker Toolbox.&lt;/p&gt;
@@ -460,7 +460,7 @@
  <entry>
    <title>Imagr 1.0.0 Released</title>
    <link href="http://grahamgilbert.com/blog/2016/01/14/imagr-1-0-0-released/"/>
-   <updated>2016-01-14T08:53:47-08:00</updated>
+   <updated>2016-01-14T16:53:47+00:00</updated>
    <id>http://grahamgilbert.com/blog/2016/01/14/imagr-1-0-0-released</id>
    <content type="html">&lt;p&gt;It’s been a lot of work, but I’m pleased to say that Imagr has grown up and as I now consider it to have everything I originally intended it to have, I’m calling this a 1.0.0 release.&lt;/p&gt;
 
@@ -471,7 +471,7 @@
  <entry>
    <title>Dynamic first boot scripts with Imagr and Flask&#58; Part 3</title>
    <link href="http://grahamgilbert.com/blog/2016/01/13/dynamic-first-boot-scripts-with-imagr-and-flask-part-3/"/>
-   <updated>2016-01-13T00:51:26-08:00</updated>
+   <updated>2016-01-13T08:51:26+00:00</updated>
    <id>http://grahamgilbert.com/blog/2016/01/13/dynamic-first-boot-scripts-with-imagr-and-flask-part-3</id>
    <content type="html">&lt;p&gt;If you are just starting with this series, it is highly recommended you start with &lt;a href=&quot;http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/&quot;&gt;Part 1&lt;/a&gt;.&lt;/p&gt;
 
@@ -665,7 +665,7 @@
  <entry>
    <title>Dynamic first boot scripts with Imagr and Flask&#58; Part 2</title>
    <link href="http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/"/>
-   <updated>2016-01-07T01:33:31-08:00</updated>
+   <updated>2016-01-07T09:33:31+00:00</updated>
    <id>http://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2</id>
    <content type="html">&lt;p&gt;If you are just starting with this series, it is highly recommended you start with &lt;a href=&quot;http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/&quot;&gt;Part 1&lt;/a&gt;.&lt;/p&gt;
 
@@ -856,7 +856,7 @@
  <entry>
    <title>Dynamic first boot scripts with Imagr and Flask</title>
    <link href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/"/>
-   <updated>2016-01-05T02:22:31-08:00</updated>
+   <updated>2016-01-05T10:22:31+00:00</updated>
    <id>http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask</id>
    <content type="html">&lt;p&gt;Some may wonder why you would go to the trouble of dynamically generating first boot scripts. I mean, how many can you need?&lt;/p&gt;
 
@@ -1016,7 +1016,7 @@
  <entry>
    <title>Imagr 0.0.5</title>
    <link href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/"/>
-   <updated>2015-12-15T08:35:26-08:00</updated>
+   <updated>2015-12-15T16:35:26+00:00</updated>
    <id>http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5</id>
    <content type="html">&lt;p&gt;It’s been 246 days and 290 commits since I started working on Imagr, and today is it’s &lt;a href=&quot;https://github.com/grahamgilbert/imagr/releases/tag/0.0.5&quot;&gt;0.0.5 release&lt;/a&gt;. It’s been a while since I blogged about Imagr, so in case you have forgotten that I make it, go and take a look!&lt;/p&gt;
 
@@ -1027,7 +1027,7 @@
  <entry>
    <title>Automated timed releases with Munki</title>
    <link href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/"/>
-   <updated>2015-12-13T05:55:13-08:00</updated>
+   <updated>2015-12-13T13:55:13+00:00</updated>
    <id>http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki</id>
    <content type="html">&lt;p&gt;In my environment, we have software that needs to be deployed at the same time across all of our sites. Previously, this meant someone had to pull their computer out on a Sunday and promote the item from the testing catalog to the production catalog. Which is fine, but to be honest I’d rather be doing something else on a Sunday!&lt;/p&gt;
 
@@ -1079,7 +1079,7 @@
  <entry>
    <title>Crypt 2 Alpha Release</title>
    <link href="http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/"/>
-   <updated>2015-12-03T05:10:49-08:00</updated>
+   <updated>2015-12-03T13:10:49+00:00</updated>
    <id>http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release</id>
    <content type="html">&lt;p&gt;A few months ago at PSU, Tom Burgin and Jeremy Baker &lt;a href=&quot;https://youtu.be/tcmql5byA_I?list=PLRUboZUQxbyVydhdMcxGGfEaZc2sFdQk8&quot;&gt;spoke about using Authorization Plugins&lt;/a&gt;. I sat there watching this talk thinking about how cool it would be to use this method for Crypt. And then I had a go at it. And it was &lt;em&gt;hard&lt;/em&gt;. So I put it to one side.&lt;/p&gt;
 
@@ -1095,9 +1095,9 @@
  
  <entry>
    <title>Redirecting Munki Downloads</title>
-   <link href="http://grahamgilbert.com/blog/2015/11/30/redirecting-munki-downloads/"/>
-   <updated>2015-11-30T23:09:00-08:00</updated>
-   <id>http://grahamgilbert.com/blog/2015/11/30/redirecting-munki-downloads</id>
+   <link href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/"/>
+   <updated>2015-12-01T07:09:00+00:00</updated>
+   <id>http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads</id>
    <content type="html">&lt;p&gt;Munki 2.4.0 brought the option to have Munki follow http redirects (&lt;a href=&quot;https://github.com/munki/munki/pull/530&quot;&gt;my first contribution to Munki&lt;/a&gt;). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done. &lt;!-- more --&gt;&lt;/p&gt;
 
 &lt;p&gt;I use Nginx for my Munki server, but you should be able to translate this technique for your server of choice.&lt;/p&gt;
@@ -1224,7 +1224,7 @@
  <entry>
    <title>Releasing Changes With Sharding</title>
    <link href="http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/"/>
-   <updated>2015-11-23T11:16:02-08:00</updated>
+   <updated>2015-11-23T19:16:02+00:00</updated>
    <id>http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding</id>
    <content type="html">&lt;p&gt;Sharding is traditionally associated with databases - splitting up your dataset to make it more manageable. When using the term in this instance we are taking about splitting up our computers - there are several reasons you might want to do this. You might want to split them up for similar performance reasons - if you’re deploying large software updates your server might not be able to cope with all your clients pulling it at once. You might want a way to roll changes out to certain groups of machines.&lt;/p&gt;
 
@@ -1365,7 +1365,7 @@
  <entry>
    <title>MacTech 2015: Hands on with Imagr</title>
    <link href="http://grahamgilbert.com/blog/2015/11/12/mactech-2015-hands-on-with-imagr/"/>
-   <updated>2015-11-12T11:32:13-08:00</updated>
+   <updated>2015-11-12T19:32:13+00:00</updated>
    <id>http://grahamgilbert.com/blog/2015/11/12/mactech-2015-hands-on-with-imagr</id>
    <content type="html">&lt;p&gt;Last week, I led a lab in which participants got hands on with &lt;a href=&quot;https://github.com/grahamgilbert/imagr&quot;&gt;Imagr&lt;/a&gt;. I will hopefully be able to distribute the materials I used (the disk image is nearly 2GB, so I need to find a way of it not bankrupting me!), but in the meantime, &lt;a href=&quot;/images/posts/2015-11-12/ImagrLab.pdf&quot;&gt;here are the slides&lt;/a&gt;. Thanks to everyone who attended, I hope you had as much fun as I did.&lt;/p&gt;
 </content>
@@ -1374,7 +1374,7 @@
  <entry>
    <title>Detecting when a Munki client is on the corporate network</title>
    <link href="http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network/"/>
-   <updated>2015-10-15T04:37:34-07:00</updated>
+   <updated>2015-10-15T12:37:34+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/10/15/detecting-when-a-munki-client-is-on-the-corporate-network</id>
    <content type="html">&lt;p&gt;Sometimes it is useful to know whether a Munki client is on your corporate network - you might have a package or script that will only work when able to access an internal resource, or you might just want statistics on which users are accessing your internal infrastructure and external infrastructure.&lt;!-- more --&gt;&lt;/p&gt;
 
@@ -1416,7 +1416,7 @@
  <entry>
    <title>Upgrading OS X using a package</title>
    <link href="http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package/"/>
-   <updated>2015-09-28T03:35:55-07:00</updated>
+   <updated>2015-09-28T11:35:55+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/09/28/upgrading-os-x-using-a-package</id>
    <content type="html">&lt;p&gt;It’s the time of year where we start to think about upgrading our machines to the latest version of OS X. There are several ways of doing this, but assuming your users are unable to perform the upgrade themselves via the App Store (if they’re running as a standard user or your policies prohibit the use of the App Store), you might be wondering how you can use your management tool to get your machines upgraded and make sure they stay enrolled in your management tool.&lt;/p&gt;
 
@@ -1571,9 +1571,9 @@
  
  <entry>
    <title>Using a proxy container with Docker for virtualhosts</title>
-   <link href="http://grahamgilbert.com/blog/2015/08/25/using-a-proxy-container-with-docker-for-virtualhosts/"/>
-   <updated>2015-08-25T20:18:19-07:00</updated>
-   <id>http://grahamgilbert.com/blog/2015/08/25/using-a-proxy-container-with-docker-for-virtualhosts</id>
+   <link href="http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/"/>
+   <updated>2015-08-26T04:18:19+01:00</updated>
+   <id>http://grahamgilbert.com/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts</id>
    <content type="html">&lt;p&gt;I’ve been asked a few times over the last few weeks about how you can have multiple services (for example, Munki and Sal) running on the same port on the same server - how we used to do Virtual Hosting when we ran our apps on the host OS. My usual four word answer has been ‘use a proxy container’. How you actually do that has been undocumented - this post hopes to recitfy that.&lt;!-- more --&gt;&lt;/p&gt;
 
 &lt;p&gt;Let’s consider a usual setup that has Sal and Munki running on the same box. We have two hostnames that both resolve to our Docker server - &lt;code&gt;sal.example.com&lt;/code&gt; and &lt;code&gt;munki.example.com&lt;/code&gt;, and we have our containers running in a manner similar to the below:&lt;/p&gt;
@@ -1663,7 +1663,7 @@
  <entry>
    <title>Mac Admin &amp; Developer Conference UK</title>
    <link href="http://grahamgilbert.com/blog/2015/07/21/mac-admin-and-developer-conference-uk/"/>
-   <updated>2015-07-21T05:33:31-07:00</updated>
+   <updated>2015-07-21T13:33:31+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/07/21/mac-admin-and-developer-conference-uk</id>
    <content type="html">&lt;p&gt;I’m very happy to announce that &lt;a href=&quot;http://www.macad.uk/speaker/graham-gilbert/&quot;&gt;I will be speaking&lt;/a&gt; at the first &lt;a href=&quot;http://www.macad.uk/&quot;&gt;Mac Admin &amp;amp; Developer Conference UK&lt;/a&gt;, held in our very own London on Feburary 9th and 10th, 2016. In addition to some &lt;a href=&quot;http://www.macad.uk/speakers/&quot;&gt;fantastic speakers&lt;/a&gt; (I have no idea how they let me in), it’s being &lt;a href=&quot;http://www.macad.uk/sponsor/london-apple-admins/&quot;&gt;sponsored&lt;/a&gt; by &lt;a href=&quot;http://www.londonappleadmins.org.uk/&quot;&gt;London Apple Admins&lt;/a&gt; (who will be meeting next in early September - we are looking for people who would like to give a short 15-20 minute presentation - get in touch if you’re interested).&lt;/p&gt;
 </content>
@@ -1672,7 +1672,7 @@
  <entry>
    <title>Running Puppet Server in Docker Part 3: Hiera</title>
    <link href="http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/"/>
-   <updated>2015-07-18T01:36:01-07:00</updated>
+   <updated>2015-07-18T09:36:01+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera</id>
    <content type="html">&lt;p&gt;In the previous &lt;a href=&quot;http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/&quot;&gt;two&lt;/a&gt; &lt;a href=&quot;http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/#comment-2143364638&quot;&gt;parts&lt;/a&gt;, we went over how to get a basic Puppet Server up and running in Docker and how to deploy your modules using r10k. This time we’ll assign some configuration to our nodes using &lt;a href=&quot;http://docs.puppetlabs.com/hiera/latest/&quot;&gt;Hiera&lt;/a&gt;.&lt;/p&gt;
 
@@ -1736,7 +1736,7 @@
  <entry>
    <title>Using the Sal API</title>
    <link href="http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api/"/>
-   <updated>2015-07-10T03:12:36-07:00</updated>
+   <updated>2015-07-10T11:12:36+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/07/10/using-the-sal-api</id>
    <content type="html">&lt;p&gt;As previously mentioned, Sal now has an &lt;a href=&quot;https://github.com/salopensource/sal/blob/master/docs/API.md&quot;&gt;API&lt;/a&gt;. You might be wondering what you can do with this wonderous API. This is a simple example of using it to automate building packages to enrol Macs into Sal.&lt;/p&gt;
 
@@ -1783,7 +1783,7 @@
  <entry>
    <title>Munki DND</title>
    <link href="http://grahamgilbert.com/blog/2015/07/07/munki-dnd/"/>
-   <updated>2015-07-07T09:46:44-07:00</updated>
+   <updated>2015-07-07T17:46:44+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/07/07/munki-dnd</id>
    <content type="html">&lt;p&gt;I’ve been wanting to get stuck in with a simple Swift project for a while, but couldn’t think of anything suitable for a first project (&lt;a href=&quot;https://github.com/grahamgilbert/imagr&quot;&gt;Imagr&lt;/a&gt; was originally going to be that project, but I don’t think it would ever have been made if I chose Swift), until I saw &lt;a href=&quot;https://grpugh.wordpress.com/2015/07/03/a-do-not-disturb-application-for-munki/&quot;&gt;Dr Graham R Pugh’s Do Not Disturb application&lt;/a&gt;. I thought it was an excellent idea that could be made even better by being a manu bar app.&lt;/p&gt;
 
@@ -1801,7 +1801,7 @@
  <entry>
    <title>The future of Sal</title>
    <link href="http://grahamgilbert.com/blog/2015/06/26/the-future-of-sal/"/>
-   <updated>2015-06-26T01:40:31-07:00</updated>
+   <updated>2015-06-26T09:40:31+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/06/26/the-future-of-sal</id>
    <content type="html">&lt;p&gt;As some of you may know, yesterday was my last day at pebble.it. Since I announced I was leaving, I’ve been getting asked this pretty regularly, so I thought I’d answer it here.&lt;/p&gt;
 
@@ -1816,7 +1816,7 @@
  <entry>
    <title>Running Puppet Server in Docker Part 2: r10k</title>
    <link href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/"/>
-   <updated>2015-06-24T06:49:31-07:00</updated>
+   <updated>2015-06-24T14:49:31+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k</id>
    <content type="html">&lt;p&gt;Last time we got our Puppet Server up and running - now we need to put some Puppet modules on it so we can use it.&lt;/p&gt;
 
@@ -1900,7 +1900,7 @@
  <entry>
    <title>Running Puppet Server in Docker</title>
    <link href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/"/>
-   <updated>2015-06-22T04:29:55-07:00</updated>
+   <updated>2015-06-22T12:29:55+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker</id>
    <content type="html">&lt;p&gt;Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like &lt;a href=&quot;https://www.phusionpassenger.com/&quot;&gt;Passenger&lt;/a&gt; if you had any number of clients). Thankfully, the new &lt;a href=&quot;https://github.com/puppetlabs/puppet-server&quot;&gt;Puppet Server&lt;/a&gt; simplifies things massively - it’s just one installation to get things working in a way that would be suitable for putting straight into production.&lt;/p&gt;
 
@@ -2052,7 +2052,7 @@
  <entry>
    <title>Using munki-trello with Git</title>
    <link href="http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git/"/>
-   <updated>2015-06-16T03:21:58-07:00</updated>
+   <updated>2015-06-16T11:21:58+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/06/16/using-munki-trello-with-git</id>
    <content type="html">&lt;p&gt;So you’re managing your catalogs with &lt;a href=&quot;http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/&quot;&gt;munki-trello&lt;/a&gt;, but you also want to use git and &lt;a href=&quot;https://www.afp548.com/2014/12/01/git-fat-intro-part-two-setup-and-migration/&quot;&gt;git-fat&lt;/a&gt; to track the changes - what do you do?&lt;/p&gt;
 
@@ -2089,7 +2089,7 @@
  <entry>
    <title>Introducing Imagr</title>
    <link href="http://grahamgilbert.com/blog/2015/05/08/introducing-imagr/"/>
-   <updated>2015-05-08T06:41:37-07:00</updated>
+   <updated>2015-05-08T14:41:37+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/05/08/introducing-imagr</id>
    <content type="html">&lt;p&gt;For the past few weeks, I’ve been working with some other Mac admins on a new application that can aid with the deployment of Macs - say hi to &lt;a href=&quot;https://github.com/grahamgilbert/imagr&quot;&gt;Imagr&lt;/a&gt;.&lt;/p&gt;
 
@@ -2104,7 +2104,7 @@
  <entry>
    <title>Testing BSDPy in Vagrant</title>
    <link href="http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/"/>
-   <updated>2015-04-28T08:10:07-07:00</updated>
+   <updated>2015-04-28T16:10:07+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant</id>
    <content type="html">&lt;p&gt;Last time, we looked at how to spin up a Docker host and run BSDPy on it. That’s great for production, but might be a bit of a faff to do every time you want to test your NBI at home.&lt;/p&gt;
 
@@ -2136,9 +2136,9 @@
  
  <entry>
    <title>Getting started with BSDPy on Docker</title>
-   <link href="http://grahamgilbert.com/blog/2015/04/21/getting-started-with-bsdpy-on-docker/"/>
-   <updated>2015-04-21T23:07:23-07:00</updated>
-   <id>http://grahamgilbert.com/blog/2015/04/21/getting-started-with-bsdpy-on-docker</id>
+   <link href="http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker/"/>
+   <updated>2015-04-22T07:07:23+01:00</updated>
+   <id>http://grahamgilbert.com/blog/2015/04/22/getting-started-with-bsdpy-on-docker</id>
    <content type="html">&lt;p&gt;Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you’re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we’re using that. Your Ubuntu box will also need a real IP address - if you are using VMware Fusion, this will be a Bridged Network Adapter - adjust the terminology if you’re using a different virtualization tool. You don’t need to worry about giving your machine a static IP unless you want to - Macs will NetBoot just fine when they’re on the same subnet. &lt;!-- more --&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;baby-steps&quot;&gt;Baby Steps&lt;/h2&gt;
@@ -2272,7 +2272,7 @@
  <entry>
    <title>More fun with AutoNBI</title>
    <link href="http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi/"/>
-   <updated>2015-04-13T00:05:53-07:00</updated>
+   <updated>2015-04-13T08:05:53+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/04/13/more-fun-with-autonbi</id>
    <content type="html">&lt;p&gt;Last time we saw our heroes, there was the unfuffilled promise of making small NetInstall sets. Now is the time to deliver on that promise. We’re going to make a small NetInstall that will open up Terminal.app.&lt;/p&gt;
 
@@ -2314,7 +2314,7 @@
  <entry>
    <title>Building custom NetInstalls with AutoNBI</title>
    <link href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/"/>
-   <updated>2015-04-12T12:33:28-07:00</updated>
+   <updated>2015-04-12T20:33:28+01:00</updated>
    <id>http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi</id>
    <content type="html">&lt;p&gt;Another day, another tool made by &lt;a href=&quot;http://enterprisemac.bruienne.com&quot;&gt;Mr Bruienne&lt;/a&gt;! A while back, Pepijn released &lt;a href=&quot;https://bitbucket.org/bruienne/autonbi&quot;&gt;AutoNBI&lt;/a&gt; - a tool for automating the creation of NetInstall sets. At the time, it was filled away in the “this is cool, but isn’t this what System Image Utility does?” section. Then I saw his NetInstall running at MacTech (are you seeing a theme here?). It had this really simple DeployStudio like imagaing app - it was really cool. And suddently it made sense why you can replace the &lt;code&gt;Packages&lt;/code&gt; directory with AutoNBI - a NetInstall is a really stripped down OS X environment, so it it much easier to distribute and use - we’re looking at around 1.8GB for my current NetInstall vs 5-6GB for a normal NetBoot.&lt;/p&gt;
 
@@ -2342,7 +2342,7 @@
  <entry>
    <title>Managing Munki catalogs with Trello</title>
    <link href="http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello/"/>
-   <updated>2015-02-11T04:11:30-08:00</updated>
+   <updated>2015-02-11T12:11:30+00:00</updated>
    <id>http://grahamgilbert.com/blog/2015/02/11/managing-munki-catalogs-with-trello</id>
    <content type="html">&lt;p&gt;Over the past few months, I’ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage it. We’ve got &lt;a href=&quot;https://github.com/autopkg/autopkg&quot;&gt;AutoPkg&lt;/a&gt; populating our &lt;a href=&quot;https://github.com/munki/munki&quot;&gt;Munki&lt;/a&gt; repositories without any manual intervention, but we still need to edit pkgsinfo files to move items through development to testing to production catalogs. Sure, there are existing tools  like &lt;a href=&quot;https://github.com/munki/munkiwebadmin&quot;&gt;MunkiWebAdmin&lt;/a&gt; or &lt;a href=&quot;https://github.com/hjuutilainen/munkiadmin&quot;&gt;MunkiAdmin&lt;/a&gt;, but they either still require knowledge of how Munki works or full access to the repository via a file share of some sort. And we obviously already have a tool for assigning software to machines in Sal+ - we needed something that can speed this incredibly common task.&lt;/p&gt;
 
@@ -2367,7 +2367,7 @@
  <entry>
    <title>Migrating scriptRunner to Outset</title>
    <link href="http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset/"/>
-   <updated>2015-01-04T03:40:41-08:00</updated>
+   <updated>2015-01-04T11:40:41+00:00</updated>
    <id>http://grahamgilbert.com/blog/2015/01/04/migrating-scriptrunner-to-outset</id>
    <content type="html">&lt;p&gt;A while back, Nate Walck wrote &lt;a href=&quot;https://github.com/natewalck/Scripts/blob/master/scriptRunner.py&quot;&gt;scriptRunner&lt;/a&gt;. It’s a tool that can run a script either every time a user logs in or just the one time. It has served the test of time, but last year Joe Chilcote released &lt;a href=&quot;https://github.com/chilcote/outset&quot;&gt;Outset&lt;/a&gt;. It has all of the functionality of scriptRunner, but it can also install packages at the Mac’s first boot, and run scripts as root at either the first boot or every boot. This comes into it’s own when you’re trying to do things like skipping the iCloud screens on 10.10 using &lt;a href=&quot;https://derflounder.wordpress.com/2014/10/16/disabling-the-icloud-and-diagnostics-pop-up-windows-in-yosemite/&quot;&gt;Rich Trouton’s script&lt;/a&gt; - this script needs to run after every OS update, so it makes sense to run this every time the Mac boots.&lt;/p&gt;
 
@@ -2390,9 +2390,9 @@
  
  <entry>
    <title>Creating Business Units and Groups in Sal using a CSV</title>
-   <link href="http://grahamgilbert.com/blog/2014/12/07/creating-business-units-and-groups-in-sal-using-a-csv/"/>
-   <updated>2014-12-07T23:52:21-08:00</updated>
-   <id>http://grahamgilbert.com/blog/2014/12/07/creating-business-units-and-groups-in-sal-using-a-csv</id>
+   <link href="http://grahamgilbert.com/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv/"/>
+   <updated>2014-12-08T07:52:21+00:00</updated>
+   <id>http://grahamgilbert.com/blog/2014/12/08/creating-business-units-and-groups-in-sal-using-a-csv</id>
    <content type="html">&lt;p&gt;Obviously I’m a little biased, but I love Sal. But, it can be a little tedious to get everything set up the first time if you have hundreds of Business Units and Machine Groups. I’ve quietly ignored the problem for a while, but then I saw this tweet pop up in my feed:&lt;/p&gt;
 
 &lt;blockquote class=&quot;twitter-tweet&quot; lang=&quot;en&quot;&gt;&lt;p&gt;&lt;a href=&quot;https://twitter.com/hunty1er&quot;&gt;@hunty1er&lt;/a&gt; Pretty sure you could automate BU/MG creation through the DB backend. What say you &lt;a href=&quot;https://twitter.com/grahamgilbert&quot;&gt;@grahamgilbert&lt;/a&gt; ?&lt;/p&gt;&amp;mdash; Pepijn Bruienne (@bruienne) &lt;a href=&quot;https://twitter.com/bruienne/status/541811445512830976&quot;&gt;December 8, 2014&lt;/a&gt;&lt;/blockquote&gt;
@@ -2450,9 +2450,9 @@
  
  <entry>
    <title>Slides and notes from Twisting Munki</title>
-   <link href="http://grahamgilbert.com/blog/2014/11/06/slides-and-notes-from-twisting-munki/"/>
-   <updated>2014-11-06T16:51:33-08:00</updated>
-   <id>http://grahamgilbert.com/blog/2014/11/06/slides-and-notes-from-twisting-munki</id>
+   <link href="http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki/"/>
+   <updated>2014-11-07T00:51:33+00:00</updated>
+   <id>http://grahamgilbert.com/blog/2014/11/07/slides-and-notes-from-twisting-munki</id>
    <content type="html">&lt;p&gt;Firstly, thanks if you came to my talk and putting up with me! You can get my slides and code from the &lt;a href=&quot;https://github.com/grahamgilbert/mactech_2014&quot;&gt;GitHub repository&lt;/a&gt;.&lt;/p&gt;
 </content>
  </entry>
@@ -2460,7 +2460,7 @@
  <entry>
    <title>first-boot-pkg updated for Yosemite</title>
    <link href="http://grahamgilbert.com/blog/2014/10/21/first-boot-pkg-updated-for-yosemite/"/>
-   <updated>2014-10-21T03:50:28-07:00</updated>
+   <updated>2014-10-21T11:50:28+01:00</updated>
    <id>http://grahamgilbert.com/blog/2014/10/21/first-boot-pkg-updated-for-yosemite</id>
    <content type="html">&lt;p&gt;It seems like Yosemite introduced an &lt;a href=&quot;https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite&quot;&gt;undocumented change&lt;/a&gt; that requires any packages that are added an OS X installer (e.g. Netinstall or createOSXinstallPkg) be distribution style packages, or you get a nasty failure acompanied by one of the most unhelpful error messages ever.&lt;/p&gt;
 
@@ -2471,7 +2471,7 @@
  <entry>
    <title>London Apple Admins</title>
    <link href="http://grahamgilbert.com/blog/2014/08/24/london-apple-admins/"/>
-   <updated>2014-08-24T09:17:24-07:00</updated>
+   <updated>2014-08-24T17:17:24+01:00</updated>
    <id>http://grahamgilbert.com/blog/2014/08/24/london-apple-admins</id>
    <content type="html">&lt;p&gt;I’m delighted to say that the first (first meet that isn’t “let’s go to the pub and get drunk”, anyway!) &lt;a href=&quot;http://www.londonappleadmins.org.uk&quot;&gt;London Apple Admins&lt;/a&gt; meetup is happening on the 3rd September at &lt;a href=&quot;http://theredherring.co.uk/&quot;&gt;The Red Herring in St Pauls&lt;/a&gt;. I’d like to take all of the credit for organising it, but it was down to the hard work of &lt;a href=&quot;http://macmule.com&quot;&gt;Ben Toms&lt;/a&gt;. The theme this time is “this is what I’m working on at the moment”, so I’ll be talking about my new favourite toy, &lt;a href=&quot;https://www.docker.com&quot;&gt;Docker&lt;/a&gt;.&lt;/p&gt;
 
@@ -2482,7 +2482,7 @@
  <entry>
    <title>Personal Automation: Munki (Part 2)</title>
    <link href="http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2/"/>
-   <updated>2014-07-27T03:21:37-07:00</updated>
+   <updated>2014-07-27T11:21:37+01:00</updated>
    <id>http://grahamgilbert.com/blog/2014/07/27/personal-automation-munki-part-2</id>
    <content type="html">&lt;p&gt;The first step to getting any Mac set up is to get some software onto it. I’m not going to cover how to set up &lt;a href=&quot;https://code.google.com/p/munki/wiki/GettingStartedWithMunki&quot;&gt;Munki&lt;/a&gt; or &lt;a href=&quot;https://github.com/autopkg/autopkg/wiki/Getting-Started&quot;&gt;AutoPkg&lt;/a&gt; - there are lots of other places for that information.&lt;/p&gt;
 
@@ -2528,7 +2528,7 @@
  <entry>
    <title>Personal Automation (Part 1)</title>
    <link href="http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1/"/>
-   <updated>2014-07-26T03:27:00-07:00</updated>
+   <updated>2014-07-26T11:27:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2014/07/26/personal-automation-part-1</id>
    <content type="html">&lt;p&gt;&lt;a href=&quot;http://grahamgilbert.com/blog/2014/04/04/updating-boxen/&quot;&gt;Earlier this year&lt;/a&gt;, I professed my love of Boxen - the personal automation solution based on Puppet released by Github. Indeed, it served me well for quite some time, but I began to find myself spending more time fixing Boxen than actually getting things done. As Boxen was designed for internal use at Github, it set some things up how they liked them - which wasn’t necesarily how I liked them. Sysadmins have similar needs to developers, but not exactly the same.&lt;/p&gt;
 
@@ -2560,7 +2560,7 @@
  <entry>
    <title>Automate yourself out of a job</title>
    <link href="http://grahamgilbert.com/blog/2014/07/10/automate-yourself-out-of-a-job/"/>
-   <updated>2014-07-10T12:39:33-07:00</updated>
+   <updated>2014-07-10T20:39:33+01:00</updated>
    <id>http://grahamgilbert.com/blog/2014/07/10/automate-yourself-out-of-a-job</id>
    <content type="html">&lt;p&gt;A massive thanks to everyone who came to my talk today, and thanks to everyone who helped out with the Q&amp;amp;A at the end. All of the code I used in the talk is &lt;a href=&quot;https://github.com/grahamgilbert/automate_psu_2014&quot;&gt;up on GitHub&lt;/a&gt; and &lt;a href=&quot;http://grahamgilbert.com/images/posts/2014-07-10/Automate_yourself_out_of_a_job.pdf&quot;&gt;here are the slides&lt;/a&gt;. Hopefully the video will convey how much fun it actually was - it could have been a disaster, so I’m hugely grateful to everyone who contributed to the discussion at the end.&lt;/p&gt;
 </content>
@@ -2569,7 +2569,7 @@
  <entry>
    <title>Multi tenanted Munki with Puppet and Sal</title>
    <link href="http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal/"/>
-   <updated>2014-07-09T12:27:25-07:00</updated>
+   <updated>2014-07-09T20:27:25+01:00</updated>
    <id>http://grahamgilbert.com/blog/2014/07/09/multi-tenanted-munki-with-puppet-and-sal</id>
    <content type="html">&lt;p&gt;Thanks for everyone that came to my talk today, it was fun to finally show off what I’ve been working on for the last year or so. I’m sure the video will be up soon, but in the meantime, &lt;a href=&quot;http://grahamgilbert.com/images/posts/2014-07-09/Multi_site_Munki.pdf&quot;&gt;here are the slides from the talk&lt;/a&gt;.&lt;/p&gt;
 </content>
@@ -2578,7 +2578,7 @@
  <entry>
    <title>Making packages with AutoPkg</title>
    <link href="http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg/"/>
-   <updated>2014-06-30T02:12:10-07:00</updated>
+   <updated>2014-06-30T10:12:10+01:00</updated>
    <id>http://grahamgilbert.com/blog/2014/06/30/making-packages-with-autopkg</id>
    <content type="html">&lt;p&gt;Over the past few weeks, I’ve had the same conversation over and over:
 people telling me that once they get started using Munki, their next
@@ -2690,7 +2690,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>Deploying Sal on Heroku</title>
    <link href="http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku/"/>
-   <updated>2014-05-19T01:04:05-07:00</updated>
+   <updated>2014-05-19T09:04:05+01:00</updated>
    <id>http://grahamgilbert.com/blog/2014/05/19/deploying-sal-on-heroku</id>
    <content type="html">&lt;p&gt;Setting up everything you need for Sal can be difficult, especially if you only have an OS X server available. Thankfully, Sal is built on top of a very common Python framework, Django. And even more thankfully, you can run Django on a whole host of &lt;a href=&quot;http://en.wikipedia.org/wiki/Platform_as_a_service&quot;&gt;PaaS&lt;/a&gt; providers, including &lt;a href=&quot;https://www.heroku.com&quot;&gt;Heroku&lt;/a&gt;.&lt;/p&gt;
 
@@ -2748,7 +2748,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>first-boot-pkg</title>
    <link href="http://grahamgilbert.com/blog/2014/04/21/first-boot-pkg/"/>
-   <updated>2014-04-21T01:01:24-07:00</updated>
+   <updated>2014-04-21T09:01:24+01:00</updated>
    <id>http://grahamgilbert.com/blog/2014/04/21/first-boot-pkg</id>
    <content type="html">&lt;p&gt;There are some packages that can’t be deployed to an unbooted OS, such as when building an image with AutoDMG. If you are using Greg Neagle’s &lt;a href=&quot;http://managingosx.wordpress.com/2012/07/25/son-of-installlion-pkg/&quot;&gt;createOSXinstallPkg&lt;/a&gt;, the OS X installer environment doesn’t have everything a full OS X install has. For times like this, you need to install the packages at first boot. For a long time, I’ve used Rich Trouton’s &lt;a href=&quot;http://derflounder.wordpress.com/2014/04/17/first-boot-package-install-revisited/&quot;&gt;First Boot Package Install&lt;/a&gt;, however I found myself repeating things quite a bit and having a folder full of first boot packages.&lt;/p&gt;
 
@@ -2770,9 +2770,9 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  
  <entry>
    <title>Updating Boxen</title>
-   <link href="http://grahamgilbert.com/blog/2014/04/03/updating-boxen/"/>
-   <updated>2014-04-03T23:54:26-07:00</updated>
-   <id>http://grahamgilbert.com/blog/2014/04/03/updating-boxen</id>
+   <link href="http://grahamgilbert.com/blog/2014/04/04/updating-boxen/"/>
+   <updated>2014-04-04T07:54:26+01:00</updated>
+   <id>http://grahamgilbert.com/blog/2014/04/04/updating-boxen</id>
    <content type="html">&lt;p&gt;As you might know, I’m a bit of a fan of &lt;a href=&quot;https://www.youtube.com/watch?v=GqerWmKU1Js&quot;&gt;Munki and Puppet&lt;/a&gt; for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn’t on the Mac I was working on. Then there came the time when I wanted to do a clean install - that was easily a day down the drain there!&lt;/p&gt;
 
 &lt;h2 id=&quot;automate-all-of-the-things&quot;&gt;Automate all of the things&lt;/h2&gt;
@@ -2823,7 +2823,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>Binding to Active Directory with Munki</title>
    <link href="http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki/"/>
-   <updated>2014-04-01T12:15:39-07:00</updated>
+   <updated>2014-04-01T20:15:39+01:00</updated>
    <id>http://grahamgilbert.com/blog/2014/04/01/binding-to-active-directory-with-munki</id>
    <content type="html">&lt;p&gt;Many organisations need to bind their Macs to AD. There are quite a few options however, that need to be changed. It’s quite  a straightforward process to automate this with Munki, although you do have a few options to consider.&lt;/p&gt;
 
@@ -2911,7 +2911,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>Writing Plugins for Sal: Part 3</title>
    <link href="http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3/"/>
-   <updated>2014-02-17T13:12:36-08:00</updated>
+   <updated>2014-02-17T21:12:36+00:00</updated>
    <id>http://grahamgilbert.com/blog/2014/02/17/writing-plugins-for-sal-part-3</id>
    <content type="html">&lt;p&gt;We’ve already got a fairly decent plugin - it shows us how many machines we have that aren’t able to run 10.9. However, quite a few people won’t have any machines that fall into this category, and just want to know when one manages to sneak under the radar, so let’s hide the plugin if we don’t need to see it.&lt;/p&gt;
 
@@ -2976,7 +2976,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>Writing Plugins for Sal: Part 2</title>
    <link href="http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2/"/>
-   <updated>2014-02-07T03:34:24-08:00</updated>
+   <updated>2014-02-07T11:34:24+00:00</updated>
    <id>http://grahamgilbert.com/blog/2014/02/07/writing-plugins-for-sal-part-2</id>
    <content type="html">&lt;p&gt;And now, time for the shocking second part of our series on how to write plugins for Sal.&lt;/p&gt;
 
@@ -3051,7 +3051,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>Writing plugins for Sal: Part 1</title>
    <link href="http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1/"/>
-   <updated>2014-01-26T02:01:26-08:00</updated>
+   <updated>2014-01-26T10:01:26+00:00</updated>
    <id>http://grahamgilbert.com/blog/2014/01/26/writing-plugins-for-sal-part-1</id>
    <content type="html">&lt;p&gt;Writing a plugin for Sal isn’t hard. In fact, I’d go so far as to say it’s easy. We’re going to make a plugin that will flag up any machines that aren’t compatible with Mavericks, by using &lt;a href=&quot;https://github.com/timsutton/munki-conditions/blob/master/supported_major_os_upgrades&quot;&gt;Tim Sutton’s script&lt;/a&gt;. To start off with, you’re going to need to get that script onto your Macs at &lt;code&gt;/usr/local/munki/conditions&lt;/code&gt;. I’d personally use Puppet for that, but if you’re a purely Munki shop, you’ll be using a package. &lt;a href=&quot;https://github.com/grahamgilbert/macscripts/raw/master/Munki/Condtion%20Packages/supported_major_os_upgrades/supported_major_os_upgrades.pkg&quot;&gt;And handily, I’ve made one&lt;/a&gt;.&lt;/p&gt;
 
@@ -3144,7 +3144,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>Sal: The Munki Puppet</title>
    <link href="http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet/"/>
-   <updated>2014-01-17T02:51:46-08:00</updated>
+   <updated>2014-01-17T10:51:46+00:00</updated>
    <id>http://grahamgilbert.com/blog/2014/01/17/sal-the-munki-puppet</id>
    <content type="html">&lt;p&gt;At &lt;a href=&quot;http://pebbleit.com&quot;&gt;pebble.it&lt;/a&gt;, we always wanted to have an easy dashboard to look at to visualise the information we could collect from Puppet and Munki. We tried a few options, but didn’t like any of them, so we made our own.&lt;/p&gt;
 
@@ -3159,7 +3159,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>Managing the Authorization Database with Munki</title>
    <link href="http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki/"/>
-   <updated>2013-12-22T15:25:00-08:00</updated>
+   <updated>2013-12-22T15:25:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/12/22/managing-the-authorization-database-with-munki</id>
    <content type="html">&lt;p&gt;Have you ever wished you didn’t have to take calls from your users to unlock various parts of System Preferences? That standard users could unlock Energy Saver or Date and Time preferences? Well dear reader, this is the article for you.&lt;/p&gt;
 
@@ -3382,7 +3382,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>Crypt 0.5 released</title>
    <link href="http://grahamgilbert.com/blog/2013/11/19/crypt-0-dot-5-released/"/>
-   <updated>2013-11-19T11:29:00-08:00</updated>
+   <updated>2013-11-19T11:29:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/11/19/crypt-0-dot-5-released</id>
    <content type="html">&lt;p&gt;I just pushed up version 0.5 of Crypt - the &lt;a href=&quot;https://github.com/grahamgilbert/Crypt/releases/tag/0.5&quot;&gt;release details are over at GitHub&lt;/a&gt;. This is the last version that will be compatibile with the current version of &lt;a href=&quot;https://github.com/grahamgilbert/Crypt-server&quot;&gt;Crypt-Server&lt;/a&gt; - which has also been updated to be compatible with Django 1.5.&lt;/p&gt;
 
@@ -3393,7 +3393,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>AFP548 Podcast Episode 4: Don't Stab Yourself in the Leg, Then</title>
    <link href="http://grahamgilbert.com/blog/2013/11/13/afp548-podcast-episode-4-dont-stab-yourself-in-the-leg-then/"/>
-   <updated>2013-11-13T11:46:00-08:00</updated>
+   <updated>2013-11-13T11:46:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/11/13/afp548-podcast-episode-4-dont-stab-yourself-in-the-leg-then</id>
    <content type="html">&lt;p&gt;A couple of weeks ago, I had a chat with Ed Marczak for the AFP548 Podcast. We discussed packaging, community and convincing clients that they shouldn’t stab themselves in the leg. &lt;a href=&quot;https://soundcloud.com/afp548/episode-four-dont-stab-yourself-in-the-leg-then&quot;&gt;Go listen.&lt;/a&gt;&lt;/p&gt;
 </content>
@@ -3402,7 +3402,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>Setting a desktop picture in Mavericks</title>
    <link href="http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks/"/>
-   <updated>2013-10-28T14:48:00-07:00</updated>
+   <updated>2013-10-28T14:48:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/10/28/setting-a-desktop-picture-in-mavericks</id>
    <content type="html">&lt;p&gt;Sometimes we are asked by clients to set a default desktop picture for new users - sometimes we are deleting home directories on logout, so need to warn the users, other times the client just wants their corporate wallpaper to be the default.&lt;/p&gt;
 
@@ -3434,7 +3434,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>ZNC: An IRC Bouncer</title>
    <link href="http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer/"/>
-   <updated>2013-10-13T08:35:00-07:00</updated>
+   <updated>2013-10-13T08:35:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2013/10/13/znc-an-irc-bouncer</id>
    <content type="html">&lt;p&gt;Yes,  it’s true. The most interesting conversations in the Mac admin world take place using technology from the 1980’s - &lt;a href=&quot;http://en.wikipedia.org/wiki/Internet_Relay_Chat&quot;&gt;IRC&lt;/a&gt; (##osx-server on &lt;a href=&quot;http://freenode.net/&quot;&gt;freenode&lt;/a&gt;). Those of you who know me will know that I’m borderline OCD. In this instance, my major annoyance was that I’d only get half of the conversation and I’d miss private messages when I had to put my laptop to sleep. I needed to somehow keep a persistient conenction to IRC without having to sit infront of my computer 24/7.&lt;/p&gt;
 
@@ -3606,7 +3606,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>Creating an OS X base box for Vagrant with Packer</title>
    <link href="http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/"/>
-   <updated>2013-08-23T11:30:00-07:00</updated>
+   <updated>2013-08-23T11:30:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer</id>
    <content type="html">&lt;p&gt;A while ago, the chaps over at the &lt;a href=&quot;http://www.vagrantup.com/&quot;&gt;Vagrant&lt;/a&gt; project have recently released a &lt;a href=&quot;http://www.vagrantup.com/vmware&quot;&gt;plugin to let Vagrant work with VMWare Fusion&lt;/a&gt; - this means we can finally use Vagrant to provision OS X VMs.&lt;/p&gt;
 
@@ -3725,7 +3725,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>The Luggage: Further automation</title>
    <link href="http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation/"/>
-   <updated>2013-08-19T11:33:00-07:00</updated>
+   <updated>2013-08-19T11:33:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2013/08/19/the-luggage-further-automation</id>
    <content type="html">&lt;p&gt;As promised in my previous post, today we’re going to look at how we can further refine our workflow, with the aim of cutting out as many manual steps as possible (every IT person knows it’s not computer that make mistakes, it’s the idiots in front of them) and making as much of our code re-usable in other packages.&lt;/p&gt;
 
@@ -3849,7 +3849,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>The Luggage: An Introduction</title>
    <link href="http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction/"/>
-   <updated>2013-08-09T18:00:00-07:00</updated>
+   <updated>2013-08-09T18:00:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2013/08/09/the-luggage-an-introduction</id>
    <content type="html">&lt;p&gt;If you’ve managed OS X for any amount of time, chances are you’ve needed to deploy software. And chances also are that you’ve come across a vendor (I’m looking at you, Adobe) that seems to be incapable of distributing their software in a useful manner. Or maybe you’ve got your own scripts or software that you need to get installed on the machines that you look after - either way, you’re going to want to build a package.&lt;/p&gt;
 
@@ -3967,7 +3967,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>buildCrankPkg</title>
    <link href="http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg/"/>
-   <updated>2013-07-17T16:31:00-07:00</updated>
+   <updated>2013-07-17T16:31:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2013/07/17/buildcrankpkg</id>
    <content type="html">&lt;p&gt;In my &lt;a href=&quot;http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/&quot;&gt;last post&lt;/a&gt; I promised a tool I’ve been working on to automate the building of a package for crankd.&lt;/p&gt;
 
@@ -4098,7 +4098,7 @@ someone else has done all of the hard work for us.&lt;/p&gt;
  <entry>
    <title>Using crankd to react to network events</title>
    <link href="http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events/"/>
-   <updated>2013-07-12T14:04:00-07:00</updated>
+   <updated>2013-07-12T14:04:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2013/07/12/using-crankd-to-react-to-network-events</id>
    <content type="html">&lt;p&gt;Updated 14/7/2013: After &lt;a href=&quot;https://twitter.com/Sacrilicious/status/355756510535614464&quot;&gt;Alister’s suggestion&lt;/a&gt;, the script now loops over network interfaces up to en19 (hopefully that’s enough!).&lt;/p&gt;
 
@@ -4283,7 +4283,7 @@ git clone https://github.com/acdha/pymacadmin.git
  <entry>
    <title>Managing Macs with Puppet at PSU 2013</title>
    <link href="http://grahamgilbert.com/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013/"/>
-   <updated>2013-05-24T13:56:00-07:00</updated>
+   <updated>2013-05-24T13:56:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013</id>
    <content type="html">&lt;p&gt;For those of you who attended my talk yesterday at PSU MacAdmins on Managing Macs with Puppet, here are are my &lt;a href=&quot;/images/posts/2013-05-24/Managing_Macs_with_Puppet.pdf&quot;&gt;slides&lt;/a&gt; and all of the code and servers used are up on &lt;a href=&quot;https://github.com/grahamgilbert/puppet_psu_2013&quot;&gt;grahamgilbert/puppet_psu_2013 on GitHub&lt;/a&gt;. Please comment, &lt;a href=&quot;/about&quot;&gt;email me&lt;/a&gt; or catch me on the &lt;a href=&quot;http://twitter.com/grahamgilbert&quot;&gt;twitter&lt;/a&gt; if you have any questions about any of this. Hopefully the video will be up soon, so those of you who weren’t there to laugh at the guy with the funny accent can see me dealing with internet fails and my obscure British sit-com references.&lt;/p&gt;
 
@@ -4295,7 +4295,7 @@ git clone https://github.com/acdha/pymacadmin.git
  <entry>
    <title>One bootstrap package to rule them all</title>
    <link href="http://grahamgilbert.com/blog/2013/04/07/one-bootstrap-package-to-rule-them-all/"/>
-   <updated>2013-04-07T15:36:00-07:00</updated>
+   <updated>2013-04-07T15:36:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2013/04/07/one-bootstrap-package-to-rule-them-all</id>
    <content type="html">&lt;p&gt;At work, we’ve recently changed how we build our bootstrap package to having the main code that connects a Mac to our Puppet infrastructure pulled down from GitHub when the client boots up for the first time.&lt;/p&gt;
 
@@ -4334,7 +4334,7 @@ git clone https://github.com/acdha/pymacadmin.git
  <entry>
    <title>Facter 101</title>
    <link href="http://grahamgilbert.com/blog/2013/04/02/facter-101/"/>
-   <updated>2013-04-02T10:11:00-07:00</updated>
+   <updated>2013-04-02T10:11:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2013/04/02/facter-101</id>
    <content type="html">&lt;p&gt;Facter is what gives Puppet it’s brains. It collects information about the computer it is run on and then passes it to the Puppet Master for use in manifests and can optionally be stored. I know, it doesn’t sound like the most earth shattering revelation of all time, but stop for a moment. Every time your current scripts need to taget a specific OS version or a machine with a certain bit of hardware, you need to code it directly into the script. If the method of extracting that information changes, you need to modify every single script that uses that method. With Facter, you’re editing one file, which is always up to date on the client. Anyway, that’s enough waffle from me. Let’s get started.&lt;!-- more --&gt;&lt;/p&gt;
 
@@ -4467,7 +4467,7 @@ git clone https://github.com/acdha/pymacadmin.git
  <entry>
    <title>Getting Started With Puppet on OS X (Part 4)</title>
    <link href="http://grahamgilbert.com/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4/"/>
-   <updated>2013-03-05T14:59:00-08:00</updated>
+   <updated>2013-03-05T14:59:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/03/05/getting-started-with-puppet-on-os-x-part-4</id>
    <content type="html">&lt;p&gt;We’ve made quite a bit of progress with our Puppet install. We’ve already made Puppet do something useful with setting up an admin user, but let’s get back to being lazy - let’s get someone else to write the code.&lt;/p&gt;
 
@@ -4587,7 +4587,7 @@ vagrant reload
  <entry>
    <title>Getting Started With Puppet on OS X (Part 3)</title>
    <link href="http://grahamgilbert.com/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3/"/>
-   <updated>2013-02-24T14:59:00-08:00</updated>
+   <updated>2013-02-24T14:59:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/02/24/getting-started-with-puppet-on-os-x-part-3</id>
    <content type="html">&lt;p&gt;In this post, we’ll do something pretty much all Mac admins will need to do - set up their admin user. Bust first, a little housekeeping.&lt;/p&gt;
 
@@ -4710,7 +4710,7 @@ vagrant reload
  <entry>
    <title>Building a test Puppet Master with Vagrant</title>
    <link href="http://grahamgilbert.com/blog/2013/02/13/building-a-test-puppet-master-with-vagrant/"/>
-   <updated>2013-02-13T08:27:00-08:00</updated>
+   <updated>2013-02-13T08:27:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/02/13/building-a-test-puppet-master-with-vagrant</id>
    <content type="html">&lt;p&gt;Puppet is awesome. Until you deploy some code that worked locally, but for some reason didn’t when you put it onto your Puppet Master. Whoops.&lt;/p&gt;
 
@@ -4752,7 +4752,7 @@ vagrant up
  <entry>
    <title>Getting started with Puppet on OS X (part 2)</title>
    <link href="http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2/"/>
-   <updated>2013-01-27T09:30:00-08:00</updated>
+   <updated>2013-01-27T09:30:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/01/27/getting-started-with-puppet-on-os-x-part-2</id>
    <content type="html">&lt;p&gt;Before reading this post, you really need to read &lt;a href=&quot;http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/&quot;&gt;part 1&lt;/a&gt; - none of this will make sense without it!&lt;/p&gt;
 
@@ -4835,7 +4835,7 @@ Notice: Finished catalog run in 0.07 seconds
  <entry>
    <title>Getting started with Puppet on OS X (part 1)</title>
    <link href="http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1/"/>
-   <updated>2013-01-25T21:22:00-08:00</updated>
+   <updated>2013-01-25T21:22:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/01/25/getting-started-with-puppet-part-1</id>
    <content type="html">&lt;p&gt;When I was first getting started, the first hurdle I had to get over was trying to work out how it would apply to what I do - manage Macs. There are plenty of resources on managing servers with Puppet, but precious little on using Puppet with OS X - so, here’s how to get started with Puppet.
 &lt;!-- more --&gt;
@@ -4933,7 +4933,7 @@ First off, grab yourself the Puppet Enterprise demo VM from the &lt;a href=&quot
  <entry>
    <title>Crypt: A FileVault 2 escrow solution</title>
    <link href="http://grahamgilbert.com/blog/2013/01/18/crypt-a-filevault-2-escrow-solution/"/>
-   <updated>2013-01-18T08:05:00-08:00</updated>
+   <updated>2013-01-18T08:05:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/01/18/crypt-a-filevault-2-escrow-solution</id>
    <content type="html">&lt;p&gt;Although it’s been blogged about over at &lt;a href=&quot;http://afp548.com/2013/01/02/crypt-a-client-and-web-app-for-filevault-2-encryption-and-escrow/&quot;&gt;afp548&lt;/a&gt; and &lt;a href=&quot;http://derflounder.wordpress.com/2012/12/31/first-look-at-crypt/&quot;&gt;Rich Trouton’s blog&lt;/a&gt;, I’d like to introduce you all to &lt;a href=&quot;https://github.com/grahamgilbert/Crypt&quot;&gt;Crypt&lt;/a&gt;.&lt;/p&gt;
 
@@ -4950,7 +4950,7 @@ First off, grab yourself the Puppet Enterprise demo VM from the &lt;a href=&quot
  <entry>
    <title>Casper Vs Munki</title>
    <link href="http://grahamgilbert.com/blog/2013/01/13/casper-vs-munki/"/>
-   <updated>2013-01-13T21:34:00-08:00</updated>
+   <updated>2013-01-13T21:34:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/01/13/casper-vs-munki</id>
    <content type="html">&lt;p&gt;Next up in the battle of Casper vs the rest of the Mac admin toolset looking to reign supreme in the contest of software installation is Munki.&lt;/p&gt;
 
@@ -5023,7 +5023,7 @@ Some might be, others won’t for one reason or another.&lt;/p&gt;
  <entry>
    <title>Updating InstaDMG based NetRestore images</title>
    <link href="http://grahamgilbert.com/blog/2013/01/07/updating-instadmg-based-netrestore-images/"/>
-   <updated>2013-01-07T11:54:00-08:00</updated>
+   <updated>2013-01-07T11:54:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/01/07/updating-instadmg-based-netrestore-images</id>
    <content type="html">&lt;p&gt;This probably isn’t news to anyone else, but I made a discovery last week that will save me a fair bit of time.&lt;/p&gt;
 
@@ -5060,7 +5060,7 @@ Some might be, others won’t for one reason or another.&lt;/p&gt;
  <entry>
    <title>InstaDMG Tips</title>
    <link href="http://grahamgilbert.com/blog/2013/01/05/instadmg-tips/"/>
-   <updated>2013-01-05T14:35:00-08:00</updated>
+   <updated>2013-01-05T14:35:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/01/05/instadmg-tips</id>
    <content type="html">&lt;p&gt;I’ve been using &lt;a href=&quot;http://code.google.com/p/instadmg/&quot;&gt;InstaDMG&lt;/a&gt; for nearly two years now. We all know it’s awesome (if you aren’t aware of it’s awesomeness, I suggest taking a look at &lt;a href=&quot;http://www.youtube.com/watch?v=o8xtO5E4MzE&quot;&gt;Allister Banks’ talk at PSU MacAdmins last year&lt;/a&gt;). I’m almost ashamed to admit that I was happily making my Golden Master images on my test iMac and hoping for the best when I cleaned them up by hand and pushed them out. Anyway, that’s enough of my admissions. Over these two years, I’ve picked up a few tips and tricks for working effectively with InstaDMG.&lt;/p&gt;
 
@@ -5078,7 +5078,7 @@ Some might be, others won’t for one reason or another.&lt;/p&gt;
  <entry>
    <title>MacScripts</title>
    <link href="http://grahamgilbert.com/blog/2013/01/01/macscripts/"/>
-   <updated>2013-01-01T16:12:00-08:00</updated>
+   <updated>2013-01-01T16:12:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2013/01/01/macscripts</id>
    <content type="html">&lt;p&gt;I’ve had my Mac scripts dotted around my Macs over the years, so after spending twenty minutes looking for my script to add a login item to a user, I decided to put them all in one place on GitHub. Hopefully someone will find them useful, I’ll be adding the rest as soon as I work out where I put them.&lt;/p&gt;
 
@@ -5089,7 +5089,7 @@ Some might be, others won’t for one reason or another.&lt;/p&gt;
  <entry>
    <title>Casper versus DeployStudio</title>
    <link href="http://grahamgilbert.com/blog/2012/12/15/casper-versus-deploystudio/"/>
-   <updated>2012-12-15T13:00:00-08:00</updated>
+   <updated>2012-12-15T13:00:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2012/12/15/casper-versus-deploystudio</id>
    <content type="html">&lt;p&gt;I’ll preface this with one thing - I’m not a Casper Suite expert. I don’t use it reguarly, and at what it costs, I probably won’t! It’s this price that gave me high expectations for this last install. Unfortunately they were unfounded.&lt;/p&gt;
 
@@ -5117,7 +5117,7 @@ Some might be, others won’t for one reason or another.&lt;/p&gt;
  <entry>
    <title>MacNamer</title>
    <link href="http://grahamgilbert.com/blog/2012/12/12/macnamer/"/>
-   <updated>2012-12-12T11:05:00-08:00</updated>
+   <updated>2012-12-12T11:05:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2012/12/12/macnamer</id>
    <content type="html">&lt;p&gt;A few months ago, we decided to move away from DeployStudio for imaging our Macs to reduce the OS X footprint in the server room (a plain old NetRestore can be run from &lt;a href=&quot;https://jamfnation.jamfsoftware.com/viewProduct.html?id=180&amp;amp;view=info&quot;&gt;NetSUS&lt;/a&gt;). This left us with a problem - how are we going to name our Macs now (a task previously performed by DeployStudio)?&lt;/p&gt;
 
@@ -5128,7 +5128,7 @@ Some might be, others won’t for one reason or another.&lt;/p&gt;
  <entry>
    <title>Meraki Systems Manager</title>
    <link href="http://grahamgilbert.com/blog/2012/11/12/meraki-systems-manager/"/>
-   <updated>2012-11-12T16:07:00-08:00</updated>
+   <updated>2012-11-12T16:07:00+00:00</updated>
    <id>http://grahamgilbert.com/blog/2012/11/12/meraki-systems-manager</id>
    <content type="html">&lt;p&gt;Maintaining visibility over your fleet of machines is always difficult. It’s even more difficult when you’ve got Macs. It gets nearly impossible when you decide you’d like something hosted in the cloud.&lt;/p&gt;
 
@@ -5156,7 +5156,7 @@ Some might be, others won’t for one reason or another.&lt;/p&gt;
  <entry>
    <title>Five reasons sysadmins should use Git</title>
    <link href="http://grahamgilbert.com/blog/2012/09/21/five-reasons-sysadmins-should-use-git/"/>
-   <updated>2012-09-21T07:28:00-07:00</updated>
+   <updated>2012-09-21T07:28:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2012/09/21/five-reasons-sysadmins-should-use-git</id>
    <content type="html">&lt;p&gt;This post could also be called “Things we could learn from our developer brethren, but I digress, to the list! (Lists are awesome, aren’t they?)&lt;/p&gt;
 
@@ -5177,7 +5177,7 @@ Some might be, others won’t for one reason or another.&lt;/p&gt;
  <entry>
    <title>Location based printers with Puppet</title>
    <link href="http://grahamgilbert.com/blog/2012/08/18/location-based-printers-with-puppet/"/>
-   <updated>2012-08-18T21:08:00-07:00</updated>
+   <updated>2012-08-18T21:08:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2012/08/18/location-based-printers-with-puppet</id>
    <content type="html">&lt;p&gt;This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent &lt;a href=&quot;https://github.com/mosen/puppet-cups&quot;&gt;mosen-puppet-cups&lt;/a&gt; module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).&lt;/p&gt;
 
@@ -5219,7 +5219,7 @@ Some might be, others won’t for one reason or another.&lt;/p&gt;
  <entry>
    <title>Making a Mountain Lion Recovery HD</title>
    <link href="http://grahamgilbert.com/blog/2012/07/28/making-a-mountain-lion-recovery-hd/"/>
-   <updated>2012-07-28T06:48:00-07:00</updated>
+   <updated>2012-07-28T06:48:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2012/07/28/making-a-mountain-lion-recovery-hd</id>
    <content type="html">&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; There’s a better method over at &lt;a href=&quot;http://afp548.com/2012/08/15/creating-a-10-8-recovery-hd-package-with-luggage/&quot;&gt;afp548&lt;/a&gt; that does this better. Use that!&lt;/p&gt;
 
@@ -5254,7 +5254,7 @@ First you need the debug menu turned on in Disk Utility. Make sure Disk Utility 
  <entry>
    <title>Google Directory?</title>
    <link href="http://grahamgilbert.com/blog/2012/07/01/google-directory/"/>
-   <updated>2012-07-01T20:11:00-07:00</updated>
+   <updated>2012-07-01T20:11:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2012/07/01/google-directory</id>
    <content type="html">&lt;p&gt;Last week at work we were discussing where we were headed. Our email is now firmly in the cloud with Google providing a better infrastructure than we ever could. They’ve also got word processing and spreadsheets solved for most people with the hard to beat price of free.&lt;/p&gt;
 
@@ -5273,7 +5273,7 @@ First you need the debug menu turned on in Disk Utility. Make sure Disk Utility 
  <entry>
    <title>Run munki at boot</title>
    <link href="http://grahamgilbert.com/blog/2012/05/07/run-munki-at-boot/"/>
-   <updated>2012-05-07T09:19:00-07:00</updated>
+   <updated>2012-05-07T09:19:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2012/05/07/run-munki-at-boot</id>
    <content type="html">&lt;p&gt;Munki is great. It keeps your macs up to date - well it does most of the time. Sometimes you get a user that just refuses to click on “Update” now matter how many times it pops up. Now you have a tool to defeat them - install this package over ARD and munki will install everything that’s available, including Apple software updates (it will reboot the mac if needed and carry on where it left off).&lt;/p&gt;
 
@@ -5284,7 +5284,7 @@ First you need the debug menu turned on in Disk Utility. Make sure Disk Utility 
  <entry>
    <title>Headless VirtualBox</title>
    <link href="http://grahamgilbert.com/blog/2012/04/21/headless-virtualbox/"/>
-   <updated>2012-04-21T22:06:00-07:00</updated>
+   <updated>2012-04-21T22:06:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2012/04/21/headless-virtualbox</id>
    <content type="html">&lt;p&gt;I recently had a requirement to run an Ununtu machine, but the client had only mac servers, and no budget for additional hardware. The solution turned out to be VirtualBox - we could run it headless and have it start when the mac booted.&lt;/p&gt;
 
@@ -5335,7 +5335,7 @@ First you need the debug menu turned on in Disk Utility. Make sure Disk Utility 
  <entry>
    <title>Profile Manager Enrollment Package</title>
    <link href="http://grahamgilbert.com/blog/2012/04/06/profile-manager-enrollment-package/"/>
-   <updated>2012-04-06T10:38:00-07:00</updated>
+   <updated>2012-04-06T10:38:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2012/04/06/profile-manager-enrollment-package</id>
    <content type="html">&lt;p&gt;Over the past week or so, we had a need to enroll macs automagically with a Lion Profile Manager server. My first plan was to do what Charles Edge did in his recent &lt;a href=&quot;http://krypted.com/mac-os-x/automating-profile-manager-enrollment-through-deploystudio/&quot;&gt;blog post&lt;/a&gt; and use DeployStudio. Then I remembered another post by Charles on &lt;a href=&quot;http://krypted.com/iphone/profile-manager-and-profiles/&quot;&gt;/usr/bin/profiles&lt;/a&gt; and wondered if I could make a workflow that can be used throughout our deployment and system maintenance process - yup, the humble pkg, that can be popped into Munki for existing macs, installed with DeployStudio for imaging and pushed out with ARD if need be.&lt;/p&gt;
 
@@ -5357,7 +5357,7 @@ First you need the debug menu turned on in Disk Utility. Make sure Disk Utility 
  <entry>
    <title>Hello Octopress</title>
    <link href="http://grahamgilbert.com/blog/2012/04/03/hello-octopress/"/>
-   <updated>2012-04-03T12:49:00-07:00</updated>
+   <updated>2012-04-03T12:49:00+01:00</updated>
    <id>http://grahamgilbert.com/blog/2012/04/03/hello-octopress</id>
    <content type="html">&lt;p&gt;Inspired by some of the &lt;a href=&quot;http://mattgemmell.com/2011/09/12/blogging-with-octopress/&quot;&gt;cool kids&lt;/a&gt;, I’ve spent the last couple of evenings migrating my blog over to &lt;a href=&quot;http://octopress.org&quot;&gt;Octopress&lt;/a&gt;.  The main motivators were my desire to put my posts under version control (we’ve been going a bit nuts for Git at Pebble towers recently), and that I wanted to use the excellent Byword app to compose my posts (I just need to work out how I’m going to be able to use the iOS app to publish on the go - probably some Dropbox trickery).&lt;/p&gt;
 
@@ -5370,7 +5370,7 @@ First you need the debug menu turned on in Disk Utility. Make sure Disk Utility 
  <entry>
    <title>The agony and ecstasy of 100meg broadband</title>
    <link href="http://grahamgilbert.com/blog/2012/03/24/the-agony-and-ecstasy-of-100meg-broadband/"/>
-   <updated>2012-03-24T13:09:19-07:00</updated>
+   <updated>2012-03-24T13:09:19+00:00</updated>
    <id>http://grahamgilbert.com/blog/2012/03/24/the-agony-and-ecstasy-of-100meg-broadband</id>
    <content type="html">&lt;p&gt;Before I descend into a massive rant, let me preface this post with this: I hate BT. I always have, and I probably always will. They are generally the most incompetent, uncooperative company on the planet.&lt;/p&gt;
 
@@ -5403,7 +5403,7 @@ First you need the debug menu turned on in Disk Utility. Make sure Disk Utility 
  <entry>
    <title>Making a Lion Recovery HD revisited</title>
    <link href="http://grahamgilbert.com/blog/2012/02/23/making-a-lion-recovery-hd-revisited/"/>
-   <updated>2012-02-23T11:55:29-08:00</updated>
+   <updated>2012-02-23T11:55:29+00:00</updated>
    <id>http://grahamgilbert.com/blog/2012/02/23/making-a-lion-recovery-hd-revisited</id>
    <content type="html">&lt;p&gt;I’ve pushed some updates to this script, mainly switching to using &lt;a href=&quot;https://github.com/unixorn/luggage&quot;&gt;The Luggage&lt;/a&gt; for making the package. As ever, it’s up on &lt;a href=&quot;https://github.com/grahamgilbert/Make-Recovery-HD&quot;&gt;Github&lt;/a&gt;.&lt;/p&gt;
 </content>
@@ -5412,7 +5412,7 @@ First you need the debug menu turned on in Disk Utility. Make sure Disk Utility 
  <entry>
    <title>Making a Lion Recovery HD</title>
    <link href="http://grahamgilbert.com/blog/2012/02/01/making-a-lion-recovery-hd/"/>
-   <updated>2012-02-01T17:30:35-08:00</updated>
+   <updated>2012-02-01T17:30:35+00:00</updated>
    <id>http://grahamgilbert.com/blog/2012/02/01/making-a-lion-recovery-hd</id>
    <content type="html">&lt;p&gt;So you’ve lovingly crafted your never booted image in InstaDMG. It’s fully up to date and lovely. And then you try to enable FileVault 2. As you have no Recovery HD, it’s not going to happen.&lt;/p&gt;
 
@@ -5423,7 +5423,7 @@ First you need the debug menu turned on in Disk Utility. Make sure Disk Utility 
  <entry>
    <title>Web server on Linode part 1</title>
    <link href="http://grahamgilbert.com/blog/2012/01/01/web-server-on-linode-part-1/"/>
-   <updated>2012-01-01T20:23:03-08:00</updated>
+   <updated>2012-01-01T20:23:03+00:00</updated>
    <id>http://grahamgilbert.com/blog/2012/01/01/web-server-on-linode-part-1</id>
    <content type="html">&lt;p&gt;Recently, I was tasked with moving a client’s web server from a box in their office, to something a little more robust when they put something up there that caused the server to go nuts (30 mb/s nuts!).&lt;/p&gt;
 
@@ -5505,7 +5505,7 @@ First you need the debug menu turned on in Disk Utility. Make sure Disk Utility 
  <entry>
    <title>Thoughts on Profile Manager</title>
    <link href="http://grahamgilbert.com/blog/2011/12/10/thoughts-on-profile-manager/"/>
-   <updated>2011-12-10T20:45:29-08:00</updated>
+   <updated>2011-12-10T20:45:29+00:00</updated>
    <id>http://grahamgilbert.com/blog/2011/12/10/thoughts-on-profile-manager</id>
    <content type="html">&lt;p&gt;We’ve been using a 10.7 Server in the office since Lion was released, but it is only now that I’m about to install an all Lion office, so will get the chance to use Profile Manager in a real install. Over the last few months, I’ve noticed a couple of things:&lt;/p&gt;
 
@@ -5530,7 +5530,7 @@ First you need the debug menu turned on in Disk Utility. Make sure Disk Utility 
  <entry>
    <title>Backing up Postres in Lion Server</title>
    <link href="http://grahamgilbert.com/blog/2011/11/29/backing-up-postres-in-lion-server/"/>
-   <updated>2011-11-29T16:10:37-08:00</updated>
+   <updated>2011-11-29T16:10:37+00:00</updated>
    <id>http://grahamgilbert.com/blog/2011/11/29/backing-up-postres-in-lion-server</id>
    <content type="html">&lt;p&gt;Starting with Lion Server, a fair bit of data is now stored in Postgres databases. If you use Time Machine, you’ll get this backed up properly for you. If you use a proper backup solution (I prefer CrashPlan), you won’t get automated dumps. This script rectifies this, by dumping all of your Postgres data, and keeping 7 days worth.&lt;/p&gt;
 
@@ -5551,7 +5551,7 @@ First you need the debug menu turned on in Disk Utility. Make sure Disk Utility 
  <entry>
    <title>Kerio Connect vs Web Services in Lion Server</title>
    <link href="http://grahamgilbert.com/blog/2011/11/22/kerio-connect-vs-web-services-in-lion-server/"/>
-   <updated>2011-11-22T21:17:27-08:00</updated>
+   <updated>2011-11-22T21:17:27+00:00</updated>
    <id>http://grahamgilbert.com/blog/2011/11/22/kerio-connect-vs-web-services-in-lion-server</id>
    <content type="html">&lt;h3 id=&quot;the-problem&quot;&gt;The problem&lt;/h3&gt;
 
