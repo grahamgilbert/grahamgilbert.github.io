@@ -2,6 +2,11 @@
 <html lang="en-us">
 
   <head>
+  <script type="text/javascript">
+    var host = "grahamgilbert.com";
+    if ((host == window.location.host) && (window.location.protocol != "https:"))
+        window.location.protocol = "https";
+  </script>
   <link href="http://gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -24,9 +29,9 @@
   <!-- Icons -->
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
   <link rel="shortcut icon" href="/public/favicon.ico">
-
+  <link rel="canonical" href=" { { site.url } }{ { page.url } }" />
   <!-- RSS -->
-  <link type="application/atom+xml" rel="alternate" href="http://grahamgilbert.com/atom.xml" title="graham gilbert dot com" />
+  <link type="application/atom+xml" rel="alternate" href="https://grahamgilbert.com/atom.xml" title="graham gilbert dot com" />
   <link href='/stylesheets/all-c8369cf731585eb98eef0098877bca87.css' media='all' rel='stylesheet' type='text/css'>
 </head>
 
@@ -200,7 +205,7 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">
+      <a href="https://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">
         Dynamic first boot scripts with Imagr and Flask
       </a>
     </h1>
@@ -220,13 +225,13 @@
 </ul>
 
 
-            <p><b><a href="http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">Continue reading...</a></b></p>
+            <p><b><a href="https://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">Continue reading...</a></b></p>
           
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/">
+      <a href="https://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/">
         Imagr 0.0.5
       </a>
     </h1>
@@ -242,7 +247,7 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/">
+      <a href="https://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/">
         Automated timed releases with Munki
       </a>
     </h1>
@@ -254,13 +259,13 @@
 <p>So I started looking at how to automate this process. First I looked at <a href="https://github.com/munki/munki/wiki/Pkginfo-Files#force-install-after-date"><code>force_install_after_date</code></a>, but this install the item at a specified time in the client’s local time - I needed this to be installed at the same time globally. Next was <a href="https://github.com/munki/munki/wiki/Conditional-Items#built-in-conditions">Munki’s <code>date</code> condition</a> and using <code>installable_conditon</code> in the item’s pkgsinfo file similarly to how we <a href="http://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/">shard our updates</a> - but despite the time object looking like it’s UTC, it’s still just the client’s local time.</p>
 
 
-            <p><b><a href="http://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/">Continue reading...</a></b></p>
+            <p><b><a href="https://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/">Continue reading...</a></b></p>
           
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/">
+      <a href="https://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/">
         Crypt 2 Alpha Release
       </a>
     </h1>
@@ -272,13 +277,13 @@
 <p>Then in November, I met up with Tom at MacTech. He very kindly donated a few hours of his time to get me started with re-writing Crypt as an authorization plugin in Swift.</p>
 
 
-            <p><b><a href="http://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/">Continue reading...</a></b></p>
+            <p><b><a href="https://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/">Continue reading...</a></b></p>
           
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/">
+      <a href="https://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/">
         Redirecting Munki Downloads
       </a>
     </h1>
@@ -288,7 +293,7 @@
             <p>Munki 2.4.0 brought the option to have Munki follow http redirects (<a href="https://github.com/munki/munki/pull/530">my first contribution to Munki</a>). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done.</p>
 
 
-            <p><b><a href="http://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/">Continue reading...</a></b></p>
+            <p><b><a href="https://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/">Continue reading...</a></b></p>
           
   </div>
   
@@ -296,11 +301,11 @@
 
 <div class="pagination">
   
-    <a class="pagination-item older" href="http://grahamgilbert.com/page4">Older</a>
+    <a class="pagination-item older" href="https://grahamgilbert.com/page4">Older</a>
   
   
     
-      <a class="pagination-item newer" href="http://grahamgilbert.com/page2">Newer</a>
+      <a class="pagination-item newer" href="https://grahamgilbert.com/page2">Newer</a>
     
   
 </div>
