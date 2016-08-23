@@ -205,6 +205,26 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="https://grahamgilbert.com/blog/2015/06/26/the-future-of-sal/">
+        The future of Sal
+      </a>
+    </h1>
+
+    <span class="post-date">26 Jun 2015</span>
+    
+            <p>As some of you may know, yesterday was my last day at pebble.it. Since I announced I was leaving, I’ve been getting asked this pretty regularly, so I thought I’d answer it here.</p>
+
+<p>My new job uses Munki extensively, and I expect to be using Sal there. As such, development of Sal will continue. I no longer have commit access to the Sal Software organisation, so I’ve forked the project and have set up <a href="https://github.com/salopensource">Sal Open Source</a> as an organisation on GitHub - hopefully this will be the last time anything needs to change. I’ll be moving the preference domain in version 0.4.0 of the client side scripts to <code>com.github.salopensource.sal</code> - once again, this should be the last time things need to change.</p>
+
+<p>So, what else can you expect from Sal in the near future? The next release will have a GUI for managing your plugins, and I’ve started work on a basic API, which should make it easier for people to extend Sal in any language you like. For example, I’ve been working on a way to sign Puppet certificates based on whether it’s a known machine in Sal, with the machine being created via the API if it doesn’t already exist at imaging time (using Imagr, naturally).</p>
+
+<p>It’s exciting times for users of all the projects I’m working on - in addition to these changes, I have some changes planned for <a href="https://github.com/grahamgilbert/Crypt">Crypt</a>, and of course <a href="https://github.com/grahamgilbert/imagr">Imagr</a> is still on the development rollercoaster.</p>
+
+          
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="https://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">
         Running Puppet Server in Docker Part 2: r10k
       </a>
@@ -306,44 +326,6 @@
 <p>It’s not intended to be a full replacement for Deploystudio, but it’s now got all of the features I need to use Imagr full time. If you’d like to get started with Imagr, head on over to the <a href="https://github.com/grahamgilbert/imagr/wiki/Getting-Started">Wiki</a> - the only requirement is a web server, so the barrier to entry is pretty low (if you followed my guide on how to set up <a href="/blog/2015/04/22/getting-started-with-bsdpy-on-docker/">BSDPy</a>, you can use that web server).</p>
 
 <p>I hope you’ll give it a go and maybe, just maybe, we can get rid of those little Mac Minis for good!</p>
-
-          
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="https://grahamgilbert.com/blog/2015/04/28/testing-bsdpy-in-vagrant/">
-        Testing BSDPy in Vagrant
-      </a>
-    </h1>
-
-    <span class="post-date">28 Apr 2015</span>
-    
-            <p>Last time, we looked at how to spin up a Docker host and run BSDPy on it. That’s great for production, but might be a bit of a faff to do every time you want to test your NBI at home.</p>
-
-<p>Inspired by <a href="https://grpugh.wordpress.com/2015/04/28/a-test-docker-bsdpy-environment/">Dr Graham R Pugh</a>, here’s my Vagrant setup for this.</p>
-
-<p>You will need:</p>
-
-<ul>
-  <li><a href="https://www.vagrantup.com/">Vagrant</a></li>
-  <li>Either <a href="https://www.virtualbox.org/">VirtualBox</a> or <a href="http://www.vmware.com/uk/products/fusion">VMware Fusion</a> (if you use Fusion with Vagrant, you will need to purchase the <a href="http://www.vagrantup.com/vmware">VMware plugin</a> - this will allow you to create OS X Vagrantboxes as well as enjoy the much greater performance of VMware, but that’s another post)</li>
-  <li>Xcode, or at the very least the command line tools from Xcode so you have git available.</li>
-  <li>Something to NetBoot - either a physical Mac or a VM in VMware Fusion. A VM configured as per <a href="https://derflounder.wordpress.com/2013/01/23/building-mac-test-environments-with-vmware-fusion-netboot-and-deploystudio/">Rich Trouton’s post</a> will do nicely.</li>
-</ul>
-
-<p>Get all of that installed and you’re ready to go. Next we need to get the Vagrantfile:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git clone https://github.com/grahamgilbert/docker-vagrant.git</div></div></pre></div></figure>
-
-<p>You will obviously need an NBI - I’ve <a href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/">covered how to use AutoNBI before</a>, or you could use an existing one. Just make sure you’ve edited <code>NBImageInfo.plist</code> to make <code>enabled</code> be <code>true</code> and that the Mac (or VM) you’re NetBooting isn’t in <code>DisabledSystemIdentifiers</code> (I leave this as an empty <code>&lt;array /&gt;</code>). Put your NBI in the <code>nbi</code> directory.</p>
-
-<p>Now there’s one thing left to do:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd </span>docker-vagrant
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>vagrant up</div></div></pre></div></figure>
-
-<p>Give it 20 seconds to finish booting and you will see your NBI in the startup pane of your Mac.</p>
 
           
   </div>

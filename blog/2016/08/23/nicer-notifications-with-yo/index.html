@@ -16,7 +16,7 @@
 
   <title>
     
-      Thoughts on Profile Manager &middot; graham gilbert dot com
+      Nicer notifications with Yo &middot; graham gilbert dot com
     
   </title>
 
@@ -29,7 +29,7 @@
   <!-- Icons -->
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
   <link rel="shortcut icon" href="/public/favicon.ico">
-  <link rel="canonical" href=" https://grahamgilbert.com/blog/2011/12/10/thoughts-on-profile-manager/" />
+  <link rel="canonical" href=" https://grahamgilbert.com/blog/2016/08/23/nicer-notifications-with-yo/" />
   <!-- RSS -->
   <link type="application/atom+xml" rel="alternate" href="https://grahamgilbert.com/atom.xml" title="graham gilbert dot com" />
   <link href='/stylesheets/all-c8369cf731585eb98eef0098877bca87.css' media='all' rel='stylesheet' type='text/css'>
@@ -203,28 +203,28 @@
       <div class="container content">
         <div class="post">
     <h1 class="post-title">
-      <a href="https://grahamgilbert.com/blog/2011/12/10/thoughts-on-profile-manager/">
-        Thoughts on Profile Manager
+      <a href="https://grahamgilbert.com/blog/2016/08/23/nicer-notifications-with-yo/">
+        Nicer notifications with Yo
       </a>
     </h1>
-  <span class="post-date">10 Dec 2011</span>
-  <p>We’ve been using a 10.7 Server in the office since Lion was released, but it is only now that I’m about to install an all Lion office, so will get the chance to use Profile Manager in a real install. Over the last few months, I’ve noticed a couple of things:</p>
+  <span class="post-date">23 Aug 2016</span>
+  <p>Have you ever wished you could let your users know about something without completely taking over their screen with Munki or jamfhelper? Perhaps something that would respect macOS’ Do Not Disturb settings? Then Shea Craig’s Yo is what you need.</p>
 
-<ul>
-  <li>
-    <p>Don’t bother using a self signed SSL certificate. Preferences will fail to push seemingly at random without a proper certificate. For what they cost, get over to Godaddy and buy yourself a cheap certificate and save yourself hours of head scratching.</p>
-  </li>
-  <li>
-    <p>On first glance, Profile Manager seems to be lacking load of options that we had in Workgroup Manager. Remember that your can upload your own plists, so we can still set all of the options that we could before.</p>
-  </li>
-  <li>
-    <p>I’ve not been able to set Mobility preferences using Profile Manager, so have had to fall back to MCX for this as the client mac steadfastly refuses to use the settings I’ve set in Profile Manager. If anyone has any ideas about this, I’d love to hear them.</p>
-  </li>
-  <li>
-    <p>If you’re using DeployStudio, your can cut out a load of post imaging faffing about with enrolling the mac by using an Enrolment Profile and then using the workflow item in DS to get the client talking to your server.</p>
-  </li>
-</ul>
+<p>The first thing you’re going to need is the Yo installer - you can grab that from <a href="https://github.com/sheagcraig/yo/releases">https://github.com/sheagcraig/yo/releases</a>.</p>
 
+<p>It will drop <code>Yo.app</code> into <code>/Applications/Utilities</code> - but don’t go thinking you can just double click on it. Well, you can but you won’t have much fun with it. Let’s send it a basic notification. Open up <code>Terminal.app</code> and run:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>/Applications/Utilities/yo.app/Contents/MacOS/yo --title <span class="s2">&quot;You are lovely&quot;</span> --info <span class="s2">&quot;I mean it, you look really lovely today&quot;</span></div></div></pre></div></figure>
+
+<p><img class="center" src="/images/posts/2016-08-23/Simple_Notification.gif" /></p>
+
+<p>So let’s say you would like a button that takes your users to a webpage that gives them more information on their loveliness:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>/Applications/Utilities/yo.app/Contents/MacOS/yo --title <span class="s2">&quot;You are lovely&quot;</span> --info <span class="s2">&quot;I mean it, you look really lovely today&quot;</span> --action-btn <span class="s2">&quot;Do I?&quot;</span> --action-path <span class="s2">&quot;https://www.youtube.com/watch?v=vUSzL2leaFM&quot;</span></div></div></pre></div></figure>
+
+<p><img class="center" src="/images/posts/2016-08-23/Nicer_notification.gif" /></p>
+
+<p>So that’s all there is to using Yo to send notifications to your users. Next time, we’ll look at using this for something more useful to Mac admins.</p>
 
   <div id="disqus_thread"></div>
 <script>
@@ -256,15 +256,6 @@
     
       <li>
         <h3>
-          <a href="/blog/2016/08/23/nicer-notifications-with-yo/">
-            Nicer notifications with Yo
-            <small>23 Aug 2016</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
           <a href="/blog/2016/06/21/hands-on-with-imagr-at-macdevops-yvr/">
             Hands on with Imagr at MacDevOps:YVR
             <small>21 Jun 2016</small>
@@ -277,6 +268,15 @@
           <a href="/blog/2016/06/01/imagr-1-1-1/">
             Imagr 1.1.1
             <small>01 Jun 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/05/11/conference-season-2016/">
+            Conference Season 2016
+            <small>11 May 2016</small>
           </a>
         </h3>
       </li>
