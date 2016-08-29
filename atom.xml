@@ -4,7 +4,7 @@
  <title>graham gilbert</title>
  <link href="https://grahamgilbert.com/atom.xml" rel="self"/>
  <link href="https://grahamgilbert.com/"/>
- <updated>2016-08-29T12:35:01+01:00</updated>
+ <updated>2016-08-29T12:55:16+01:00</updated>
  <id>https://grahamgilbert.com</id>
  <author>
    <name>Graham Gilbert</name>
@@ -17,7 +17,7 @@
    <link href="https://grahamgilbert.com/blog/2016/08/29/more-notifications-with-yo-the-yo-strikes-back/"/>
    <updated>2016-08-29T22:04:24+01:00</updated>
    <id>https://grahamgilbert.com/blog/2016/08/29/more-notifications-with-yo-the-yo-strikes-back</id>
-   <content type="html">&lt;p&gt;Last time, we look our first look at the fantastic Yo. This time, we’re going to o something useful - we’re going to open an item up in Managed Software Centre.&lt;/p&gt;
+   <content type="html">&lt;p&gt;Last time, we took our first look at the fantastic Yo. This time, we’re going to o something useful - we’re going to open an item up in Managed Software Centre.&lt;/p&gt;
 
 &lt;p&gt;Let’s build our command to show the notification. Note that InstallElCap is the name of the relevent item in Munki. You could for example, replace it with &lt;code&gt;munki://detail-GoogleChrome&lt;/code&gt;.&lt;/p&gt;
 
