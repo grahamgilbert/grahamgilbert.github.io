@@ -213,9 +213,9 @@
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir -p payload/opt/grahamgilbert/bin
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir -p payload/LaunchAgents</div></div></pre></div></figure>
 
-<p>Now we’ve got our directory structure, create a file at <code>payload/grahamgilbert/bin/notifier</code> with the following content</p>
+<p>Now we’ve got our directory structure, create a file at <code>payload/grahamgilbert/bin/updatenotifier</code> with the following content</p>
 
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">payload/grahamgilbert/bin/notifier</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">#!/bin/bash</span>
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">payload/grahamgilbert/bin/updatenotifier</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">#!/bin/bash</span>
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">/Applications/Utilities/yo.app/Contents/MacOS/yo --title <span class="s2">&quot;Update Required&quot;</span> --info <span class="s2">&quot;Your operating system is out of date. Please upgrade ASAP.&quot;</span> --action-btn <span class="s2">&quot;More Info&quot;</span> --action-path <span class="s2">&quot;munki://detail-InstallElCap&quot;</span></div></div></pre></div></figure>
 
 <p>Let’s make it executable</p>

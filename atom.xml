@@ -4,7 +4,7 @@
  <title>graham gilbert</title>
  <link href="https://grahamgilbert.com/atom.xml" rel="self"/>
  <link href="https://grahamgilbert.com/"/>
- <updated>2016-08-29T13:41:10+01:00</updated>
+ <updated>2016-08-30T09:33:10+01:00</updated>
  <id>https://grahamgilbert.com</id>
  <author>
    <name>Graham Gilbert</name>
@@ -39,9 +39,9 @@
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;6&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mkdir -p payload/opt/grahamgilbert/bin
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;7&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mkdir -p payload/LaunchAgents&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
 
-&lt;p&gt;Now we’ve got our directory structure, create a file at &lt;code&gt;payload/grahamgilbert/bin/notifier&lt;/code&gt; with the following content&lt;/p&gt;
+&lt;p&gt;Now we’ve got our directory structure, create a file at &lt;code&gt;payload/grahamgilbert/bin/updatenotifier&lt;/code&gt; with the following content&lt;/p&gt;
 
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;figcaption class=&quot;code-highlight-caption&quot;&gt;&lt;span class=&quot;code-highlight-caption-title&quot;&gt;payload/grahamgilbert/bin/notifier&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;figcaption class=&quot;code-highlight-caption&quot;&gt;&lt;span class=&quot;code-highlight-caption-title&quot;&gt;payload/grahamgilbert/bin/updatenotifier&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;/Applications/Utilities/yo.app/Contents/MacOS/yo --title &lt;span class=&quot;s2&quot;&gt;&amp;quot;Update Required&amp;quot;&lt;/span&gt; --info &lt;span class=&quot;s2&quot;&gt;&amp;quot;Your operating system is out of date. Please upgrade ASAP.&amp;quot;&lt;/span&gt; --action-btn &lt;span class=&quot;s2&quot;&gt;&amp;quot;More Info&amp;quot;&lt;/span&gt; --action-path &lt;span class=&quot;s2&quot;&gt;&amp;quot;munki://detail-InstallElCap&amp;quot;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
 
 &lt;p&gt;Let’s make it executable&lt;/p&gt;
