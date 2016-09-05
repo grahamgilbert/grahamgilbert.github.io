@@ -174,6 +174,10 @@
           
         
       
+        
+          
+        
+      
       </nav>
       <p>
 
@@ -211,7 +215,7 @@
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir updatenotifier
 </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd </span>updatenotifier
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir -p payload/opt/grahamgilbert/bin
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir -p payload/LaunchAgents</div></div></pre></div></figure>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>mkdir -p payload/Library/LaunchAgents</div></div></pre></div></figure>
 
 <p>Now we’ve got our directory structure, create a file at <code>payload/grahamgilbert/bin/updatenotifier</code> with the following content</p>
 
@@ -222,9 +226,9 @@
 
 <figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>chmod <span class="m">755</span> payload/opt/grahamgilbert/bin/updatenotifier</div></div></pre></div></figure>
 
-<p>And for our launchagent, add the following at <code>payload/LaunchAgents/com.grahamgilbert.updatenotifier.plist</code></p>
+<p>And for our launchagent, add the following at <code>payload/Library/LaunchAgents/com.grahamgilbert.updatenotifier.plist</code></p>
 
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">payload/LaunchAgents/com.grahamgilbert.updatenotifier.plist</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">payload/Library/LaunchAgents/com.grahamgilbert.updatenotifier.plist</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 </div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
 </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
 </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;dict&gt;</span>
@@ -246,7 +250,7 @@
 
 <p>And finally, let’s build the package</p>
 
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">pkgbuild --root payload --identifier com.grahamgilbert.updatenotifier --version 1.0.0 ~/Desktop/UpdateNotifier.pkg</div></div></pre></div></figure>
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>pkgbuild --root payload --identifier com.grahamgilbert.updatenotifier --version 1.0.0 ~/Desktop/UpdateNotifier.pkg</div></div></pre></div></figure>
 
 <p>Now you’ve got a notification that pops up once an hour, on the hour that lets people know they should upgrade. Where could we improve on this? We could only bug them once a day as this is going to get incredibly annoying. We should also target those who need to upgrade. We also probably want to put our corporate logo on the pop up so our users know it came from us - well, guess what’s coming in the next couple of parts?</p>
 
@@ -281,6 +285,15 @@
     
       <li>
         <h3>
+          <a href="/blog/2016/09/05/return-of-the-yo-notifications/">
+            Return of the Yo notifications
+            <small>05 Sep 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <a href="/blog/2016/08/23/nicer-notifications-with-yo/">
             Nicer notifications with Yo
             <small>23 Aug 2016</small>
@@ -293,15 +306,6 @@
           <a href="/blog/2016/06/21/hands-on-with-imagr-at-macdevops-yvr/">
             Hands on with Imagr at MacDevOps:YVR
             <small>21 Jun 2016</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/blog/2016/06/01/imagr-1-1-1/">
-            Imagr 1.1.1
-            <small>01 Jun 2016</small>
           </a>
         </h3>
       </li>

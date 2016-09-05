@@ -174,6 +174,10 @@
           
         
       
+        
+          
+        
+      
       </nav>
       <p>
 
@@ -189,6 +193,25 @@
 
     <div class="content container">
       <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/blog/2013/05/24/managing-macs-with-puppet-at-psu-2013/">
+        Managing Macs with Puppet at PSU 2013
+      </a>
+    </h1>
+
+    <span class="post-date">24 May 2013</span>
+
+
+    
+  <p>For those of you who attended my talk yesterday at PSU MacAdmins on Managing Macs with Puppet, here are are my <a href="/images/posts/2013-05-24/Managing_Macs_with_Puppet.pdf">slides</a> and all of the code and servers used are up on <a href="https://github.com/grahamgilbert/puppet_psu_2013">grahamgilbert/puppet_psu_2013 on GitHub</a>. Please comment, <a href="/about">email me</a> or catch me on the <a href="http://twitter.com/grahamgilbert">twitter</a> if you have any questions about any of this. Hopefully the video will be up soon, so those of you who weren’t there to laugh at the guy with the funny accent can see me dealing with internet fails and my obscure British sit-com references.</p>
+
+<p><strong>Update:</strong> the video has now been posted.</p>
+<iframe width="480" height="360" src="http://www.youtube.com/embed/GqerWmKU1Js" frameborder="0" allowfullscreen=""></iframe>
+
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -400,55 +423,6 @@
 <p>Save it, and perform a Puppet run on your client.You’ll notice that the defaults command is now only run when Puppet needs to modify the user.</p>
 
 <p>Next time, we’ll be taking a look at Modules - pre-built bits of Puppet code that you can plug into your workflow to save you re-inventing the wheel.</p>
-
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2013/02/13/building-a-test-puppet-master-with-vagrant/">
-        Building a test Puppet Master with Vagrant
-      </a>
-    </h1>
-
-    <span class="post-date">13 Feb 2013</span>
-
-
-    
-  <p>Puppet is awesome. Until you deploy some code that worked locally, but for some reason didn’t when you put it onto your Puppet Master. Whoops.</p>
-
-<p>So, you need a testing setup. But Puppet can take a while to keep configuring. Which is where <a href="http://www.vagrantup.com">Vagrant</a> comes in. It it a tool which allows you to build virtual machines automatically (currently only with VirtualBox, but VMWare Fusion support is coming very soon). And the best part (for me, anyway) is that it uses Puppet to configure the VM (Puppet to configure your Puppet Master? All too meta for this time of the morning).</p>
-
-<p>Anyway, that’s enough waffle - the Vagrant configuration is up on my <a href="https://github.com/grahamgilbert/vagrant-puppetmaster">GitHub</a>.</p>
-
-<p>If you are following along with my series on getting started with Puppet on OS X, you can replace the Puppet Labs provided VM with this setup (which would be a good idea, as the Enterprise version is a few versions behind the Open Source version, missing some features when managing Macs).</p>
-
-<p>This testing setup includes:</p>
-
-<ul>
-  <li>A Puppet Master running using the built in web server (fine for testing, not enough poke for a production server)</li>
-  <li>Puppet Dashboard (we all love a GUI, right?)</li>
-  <li>PuppetDB (this will store data about your nodes, and then hooks into the Dashboard to display it)</li>
-</ul>
-
-<p>To get up and running quickly, you will need:</p>
-
-<ul>
-  <li><a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a></li>
-  <li><a href="http://downloads.vagrantup.com/">Vagrant</a></li>
-</ul>
-
-<p>Once those are installed, cd into the directory where you keep your code (mine lives in ~/Documents/Code), clone the repo and then tell Vagrant to bring the VM up.</p>
-
-<pre><code>cd ~/Documents/Code
-git clone https://github.com/grahamgilbert/vagrant-puppetmaster.git
-cd vagrant-puppetmaster
-vagrant up
-</code></pre>
-
-<p>If you don’t have the base box Ubuntu box downloaded, Vagrant will pull it down for you and cache the clean VM for you. It will then make a copy, run the script that installs the latest version of Puppet, then run through the Puppet code that will configure the VM to be a Puppet Master for you. Once the VM is running, you can place your modules and manifests in <code>puppet/modules</code> and <code>puppet/manifests</code>, respectively. The dashboard is accessible at <a href="http://192.168.33.10:3000">http://192.168.33.10:3000</a>.</p>
-
-<p><strong>This VM is not suitable for production.</strong> I’ve made several tweaks to the configuration that makes it easier to test your code, but would be a security risk if used on a production server. <strong>Only use this configuration for testing.</strong> We’re also installing everything onto one VM - you probably want to separate this out into at least two boxes in production, maybe even three if you have a large deployment. Like I said, the idea here is to quickly set up a testing environment that behaves like our production environment.</p>
 
 
   </div>
