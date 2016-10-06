@@ -196,6 +196,24 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/">
+        Running Puppet Server in Docker Part 3: Hiera
+      </a>
+    </h1>
+
+    <span class="post-date">18 Jul 2015</span>
+
+
+    
+    <p>In the previous <a href="http://grahamgilbert.com/blog/2015/06/22/running-puppet-server-in-docker/">two</a> <a href="http://grahamgilbert.com/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/#comment-2143364638">parts</a>, we went over how to get a basic Puppet Server up and running in Docker and how to deploy your modules using r10k. This time we’ll assign some configuration to our nodes using <a href="http://docs.puppetlabs.com/hiera/latest/">Hiera</a>.</p>
+
+<p>For a full explanation of what Hiera is, see the Puppetlabs documentation, but essentially, you are using a series of directories and files that are named in a particular way, and then specifying which is the most speccific to your node.
+  <p><a href="/blog/2015/07/18/running-puppet-server-in-docker-part-3-hiera/">Read more →</a></p>
+  
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/blog/2015/07/10/using-the-sal-api/">
         Using the Sal API
       </a>
@@ -310,32 +328,6 @@
 
 <p>To do that, we’re going to use r10k. It’s a tool that uses a control git repository that contains something called a puppetfile- a file that lists all of the puppet modules you want to use, either from the puppet forge or from git repositories. You may want to keep this module private by using a paid account on GitHub if your configuration contains secrets, but  it doesn’t have to be - mine doesn’t have anything particularly sensitive in, so here it is: <a href="https://github.com/grahamgilbert/personal-puppet">grahamgilbert/personal-puppet</a>. 
   <p><a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Read more →</a></p>
-  
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2015/06/22/running-puppet-server-in-docker/">
-        Running Puppet Server in Docker
-      </a>
-    </h1>
-
-    <span class="post-date">22 Jun 2015</span>
-
-
-    
-    <p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively - it’s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
-
-<p>Over the next few posts, I’ll take you through setting up the Puppet Server (running on Docker, naturally!), using r10k and git for managing your modules and using Hiera to configure your Macs - we’ll apply some configuration to a Mac without writing a single line of Puppet code .</p>
-
-<h1 id="why">Why?</h1>
-
-<p>You might well be thinking “why would I want to use Puppet?” After all, you’ve already got Munki. There are two main reasons I’ve chosen to go back to using a Puppet Server in conjunction with Munki.</p>
-
-<ol>
-  <li>It’s nice to have a fallback. If I manage to do something stupid and nuke my Munki install, or my customers manage to do the same, I’ve got some way of getting the machines back under control.</li>
-  <li>“Free” SSL certs - this might not be a priority now, but it gives you an easy to to secure your Munki repository later on (which we may cover in a later post).
-  <p><a href="/blog/2015/06/22/running-puppet-server-in-docker/">Read more →</a></p>
   
   </div>
   

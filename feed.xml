@@ -4,7 +4,7 @@
  <title>graham gilbert</title>
  <link href="https://grahamgilbert.com//atom.xml" rel="self"/>
  <link href="https://grahamgilbert.com//"/>
- <updated>2016-09-05T08:09:46+01:00</updated>
+ <updated>2016-10-06T12:00:03+02:00</updated>
  <id>https://grahamgilbert.com</id>
  <author>
    <name>Graham Gilbert</name>
@@ -13,9 +13,18 @@
 
  
  <entry>
+   <title>0 to Imagr-ing in 45 minutes</title>
+   <link href="https://grahamgilbert.com/blog/2016/10/06/0-to-imagr-ing-in-45-minutes/"/>
+   <updated>2016-10-06T11:32:22+02:00</updated>
+   <id>https://grahamgilbert.com//blog/2016/10/06/0-to-imagr-ing-in-45-minutes</id>
+   <content type="html">&lt;p&gt;If you attended my talk in Gothenburg today, thank you! The slides from my primary talk, “0 to Imagr-ing in 45 minutes” are &lt;a href=&quot;/images/posts/2016-10-06/0 to Imagr-ing.pdf&quot;&gt;available here&lt;/a&gt;, and you can find the all of the &lt;a href=&quot;https://github.com/grahamgilbert/imagr_macsysadmin_2016&quot;&gt;code I used on GitHub&lt;/a&gt;. If for some reason you would like my slides on beer in London (or, VMware is slow at imaging a disk and I needed to fill time), you can &lt;a href=&quot;/images/posts/2016-10-06/Beer in London.pdf&quot;&gt;also get them here&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Return of the Yo notifications</title>
    <link href="https://grahamgilbert.com/blog/2016/09/05/return-of-the-yo-notifications/"/>
-   <updated>2016-09-05T08:07:57+01:00</updated>
+   <updated>2016-09-05T09:07:57+02:00</updated>
    <id>https://grahamgilbert.com//blog/2016/09/05/return-of-the-yo-notifications</id>
    <content type="html">&lt;p&gt;&lt;a href=&quot;/blog/2016/08/29/more-notifications-with-yo-the-yo-strikes-back/&quot;&gt;Last time&lt;/a&gt;, took our first steps to notify our users about updates in a slight nicer way. This time we are going to modify our script so that our users are only bugged once a day, and also not promoted to install 10.11 if they’re already running it.&lt;/p&gt;
 
@@ -207,7 +216,7 @@
  <entry>
    <title>More notifications with Yo: The Yo Strikes Back</title>
    <link href="https://grahamgilbert.com/blog/2016/08/29/more-notifications-with-yo-the-yo-strikes-back/"/>
-   <updated>2016-08-29T22:04:24+01:00</updated>
+   <updated>2016-08-29T23:04:24+02:00</updated>
    <id>https://grahamgilbert.com//blog/2016/08/29/more-notifications-with-yo-the-yo-strikes-back</id>
    <content type="html">&lt;p&gt;Last time, we took our first look at the fantastic Yo. This time, we’re going to o something useful - we’re going to open an item up in Managed Software Centre.&lt;/p&gt;
 
@@ -273,7 +282,7 @@
  <entry>
    <title>Nicer notifications with Yo</title>
    <link href="https://grahamgilbert.com/blog/2016/08/23/nicer-notifications-with-yo/"/>
-   <updated>2016-08-23T15:35:50+01:00</updated>
+   <updated>2016-08-23T16:35:50+02:00</updated>
    <id>https://grahamgilbert.com//blog/2016/08/23/nicer-notifications-with-yo</id>
    <content type="html">&lt;p&gt;Have you ever wished you could let your users know about something without completely taking over their screen with Munki or jamfhelper? Perhaps something that would respect macOS’ Do Not Disturb settings? Then Shea Craig’s Yo is what you need.&lt;/p&gt;
 
@@ -298,7 +307,7 @@
  <entry>
    <title>Hands on with Imagr at MacDevOps:YVR</title>
    <link href="https://grahamgilbert.com/blog/2016/06/21/hands-on-with-imagr-at-macdevops-yvr/"/>
-   <updated>2016-06-21T17:00:45+01:00</updated>
+   <updated>2016-06-21T18:00:45+02:00</updated>
    <id>https://grahamgilbert.com//blog/2016/06/21/hands-on-with-imagr-at-macdevops-yvr</id>
    <content type="html">&lt;p&gt;Thanks to Mat and everyone else who put so much effort into &lt;a href=&quot;http://www.macdevops.ca&quot;&gt;MacDevOps:YVR&lt;/a&gt; - it’s been awesome, and I can’t wait to come back next year. &lt;a href=&quot;/images/posts/2016-06-21/Imagr.pdf&quot;&gt;Here are my slides&lt;/a&gt;, and I’ll slim down the handout for use in the real world where you don’t have a room full of nerds hammering a single access point shortly and update this post.&lt;/p&gt;
 </content>
@@ -307,7 +316,7 @@
  <entry>
    <title>Imagr 1.1.1</title>
    <link href="https://grahamgilbert.com/blog/2016/06/01/imagr-1-1-1/"/>
-   <updated>2016-06-01T15:33:37+01:00</updated>
+   <updated>2016-06-01T16:33:37+02:00</updated>
    <id>https://grahamgilbert.com//blog/2016/06/01/imagr-1-1-1</id>
    <content type="html">&lt;p&gt;I’m pleased to announce that &lt;a href=&quot;https://github.com/grahamgilbert/imagr/releases/tag/1.1.1&quot;&gt;Imagr 1.1.1 is out&lt;/a&gt;! Why am I so happy? This is the first release that’s made up nearly all of community contributions. So many thanks to everyone who has helped out with code, documentation and filing bugs.&lt;/p&gt;
 
@@ -320,7 +329,7 @@
  <entry>
    <title>Conference Season 2016</title>
    <link href="https://grahamgilbert.com/blog/2016/05/11/conference-season-2016/"/>
-   <updated>2016-05-11T18:56:46+01:00</updated>
+   <updated>2016-05-11T19:56:46+02:00</updated>
    <id>https://grahamgilbert.com//blog/2016/05/11/conference-season-2016</id>
    <content type="html">&lt;p&gt;For one reason or another, I may need to stay out of the US for a bit this year, but that doesn’t mean I’m not going to be giving any talks - no siree!&lt;/p&gt;
 
@@ -335,7 +344,7 @@
  <entry>
    <title>Getting started as a Mac admin</title>
    <link href="https://grahamgilbert.com/blog/2016/05/05/getting-started-as-a-mac-admin/"/>
-   <updated>2016-05-05T13:47:16+01:00</updated>
+   <updated>2016-05-05T14:47:16+02:00</updated>
    <id>https://grahamgilbert.com//blog/2016/05/05/getting-started-as-a-mac-admin</id>
    <content type="html">&lt;p&gt;I’ve been wanting to write this post ever since &lt;a href=&quot;https://derflounder.wordpress.com/2016/02/11/getting-started-as-a-mac-admin/&quot;&gt;Rich Trouton wrote a similar one&lt;/a&gt; after &lt;a href=&quot;http://www.macad.uk/&quot;&gt;MacADUK&lt;/a&gt;, but I finally got the kick to finally write it after I saw this &lt;a href=&quot;http://jobs.recruitsosimple.com/job/1337/75&quot;&gt;job advert&lt;/a&gt;. That’s right, they want an experienced Mac admin who is willing to work for around what &lt;a href=&quot;http://www.mcdonalds.co.uk/ukhome/whatmakesmcdonalds/questions/work-with-us/wages/what-is-the-average-salary-of-a-mcdonalds-restaurant-employee.html&quot;&gt;McDonald’s pay a trainee manager&lt;/a&gt;. If you are indeed starting out in your career supporting OS X, know that you don’t have to settle for appalling renumeration like that!&lt;/p&gt;
 
@@ -375,7 +384,7 @@
  <entry>
    <title>Managing OS X Profiles with Puppet</title>
    <link href="https://grahamgilbert.com/blog/2016/03/30/managing-os-x-profiles-with-puppet/"/>
-   <updated>2016-03-30T07:17:51+01:00</updated>
+   <updated>2016-03-30T08:17:51+02:00</updated>
    <id>https://grahamgilbert.com//blog/2016/03/30/managing-os-x-profiles-with-puppet</id>
    <content type="html">&lt;p&gt;There are many ways of managing configuration profiles on OS X - you can use MDM, Munki or any one of the other many great tools. My preferred method however is using Puppet.&lt;/p&gt;
 
@@ -535,7 +544,7 @@
  <entry>
    <title>MacAD.UK 2016&amp;#58; Puppet on OS X</title>
    <link href="https://grahamgilbert.com/blog/2016/02/10/macad-uk-2016-puppet-on-os-x/"/>
-   <updated>2016-02-10T09:09:09+00:00</updated>
+   <updated>2016-02-10T10:09:09+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/02/10/macad-uk-2016-puppet-on-os-x</id>
    <content type="html">&lt;p&gt;First off, thanks for coming (if you did indeed come - if you didn’t, you can go away). All of the code I used in my talk is &lt;a href=&quot;https://github.com/grahamgilbert/macaduk_2016&quot;&gt;up on Github&lt;/a&gt;, and you can &lt;a href=&quot;/images/posts/2016-02-09/Puppet_On_OS_X.pdf&quot;&gt;grab the slides as well&lt;/a&gt; if you feel so inclined.&lt;/p&gt;
 </content>
@@ -544,7 +553,7 @@
  <entry>
    <title>Dynamic first boot scripts with Imagr and Flask&amp;#58; Part 4</title>
    <link href="https://grahamgilbert.com/blog/2016/01/20/dynamic-first-boot-scripts-with-imagr-and-flask-part-4/"/>
-   <updated>2016-01-20T05:49:05+00:00</updated>
+   <updated>2016-01-20T06:49:05+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/01/20/dynamic-first-boot-scripts-with-imagr-and-flask-part-4</id>
    <content type="html">&lt;p&gt;If you are just starting with this series, it is highly recommended you start with &lt;a href=&quot;http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/&quot;&gt;Part 1&lt;/a&gt;.&lt;/p&gt;
 
@@ -743,7 +752,7 @@
  <entry>
    <title>Imagr 1.0.0 Released</title>
    <link href="https://grahamgilbert.com/blog/2016/01/14/imagr-1-0-0-released/"/>
-   <updated>2016-01-14T16:53:47+00:00</updated>
+   <updated>2016-01-14T17:53:47+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/01/14/imagr-1-0-0-released</id>
    <content type="html">&lt;p&gt;It’s been a lot of work, but I’m pleased to say that Imagr has grown up and as I now consider it to have everything I originally intended it to have, I’m calling this a 1.0.0 release.&lt;/p&gt;
 
@@ -754,7 +763,7 @@
  <entry>
    <title>Dynamic first boot scripts with Imagr and Flask&amp;#58; Part 3</title>
    <link href="https://grahamgilbert.com/blog/2016/01/13/dynamic-first-boot-scripts-with-imagr-and-flask-part-3/"/>
-   <updated>2016-01-13T08:51:26+00:00</updated>
+   <updated>2016-01-13T09:51:26+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/01/13/dynamic-first-boot-scripts-with-imagr-and-flask-part-3</id>
    <content type="html">&lt;p&gt;If you are just starting with this series, it is highly recommended you start with &lt;a href=&quot;http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/&quot;&gt;Part 1&lt;/a&gt;.&lt;/p&gt;
 
@@ -948,7 +957,7 @@
  <entry>
    <title>Dynamic first boot scripts with Imagr and Flask&amp;#58; Part 2</title>
    <link href="https://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/"/>
-   <updated>2016-01-07T09:33:31+00:00</updated>
+   <updated>2016-01-07T10:33:31+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2</id>
    <content type="html">&lt;p&gt;If you are just starting with this series, it is highly recommended you start with &lt;a href=&quot;http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/&quot;&gt;Part 1&lt;/a&gt;.&lt;/p&gt;
 
@@ -1139,7 +1148,7 @@
  <entry>
    <title>Dynamic first boot scripts with Imagr and Flask</title>
    <link href="https://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/"/>
-   <updated>2016-01-05T10:22:31+00:00</updated>
+   <updated>2016-01-05T11:22:31+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask</id>
    <content type="html">&lt;p&gt;Some may wonder why you would go to the trouble of dynamically generating first boot scripts. I mean, how many can you need?&lt;/p&gt;
 
@@ -1299,7 +1308,7 @@
  <entry>
    <title>Imagr 0.0.5</title>
    <link href="https://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/"/>
-   <updated>2015-12-15T16:35:26+00:00</updated>
+   <updated>2015-12-15T17:35:26+01:00</updated>
    <id>https://grahamgilbert.com//blog/2015/12/15/imagr-0-0-5</id>
    <content type="html">&lt;p&gt;It’s been 246 days and 290 commits since I started working on Imagr, and today is it’s &lt;a href=&quot;https://github.com/grahamgilbert/imagr/releases/tag/0.0.5&quot;&gt;0.0.5 release&lt;/a&gt;. It’s been a while since I blogged about Imagr, so in case you have forgotten that I make it, go and take a look!&lt;/p&gt;
 
@@ -1310,7 +1319,7 @@
  <entry>
    <title>Automated timed releases with Munki</title>
    <link href="https://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/"/>
-   <updated>2015-12-13T13:55:13+00:00</updated>
+   <updated>2015-12-13T14:55:13+01:00</updated>
    <id>https://grahamgilbert.com//blog/2015/12/13/automated-timed-releases-with-munki</id>
    <content type="html">&lt;p&gt;In my environment, we have software that needs to be deployed at the same time across all of our sites. Previously, this meant someone had to pull their computer out on a Sunday and promote the item from the testing catalog to the production catalog. Which is fine, but to be honest I’d rather be doing something else on a Sunday!&lt;/p&gt;
 
@@ -1362,7 +1371,7 @@
  <entry>
    <title>Crypt 2 Alpha Release</title>
    <link href="https://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/"/>
-   <updated>2015-12-03T13:10:49+00:00</updated>
+   <updated>2015-12-03T14:10:49+01:00</updated>
    <id>https://grahamgilbert.com//blog/2015/12/03/crypt-2-alpha-release</id>
    <content type="html">&lt;p&gt;A few months ago at PSU, Tom Burgin and Jeremy Baker &lt;a href=&quot;https://youtu.be/tcmql5byA_I?list=PLRUboZUQxbyVydhdMcxGGfEaZc2sFdQk8&quot;&gt;spoke about using Authorization Plugins&lt;/a&gt;. I sat there watching this talk thinking about how cool it would be to use this method for Crypt. And then I had a go at it. And it was &lt;em&gt;hard&lt;/em&gt;. So I put it to one side.&lt;/p&gt;
 
@@ -1379,7 +1388,7 @@
  <entry>
    <title>Redirecting Munki Downloads</title>
    <link href="https://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/"/>
-   <updated>2015-12-01T07:09:00+00:00</updated>
+   <updated>2015-12-01T08:09:00+01:00</updated>
    <id>https://grahamgilbert.com//blog/2015/12/01/redirecting-munki-downloads</id>
    <content type="html">&lt;p&gt;Munki 2.4.0 brought the option to have Munki follow http redirects (&lt;a href=&quot;https://github.com/munki/munki/pull/530&quot;&gt;my first contribution to Munki&lt;/a&gt;). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done. &lt;!-- more --&gt;&lt;/p&gt;
 
@@ -1507,7 +1516,7 @@
  <entry>
    <title>Releasing Changes With Sharding</title>
    <link href="https://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/"/>
-   <updated>2015-11-23T19:16:02+00:00</updated>
+   <updated>2015-11-23T20:16:02+01:00</updated>
    <id>https://grahamgilbert.com//blog/2015/11/23/releasing-changes-with-sharding</id>
    <content type="html">&lt;p&gt;Sharding is traditionally associated with databases - splitting up your dataset to make it more manageable. When using the term in this instance we are taking about splitting up our computers - there are several reasons you might want to do this. You might want to split them up for similar performance reasons - if you’re deploying large software updates your server might not be able to cope with all your clients pulling it at once. You might want a way to roll changes out to certain groups of machines.&lt;/p&gt;
 
@@ -1642,15 +1651,6 @@
   &lt;li&gt;&lt;a href=&quot;https://github.com/salopensource/sal&quot;&gt;Sal&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/salopensource/grahamgilbert-plugins/tree/master/shard&quot;&gt;Sal Plugin&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>MacTech 2015: Hands on with Imagr</title>
-   <link href="https://grahamgilbert.com/blog/2015/11/12/mactech-2015-hands-on-with-imagr/"/>
-   <updated>2015-11-12T19:32:13+00:00</updated>
-   <id>https://grahamgilbert.com//blog/2015/11/12/mactech-2015-hands-on-with-imagr</id>
-   <content type="html">&lt;p&gt;Last week, I led a lab in which participants got hands on with &lt;a href=&quot;https://github.com/grahamgilbert/imagr&quot;&gt;Imagr&lt;/a&gt;. I will hopefully be able to distribute the materials I used (the disk image is nearly 2GB, so I need to find a way of it not bankrupting me!), but in the meantime, &lt;a href=&quot;/images/posts/2015-11-12/ImagrLab.pdf&quot;&gt;here are the slides&lt;/a&gt;. Thanks to everyone who attended, I hope you had as much fun as I did.&lt;/p&gt;
 </content>
  </entry>
  
