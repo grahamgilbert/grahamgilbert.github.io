@@ -4,7 +4,7 @@
  <title>graham gilbert</title>
  <link href="https://grahamgilbert.com//atom.xml" rel="self"/>
  <link href="https://grahamgilbert.com//"/>
- <updated>2016-10-06T12:00:03+02:00</updated>
+ <updated>2016-11-04T17:44:04+00:00</updated>
  <id>https://grahamgilbert.com</id>
  <author>
    <name>Graham Gilbert</name>
@@ -13,9 +13,20 @@
 
  
  <entry>
+   <title>MacAD.UK 2017</title>
+   <link href="https://grahamgilbert.com/blog/2016/11/04/macad-uk-2017/"/>
+   <updated>2016-11-04T17:40:19+00:00</updated>
+   <id>https://grahamgilbert.com//blog/2016/11/04/macad-uk-2017</id>
+   <content type="html">&lt;p&gt;I’m delighted to announce that the lovely people at Amsys have asked me to return to speak at &lt;a href=&quot;http://www.macad.uk/&quot;&gt;MacAD.UK 2017&lt;/a&gt; for it’s second year. This year I will be talking about &lt;a href=&quot;http://www.macad.uk/speaker/speaker-graham-gilbert/&quot;&gt;Airbnb’s transition from a commercial macOS management platform to an entirely open source stack&lt;/a&gt; - &lt;em&gt;“Something something commercial, something something open source”&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;See you all in February!&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>0 to Imagr-ing in 45 minutes</title>
    <link href="https://grahamgilbert.com/blog/2016/10/06/0-to-imagr-ing-in-45-minutes/"/>
-   <updated>2016-10-06T11:32:22+02:00</updated>
+   <updated>2016-10-06T10:32:22+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/10/06/0-to-imagr-ing-in-45-minutes</id>
    <content type="html">&lt;p&gt;If you attended my talk in Gothenburg today, thank you! The slides from my primary talk, “0 to Imagr-ing in 45 minutes” are &lt;a href=&quot;/images/posts/2016-10-06/0 to Imagr-ing.pdf&quot;&gt;available here&lt;/a&gt;, and you can find the all of the &lt;a href=&quot;https://github.com/grahamgilbert/imagr_macsysadmin_2016&quot;&gt;code I used on GitHub&lt;/a&gt;. If for some reason you would like my slides on beer in London (or, VMware is slow at imaging a disk and I needed to fill time), you can &lt;a href=&quot;/images/posts/2016-10-06/Beer in London.pdf&quot;&gt;also get them here&lt;/a&gt;.&lt;/p&gt;
 </content>
@@ -24,7 +35,7 @@
  <entry>
    <title>Return of the Yo notifications</title>
    <link href="https://grahamgilbert.com/blog/2016/09/05/return-of-the-yo-notifications/"/>
-   <updated>2016-09-05T09:07:57+02:00</updated>
+   <updated>2016-09-05T08:07:57+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/09/05/return-of-the-yo-notifications</id>
    <content type="html">&lt;p&gt;&lt;a href=&quot;/blog/2016/08/29/more-notifications-with-yo-the-yo-strikes-back/&quot;&gt;Last time&lt;/a&gt;, took our first steps to notify our users about updates in a slight nicer way. This time we are going to modify our script so that our users are only bugged once a day, and also not promoted to install 10.11 if they’re already running it.&lt;/p&gt;
 
@@ -216,7 +227,7 @@
  <entry>
    <title>More notifications with Yo: The Yo Strikes Back</title>
    <link href="https://grahamgilbert.com/blog/2016/08/29/more-notifications-with-yo-the-yo-strikes-back/"/>
-   <updated>2016-08-29T23:04:24+02:00</updated>
+   <updated>2016-08-29T22:04:24+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/08/29/more-notifications-with-yo-the-yo-strikes-back</id>
    <content type="html">&lt;p&gt;Last time, we took our first look at the fantastic Yo. This time, we’re going to o something useful - we’re going to open an item up in Managed Software Centre.&lt;/p&gt;
 
@@ -282,7 +293,7 @@
  <entry>
    <title>Nicer notifications with Yo</title>
    <link href="https://grahamgilbert.com/blog/2016/08/23/nicer-notifications-with-yo/"/>
-   <updated>2016-08-23T16:35:50+02:00</updated>
+   <updated>2016-08-23T15:35:50+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/08/23/nicer-notifications-with-yo</id>
    <content type="html">&lt;p&gt;Have you ever wished you could let your users know about something without completely taking over their screen with Munki or jamfhelper? Perhaps something that would respect macOS’ Do Not Disturb settings? Then Shea Craig’s Yo is what you need.&lt;/p&gt;
 
@@ -307,7 +318,7 @@
  <entry>
    <title>Hands on with Imagr at MacDevOps:YVR</title>
    <link href="https://grahamgilbert.com/blog/2016/06/21/hands-on-with-imagr-at-macdevops-yvr/"/>
-   <updated>2016-06-21T18:00:45+02:00</updated>
+   <updated>2016-06-21T17:00:45+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/06/21/hands-on-with-imagr-at-macdevops-yvr</id>
    <content type="html">&lt;p&gt;Thanks to Mat and everyone else who put so much effort into &lt;a href=&quot;http://www.macdevops.ca&quot;&gt;MacDevOps:YVR&lt;/a&gt; - it’s been awesome, and I can’t wait to come back next year. &lt;a href=&quot;/images/posts/2016-06-21/Imagr.pdf&quot;&gt;Here are my slides&lt;/a&gt;, and I’ll slim down the handout for use in the real world where you don’t have a room full of nerds hammering a single access point shortly and update this post.&lt;/p&gt;
 </content>
@@ -316,7 +327,7 @@
  <entry>
    <title>Imagr 1.1.1</title>
    <link href="https://grahamgilbert.com/blog/2016/06/01/imagr-1-1-1/"/>
-   <updated>2016-06-01T16:33:37+02:00</updated>
+   <updated>2016-06-01T15:33:37+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/06/01/imagr-1-1-1</id>
    <content type="html">&lt;p&gt;I’m pleased to announce that &lt;a href=&quot;https://github.com/grahamgilbert/imagr/releases/tag/1.1.1&quot;&gt;Imagr 1.1.1 is out&lt;/a&gt;! Why am I so happy? This is the first release that’s made up nearly all of community contributions. So many thanks to everyone who has helped out with code, documentation and filing bugs.&lt;/p&gt;
 
@@ -329,7 +340,7 @@
  <entry>
    <title>Conference Season 2016</title>
    <link href="https://grahamgilbert.com/blog/2016/05/11/conference-season-2016/"/>
-   <updated>2016-05-11T19:56:46+02:00</updated>
+   <updated>2016-05-11T18:56:46+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/05/11/conference-season-2016</id>
    <content type="html">&lt;p&gt;For one reason or another, I may need to stay out of the US for a bit this year, but that doesn’t mean I’m not going to be giving any talks - no siree!&lt;/p&gt;
 
@@ -344,7 +355,7 @@
  <entry>
    <title>Getting started as a Mac admin</title>
    <link href="https://grahamgilbert.com/blog/2016/05/05/getting-started-as-a-mac-admin/"/>
-   <updated>2016-05-05T14:47:16+02:00</updated>
+   <updated>2016-05-05T13:47:16+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/05/05/getting-started-as-a-mac-admin</id>
    <content type="html">&lt;p&gt;I’ve been wanting to write this post ever since &lt;a href=&quot;https://derflounder.wordpress.com/2016/02/11/getting-started-as-a-mac-admin/&quot;&gt;Rich Trouton wrote a similar one&lt;/a&gt; after &lt;a href=&quot;http://www.macad.uk/&quot;&gt;MacADUK&lt;/a&gt;, but I finally got the kick to finally write it after I saw this &lt;a href=&quot;http://jobs.recruitsosimple.com/job/1337/75&quot;&gt;job advert&lt;/a&gt;. That’s right, they want an experienced Mac admin who is willing to work for around what &lt;a href=&quot;http://www.mcdonalds.co.uk/ukhome/whatmakesmcdonalds/questions/work-with-us/wages/what-is-the-average-salary-of-a-mcdonalds-restaurant-employee.html&quot;&gt;McDonald’s pay a trainee manager&lt;/a&gt;. If you are indeed starting out in your career supporting OS X, know that you don’t have to settle for appalling renumeration like that!&lt;/p&gt;
 
@@ -384,7 +395,7 @@
  <entry>
    <title>Managing OS X Profiles with Puppet</title>
    <link href="https://grahamgilbert.com/blog/2016/03/30/managing-os-x-profiles-with-puppet/"/>
-   <updated>2016-03-30T08:17:51+02:00</updated>
+   <updated>2016-03-30T07:17:51+01:00</updated>
    <id>https://grahamgilbert.com//blog/2016/03/30/managing-os-x-profiles-with-puppet</id>
    <content type="html">&lt;p&gt;There are many ways of managing configuration profiles on OS X - you can use MDM, Munki or any one of the other many great tools. My preferred method however is using Puppet.&lt;/p&gt;
 
@@ -544,7 +555,7 @@
  <entry>
    <title>MacAD.UK 2016&amp;#58; Puppet on OS X</title>
    <link href="https://grahamgilbert.com/blog/2016/02/10/macad-uk-2016-puppet-on-os-x/"/>
-   <updated>2016-02-10T10:09:09+01:00</updated>
+   <updated>2016-02-10T09:09:09+00:00</updated>
    <id>https://grahamgilbert.com//blog/2016/02/10/macad-uk-2016-puppet-on-os-x</id>
    <content type="html">&lt;p&gt;First off, thanks for coming (if you did indeed come - if you didn’t, you can go away). All of the code I used in my talk is &lt;a href=&quot;https://github.com/grahamgilbert/macaduk_2016&quot;&gt;up on Github&lt;/a&gt;, and you can &lt;a href=&quot;/images/posts/2016-02-09/Puppet_On_OS_X.pdf&quot;&gt;grab the slides as well&lt;/a&gt; if you feel so inclined.&lt;/p&gt;
 </content>
@@ -553,7 +564,7 @@
  <entry>
    <title>Dynamic first boot scripts with Imagr and Flask&amp;#58; Part 4</title>
    <link href="https://grahamgilbert.com/blog/2016/01/20/dynamic-first-boot-scripts-with-imagr-and-flask-part-4/"/>
-   <updated>2016-01-20T06:49:05+01:00</updated>
+   <updated>2016-01-20T05:49:05+00:00</updated>
    <id>https://grahamgilbert.com//blog/2016/01/20/dynamic-first-boot-scripts-with-imagr-and-flask-part-4</id>
    <content type="html">&lt;p&gt;If you are just starting with this series, it is highly recommended you start with &lt;a href=&quot;http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/&quot;&gt;Part 1&lt;/a&gt;.&lt;/p&gt;
 
@@ -752,7 +763,7 @@
  <entry>
    <title>Imagr 1.0.0 Released</title>
    <link href="https://grahamgilbert.com/blog/2016/01/14/imagr-1-0-0-released/"/>
-   <updated>2016-01-14T17:53:47+01:00</updated>
+   <updated>2016-01-14T16:53:47+00:00</updated>
    <id>https://grahamgilbert.com//blog/2016/01/14/imagr-1-0-0-released</id>
    <content type="html">&lt;p&gt;It’s been a lot of work, but I’m pleased to say that Imagr has grown up and as I now consider it to have everything I originally intended it to have, I’m calling this a 1.0.0 release.&lt;/p&gt;
 
@@ -763,7 +774,7 @@
  <entry>
    <title>Dynamic first boot scripts with Imagr and Flask&amp;#58; Part 3</title>
    <link href="https://grahamgilbert.com/blog/2016/01/13/dynamic-first-boot-scripts-with-imagr-and-flask-part-3/"/>
-   <updated>2016-01-13T09:51:26+01:00</updated>
+   <updated>2016-01-13T08:51:26+00:00</updated>
    <id>https://grahamgilbert.com//blog/2016/01/13/dynamic-first-boot-scripts-with-imagr-and-flask-part-3</id>
    <content type="html">&lt;p&gt;If you are just starting with this series, it is highly recommended you start with &lt;a href=&quot;http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/&quot;&gt;Part 1&lt;/a&gt;.&lt;/p&gt;
 
@@ -957,7 +968,7 @@
  <entry>
    <title>Dynamic first boot scripts with Imagr and Flask&amp;#58; Part 2</title>
    <link href="https://grahamgilbert.com/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/"/>
-   <updated>2016-01-07T10:33:31+01:00</updated>
+   <updated>2016-01-07T09:33:31+00:00</updated>
    <id>https://grahamgilbert.com//blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2</id>
    <content type="html">&lt;p&gt;If you are just starting with this series, it is highly recommended you start with &lt;a href=&quot;http://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/&quot;&gt;Part 1&lt;/a&gt;.&lt;/p&gt;
 
@@ -1148,7 +1159,7 @@
  <entry>
    <title>Dynamic first boot scripts with Imagr and Flask</title>
    <link href="https://grahamgilbert.com/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/"/>
-   <updated>2016-01-05T11:22:31+01:00</updated>
+   <updated>2016-01-05T10:22:31+00:00</updated>
    <id>https://grahamgilbert.com//blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask</id>
    <content type="html">&lt;p&gt;Some may wonder why you would go to the trouble of dynamically generating first boot scripts. I mean, how many can you need?&lt;/p&gt;
 
@@ -1308,7 +1319,7 @@
  <entry>
    <title>Imagr 0.0.5</title>
    <link href="https://grahamgilbert.com/blog/2015/12/15/imagr-0-0-5/"/>
-   <updated>2015-12-15T17:35:26+01:00</updated>
+   <updated>2015-12-15T16:35:26+00:00</updated>
    <id>https://grahamgilbert.com//blog/2015/12/15/imagr-0-0-5</id>
    <content type="html">&lt;p&gt;It’s been 246 days and 290 commits since I started working on Imagr, and today is it’s &lt;a href=&quot;https://github.com/grahamgilbert/imagr/releases/tag/0.0.5&quot;&gt;0.0.5 release&lt;/a&gt;. It’s been a while since I blogged about Imagr, so in case you have forgotten that I make it, go and take a look!&lt;/p&gt;
 
@@ -1319,7 +1330,7 @@
  <entry>
    <title>Automated timed releases with Munki</title>
    <link href="https://grahamgilbert.com/blog/2015/12/13/automated-timed-releases-with-munki/"/>
-   <updated>2015-12-13T14:55:13+01:00</updated>
+   <updated>2015-12-13T13:55:13+00:00</updated>
    <id>https://grahamgilbert.com//blog/2015/12/13/automated-timed-releases-with-munki</id>
    <content type="html">&lt;p&gt;In my environment, we have software that needs to be deployed at the same time across all of our sites. Previously, this meant someone had to pull their computer out on a Sunday and promote the item from the testing catalog to the production catalog. Which is fine, but to be honest I’d rather be doing something else on a Sunday!&lt;/p&gt;
 
@@ -1371,7 +1382,7 @@
  <entry>
    <title>Crypt 2 Alpha Release</title>
    <link href="https://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/"/>
-   <updated>2015-12-03T14:10:49+01:00</updated>
+   <updated>2015-12-03T13:10:49+00:00</updated>
    <id>https://grahamgilbert.com//blog/2015/12/03/crypt-2-alpha-release</id>
    <content type="html">&lt;p&gt;A few months ago at PSU, Tom Burgin and Jeremy Baker &lt;a href=&quot;https://youtu.be/tcmql5byA_I?list=PLRUboZUQxbyVydhdMcxGGfEaZc2sFdQk8&quot;&gt;spoke about using Authorization Plugins&lt;/a&gt;. I sat there watching this talk thinking about how cool it would be to use this method for Crypt. And then I had a go at it. And it was &lt;em&gt;hard&lt;/em&gt;. So I put it to one side.&lt;/p&gt;
 
@@ -1388,7 +1399,7 @@
  <entry>
    <title>Redirecting Munki Downloads</title>
    <link href="https://grahamgilbert.com/blog/2015/12/01/redirecting-munki-downloads/"/>
-   <updated>2015-12-01T08:09:00+01:00</updated>
+   <updated>2015-12-01T07:09:00+00:00</updated>
    <id>https://grahamgilbert.com//blog/2015/12/01/redirecting-munki-downloads</id>
    <content type="html">&lt;p&gt;Munki 2.4.0 brought the option to have Munki follow http redirects (&lt;a href=&quot;https://github.com/munki/munki/pull/530&quot;&gt;my first contribution to Munki&lt;/a&gt;). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done. &lt;!-- more --&gt;&lt;/p&gt;
 
@@ -1510,147 +1521,6 @@
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;11&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;p&quot;&gt;&amp;#x7d;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
 
 &lt;p&gt;This allows us to redirect any packages that are in &lt;code&gt;/pkgs/apps/ToRedirect&lt;/code&gt; if the client is capble of following the redirect - if they aren’t, they will carry on and read the rest of the configuration and get the file directly from the main web server.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Releasing Changes With Sharding</title>
-   <link href="https://grahamgilbert.com/blog/2015/11/23/releasing-changes-with-sharding/"/>
-   <updated>2015-11-23T20:16:02+01:00</updated>
-   <id>https://grahamgilbert.com//blog/2015/11/23/releasing-changes-with-sharding</id>
-   <content type="html">&lt;p&gt;Sharding is traditionally associated with databases - splitting up your dataset to make it more manageable. When using the term in this instance we are taking about splitting up our computers - there are several reasons you might want to do this. You might want to split them up for similar performance reasons - if you’re deploying large software updates your server might not be able to cope with all your clients pulling it at once. You might want a way to roll changes out to certain groups of machines.&lt;/p&gt;
-
-&lt;p&gt;Facebook spoke about sharding at &lt;a href=&quot;http://macbrained.org/recap-may-quantcast/&quot;&gt;macbrained in May 2015&lt;/a&gt;, but they weren’t clear on how they use it (&lt;strong&gt;edit:&lt;/strong&gt; they actually first spoke about it at &lt;a href=&quot;https://macsysadmin.se/2014/Thursday.html&quot;&gt;MacSysAdmin&lt;/a&gt;). A few people were pretty interested in using this method of rolling out changes to their machines, but it was &lt;a href=&quot;http://groob.io/&quot;&gt;Victor Vrantchan&lt;/a&gt; who came up with a &lt;a href=&quot;https://github.com/whitby/mac-scripts/tree/master/munki_condition_shard&quot;&gt;method of deriving a value between one and 100 based on the machines serial number&lt;/a&gt; (&lt;strong&gt;edit:&lt;/strong&gt; this was based on &lt;a href=&quot;https://github.com/facebook/IT-CPE/blob/master/code/lib/modules/sys_tools.py#L161&quot;&gt;Facebook’s&lt;/a&gt; and &lt;a href=&quot;https://github.com/google/macops/blob/master/gmacpyutil/gmacpyutil/experiments.py&quot;&gt;Google’s&lt;/a&gt; code. Elliot Jordan also came up with something &lt;a href=&quot;https://gist.github.com/homebysix/b35f1979d5b11e00602c&quot;&gt;similar for Casper&lt;/a&gt;).&lt;/p&gt;
-
-&lt;p&gt;Using this condition as a base and a similar Facter Fact I’ve started using the method outlined below to release changes to the macs I look after. &lt;!-- more --&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;the-process&quot;&gt;The process&lt;/h2&gt;
-
-&lt;p&gt;Since the condition and fact gives me a nice number between 1 and 100, I’ve split my machines into four groups - the lower 25%, the lower 50%, the lower 75% and general release group (all of the machines) - the first three groups comprise of shards 1 to 3. For normal software or config change releases (where there are no major security implications of delaying release), the software is tested by IT for installation issues and major, obvious bugs. Once this has been concluded, we use the following process:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Software is released to shard 1 (lower 25%).&lt;/li&gt;
-  &lt;li&gt;If no issues are reported, after 72 hours, the change is promoted to shard 2.&lt;/li&gt;
-  &lt;li&gt;After a further 48 hours, the change is promoted to shard 3.&lt;/li&gt;
-  &lt;li&gt;Once a final 48 hours has passed, the change will be promoted to general release.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;If any issues are found at any stage, it will go back to the beginning of the process.&lt;/p&gt;
-
-&lt;h2 id=&quot;which-shard-is-jim-bob-in&quot;&gt;Which shard is Jim-Bob in?&lt;/h2&gt;
-
-&lt;p&gt;This whole system falls down if your IT staff don’t know what to expect when they build a machine. Of course they can run &lt;code&gt;facter -p&lt;/code&gt; or look at the &lt;code&gt;ManagedInstallReport.plist&lt;/code&gt;, but that’s not exactly scalable. Your reporting tool should do this for you. I’ve written a &lt;a href=&quot;https://github.com/salopensource/grahamgilbert-plugins/tree/master/shard&quot;&gt;plugin&lt;/a&gt; for &lt;a href=&quot;https://github.com/salopensource/sal&quot;&gt;Sal&lt;/a&gt;:&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;/images/posts/2015-11-23/Sal-shard.png&quot; width=&quot;300px&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;but-what-about-my-bosses-bosses-boss&quot;&gt;But what about my bosses bosses boss?&lt;/h2&gt;
-
-&lt;p&gt;Of course there are machines you absolutely don’t want to be testing things on. Important people, your mum, whoever. Conversely, there will be people you want to be out there on the front lines testing everything you can throw at them. Let’s take the &lt;a href=&quot;https://github.com/grahamgilbert/macscripts/tree/master/Munki/Condtion%20Packages/shard&quot;&gt;condition&lt;/a&gt; (as my ruby in the &lt;a href=&quot;https://github.com/grahamgilbert/puppet-mac_admin/blob/master/lib/facter/shard.rb&quot;&gt;Fact&lt;/a&gt; will probably offend your eyes). If &lt;code&gt;/usr/local/shard/production&lt;/code&gt; is present, the machine always gets a shard value of &lt;code&gt;100&lt;/code&gt;. If &lt;code&gt;/usr/local/shard/testing&lt;/code&gt; is present, the machine will get a shard value of &lt;code&gt;1&lt;/code&gt;:&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;figcaption class=&quot;code-highlight-caption&quot;&gt;&lt;span class=&quot;code-highlight-caption-title&quot;&gt;/usr/local/munki/conditions/shard&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;hashlib&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;subprocess&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;4&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;5&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;plistlib&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;6&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;7&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;Foundation&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CFPreferencesCopyAppValue&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;8&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;9&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;n&quot;&gt;MOD_VALUE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;10&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Read the location of the ManagedInstallDir from ManagedInstall.plist&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;11&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;n&quot;&gt;BUNDLE_ID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;ManagedInstalls&amp;#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;12&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;n&quot;&gt;pref_name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;ManagedInstallDir&amp;#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;13&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;n&quot;&gt;managedinstalldir&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CFPreferencesCopyAppValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pref_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BUNDLE_ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;14&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Make sure we&amp;#39;re outputting our information to &amp;quot;ConditionalItems.plist&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;15&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;n&quot;&gt;conditionalitemspath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;managedinstalldir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;ConditionalItems.plist&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;16&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;17&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;18&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;19&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;Returns the serial number of this Mac&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;20&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;n&quot;&gt;cmd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;/usr/sbin/ioreg&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;-c&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;IOPlatformExpertDevice&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;-d&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;2&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;21&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;n&quot;&gt;output&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;subprocess&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;check_output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;22&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;splitlines&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;23&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;IOPlatformSerialNumber&amp;#39;&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;24&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39; = &amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&amp;quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;25&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;26&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;27&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_shard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;28&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;/usr/local/shard/production&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;29&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;        &lt;span class=&quot;n&quot;&gt;shard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;30&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;/usr/local/shard/testing&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;31&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;        &lt;span class=&quot;n&quot;&gt;shard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;32&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;33&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;        &lt;span class=&quot;n&quot;&gt;serial&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;get_serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;34&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;        &lt;span class=&quot;n&quot;&gt;sha256&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hashlib&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sha256&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hexdigest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;35&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;        &lt;span class=&quot;n&quot;&gt;shard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sha256&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MOD_VALUE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MOD_VALUE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;36&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;37&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;n&quot;&gt;newdict&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;dict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;38&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;39&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;c&quot;&gt;# CRITICAL!&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;40&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conditionalitemspath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;41&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;        &lt;span class=&quot;c&quot;&gt;# &amp;quot;ConditionalItems.plist&amp;quot; exists, so read it FIRST (existing_dict)&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;42&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;        &lt;span class=&quot;n&quot;&gt;existing_dict&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plistlib&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;readPlist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conditionalitemspath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;43&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;        &lt;span class=&quot;c&quot;&gt;# Create output_dict which joins new data generated in this script with existing data&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;44&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;        &lt;span class=&quot;n&quot;&gt;output_dict&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;dict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;existing_dict&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newdict&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;45&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;46&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;        &lt;span class=&quot;c&quot;&gt;# &amp;quot;ConditionalItems.plist&amp;quot; does not exist,&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;47&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;        &lt;span class=&quot;c&quot;&gt;# output only consists of data generated in this script&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;48&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;        &lt;span class=&quot;n&quot;&gt;output_dict&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newdict&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;49&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;50&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;c&quot;&gt;# Write out data to &amp;quot;ConditionalItems.plist&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;51&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;n&quot;&gt;plistlib&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;writePlist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;output_dict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;conditionalitemspath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;52&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;53&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;n&quot;&gt;get_shard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;the-joy-of-sharding&quot;&gt;The joy of sharding&lt;/h2&gt;
-
-&lt;p&gt;There are two primary benefits in my organisation to sharding. The first is the obvious - it allows us to smoke test changes and updates and potentially roll them back if they have any adverse effect on our fleet before too many machines are effected. The second is an important consideration if you have a large, dispersed fleet. We have a large number of at home workers - by staggering the number of machines pulling the upate at once, we can avoid a thundering heard situation on our primary servers without having to use more expensive CDN-backed bandwidth (which we still use when we have a time critical update).&lt;/p&gt;
-
-&lt;h2 id=&quot;using-sharding-with-puppet&quot;&gt;Using sharding with Puppet&lt;/h2&gt;
-
-&lt;p&gt;Puppet is our primary configuration management tool for our OS X devices - and as we are quite literally using code to define our configuration, it’s really easy to use the shard value to limit who gets which configuration:&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$shard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;#x7b;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;k&quot;&gt;notify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;#x7b;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;shard value is less than or equal to 25&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;#x7d;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;p&quot;&gt;&amp;#x7d;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;Or to use it for something more useful, let’s say we are going to use different &lt;a href=&quot;https://github.com/wdas/reposado&quot;&gt;Reposado&lt;/a&gt; branches depending on which shard they fall into:&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$shard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;#x7b;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;nv&quot;&gt;$shard_sus_url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;http://sus.company.com/sus/content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1_shard1.sucatalog&amp;#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;p&quot;&gt;&amp;#x7d;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;4&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;k&quot;&gt;elsif&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$shard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;#x7b;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;5&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;nv&quot;&gt;$shard_sus_url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;http://sus.company.com/sus/content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1_shard2.sucatalog&amp;#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;6&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;p&quot;&gt;&amp;#x7d;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;7&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;k&quot;&gt;elsif&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$shard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;75&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;#x7b;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;8&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;nv&quot;&gt;$shard_sus_url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;http://sus.company.com/sus/content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1_shard3.sucatalog&amp;#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;9&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;p&quot;&gt;&amp;#x7d;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;10&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;#x7b;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;11&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;nv&quot;&gt;$shard_sus_url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;http://sus.company.com/sus/content/catalogs/others/index-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1_production.sucatalog&amp;#39;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;12&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;p&quot;&gt;&amp;#x7d;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;13&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;14&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;mac_admin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sus&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;#x7b;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;15&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;na&quot;&gt;sus_url_1011&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$shard_sus_url,&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;16&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;p&quot;&gt;&amp;#x7d;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;using-sharding-with-munki&quot;&gt;Using sharding with Munki&lt;/h2&gt;
-
-&lt;p&gt;You have a few more options when you’re sharding software with Munki.&lt;/p&gt;
-
-&lt;p&gt;Usually, when I’m ready to move onto the sharding phase of release, I move the item into the production catalog and add &lt;code&gt;installable_condition&lt;/code&gt; to it’s pkgsinfo file to limit installs to the right shard:&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;installable_condition&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;shard &lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;= 25&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;This is fine if there are other versions of that particular item in your production catalog. If it’s a new item, your reporting tool is going to get filled up with warnings.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/posts/2015-11-23/Sal-warnings.png&quot; alt=&quot;Install warnings in Sal&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This might not worry you - maybe you don’t have a reporting tool for Munki (you’re doing it wrong) or you don’t care about warnings (you’re only doing it slightly less wrong).&lt;/p&gt;
-
-&lt;p&gt;The way around this is to use &lt;a href=&quot;https://github.com/munki/munki/wiki/Conditional-Items&quot;&gt;&lt;code&gt;conditional items&lt;/code&gt;&lt;/a&gt; for the first release of a particular item. This means that no machines will fail to find the item in a catalog (remember that putting an item into &lt;code&gt;managed_installs&lt;/code&gt; means you’re telling Munki that the item &lt;em&gt;must&lt;/em&gt; be installed on this client), as they are only adding it to their &lt;code&gt;managed_installs&lt;/code&gt; when the condition is met. This of course has the downside of you now having two places to manage the sharding of your Munki items. This may be an acceptable trade off to keep your warnings useful (as it is to me).&lt;/p&gt;
-
-&lt;h2 id=&quot;wrap-up&quot;&gt;Wrap up&lt;/h2&gt;
-
-&lt;p&gt;This is only the beginning of my use of sharding. I’m sure there will be improvements and refinements along the way, but it has worked well for me so far.&lt;/p&gt;
-
-&lt;p&gt;Links:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/grahamgilbert/macscripts/tree/master/Munki/Condtion%20Packages/shard&quot;&gt;Munki condition&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/grahamgilbert/puppet-mac_admin/blob/master/lib/facter/shard.rb&quot;&gt;Facter fact&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/salopensource/sal&quot;&gt;Sal&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/salopensource/grahamgilbert-plugins/tree/master/shard&quot;&gt;Sal Plugin&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </content>
  </entry>
  

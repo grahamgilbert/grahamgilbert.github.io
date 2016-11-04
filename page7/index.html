@@ -196,6 +196,24 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">
+        Running Puppet Server in Docker Part 2: r10k
+      </a>
+    </h1>
+
+    <span class="post-date">24 Jun 2015</span>
+
+
+    
+    <p>Last time we got our Puppet Server up and running - now we need to put some Puppet modules on it so we can use it.</p>
+
+<p>To do that, we’re going to use r10k. It’s a tool that uses a control git repository that contains something called a puppetfile- a file that lists all of the puppet modules you want to use, either from the puppet forge or from git repositories. You may want to keep this module private by using a paid account on GitHub if your configuration contains secrets, but  it doesn’t have to be - mine doesn’t have anything particularly sensitive in, so here it is: <a href="https://github.com/grahamgilbert/personal-puppet">grahamgilbert/personal-puppet</a>. 
+  <p><a href="/blog/2015/06/24/running-puppet-server-in-docker-part-2-r10k/">Read more →</a></p>
+  
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/blog/2015/06/22/running-puppet-server-in-docker/">
         Running Puppet Server in Docker
       </a>
@@ -324,22 +342,6 @@
 <p>Give it 20 seconds to finish booting and you will see your NBI in the startup pane of your Mac.</p>
 
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2015/04/22/getting-started-with-bsdpy-on-docker/">
-        Getting started with BSDPy on Docker
-      </a>
-    </h1>
-
-    <span class="post-date">22 Apr 2015</span>
-
-
-    
-    <p>Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you’re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we’re using that. Your Ubuntu box will also need a real IP address - if you are using VMware Fusion, this will be a Bridged Network Adapter - adjust the terminology if you’re using a different virtualization tool. You don’t need to worry about giving your machine a static IP unless you want to - Macs will NetBoot just fine when they’re on the same subnet. 
-  <p><a href="/blog/2015/04/22/getting-started-with-bsdpy-on-docker/">Read more →</a></p>
-  
   </div>
   
 </div>

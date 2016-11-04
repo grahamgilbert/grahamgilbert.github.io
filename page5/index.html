@@ -196,6 +196,26 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/blog/2015/11/23/releasing-changes-with-sharding/">
+        Releasing Changes With Sharding
+      </a>
+    </h1>
+
+    <span class="post-date">23 Nov 2015</span>
+
+
+    
+    <p>Sharding is traditionally associated with databases - splitting up your dataset to make it more manageable. When using the term in this instance we are taking about splitting up our computers - there are several reasons you might want to do this. You might want to split them up for similar performance reasons - if you’re deploying large software updates your server might not be able to cope with all your clients pulling it at once. You might want a way to roll changes out to certain groups of machines.</p>
+
+<p>Facebook spoke about sharding at <a href="http://macbrained.org/recap-may-quantcast/">macbrained in May 2015</a>, but they weren’t clear on how they use it (<strong>edit:</strong> they actually first spoke about it at <a href="https://macsysadmin.se/2014/Thursday.html">MacSysAdmin</a>). A few people were pretty interested in using this method of rolling out changes to their machines, but it was <a href="http://groob.io/">Victor Vrantchan</a> who came up with a <a href="https://github.com/whitby/mac-scripts/tree/master/munki_condition_shard">method of deriving a value between one and 100 based on the machines serial number</a> (<strong>edit:</strong> this was based on <a href="https://github.com/facebook/IT-CPE/blob/master/code/lib/modules/sys_tools.py#L161">Facebook’s</a> and <a href="https://github.com/google/macops/blob/master/gmacpyutil/gmacpyutil/experiments.py">Google’s</a> code. Elliot Jordan also came up with something <a href="https://gist.github.com/homebysix/b35f1979d5b11e00602c">similar for Casper</a>).</p>
+
+<p>Using this condition as a base and a similar Facter Fact I’ve started using the method outlined below to release changes to the macs I look after. 
+  <p><a href="/blog/2015/11/23/releasing-changes-with-sharding/">Read more →</a></p>
+  
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/blog/2015/11/12/mactech-2015-hands-on-with-imagr/">
         MacTech 2015: Hands on with Imagr
       </a>
@@ -262,22 +282,6 @@
     <p>I’ve been asked a few times over the last few weeks about how you can have multiple services (for example, Munki and Sal) running on the same port on the same server - how we used to do Virtual Hosting when we ran our apps on the host OS. My usual four word answer has been ‘use a proxy container’. How you actually do that has been undocumented - this post hopes to recitfy that.
   <p><a href="/blog/2015/08/26/using-a-proxy-container-with-docker-for-virtualhosts/">Read more →</a></p>
   
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2015/07/21/mac-admin-and-developer-conference-uk/">
-        Mac Admin &amp; Developer Conference UK
-      </a>
-    </h1>
-
-    <span class="post-date">21 Jul 2015</span>
-
-
-    
-  <p>I’m very happy to announce that <a href="http://www.macad.uk/speaker/graham-gilbert/">I will be speaking</a> at the first <a href="http://www.macad.uk/">Mac Admin &amp; Developer Conference UK</a>, held in our very own London on Feburary 9th and 10th, 2016. In addition to some <a href="http://www.macad.uk/speakers/">fantastic speakers</a> (I have no idea how they let me in), it’s being <a href="http://www.macad.uk/sponsor/london-apple-admins/">sponsored</a> by <a href="http://www.londonappleadmins.org.uk/">London Apple Admins</a> (who will be meeting next in early September - we are looking for people who would like to give a short 15-20 minute presentation - get in touch if you’re interested).</p>
-
-
   </div>
   
 </div>

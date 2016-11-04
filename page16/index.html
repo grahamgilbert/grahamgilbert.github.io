@@ -196,6 +196,30 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/blog/2013/01/18/crypt-a-filevault-2-escrow-solution/">
+        Crypt: A FileVault 2 escrow solution
+      </a>
+    </h1>
+
+    <span class="post-date">18 Jan 2013</span>
+
+
+    
+  <p>Although it’s been blogged about over at <a href="http://afp548.com/2013/01/02/crypt-a-client-and-web-app-for-filevault-2-encryption-and-escrow/">afp548</a> and <a href="http://derflounder.wordpress.com/2012/12/31/first-look-at-crypt/">Rich Trouton’s blog</a>, I’d like to introduce you all to <a href="https://github.com/grahamgilbert/Crypt">Crypt</a>.</p>
+
+<p><img class="center" src="/images/posts/2013-01-18/Crypt-Screenshot.png" /></p>
+
+<p>Crypt is a solution for enabling FileVault 2 on Macs running either 10.7 or 10.8 and securely storing those keys, using no outside infrastructure like other solutions do (Cauliflower Vest’s requirement of Google App Engine). It’s only requirement is a web server that can run a Django app (which is pretty much anything - the example setup uses Apache on Ubuntu 12, but you can use anything you want).</p>
+
+<p>Crypt is made up of two parts: A <a href="https://github.com/grahamgilbert/Crypt-Server">web app</a>, which stores the recovery keys and a <a href="https://github.com/grahamgilbert/Crypt">client app</a> for enabling FileVault 2 on a Mac which then sends the recovery key to the server. The server has two user levels, so access to keys can be restricted, and all key access is logged for auditing.</p>
+
+<p>We’ve been using it at <a href="http://pebbleit.com">pebble.it</a> for a few weeks now and haven’t found any issues during use, but please be aware that this is what I’d call “beta” software. You might be happy using beta software in production, but that’s up to you! I’d welcome all feedback, both good and bad. Planned features include AD authentication and emails to admins when new requests come in. Please file bugs and feature requests over at <a href="https://github.com/grahamgilbert/Crypt">GitHub</a> so I can keep track of them all.</p>
+
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/blog/2013/01/13/casper-vs-munki/">
         Casper Vs Munki
       </a>
@@ -357,41 +381,6 @@ Some might be, others won’t for one reason or another.</p>
   <p>I’ve had my Mac scripts dotted around my Macs over the years, so after spending twenty minutes looking for my script to add a login item to a user, I decided to put them all in one place on GitHub. Hopefully someone will find them useful, I’ll be adding the rest as soon as I work out where I put them.</p>
 
 <p><a href="https://github.com/grahamgilbert/macscripts">MacScripts on GitHub</a></p>
-
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2012/12/15/casper-versus-deploystudio/">
-        Casper versus DeployStudio
-      </a>
-    </h1>
-
-    <span class="post-date">15 Dec 2012</span>
-
-
-    
-  <p>I’ll preface this with one thing - I’m not a Casper Suite expert. I don’t use it reguarly, and at what it costs, I probably won’t! It’s this price that gave me high expectations for this last install. Unfortunately they were unfounded.</p>
-
-<p>I’m hoping to write a series of articles comparing the various aspects of Casper against the free tools I use every day. First up is DeployStudio.</p>
-
-<h2 id="workflow-creation">Workflow creation</h2>
-<p>Both Casper Imaging and DeployStudio have a nice GUI for creating the workflow. It’s just a drag and drop to place the tasks you need. The DeployStudio interface feels a bit more polished, but that’s probably just my bias showing though. The only real differentiator here are the package groups that DeployStudio offers. If you had a standard group of packages that you deploy over several different workflows, DeployStudio makes it easy to maintain - yes, this should probably be done elsewhere, but it can be handy to install a certain set of applications at imaging time. I couldn’t see a direct replacement for this in Casper Imaging.</p>
-
-<p><strong>Winner: Draw (just! if pushed, I’d say DeployStudio just edged it)</strong></p>
-
-<h2 id="netboot">NetBoot</h2>
-<p>This is where DeployStudio really starts to poop on Casper Imaging from a great height. With Casper, the chap doing the jump start told me that I had to manually build up a NetBoot image with Casper Imaging set up. Hilarious. Surely he was joking, right? No. DeployStudio, a <em>free product</em>, has a wizard for making a customised NetBoot set that offers an iTunes like interface that is so simple, I’ve regularly taken an office manager through imaging a Mac. I dread to think how that same person would cope with the random UI elements that have been thrown at the screen when making the casper imaging app.</p>
-
-<p><strong>Winner: DeployStudio, hands down. Casper didn’t even turn up</strong></p>
-
-<h2 id="imaging-process">Imaging process</h2>
-<p>So, you’ve managed to get past the lovely Casper Imaging interface, and now you’re installing a package that’s best installed when running from the target system - like an Adobe CS package. One that is likely to be the biggest package you’re installing. With DeployStudio, you at least get some indication that <em>something</em> is happening - you have the log scrolling by in the background. With Casper Imaging you get nothing other than a back window, and the nice Casper logo. No idea if it’s going to take five minutes or two hours.</p>
-
-<p><strong>Winner: DeployStudio</strong></p>
-
-<p>I’ll finish this post with an admission: I don’t use DeployStudio either. I’ve been trying to get rid of OS X in my server rooms, so as I mentioned in my last post, we’re using JAMF’s NetSUS appliance (dear JAMF, why can you make an awesome free product like NetSUS, but your flagship product be so poor?) and NetRestore with a InstaDMG made image with just an OS and a package to hook it into Puppet. I chose to compare Casper Imaging with DeployStudio as they’re closer competitors than the one trick pony of NetRestore.</p>
 
 
   </div>
