@@ -62,7 +62,7 @@
           graham gilbert
         </a>
       </h1>
-      <p class="lead">A Mac admin, automating the hell out of things in London.</p>
+      <p class="lead">A Mac admin, automating the hell out of things.</p>
     </div>
 
     <nav class="sidebar-nav">
@@ -196,6 +196,33 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/blog/2013/08/09/the-luggage-an-introduction/">
+        The Luggage: An Introduction
+      </a>
+    </h1>
+
+    <span class="post-date">09 Aug 2013</span>
+
+
+    
+    <p>If you’ve managed OS X for any amount of time, chances are you’ve needed to deploy software. And chances also are that you’ve come across a vendor (I’m looking at you, Adobe) that seems to be incapable of distributing their software in a useful manner. Or maybe you’ve got your own scripts or software that you need to get installed on the machines that you look after - either way, you’re going to want to build a package.</p>
+
+<p>You’ve got a few options - Iceberg, Packages, Composer, you’ve even got Package Maker. However, my personal choice is The Luggage. It has a few advantages over the alternatives:</p>
+
+<ul>
+  <li><strong>It’s all text files:</strong> You’re building software distributions, you should be checking the files in to build the packages into version control, such as Git. Text files are ideal for checking into version control.</li>
+  <li><strong>It’s free:</strong> if it costs nothing, there’s no reason it can’t be installed on everyone’s machine.</li>
+  <li><strong>It’s (still) all text files:</strong> Want to see what will be in the package without any extra work? Crack open the Makefile and you can see straight away what will be in the package.</li>
+  <li><strong>The Luggage has a metric buttload of shortcuts built in:</strong> it does the hard work, so you don’t have to.</li>
+  <li><strong>It’s repeatable:</strong> Have you ever tried to talk someone through a series of windows and buttons to get the same result as you’re getting? Every time you run The Luggage, you will get the same result.</li>
+  <li><strong>It’s (really, still) all text files:</strong> It’s the most precise tool I’ve used - you only package exactly what you need, no cruft is left behind.</li>
+  <li><strong>Your workflow is limited only by your imagination:</strong> Seriously, you can do pretty much anything you can think of. We’ll be going through more advanced workflows in future posts, but let’s get started with using The Luggage.
+  <p><a href="/blog/2013/08/09/the-luggage-an-introduction/">Read more →</a></p>
+  
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/blog/2013/07/17/buildcrankpkg/">
         buildCrankPkg
       </a>
@@ -319,22 +346,6 @@
 <p>This clearly isn’t required or suitable for all types of script - but if you have a package that is frequently updated and you have staff installing it by hand, this is a relatively simple way to make sure they’ve got the latest version at all times.</p>
 
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2013/04/02/facter-101/">
-        Facter 101
-      </a>
-    </h1>
-
-    <span class="post-date">02 Apr 2013</span>
-
-
-    
-    <p>Facter is what gives Puppet it’s brains. It collects information about the computer it is run on and then passes it to the Puppet Master for use in manifests and can optionally be stored. I know, it doesn’t sound like the most earth shattering revelation of all time, but stop for a moment. Every time your current scripts need to taget a specific OS version or a machine with a certain bit of hardware, you need to code it directly into the script. If the method of extracting that information changes, you need to modify every single script that uses that method. With Facter, you’re editing one file, which is always up to date on the client. Anyway, that’s enough waffle from me. Let’s get started.
-  <p><a href="/blog/2013/04/02/facter-101/">Read more →</a></p>
-  
   </div>
   
 </div>

@@ -62,7 +62,7 @@
           graham gilbert
         </a>
       </h1>
-      <p class="lead">A Mac admin, automating the hell out of things in London.</p>
+      <p class="lead">A Mac admin, automating the hell out of things.</p>
     </div>
 
     <nav class="sidebar-nav">
@@ -196,6 +196,50 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/blog/2016/12/06/sal-3-0/">
+        Sal 3.0
+      </a>
+    </h1>
+
+    <span class="post-date">06 Dec 2016</span>
+
+
+    
+  <p><a href="https://github.com/salopensource/sal/releases/tag/3.0.0">Sal 3.0</a> is a massive upgrade on Sal 2.7, so massive thanks to everyone who has contributed code and bug reports. In particular, big thanks go out to <a href="https://github.com/sheagcraig">@sheagcraig</a>  for his work on the completely rewritten application inventory features.</p>
+
+<h2 id="whats-new-in-sal-30">What’s new in Sal 3.0?</h2>
+
+<h3 id="inventory">Inventory</h3>
+
+<p>Sal’s application inventory tracking has been completely re-written (thanks again Shea), and is much more useful, allowing for greater detail on what is installed, and where across your fleet.</p>
+
+<h3 id="search">Search</h3>
+
+<p>We have migrated the basic search from using an external application that relied on building caches (so doubling the size of your database), to just querying the database directly.</p>
+
+<p>The advanced search is completely new - it allows you to build up complex queries that would previously require you to build a plugin. These queries can also be saved so they can be shared with the rest of your team.</p>
+
+<h3 id="plugins">Plugins</h3>
+
+<p>Your plugins can now process data server side during checkin. Perhaps you want to update Sal with information from your Inventory tool, or call out to a web service. Documentation can be found <a href="https://github.com/salopensource/sal/wiki/Additional-processing-of-data-in-Pugins">over here</a>.</p>
+
+<h3 id="security">Security</h3>
+
+<p>Sal scripts version <a href="https://github.com/salopensource/sal-scripts/releases/tag/2.0.0">2.0.0</a> now uses basic http authentication by default (<a href="https://github.com/salopensource/sal/wiki/Client-configuration">using the key set in preferences</a>) on any endpoint that it retrieves data from (external scripts etc). This means that any potentially sensitive data you may have in your client side scripts is now protected. This can be <a href="https://github.com/salopensource/sal/wiki/Settings#basic-authentication-on-http-endpoints">disabled if desired</a> - not recommended!.</p>
+
+<h3 id="performance">Performance</h3>
+
+<p>If you have a lot of plugins enabled with client side scripts to download, you will be getting a lot of requests to your server. There is now a script available that will build a package containing all the external scripts enabled on your Sal install (or just download the files so they can be deployed with something like Puppet or Chef), and after setting the <a href="https://github.com/salopensource/sal/wiki/Client-configuration">preference</a>, the client will use these in preference to downloading them again.</p>
+
+<p>If you are running Facter, you may be shipping duplicate data that Sal already collects - you are now able to specify facts that should not be sent to the server (enabling you to set different facts to ignore per client) or <a href="https://github.com/salopensource/sal/wiki/Settings#ignore_facts">set it on the server to configure it globally</a>.</p>
+
+<p>Finally, every single transaction with the database has been optimised. A usual run from a client that has Facter installed with 50 facts has been reduced from 70+ calls to the database to less than 10 (Postgres only, sorry SQLite and MySQL users).</p>
+
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/blog/2016/11/04/macad-uk-2017/">
         MacAD.UK 2017
       </a>
@@ -267,38 +311,6 @@
 
   <p><a href="/blog/2016/08/29/more-notifications-with-yo-the-yo-strikes-back/">Read more →</a></p>
   
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2016/08/23/nicer-notifications-with-yo/">
-        Nicer notifications with Yo
-      </a>
-    </h1>
-
-    <span class="post-date">23 Aug 2016</span>
-
-
-    
-  <p>Have you ever wished you could let your users know about something without completely taking over their screen with Munki or jamfhelper? Perhaps something that would respect macOS’ Do Not Disturb settings? Then Shea Craig’s Yo is what you need.</p>
-
-<p>The first thing you’re going to need is the Yo installer - you can grab that from <a href="https://github.com/sheagcraig/yo/releases">https://github.com/sheagcraig/yo/releases</a>.</p>
-
-<p>It will drop <code>Yo.app</code> into <code>/Applications/Utilities</code> - but don’t go thinking you can just double click on it. Well, you can but you won’t have much fun with it. Let’s send it a basic notification. Open up <code>Terminal.app</code> and run:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>/Applications/Utilities/yo.app/Contents/MacOS/yo --title <span class="s2">&quot;You are lovely&quot;</span> --info <span class="s2">&quot;I mean it, you look really lovely today&quot;</span></div></div></pre></div></figure>
-
-<p><img class="center" src="/images/posts/2016-08-23/Simple_Notification.gif" /></p>
-
-<p>So let’s say you would like a button that takes your users to a webpage that gives them more information on their loveliness:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>/Applications/Utilities/yo.app/Contents/MacOS/yo --title <span class="s2">&quot;You are lovely&quot;</span> --info <span class="s2">&quot;I mean it, you look really lovely today&quot;</span> --action-btn <span class="s2">&quot;Do I?&quot;</span> --action-path <span class="s2">&quot;https://www.youtube.com/watch?v=vUSzL2leaFM&quot;</span></div></div></pre></div></figure>
-
-<p><img class="center" src="/images/posts/2016-08-23/Nicer_notification.gif" /></p>
-
-<p>So that’s all there is to using Yo to send notifications to your users. Next time, we’ll look at using this for something more useful to Mac admins.</p>
-
-
   </div>
   
 </div>

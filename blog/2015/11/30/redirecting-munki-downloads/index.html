@@ -62,7 +62,7 @@
           graham gilbert
         </a>
       </h1>
-      <p class="lead">A Mac admin, automating the hell out of things in London.</p>
+      <p class="lead">A Mac admin, automating the hell out of things.</p>
     </div>
 
     <nav class="sidebar-nav">
@@ -194,7 +194,7 @@
     <div class="content container">
       <div class="post">
   <h1 class="post-title">Redirecting Munki Downloads</h1>
-  <span class="post-date">01 Dec 2015</span>
+  <span class="post-date">30 Nov 2015</span>
   <p>Munki 2.4.0 brought the option to have Munki follow http redirects (<a href="https://github.com/munki/munki/pull/530">my first contribution to Munki</a>). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done. <!-- more --></p>
 
 <p>I use Nginx for my Munki server, but you should be able to translate this technique for your server of choice.</p>
@@ -347,6 +347,15 @@
     
       <li>
         <h3>
+          <a href="/blog/2016/12/06/sal-3-0/">
+            Sal 3.0
+            <small>06 Dec 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <a href="/blog/2016/11/04/macad-uk-2017/">
             MacAD.UK 2017
             <small>04 Nov 2016</small>
@@ -359,15 +368,6 @@
           <a href="/blog/2016/10/06/0-to-imagr-ing-in-45-minutes/">
             0 to Imagr-ing in 45 minutes
             <small>06 Oct 2016</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/blog/2016/09/05/return-of-the-yo-notifications/">
-            Return of the Yo notifications
-            <small>05 Sep 2016</small>
           </a>
         </h3>
       </li>
