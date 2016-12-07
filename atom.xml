@@ -4,13 +4,95 @@
  <title>graham gilbert</title>
  <link href="https://grahamgilbert.com/atom.xml" rel="self"/>
  <link href="https://grahamgilbert.com/"/>
- <updated>2016-12-06T09:30:23-08:00</updated>
+ <updated>2016-12-07T12:05:20-08:00</updated>
  <id>https://grahamgilbert.com</id>
  <author>
    <name>Graham Gilbert</name>
    <email>graham@grahamgilbert.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Sal: an overview</title>
+   <link href="https://grahamgilbert.com/blog/2016/12/07/sal-an-overview/"/>
+   <updated>2016-12-07T11:09:39-08:00</updated>
+   <id>https://grahamgilbert.com/blog/2016/12/07/sal-an-overview</id>
+   <content type="html">&lt;p&gt;It’s been a long time since I wrote about Sal here (nearly &lt;a href=&quot;/blog/2014/01/17/sal-the-munki-puppet/&quot;&gt;three years&lt;/a&gt;), so with the release of Sal 3.0, it’s time to take another look at it.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-sal&quot;&gt;What is Sal?&lt;/h2&gt;
+
+&lt;p&gt;Sal is a reporting tool for macOS clients that helps you visualise what your clients are up to. It is primarily a reporting tool for &lt;a href=&quot;https://github.com/munki/munki&quot;&gt;Munki&lt;/a&gt;, but it can also ingest data from &lt;a href=&quot;https://docs.puppet.com/facter/latest/&quot;&gt;Facter&lt;/a&gt; (whether you are using Puppet to manage your Macs or not).&lt;/p&gt;
+
+&lt;p&gt;It has the concept of business units, so if you wish to separate your clients out (for example, if you wish to give access to some machines to a sub organisation’s IT etc) you are able to do so.&lt;/p&gt;
+
+&lt;p&gt;That’s the 10000 feet overview, let’s take a look at some of it’s functionality in more detail.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-dashboard&quot;&gt;The dashboard&lt;/h2&gt;
+
+&lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;/images/posts/2016-12-07/01-Dashboard.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The first thing you see when you log into Sal is the dashboard. This is where you can get access to a quick overview of your fleet. Each graph, chart, set of buttons is a plugin - this means that each one can be re-ordered and removed - you can even make your own if you need to (more on that another time). Most plugins are clickable - click on the relevent part to show a list of machines it is referring to - and if the plugin supports showing the list (and all of the built in ones do), you can export the list to CSV (since all managers love spreadsheets, right?).&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;machine-detail&quot;&gt;Machine detail&lt;/h2&gt;
+
+&lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;/images/posts/2016-12-07/02-MachineDetail.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The machine detail page is where you can take a closer look at one particular machine. It’s here you can get the status of each machine’s Munki installs, take a look at the machine’s Munki conditions and Facts (if you are using Facter), and see if there are any errors or warnings from Munki. Need something that’s not included? Read on to find out about plugins.&lt;/p&gt;
+
+&lt;h2 id=&quot;plugins&quot;&gt;Plugins&lt;/h2&gt;
+
+&lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;/images/posts/2016-12-07/03-Widgets.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Sal is designed to be completely customisable - if you need a specific widget on the dashboard for your organisation, you can write it without forking and having to maintain your own copy of Sal. If there is a widget included you don’t need, simply disable it through the GUI - no editing of configuration files needed.&lt;/p&gt;
+
+&lt;p&gt;There are three different kinds of widgets:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Basic widgets - these are what you see on the dashboard. If you need to get a quick overview of your machines, this is the widget for you.&lt;/li&gt;
+  &lt;li&gt;Reports - these are widgets that take up the whole screen. They give you a deeper dive into one particular aspect of your machines (for example, an overview of the Munki configuration on your machines).&lt;/li&gt;
+  &lt;li&gt;Machine detail widgets - these allow you to extend the Machine detail page. For example, one of the built in machine detail widgets shows the security status of the machine.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Some of the built in widgets include:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Operating system version&lt;/li&gt;
+  &lt;li&gt;Munki version&lt;/li&gt;
+  &lt;li&gt;Pending third party and Apple updates&lt;/li&gt;
+  &lt;li&gt;Disk space avaialble&lt;/li&gt;
+  &lt;li&gt;Uptime&lt;/li&gt;
+  &lt;li&gt;Gatekeeper, SIP and Encryption status&lt;/li&gt;
+  &lt;li&gt;More! (22 are included at the time of writing, with more added with every release)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;search&quot;&gt;Search&lt;/h2&gt;
+
+&lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;/images/posts/2016-12-07/04-SearchBuild.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;One of the most important parts of a reporting tool is getting information out of it. One of the strengths of commercial tools is their ability to build complex queries without needing to be a programmer. Sal 3.0 introduces advanced search. Sal’s search allows you to build complicated search queries on any of the data points it collects on the machines in your inventories from the GUI. And to keep your manager happy, each search can be exported to a CSV.&lt;/p&gt;
+
+&lt;h3 id=&quot;saved-searches&quot;&gt;Saved searches&lt;/h3&gt;
+
+&lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;/images/posts/2016-12-07/05-SavedSearch.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If you have searches your team performs regularly, you can choose to save your search - they are then avaialble for the rest of your team.&lt;/p&gt;
+
+&lt;h2 id=&quot;application-inventory&quot;&gt;Application inventory&lt;/h2&gt;
+
+&lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;/images/posts/2016-12-07/06-AppInventory.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Of course, you don’t only care about the apps you’re telling Munki to install. Sal will track the complete application inventory for all of your machines. Want to know if anyone has been naught and installed Mac Keeper? We’ve got you covered.&lt;/p&gt;
+
+&lt;h2 id=&quot;things-for-developers&quot;&gt;Things for developers&lt;/h2&gt;
+
+&lt;p&gt;In a future post, I’ll go over things that the more developer-minded people will find interesting:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;API: Sal has a full API which will allow you to integrate it with your existing apps (for example, you may be fed up with updating your asset inventory tool with the specs of each machine - let the robots do it)&lt;/li&gt;
+  &lt;li&gt;Custom plugins: Each plugin for Sal is written in Python, which allows you to do some incredibly powerful things&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Sal 3.0</title>
@@ -1413,23 +1495,6 @@
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;37&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
 
 &lt;p&gt;Just deploy that to &lt;code&gt;/usr/local/munki/conditions/utctime&lt;/code&gt; and you’re good to go - if you’d like to use a pre-built package, you’ll find one up on &lt;a href=&quot;https://github.com/grahamgilbert/macscripts/tree/master/Munki/Condtion%20Packages/utctime&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Crypt 2 Alpha Release</title>
-   <link href="https://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release/"/>
-   <updated>2015-12-03T05:10:49-08:00</updated>
-   <id>https://grahamgilbert.com/blog/2015/12/03/crypt-2-alpha-release</id>
-   <content type="html">&lt;p&gt;A few months ago at PSU, Tom Burgin and Jeremy Baker &lt;a href=&quot;https://youtu.be/tcmql5byA_I?list=PLRUboZUQxbyVydhdMcxGGfEaZc2sFdQk8&quot;&gt;spoke about using Authorization Plugins&lt;/a&gt;. I sat there watching this talk thinking about how cool it would be to use this method for Crypt. And then I had a go at it. And it was &lt;em&gt;hard&lt;/em&gt;. So I put it to one side.&lt;/p&gt;
-
-&lt;p&gt;Then in November, I met up with Tom at MacTech. He very kindly donated a few hours of his time to get me started with re-writing Crypt as an authorization plugin in Swift. &lt;!-- more --&gt;&lt;/p&gt;
-
-&lt;p&gt;Moving to an authorization plugin gives us a couple of advantages. The first is that this is the Apple-supported way of interacting with the machine before the user has completed login. Previously we had to use a Login Hook to launch things as the user was logging in if we wanted to run them as root - this has been deprecated for several releases of OS X, so it’s a good time to move off. Secondly, we get access to the user’s username and password, so it’s a more streamlined process when enabling FileVault not needing to ask the user to enter their credentials twice.&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;/images/posts/2015-12-03/crypt2.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Please bear in mind this is an &lt;strong&gt;alpha&lt;/strong&gt; release. You should not use this in production, but testing feedback is more than welcome. You can find out more on the &lt;a href=&quot;https://github.com/grahamgilbert/crypt2&quot;&gt;GitHub repo&lt;/a&gt;.&lt;/p&gt;
 </content>
  </entry>
  

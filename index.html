@@ -196,6 +196,36 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/blog/2016/12/07/sal-an-overview/">
+        Sal: an overview
+      </a>
+    </h1>
+
+    <span class="post-date">07 Dec 2016</span>
+
+
+    
+    <p>It’s been a long time since I wrote about Sal here (nearly <a href="/blog/2014/01/17/sal-the-munki-puppet/">three years</a>), so with the release of Sal 3.0, it’s time to take another look at it.</p>
+
+<h2 id="what-is-sal">What is Sal?</h2>
+
+<p>Sal is a reporting tool for macOS clients that helps you visualise what your clients are up to. It is primarily a reporting tool for <a href="https://github.com/munki/munki">Munki</a>, but it can also ingest data from <a href="https://docs.puppet.com/facter/latest/">Facter</a> (whether you are using Puppet to manage your Macs or not).</p>
+
+<p>It has the concept of business units, so if you wish to separate your clients out (for example, if you wish to give access to some machines to a sub organisation’s IT etc) you are able to do so.</p>
+
+<p>That’s the 10000 feet overview, let’s take a look at some of it’s functionality in more detail.</p>
+
+<h2 id="the-dashboard">The dashboard</h2>
+
+<p><img class="center" src="/images/posts/2016-12-07/01-Dashboard.png" /></p>
+
+<p>The first thing you see when you log into Sal is the dashboard. This is where you can get access to a quick overview of your fleet. Each graph, chart, set of buttons is a plugin - this means that each one can be re-ordered and removed - you can even make your own if you need to (more on that another time). Most plugins are clickable - click on the relevent part to show a list of machines it is referring to - and if the plugin supports showing the list (and all of the built in ones do), you can export the list to CSV (since all managers love spreadsheets, right?).
+  <p><a href="/blog/2016/12/07/sal-an-overview/">Read more →</a></p>
+  
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/blog/2016/12/06/sal-3-0/">
         Sal 3.0
       </a>
@@ -287,29 +317,6 @@
 
 <p>Unfortunately for some, whilst this will be possible if we stuck to using bash, it would drive me insane, so we are switching to Python. Don’t be scared! Python makes a lot of sense once you get your head around it, and you’ll be a much happier mac admin once you leave the 1500 line bash scripts behind. 
   <p><a href="/blog/2016/09/05/return-of-the-yo-notifications/">Read more →</a></p>
-  
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2016/08/29/more-notifications-with-yo-the-yo-strikes-back/">
-        More notifications with Yo: The Yo Strikes Back
-      </a>
-    </h1>
-
-    <span class="post-date">29 Aug 2016</span>
-
-
-    
-    <p>Last time, we took our first look at the fantastic Yo. This time, we’re going to o something useful - we’re going to open an item up in Managed Software Centre.</p>
-
-<p>Let’s build our command to show the notification. Note that InstallElCap is the name of the relevent item in Munki. You could for example, replace it with <code>munki://detail-GoogleChrome</code>.</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>/Applications/Utilities/yo.app/Contents/MacOS/yo --title <span class="s2">&quot;Update Required&quot;</span> --info <span class="s2">&quot;Your operating system is out of date. Please upgrade ASAP.&quot;</span> --action-btn <span class="s2">&quot;More Info&quot;</span> --action-path <span class="s2">&quot;munki://detail-InstallElCap&quot;</span></div></div></pre></div></figure>
-
-<p><img class="center" src="/images/posts/2016-08-29/Update_Required.gif" />
-
-  <p><a href="/blog/2016/08/29/more-notifications-with-yo-the-yo-strikes-back/">Read more →</a></p>
   
   </div>
   

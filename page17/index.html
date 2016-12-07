@@ -196,6 +196,31 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/blog/2013/01/05/instadmg-tips/">
+        InstaDMG Tips
+      </a>
+    </h1>
+
+    <span class="post-date">05 Jan 2013</span>
+
+
+    
+  <p>I’ve been using <a href="http://code.google.com/p/instadmg/">InstaDMG</a> for nearly two years now. We all know it’s awesome (if you aren’t aware of it’s awesomeness, I suggest taking a look at <a href="http://www.youtube.com/watch?v=o8xtO5E4MzE">Allister Banks’ talk at PSU MacAdmins last year</a>). I’m almost ashamed to admit that I was happily making my Golden Master images on my test iMac and hoping for the best when I cleaned them up by hand and pushed them out. Anyway, that’s enough of my admissions. Over these two years, I’ve picked up a few tips and tricks for working effectively with InstaDMG.</p>
+
+<h2 id="put-an-ssd-in-your-laptop">Put an SSD in your laptop</h2>
+<p>Seriously, just do it. If your boss complains at how much it costs, then they’re not charging enough for you. The price of the SSD was covered by the time I saved when doing one particularly chunky build (around 30GB including packages). InstaDMG is primarily I/O bound, so an SSD will change your InstaDMG life.</p>
+
+<h2 id="keep-your-instaup2datepackages-on-a-web-server">Keep your InstaUp2DatePackages on a web server</h2>
+<p>If you’ve got more than one person building images in your organisation, you’ll soon find that your packages will get out of sync with each other. One person will be using 0.8.2 of Munki, another 0.8.3, it all goes horribly wrong. As InstaDMG can pull packages from a web server, this lends itself to having a central repository for packages in your oganisation. Remember to keep it safely behind your firewall if you’ve got sensitive info in your packages (like one that creates your admin user, for example).</p>
+
+<h2 id="keep-our-catalogfiles-in-source-control">Keep our CatalogFiles in source control</h2>
+<p>Now that everyone has access to your InstaUp2DatePackages, we ought to get our CatalogFiles in check too. Keep them in some sort of source control like <a href="http://grahamgilbert.com/blog/2012/09/21/five-reasons-sysadmins-should-use-git/">Git</a> and be happy. Mine can be found on my <a href="https://github.com/grahamgilbert/InstaDMG-Catalogs">GitHub</a>.</p>
+
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/blog/2013/01/01/macscripts/">
         MacScripts
       </a>
@@ -296,34 +321,6 @@
 
 <h2 id="summary">Summary</h2>
 <p>For what it does, Meraki Systems Manager is hard to beat. If you need more than basic system information, or something that runs on Linux, you’re going to need to look elsewhere. It’s a great compliment to Puppet Inventory, but it’s not a total replacement.</p>
-
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2012/09/21/five-reasons-sysadmins-should-use-git/">
-        Five reasons sysadmins should use Git
-      </a>
-    </h1>
-
-    <span class="post-date">21 Sep 2012</span>
-
-
-    
-  <p>This post could also be called “Things we could learn from our developer brethren, but I digress, to the list! (Lists are awesome, aren’t they?)</p>
-
-<p>I’m not going to try and tell you how to get started with Git (<a href="http://glarizza.posterous.com/using-git-for-mac-sysadmins-part-1">go here instead for that</a>), I’m merely going to get on my soapbox.</p>
-
-<ol>
-  <li><strong>Branches</strong> - need to test something? No need to spend all day making a test setup, just make a branch and clone it to the test server. If it turns out that I wasn’t mad and my changes were a good idea, they can be merged back into the main branch just as easily.</li>
-  <li><strong>Accountability</strong> - who made that strange config change? A quick look at the commit history is all you need.</li>
-  <li><strong>Diff</strong> - what actually changed? It’s easy to see the exact changes</li>
-  <li><strong>Change history</strong> - why was that random change even made? Hopefully it’s in the commit message! (Your commit messages are useful, aren’t they?!)</li>
-  <li><strong>You can be a nice sysadmin</strong> - if you use GitHub it’s simple to take your repo public and share your awesomeness.</li>
-</ol>
-
-<p>So there you go - I hope this goes some way to answering the question “why shuold I be using Git?”</p>
 
 
   </div>

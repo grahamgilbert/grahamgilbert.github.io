@@ -196,6 +196,28 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/blog/2015/05/08/introducing-imagr/">
+        Introducing Imagr
+      </a>
+    </h1>
+
+    <span class="post-date">08 May 2015</span>
+
+
+    
+  <p>For the past few weeks, I’ve been working with some other Mac admins on a new application that can aid with the deployment of Macs - say hi to <a href="https://github.com/grahamgilbert/imagr">Imagr</a>.</p>
+
+<p><img src="/images/posts/2015-05-08/Imagr.png" /></p>
+
+<p>It’s not intended to be a full replacement for Deploystudio, but it’s now got all of the features I need to use Imagr full time. If you’d like to get started with Imagr, head on over to the <a href="https://github.com/grahamgilbert/imagr/wiki/Getting-Started">Wiki</a> - the only requirement is a web server, so the barrier to entry is pretty low (if you followed my guide on how to set up <a href="/blog/2015/04/22/getting-started-with-bsdpy-on-docker/">BSDPy</a>, you can use that web server).</p>
+
+<p>I hope you’ll give it a go and maybe, just maybe, we can get rid of those little Mac Minis for good!</p>
+
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/blog/2015/04/28/testing-bsdpy-in-vagrant/">
         Testing BSDPy in Vagrant
       </a>
@@ -299,38 +321,6 @@
 <p>What did we just do? The <code>-s</code> option is simply pointing at our Install OS X Yosemite.app - if you have it somewhere else, point AutoNBI there. <code>-d</code> is our destination directory and <code>-n</code> is the name of our NetInstall. <code>-e</code> is telling AutoNBI to make the NetInstall enabled.</p>
 
 <p>So the next time there’s a new OS X Installer, you can have an updated NetInstall in seconds, not minutes.</p>
-
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/">
-        Managing Munki catalogs with Trello
-      </a>
-    </h1>
-
-    <span class="post-date">11 Feb 2015</span>
-
-
-    
-  <p>Over the past few months, I’ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage it. We’ve got <a href="https://github.com/autopkg/autopkg">AutoPkg</a> populating our <a href="https://github.com/munki/munki">Munki</a> repositories without any manual intervention, but we still need to edit pkgsinfo files to move items through development to testing to production catalogs. Sure, there are existing tools  like <a href="https://github.com/munki/munkiwebadmin">MunkiWebAdmin</a> or <a href="https://github.com/hjuutilainen/munkiadmin">MunkiAdmin</a>, but they either still require knowledge of how Munki works or full access to the repository via a file share of some sort. And we obviously already have a tool for assigning software to machines in Sal+ - we needed something that can speed this incredibly common task.</p>
-
-<p>Then I cast my mind back to a conversation I had with <a href="https://twitter.com/bruienne">Pepijn Bruienne</a> at PSU last year about his workflow using <a href="https://trello.com">Trello</a> to promote items in his Munki repository. So, after pestering him for some information, I devised a workflow that matched how we worked.</p>
-
-<h2 id="so-how-does-it-work-i-hear-you-cry">“So how does it work”, I hear you cry</h2>
-
-<p>We have five lists on our “Munki Package Management” Trello board. Essentially when the script runs, it inspects the items in our Munki catalog and if they’re not already in the Trello board, it adds them to the correct list (we ignore anything that’s already in production. All promotions to production are done using this tool now).</p>
-
-<p><img class="center" src="/images/posts/2015-02-11/to_testing.gif" width="427" height="240" /></p>
-
-<p>We also have lists called “To Development”, “To Testing” and “To Production”. Moving items into these lists will be caught by the script next time it runs, and moved to the appropriate catalog.</p>
-
-<p><img class="center" src="/images/posts/2015-02-11/testing.gif" width="427" height="240" /></p>
-
-<p>When items finally make it to Production, we add them to a dated Production list. This allows us to have a full history of when things are added to Production and who has moved it through each stage. We’re also big users of Slack, so we hooked up it’s Tello integration to post a message to our notficiations channel to let our team know when items are added into Munki.</p>
-
-<p>You can grab the script from <a href="https://github.com/pebbleit/munki-trello">pebble.it’s GitHub account</a>, or if you’re Docker inclined there’s a <a href="https://registry.hub.docker.com/u/pebbleit/munki-trello/">container that has everything you need</a>.</p>
 
 
   </div>

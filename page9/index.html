@@ -196,6 +196,38 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/blog/2015/02/11/managing-munki-catalogs-with-trello/">
+        Managing Munki catalogs with Trello
+      </a>
+    </h1>
+
+    <span class="post-date">11 Feb 2015</span>
+
+
+    
+  <p>Over the past few months, I’ve been trying to take small pieces of our workflow and see if we can expand on the number of people able to manage it. We’ve got <a href="https://github.com/autopkg/autopkg">AutoPkg</a> populating our <a href="https://github.com/munki/munki">Munki</a> repositories without any manual intervention, but we still need to edit pkgsinfo files to move items through development to testing to production catalogs. Sure, there are existing tools  like <a href="https://github.com/munki/munkiwebadmin">MunkiWebAdmin</a> or <a href="https://github.com/hjuutilainen/munkiadmin">MunkiAdmin</a>, but they either still require knowledge of how Munki works or full access to the repository via a file share of some sort. And we obviously already have a tool for assigning software to machines in Sal+ - we needed something that can speed this incredibly common task.</p>
+
+<p>Then I cast my mind back to a conversation I had with <a href="https://twitter.com/bruienne">Pepijn Bruienne</a> at PSU last year about his workflow using <a href="https://trello.com">Trello</a> to promote items in his Munki repository. So, after pestering him for some information, I devised a workflow that matched how we worked.</p>
+
+<h2 id="so-how-does-it-work-i-hear-you-cry">“So how does it work”, I hear you cry</h2>
+
+<p>We have five lists on our “Munki Package Management” Trello board. Essentially when the script runs, it inspects the items in our Munki catalog and if they’re not already in the Trello board, it adds them to the correct list (we ignore anything that’s already in production. All promotions to production are done using this tool now).</p>
+
+<p><img class="center" src="/images/posts/2015-02-11/to_testing.gif" width="427" height="240" /></p>
+
+<p>We also have lists called “To Development”, “To Testing” and “To Production”. Moving items into these lists will be caught by the script next time it runs, and moved to the appropriate catalog.</p>
+
+<p><img class="center" src="/images/posts/2015-02-11/testing.gif" width="427" height="240" /></p>
+
+<p>When items finally make it to Production, we add them to a dated Production list. This allows us to have a full history of when things are added to Production and who has moved it through each stage. We’re also big users of Slack, so we hooked up it’s Tello integration to post a message to our notficiations channel to let our team know when items are added into Munki.</p>
+
+<p>You can grab the script from <a href="https://github.com/pebbleit/munki-trello">pebble.it’s GitHub account</a>, or if you’re Docker inclined there’s a <a href="https://registry.hub.docker.com/u/pebbleit/munki-trello/">container that has everything you need</a>.</p>
+
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/blog/2015/01/04/migrating-scriptrunner-to-outset/">
         Migrating scriptRunner to Outset
       </a>
@@ -286,24 +318,6 @@
   <p>It seems like Yosemite introduced an <a href="https://github.com/munki/createOSXinstallPkg#further-note-on-additional-packages-and-yosemite">undocumented change</a> that requires any packages that are added an OS X installer (e.g. Netinstall or createOSXinstallPkg) be distribution style packages, or you get a nasty failure acompanied by one of the most unhelpful error messages ever.</p>
 
 <p>To fix this, <a href="https://github.com/grahamgilbert/first-boot-pkg">first-boot-pkg</a> now builds distribution style packages.</p>
-
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2014/08/24/london-apple-admins/">
-        London Apple Admins
-      </a>
-    </h1>
-
-    <span class="post-date">24 Aug 2014</span>
-
-
-    
-  <p>I’m delighted to say that the first (first meet that isn’t “let’s go to the pub and get drunk”, anyway!) <a href="http://www.londonappleadmins.org.uk">London Apple Admins</a> meetup is happening on the 3rd September at <a href="http://theredherring.co.uk/">The Red Herring in St Pauls</a>. I’d like to take all of the credit for organising it, but it was down to the hard work of <a href="http://macmule.com">Ben Toms</a>. The theme this time is “this is what I’m working on at the moment”, so I’ll be talking about my new favourite toy, <a href="https://www.docker.com">Docker</a>.</p>
-
-<p>If you’ll be in or around London on the 3rd September, <a href="https://www.eventbrite.com/e/london-apple-admins-sept-2014-tickets-12545591201">please get yourself a ticket</a> (they’re free) and come and have a beer or two whilst listening to some awesome talks by London based Mac Admins.</p>
 
 
   </div>

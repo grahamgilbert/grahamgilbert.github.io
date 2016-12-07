@@ -196,6 +196,34 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/blog/2012/09/21/five-reasons-sysadmins-should-use-git/">
+        Five reasons sysadmins should use Git
+      </a>
+    </h1>
+
+    <span class="post-date">21 Sep 2012</span>
+
+
+    
+  <p>This post could also be called “Things we could learn from our developer brethren, but I digress, to the list! (Lists are awesome, aren’t they?)</p>
+
+<p>I’m not going to try and tell you how to get started with Git (<a href="http://glarizza.posterous.com/using-git-for-mac-sysadmins-part-1">go here instead for that</a>), I’m merely going to get on my soapbox.</p>
+
+<ol>
+  <li><strong>Branches</strong> - need to test something? No need to spend all day making a test setup, just make a branch and clone it to the test server. If it turns out that I wasn’t mad and my changes were a good idea, they can be merged back into the main branch just as easily.</li>
+  <li><strong>Accountability</strong> - who made that strange config change? A quick look at the commit history is all you need.</li>
+  <li><strong>Diff</strong> - what actually changed? It’s easy to see the exact changes</li>
+  <li><strong>Change history</strong> - why was that random change even made? Hopefully it’s in the commit message! (Your commit messages are useful, aren’t they?!)</li>
+  <li><strong>You can be a nice sysadmin</strong> - if you use GitHub it’s simple to take your repo public and share your awesomeness.</li>
+</ol>
+
+<p>So there you go - I hope this goes some way to answering the question “why shuold I be using Git?”</p>
+
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/blog/2012/08/18/location-based-printers-with-puppet/">
         Location based printers with Puppet
       </a>
@@ -302,64 +330,6 @@
   <p>Munki is great. It keeps your macs up to date - well it does most of the time. Sometimes you get a user that just refuses to click on “Update” now matter how many times it pops up. Now you have a tool to defeat them - install this package over ARD and munki will install everything that’s available, including Apple software updates (it will reboot the mac if needed and carry on where it left off).</p>
 
 <p>I wish I could take credit for all this <a href="http://code.google.com/p/munki/wiki/BootstrappingWithMunki">amazingness</a>, but I just wrapped it up into a package. The source is over at <a href="https://github.com/grahamgilbert/Munki-Bootstrap">GitHub</a>, and there’s <a href="https://github.com/downloads/grahamgilbert/Munki-Bootstrap/Munki_Bootstrap.pkg.zip">a pre built package</a> as well.</p>
-
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2012/04/21/headless-virtualbox/">
-        Headless VirtualBox
-      </a>
-    </h1>
-
-    <span class="post-date">21 Apr 2012</span>
-
-
-    
-  <p>I recently had a requirement to run an Ununtu machine, but the client had only mac servers, and no budget for additional hardware. The solution turned out to be VirtualBox - we could run it headless and have it start when the mac booted.</p>
-
-<p>First, get your VM set up how you like it and shut it down. I like to move my VMs out of the boot drive, so move the entire ~/VirtualBox VMs directory onto your storage device.</p>
-
-<p>VirtualBox needs to know where the vm lives now, so remove the original vm you made, then double click the moved vbox file.</p>
-
-<p>One last step - the launchd item to control the vm.</p>
-
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
-&lt;plist version="1.0"&gt;
-&lt;dict&gt;
-  	&lt;key&gt;Label&lt;/key&gt;
-  &lt;string&gt;com.yourcompany.mysupervm.plist&lt;/string&gt;
-  &lt;key&gt;ProgramArguments&lt;/key&gt;
-  &lt;array&gt;
-    &lt;string&gt;/usr/bin/VBoxHeadless&lt;/string&gt;
-    &lt;string&gt;-startvm&lt;/string&gt;
-    &lt;string&gt;The name of your VM&lt;/string&gt;
-  &lt;/array&gt;
-&lt;key&gt;KeepAlive&lt;/key&gt;
-&lt;true/&gt;
-  &lt;key&gt;UserName&lt;/key&gt;
-  &lt;string&gt;admin&lt;/string&gt;
-  &lt;key&gt;WorkingDirectory&lt;/key&gt;
-  &lt;string&gt;/Volumes/Storage&lt;/string&gt;
-  &lt;key&gt;RunAtLoad&lt;/key&gt;
-  &lt;true/&gt;
-&lt;/dict&gt;
-&lt;/plist&gt;
-</code></pre>
-
-<p>Change some “The name of your VM” to what your vm is actually called, change UserName to the admin username on the server, and finally change the WorkingDirectory path to match the location of your VirtualBox VMs directory.</p>
-
-<p>Save the plist into /Library/LaunchDaemons/ as com.yourcompany.mysupervm.plist (or whatever you want) and chown it to root:wheel</p>
-
-<p>To start the vm, crack open terminal and issue
-	sudo launchctl load /Library/LaunchDaemons/com.yourcompany.mysupervm.plist</p>
-
-<p>And to stop:
-	sudo launchctl unload /Library/LaunchDaemons/com.yourcompany.mysupervm.plist</p>
-
-<p>The vm will start at boot, and will continue to run, so to stop it, you need to unload the plist.</p>
 
 
   </div>
