@@ -178,6 +178,10 @@
           
         
       
+        
+          
+        
+      
       </nav>
       <p>
 
@@ -193,6 +197,50 @@
 
     <div class="content container">
       <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/blog/2013/01/07/updating-instadmg-based-netrestore-images/">
+        Updating InstaDMG based NetRestore images
+      </a>
+    </h1>
+
+    <span class="post-date">07 Jan 2013</span>
+
+
+    
+  <p>This probably isn’t news to anyone else, but I made a discovery last week that will save me a fair bit of time.</p>
+
+<p>Whilst staring at System Image Utility after yet another change to the build, I thought that there must be a better way of doing this, bearing in mind that the basic InstaDMG process is:</p>
+
+<ul>
+  <li>Install the OS</li>
+  <li>Install Packages</li>
+  <li><strong>Make a read-only DMG</strong></li>
+  <li><strong>Prep the DMG for ASR</strong></li>
+</ul>
+
+<p>And SIU’s process is:</p>
+
+<ul>
+  <li><strong>Make a read-only DMG</strong></li>
+  <li><strong>Prep the DMG for ASR</strong></li>
+  <li>Copy it into a writable disk image with a stripped down OS to restore the image.</li>
+</ul>
+
+<p>So, two steps are duplicated. This inefficiency must be stopped!</p>
+
+<p>After a 30 second hunt in the NetInstall.dmg file that SIU spits out, I saw a file called System.dmg in the Packages folder - sure enough, it was my InstaDMG image. I replaced it with my new build, and it worked flawlessly.</p>
+
+<p>If your new image is larger than the one you’re replacing, you just need to expand the NetInstall.dmg image to a size large enough to accomodate the new image.</p>
+
+<pre><code>hdiutil resize -growonly -size 15g /path/to/your/NetRestore.nbi/NetInstall.dmg
+</code></pre>
+
+<p>Replace the 15g with whatever size you want, 15 GB was plenty to accomodate my updated image.</p>
+
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -286,41 +334,6 @@
   <p>A few months ago, we decided to move away from DeployStudio for imaging our Macs to reduce the OS X footprint in the server room (a plain old NetRestore can be run from <a href="https://jamfnation.jamfsoftware.com/viewProduct.html?id=180&amp;view=info">NetSUS</a>). This left us with a problem - how are we going to name our Macs now (a task previously performed by DeployStudio)?</p>
 
 <p>Enter <a href="https://github.com/grahamgilbert/macnamer">MacNamer</a>. It’s usage and installation is detailled in the Readme file, please fork, try to break, file pull requests. This has been in production for several months at work, but I’m sure someone will manage to make it break!</p>
-
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2012/11/12/meraki-systems-manager/">
-        Meraki Systems Manager
-      </a>
-    </h1>
-
-    <span class="post-date">12 Nov 2012</span>
-
-
-    
-  <p>Maintaining visibility over your fleet of machines is always difficult. It’s even more difficult when you’ve got Macs. It gets nearly impossible when you decide you’d like something hosted in the cloud.</p>
-
-<p>We’ve been looking for a good solution for ages now - we even resorted to using <a href="http://www.ocsinventory-ng.org/en/">OCS Inventory</a> for a while. We then discovered <a href="http://www.meraki.com/products/systems-manager/">Meraki’s Systems Manager</a>.</p>
-
-<p>This isn’t going to be one of those fancy review type things - you can go and look at it’s features yourself. This is more an overview of the factors that came into our decision:
-##Pros
-* It’s cloud based! No servers for us to deploy, no VPNs between sites for clients to communicate over
-* It does basic iOS MDM. It’s not the best in the world, but it does a lot of what we wanted (basically configuring email and Wi-Fi settings)
-* It has SSH over the Internet. If all else fails, we have a way into a machine, no matter where it is.
-* It’s free! It’s hard to argue with a price like that!</p>
-
-<h2 id="cons">Cons</h2>
-<ul>
-  <li>It’s free! If you’re not paying for something, you have no SLA, no guarantee it will be working tomorrow</li>
-  <li>It’s location services suck in the UK. My home network is in Sheffield apparently. We supposedly have clients in Bath (we don’t).</li>
-  <li>It’s not particuarly customisable. With Puppet, Facter, Puppet Dashboard and the inventory service configured, you can pull out practically any information you require (for example, we have a Fact that tells us if there are any admin users on a Mac other than our own).</li>
-</ul>
-
-<h2 id="summary">Summary</h2>
-<p>For what it does, Meraki Systems Manager is hard to beat. If you need more than basic system information, or something that runs on Linux, you’re going to need to look elsewhere. It’s a great compliment to Puppet Inventory, but it’s not a total replacement.</p>
 
 
   </div>

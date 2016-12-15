@@ -178,6 +178,10 @@
           
         
       
+        
+          
+        
+      
       </nav>
       <p>
 
@@ -193,6 +197,24 @@
 
     <div class="content container">
       <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/blog/2016/12/15/enable-sip-with-munki/">
+        Enable SIP with Munki
+      </a>
+    </h1>
+
+    <span class="post-date">15 Dec 2016</span>
+
+
+    
+    <p>When 10.12.2 hit this week, it introduced an awesome new feature - the ability to enable SIP without having to be booted into a Recovery like environment (either Recovery HD or a NetInstall). Unfortunately it merely enables SIP on the next reboot.</p>
+
+<p>Fortunately, Munki is pretty good at telling users when they need to reboot, so I wrote the following pkgsinfo file that will check if SIP is enabled, and if it isn’t, will enable it and reboot (fortunately it’s quite a bit easier to do this that it is with <a href="https://babodee.wordpress.com/2016/12/15/ensuring-sip-is-enabled/">other tools</a>. I’ve targeted this update at 10.12.0, because, well, if they’re not updating, I’d like them to. And it’s called ‘Critical Security Update’ so they may actually install it. If you really want them to install it, you can set a <code>force_install_after_date</code> and set it to the past, which will give your users a hour to install it before their machine goes byebye. 
+  <p><a href="/blog/2016/12/15/enable-sip-with-munki/">Read more →</a></p>
+  
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -300,24 +322,6 @@
   <p>If you attended my talk in Gothenburg today, thank you! The slides from my primary talk, “0 to Imagr-ing in 45 minutes” are <a href="/images/posts/2016-10-06/0 to Imagr-ing.pdf">available here</a>, and you can find the all of the <a href="https://github.com/grahamgilbert/imagr_macsysadmin_2016">code I used on GitHub</a>. If for some reason you would like my slides on beer in London (or, VMware is slow at imaging a disk and I needed to fill time), you can <a href="/images/posts/2016-10-06/Beer in London.pdf">also get them here</a>.</p>
 
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2016/09/05/return-of-the-yo-notifications/">
-        Return of the Yo notifications
-      </a>
-    </h1>
-
-    <span class="post-date">05 Sep 2016</span>
-
-
-    
-    <p><a href="/blog/2016/08/29/more-notifications-with-yo-the-yo-strikes-back/">Last time</a>, took our first steps to notify our users about updates in a slight nicer way. This time we are going to modify our script so that our users are only bugged once a day, and also not promoted to install 10.11 if they’re already running it.</p>
-
-<p>Unfortunately for some, whilst this will be possible if we stuck to using bash, it would drive me insane, so we are switching to Python. Don’t be scared! Python makes a lot of sense once you get your head around it, and you’ll be a much happier mac admin once you leave the 1500 line bash scripts behind. 
-  <p><a href="/blog/2016/09/05/return-of-the-yo-notifications/">Read more →</a></p>
-  
   </div>
   
 </div>

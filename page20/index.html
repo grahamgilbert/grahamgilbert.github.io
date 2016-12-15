@@ -178,6 +178,10 @@
           
         
       
+        
+          
+        
+      
       </nav>
       <p>
 
@@ -193,6 +197,22 @@
 
     <div class="content container">
       <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/blog/2012/02/23/making-a-lion-recovery-hd-revisited/">
+        Making a Lion Recovery HD revisited
+      </a>
+    </h1>
+
+    <span class="post-date">23 Feb 2012</span>
+
+
+    
+  <p>I’ve pushed some updates to this script, mainly switching to using <a href="https://github.com/unixorn/luggage">The Luggage</a> for making the package. As ever, it’s up on <a href="https://github.com/grahamgilbert/Make-Recovery-HD">Github</a>.</p>
+
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -299,69 +319,11 @@
 
   </div>
   
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2011/11/22/kerio-connect-vs-web-services-in-lion-server/">
-        Kerio Connect vs Web Services in Lion Server
-      </a>
-    </h1>
-
-    <span class="post-date">22 Nov 2011</span>
-
-
-    
-  <h3 id="the-problem">The problem</h3>
-
-<p>Lion Server takes over every ethernet interface when you enable any web services (Web, Wiki, Profile Manager, basically anything!). This leaves us with two options: putting Kerio on a non-standard port and getting the users to type that in every time, or completely disabling apache and not using any of the good stuff that came with Lion Server. Or, we could work out a way to redirect users to the right port number when they hit mail.example.com</p>
-
-<p>Enter Reverse Proxy. This takes the request for the mail.example.com virtual host, and redirects it to our custom HTTPS port (8843).</p>
-
-<h3 id="how-to-do-it">How to do it</h3>
-
-<p>The files you need are on my <a href="https://github.com/grahamgilbert/Lion_Kerio">GitHub</a>. Replace mail.example.com with the FQDN of your mail server.</p>
-
-<ol>
-  <li>Set up your lion server first. Configure SSL certificates, OD and web services the way you like it.</li>
-  <li>Export your private key for the signed SSL certificate from the keychain.</li>
-  <li>Install Kerio Connect. Import the private key and your signed certificate.</li>
-  <li>Set Kerio to use only port 8800 for HTTP and 8843 for HTTP and HTTPS, respectively.</li>
-  <li>Set Kerio to bind it’s services to All Interfaces rather than a specific IP address. (I’ve found that services won’t start when it’s listening on all IPs, but will when it can listen to all - don’t ask me why!)</li>
-  <li>In Server.app, configure mail.example.com in Web. Set it to use port 443, set the root folder to whatever you want (it won’t be used).</li>
-  <li>In Hardware, set the virtual host you just created to use the right ssl cert.</li>
-  <li>In terminal: <code>cd /path/to/the/files/you/downloaded</code></li>
-  <li>In terminal again: <code>sudo cp httpd_kerio.conf /etc/apache2/httpd_kerio.conf</code></li>
-  <li>And again: <code>sudo cp webapps/com.grahamglbert.kerio.plist /etc/apache2/webapps/com.grahamglbert.kerio.plist</code></li>
-  <li>One last time: <code>sudo webappctl start com.grahamgilbert.kerio mail.example.com</code></li>
-</ol>
-
-<h3 id="whats-happening">What’s happening</h3>
-
-<p>By default, when you specify a vhost to use ssl in lion server, any requests to port 80 are redirected to 443. Once it’s wrapped in ssl, it’s redirected transparently to 8843, so the user is sent to the webmail login.</p>
-
-<p>The plist file is the core of the webapp mechanism that was introduced with lion server. Within that all we’re doing is importing the httpd_kerio.conf file (which just has a standard apache reverse proxy directive) and telling the app to always use ssl. The webappctl command is simply telling the webapp mechanism to load our plist and start it on the mail.example.com vhost.</p>
-
-<h3 id="known-issues">Known Issues</h3>
-
-<h4 id="entourage">Entourage</h4>
-
-<p>Entourage accounts will need to be reconfigured with the Kerio setup tool. They don’t seem to like communicating with the server over port 443 when the reverse proxy is running - they will have issues sending email.</p>
-
-<h4 id="kerio-services">Kerio Services</h4>
-
-<p>The services in Kerio Admin will need to be set to run on All Interfaces rather than a set IP address, as they won’t start on a specific address (it is unknown whether this is because of the reverse proxy / webapp process or if this is a general Lion issue). If the service has stopped, the webapp will need to be restarted:</p>
-
-<pre><code>sudo webappctl stop com.grahamgilbert.kerio mail.example.com
-sudo webappctl start com.grahamgilbert.kerio mail.example.com
-</code></pre>
-
-
-  </div>
-  
 </div>
 
 <div class="pagination">
   
-    <span class="pagination-item older">Older</span>
+    <a class="pagination-item older" href="/page21">Older</a>
   
   
     

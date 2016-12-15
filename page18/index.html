@@ -178,6 +178,10 @@
           
         
       
+        
+          
+        
+      
       </nav>
       <p>
 
@@ -193,6 +197,41 @@
 
     <div class="content container">
       <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/blog/2012/11/12/meraki-systems-manager/">
+        Meraki Systems Manager
+      </a>
+    </h1>
+
+    <span class="post-date">12 Nov 2012</span>
+
+
+    
+  <p>Maintaining visibility over your fleet of machines is always difficult. It’s even more difficult when you’ve got Macs. It gets nearly impossible when you decide you’d like something hosted in the cloud.</p>
+
+<p>We’ve been looking for a good solution for ages now - we even resorted to using <a href="http://www.ocsinventory-ng.org/en/">OCS Inventory</a> for a while. We then discovered <a href="http://www.meraki.com/products/systems-manager/">Meraki’s Systems Manager</a>.</p>
+
+<p>This isn’t going to be one of those fancy review type things - you can go and look at it’s features yourself. This is more an overview of the factors that came into our decision:
+##Pros
+* It’s cloud based! No servers for us to deploy, no VPNs between sites for clients to communicate over
+* It does basic iOS MDM. It’s not the best in the world, but it does a lot of what we wanted (basically configuring email and Wi-Fi settings)
+* It has SSH over the Internet. If all else fails, we have a way into a machine, no matter where it is.
+* It’s free! It’s hard to argue with a price like that!</p>
+
+<h2 id="cons">Cons</h2>
+<ul>
+  <li>It’s free! If you’re not paying for something, you have no SLA, no guarantee it will be working tomorrow</li>
+  <li>It’s location services suck in the UK. My home network is in Sheffield apparently. We supposedly have clients in Bath (we don’t).</li>
+  <li>It’s not particuarly customisable. With Puppet, Facter, Puppet Dashboard and the inventory service configured, you can pull out practically any information you require (for example, we have a Fact that tells us if there are any admin users on a Mac other than our own).</li>
+</ul>
+
+<h2 id="summary">Summary</h2>
+<p>For what it does, Meraki Systems Manager is hard to beat. If you need more than basic system information, or something that runs on Linux, you’re going to need to look elsewhere. It’s a great compliment to Puppet Inventory, but it’s not a total replacement.</p>
+
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -314,24 +353,6 @@
 <p>So, what else could we do better with the cloud? 
   <p><a href="/blog/2012/07/01/google-directory/">Read more →</a></p>
   
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2012/05/07/run-munki-at-boot/">
-        Run munki at boot
-      </a>
-    </h1>
-
-    <span class="post-date">07 May 2012</span>
-
-
-    
-  <p>Munki is great. It keeps your macs up to date - well it does most of the time. Sometimes you get a user that just refuses to click on “Update” now matter how many times it pops up. Now you have a tool to defeat them - install this package over ARD and munki will install everything that’s available, including Apple software updates (it will reboot the mac if needed and carry on where it left off).</p>
-
-<p>I wish I could take credit for all this <a href="http://code.google.com/p/munki/wiki/BootstrappingWithMunki">amazingness</a>, but I just wrapped it up into a package. The source is over at <a href="https://github.com/grahamgilbert/Munki-Bootstrap">GitHub</a>, and there’s <a href="https://github.com/downloads/grahamgilbert/Munki-Bootstrap/Munki_Bootstrap.pkg.zip">a pre built package</a> as well.</p>
-
-
   </div>
   
 </div>
