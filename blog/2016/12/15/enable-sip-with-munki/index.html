@@ -199,7 +199,7 @@
       <div class="post">
   <h1 class="post-title">Enable SIP with Munki</h1>
   <span class="post-date">15 Dec 2016</span>
-  <p>When 10.12.2 hit this week, it introduced an awesome new feature - the ability to enable SIP without having to be booted into a Recovery like environment (either Recovery HD or a NetInstall). Unfortunately it merely enables SIP on the next reboot.</p>
+  <p>When 10.12.2 hit this week, it introduced an awesome new feature - the <a href="https://onemoreadmin.wordpress.com/2016/12/13/system-integrity-protection-sip-changes-in-macos-sierra-10-12-2/">ability to enable SIP</a> without having to be booted into a Recovery like environment (either Recovery HD or a NetInstall). Unfortunately it merely enables SIP on the next reboot.</p>
 
 <p>Fortunately, Munki is pretty good at telling users when they need to reboot, so I wrote the following pkgsinfo file that will check if SIP is enabled, and if it isn’t, will enable it and reboot (fortunately it’s quite a bit easier to do this that it is with <a href="https://babodee.wordpress.com/2016/12/15/ensuring-sip-is-enabled/">other tools</a>. I’ve targeted this update at 10.12.0, because, well, if they’re not updating, I’d like them to. And it’s called ‘Critical Security Update’ so they may actually install it. If you really want them to install it, you can set a <code>force_install_after_date</code> and set it to the past, which will give your users a hour to install it before their machine goes byebye. <!-- more -->Without further ado, here it is:</p>
 

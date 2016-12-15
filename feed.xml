@@ -4,7 +4,7 @@
  <title>graham gilbert</title>
  <link href="https://grahamgilbert.com//atom.xml" rel="self"/>
  <link href="https://grahamgilbert.com//"/>
- <updated>2016-12-15T15:26:10-08:00</updated>
+ <updated>2016-12-15T15:50:03-08:00</updated>
  <id>https://grahamgilbert.com</id>
  <author>
    <name>Graham Gilbert</name>
@@ -17,7 +17,7 @@
    <link href="https://grahamgilbert.com/blog/2016/12/15/enable-sip-with-munki/"/>
    <updated>2016-12-15T14:47:43-08:00</updated>
    <id>https://grahamgilbert.com//blog/2016/12/15/enable-sip-with-munki</id>
-   <content type="html">&lt;p&gt;When 10.12.2 hit this week, it introduced an awesome new feature - the ability to enable SIP without having to be booted into a Recovery like environment (either Recovery HD or a NetInstall). Unfortunately it merely enables SIP on the next reboot.&lt;/p&gt;
+   <content type="html">&lt;p&gt;When 10.12.2 hit this week, it introduced an awesome new feature - the &lt;a href=&quot;https://onemoreadmin.wordpress.com/2016/12/13/system-integrity-protection-sip-changes-in-macos-sierra-10-12-2/&quot;&gt;ability to enable SIP&lt;/a&gt; without having to be booted into a Recovery like environment (either Recovery HD or a NetInstall). Unfortunately it merely enables SIP on the next reboot.&lt;/p&gt;
 
 &lt;p&gt;Fortunately, Munki is pretty good at telling users when they need to reboot, so I wrote the following pkgsinfo file that will check if SIP is enabled, and if it isn’t, will enable it and reboot (fortunately it’s quite a bit easier to do this that it is with &lt;a href=&quot;https://babodee.wordpress.com/2016/12/15/ensuring-sip-is-enabled/&quot;&gt;other tools&lt;/a&gt;. I’ve targeted this update at 10.12.0, because, well, if they’re not updating, I’d like them to. And it’s called ‘Critical Security Update’ so they may actually install it. If you really want them to install it, you can set a &lt;code&gt;force_install_after_date&lt;/code&gt; and set it to the past, which will give your users a hour to install it before their machine goes byebye. &lt;!-- more --&gt;Without further ado, here it is:&lt;/p&gt;
 
