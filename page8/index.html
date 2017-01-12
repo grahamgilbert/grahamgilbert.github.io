@@ -32,8 +32,8 @@
 
   <!-- RSS -->
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
-  <link href='/stylesheets/all-c8369cf731585eb98eef0098877bca87.css' media='all' rel='stylesheet' type='text/css'>
-  <link type="application/atom+xml" rel="alternate" href="https://grahamgilbert.com/atom.xml" title="graham gilbert" />
+  <link href='/stylesheets/all-b18cc7d6d5710987503b687ec013f838.css' media='all' rel='stylesheet' type='text/css'>
+  <link type="application/atom+xml" rel="alternate" href="https://grahamgilbert.com//atom.xml" title="graham gilbert" />
   <style>
   .clear{
     clear:both
@@ -100,6 +100,8 @@
           
             <a class="sidebar-nav-item" href="/talks/">Talks</a>
           
+        
+      
         
       
         
@@ -197,6 +199,32 @@
 
     <div class="content container">
       <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/blog/2015/06/22/running-puppet-server-in-docker/">
+        Running Puppet Server in Docker
+      </a>
+    </h1>
+
+    <span class="post-date">22 Jun 2015</span>
+
+
+    
+    <p>Back when I started using Puppet, configuring a Puppet Master could be pretty tricky as there were several moving parts (it was a Rack application, so needed to run behind something like <a href="https://www.phusionpassenger.com/">Passenger</a> if you had any number of clients). Thankfully, the new <a href="https://github.com/puppetlabs/puppet-server">Puppet Server</a> simplifies things massively - it’s just one installation to get things working in a way that would be suitable for putting straight into production.</p>
+
+<p>Over the next few posts, I’ll take you through setting up the Puppet Server (running on Docker, naturally!), using r10k and git for managing your modules and using Hiera to configure your Macs - we’ll apply some configuration to a Mac without writing a single line of Puppet code .</p>
+
+<h1 id="why">Why?</h1>
+
+<p>You might well be thinking “why would I want to use Puppet?” After all, you’ve already got Munki. There are two main reasons I’ve chosen to go back to using a Puppet Server in conjunction with Munki.</p>
+
+<ol>
+  <li>It’s nice to have a fallback. If I manage to do something stupid and nuke my Munki install, or my customers manage to do the same, I’ve got some way of getting the machines back under control.</li>
+  <li>“Free” SSL certs - this might not be a priority now, but it gives you an easy to to secure your Munki repository later on (which we may cover in a later post).
+  <p><a href="/blog/2015/06/22/running-puppet-server-in-docker/">Read more →</a></p>
+  
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -317,24 +345,6 @@
     
     <p>Have you heard of Docker, but think it all sounds a bit mystical and exotic? Then this is the post for you! Before we begin, you’re going to need a machine (or a VM, either on your machine or on a server) with Ubuntu 14.04 LTS installed on it. You can install Docker on many other operating systems, but I use Ubuntu, so we’re using that. Your Ubuntu box will also need a real IP address - if you are using VMware Fusion, this will be a Bridged Network Adapter - adjust the terminology if you’re using a different virtualization tool. You don’t need to worry about giving your machine a static IP unless you want to - Macs will NetBoot just fine when they’re on the same subnet. 
   <p><a href="/blog/2015/04/21/getting-started-with-bsdpy-on-docker/">Read more →</a></p>
-  
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2015/04/13/more-fun-with-autonbi/">
-        More fun with AutoNBI
-      </a>
-    </h1>
-
-    <span class="post-date">13 Apr 2015</span>
-
-
-    
-    <p>Last time we saw our heroes, there was the unfuffilled promise of making small NetInstall sets. Now is the time to deliver on that promise. We’re going to make a small NetInstall that will open up Terminal.app.</p>
-
-<p>If you’ve not read the <a href="http://grahamgilbert.com/blog/2015/04/12/building-custom-netinstalls-with-autonbi/">previous post</a> (and have got AutoNBI), go and do it now. I’ll wait. All done? 
-  <p><a href="/blog/2015/04/13/more-fun-with-autonbi/">Read more →</a></p>
   
   </div>
   

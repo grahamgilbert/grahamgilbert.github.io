@@ -32,8 +32,8 @@
 
   <!-- RSS -->
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
-  <link href='/stylesheets/all-c8369cf731585eb98eef0098877bca87.css' media='all' rel='stylesheet' type='text/css'>
-  <link type="application/atom+xml" rel="alternate" href="https://grahamgilbert.com/atom.xml" title="graham gilbert" />
+  <link href='/stylesheets/all-b18cc7d6d5710987503b687ec013f838.css' media='all' rel='stylesheet' type='text/css'>
+  <link type="application/atom+xml" rel="alternate" href="https://grahamgilbert.com//atom.xml" title="graham gilbert" />
   <style>
   .clear{
     clear:both
@@ -100,6 +100,8 @@
           
             <a class="sidebar-nav-item" href="/talks/">Talks</a>
           
+        
+      
         
       
         
@@ -197,6 +199,34 @@
 
     <div class="content container">
       <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/blog/2011/11/29/backing-up-postres-in-lion-server/">
+        Backing up Postres in Lion Server
+      </a>
+    </h1>
+
+    <span class="post-date">29 Nov 2011</span>
+
+
+    
+  <p>Starting with Lion Server, a fair bit of data is now stored in Postgres databases. If you use Time Machine, you’ll get this backed up properly for you. If you use a proper backup solution (I prefer CrashPlan), you won’t get automated dumps. This script rectifies this, by dumping all of your Postgres data, and keeping 7 days worth.</p>
+
+<p>You can grab the code, along with a pre-built pkg installer from <a href="https://github.com/grahamgilbert/Postgres-Backup-for-Lion-Server">GitHub</a>.</p>
+
+<h3 id="configuration">Configuration</h3>
+
+<p>By default, the script puts it’s backups in /Backups/Postgres - if you wish to change it, you will need to edit line 3 of /usr/local/pgbackup/pgbackup.sh</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">/usr/local/pgbackup/pgbackup.sh
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">FINAL_BACKUP_DIR</span><span class="o">=</span>/path/where/you/want/things/kept</div></div></pre></div></figure>
+
+<p>The LaunchDaemon will trigger the script every night at 21:00. If you wish to change this, you will need to edit the CalendarStartInterval part of com.grahamgilbert.pgbackup.plist</p>
+
+
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">

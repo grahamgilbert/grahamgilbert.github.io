@@ -32,8 +32,8 @@
 
   <!-- RSS -->
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
-  <link href='/stylesheets/all-c8369cf731585eb98eef0098877bca87.css' media='all' rel='stylesheet' type='text/css'>
-  <link type="application/atom+xml" rel="alternate" href="https://grahamgilbert.com/atom.xml" title="graham gilbert" />
+  <link href='/stylesheets/all-b18cc7d6d5710987503b687ec013f838.css' media='all' rel='stylesheet' type='text/css'>
+  <link type="application/atom+xml" rel="alternate" href="https://grahamgilbert.com//atom.xml" title="graham gilbert" />
   <style>
   .clear{
     clear:both
@@ -100,6 +100,8 @@
           
             <a class="sidebar-nav-item" href="/talks/">Talks</a>
           
+        
+      
         
       
         
@@ -200,6 +202,45 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/blog/2013/10/13/znc-an-irc-bouncer/">
+        ZNC: An IRC Bouncer
+      </a>
+    </h1>
+
+    <span class="post-date">13 Oct 2013</span>
+
+
+    
+    <p>Yes,  it’s true. The most interesting conversations in the Mac admin world take place using technology from the 1980’s - <a href="http://en.wikipedia.org/wiki/Internet_Relay_Chat">IRC</a> (##osx-server on <a href="http://freenode.net/">freenode</a>). Those of you who know me will know that I’m borderline OCD. In this instance, my major annoyance was that I’d only get half of the conversation and I’d miss private messages when I had to put my laptop to sleep. I needed to somehow keep a persistient conenction to IRC without having to sit infront of my computer 24/7.</p>
+
+<p>I’d heard of IRC bouncers before - an app that runs on a server, saving the messages in the rooms you specify for you until you are able to read them, but always assumed they were much more difficult to set up than it turned out to be.</p>
+
+<p>This is set up on a box running Ubuntu 12.04, with port 6666 opened on your firewall and forwarded to the box if you want to access it from outside the network. Mine is running on an <a href="http://aws.amazon.com/free/">Amazon EC2 Micro instance</a> - available for free for one year if you don’t already have a server to run it on.</p>
+
+<p>Right, let’s get started. All of these commands are to be run as your normal user (<code>graham</code> in this case - <strong>not root</strong>). First we’re going to enable backports in Ubuntu. I like editing text files in <code>nano</code> so I’m going to install that first, but feel free to use Vi or whatever you like.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo apt-get install -y nano
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo nano /etc/apt/sources.list</div></div></pre></div></figure>
+
+<p>Find the two backports lines commented out (lines 44-45 on my test box) and unomment them.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">deb http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">deb-src http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse</div></div></pre></div></figure>
+
+<p>If you are using nano, hit <code>CTRL+O</code> and press return to save it, then <code>CTRL-X</code> to exit.</p>
+
+<p>To install ZNC, issue the following command:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo apt-get update
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>sudo apt-get install -y znc/precise-backports znc-dbg/precise-backports znc-dev/precise-backports znc-extra/precise-backports znc-perl/precise-backports znc-python/precise-backports znc-tcl/precise-backports</div></div></pre></div></figure>
+
+
+  <p><a href="/blog/2013/10/13/znc-an-irc-bouncer/">Read more →</a></p>
+  
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/blog/2013/08/23/creating-an-os-x-base-box-for-vagrant-with-packer/">
         Creating an OS X base box for Vagrant with Packer
       </a>
@@ -285,41 +326,6 @@
 
 <p>If you’re happy with what crankd does and using the command line, head on over to the <a href="https://github.com/grahamgilbert/buildCrankPkg">repository</a> and enjoy. If you need a bit more help to get started, read on.
   <p><a href="/blog/2013/07/17/buildcrankpkg/">Read more →</a></p>
-  
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2013/07/12/using-crankd-to-react-to-network-events/">
-        Using crankd to react to network events
-      </a>
-    </h1>
-
-    <span class="post-date">12 Jul 2013</span>
-
-
-    
-    <p>Updated 14/7/2013: After <a href="https://twitter.com/Sacrilicious/status/355756510535614464">Alister’s suggestion</a>, the script now loops over network interfaces up to en19 (hopefully that’s enough!).</p>
-
-<p>So, you’ve heard of this crankd thing, maybe even had a look at it, but have no idea how to get it going? You’re in the right place. I’m by no means an expert on it, having only been playing with it for less than a week, but I already have it running in production running the simple script below. My initial work, and therefore this post was inspired by Gary Larizza’s <a href="http://web.archive.org/web/20120111031339/http://glarizza.posterous.com/using-crankd-to-react-to-network-events">two</a> <a href="http://garylarizza.com/blog/2011/12/31/using-the-google-macops-crankd-and-facter-code/">articles</a> on the subject.</p>
-
-<h2 id="what-is-crankd">What is crankd?</h2>
-
-<p>It’s part of the <a href="https://github.com/acdha/pymacadmin">PyMacAdmin</a> set of tools that <a href="http://chris.improbable.org/">Chris Adams</a> and <a href="http://explanatorygap.net">Nigel Kersten</a> released a while ago. In a nutshell, it runs in the background via a LaunchDaemon and reacts to events on the Mac by running a script or a Python function, class or method. It has loads of events it knows about (application launches, power events, network events etc), but in this case I wanted to run something when there was a network change. Some of our machines never get turned off (and for some reason the Puppet Launch Daemon has crapped out), or aren’t turned on long enough for Puppet or Munki to run. I wanted a script that would run every time the machine came back onto the network, checking if there was an active connection and run Puppet and Munki.</p>
-
-<h2 id="what-do-i-need-to-do">What do I need to do?</h2>
-
-<p>There are a few parts that we need to bring together to make this work:</p>
-
-<ul>
-  <li>The crankd.py executable and the supporting files</li>
-  <li>A Launch Daemon to start the thing</li>
-  <li>A preferences file to tell crankd what to do</li>
-  <li>And finally, our custom code</li>
-</ul>
-
-
-  <p><a href="/blog/2013/07/12/using-crankd-to-react-to-network-events/">Read more →</a></p>
   
   </div>
   

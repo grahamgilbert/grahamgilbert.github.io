@@ -32,8 +32,8 @@
 
   <!-- RSS -->
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
-  <link href='/stylesheets/all-c8369cf731585eb98eef0098877bca87.css' media='all' rel='stylesheet' type='text/css'>
-  <link type="application/atom+xml" rel="alternate" href="https://grahamgilbert.com/atom.xml" title="graham gilbert" />
+  <link href='/stylesheets/all-b18cc7d6d5710987503b687ec013f838.css' media='all' rel='stylesheet' type='text/css'>
+  <link type="application/atom+xml" rel="alternate" href="https://grahamgilbert.com//atom.xml" title="graham gilbert" />
   <style>
   .clear{
     clear:both
@@ -100,6 +100,8 @@
           
             <a class="sidebar-nav-item" href="/talks/">Talks</a>
           
+        
+      
         
       
         
@@ -197,6 +199,22 @@
 
     <div class="content container">
       <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/blog/2014/07/10/automate-yourself-out-of-a-job/">
+        Automate yourself out of a job
+      </a>
+    </h1>
+
+    <span class="post-date">10 Jul 2014</span>
+
+
+    
+  <p>A massive thanks to everyone who came to my talk today, and thanks to everyone who helped out with the Q&amp;A at the end. All of the code I used in the talk is <a href="https://github.com/grahamgilbert/automate_psu_2014">up on GitHub</a> and <a href="http://grahamgilbert.com/images/posts/2014-07-10/Automate_yourself_out_of_a_job.pdf">here are the slides</a>. Hopefully the video will convey how much fun it actually was - it could have been a disaster, so I’m hugely grateful to everyone who contributed to the discussion at the end.</p>
+
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -424,65 +442,6 @@ someone else has done all of the hard work for us.</p>
 <p>If you’re happy with using Git, I’d recommend just making a clone of the repository and doing a <code>git pull</code> to keep the script updated. If the thought of all those gits and pulls makes you run away, you can <a href="https://github.com/grahamgilbert/first-boot-pkg/archive/master.zip">download a zip</a> of the project.</p>
 
 <p>This script makes use of Per Olofsson’s <a href="https://github.com/MagerValp/LoginLog">LoginLog</a> for displaying the log file whilst the script is running, so massive thanks to him for releasing it.</p>
-
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2014/04/03/updating-boxen/">
-        Updating Boxen
-      </a>
-    </h1>
-
-    <span class="post-date">03 Apr 2014</span>
-
-
-    
-  <p>As you might know, I’m a bit of a fan of <a href="https://www.youtube.com/watch?v=GqerWmKU1Js">Munki and Puppet</a> for managing the Macs I look after. Around a year ago, I really wanted to be able to automate my own setup across my own Macs the same way. I was forever finding that the particular git repository or app wasn’t on the Mac I was working on. Then there came the time when I wanted to do a clean install - that was easily a day down the drain there!</p>
-
-<h2 id="automate-all-of-the-things">Automate all of the things</h2>
-
-<p>Then <a href="https://boxen.github.com/">Boxen</a> was released - based on Puppet, but targeted at setting up individual’s machines. I got on board just over a year ago, and haven’t really looked back - manually installing an app on my Mac seems very strange now. I’m not going to cover how to get started with Boxen, as there are <a href="http://lmgtfy.com/?q=getting+started+with+Boxen">many getting started guides out there</a> (however, <a href="http://garylarizza.com/blog/2013/02/15/puppet-plus-github-equals-laptop-love/">Gary Larizza’s</a> is rather good).</p>
-
-<p>There will come a time when you need to update the core part of Boxen. This happened to me when I clean installed 10.9 on my work laptop - all kinds of shit broke (somehow it managed to survive the upgrade process - go figure). I looked around, but couldn’t really find a definitive guide, so here it is (it’s shorter than this piece of rambling).</p>
-
-<h2 id="ok-stop-talking">Ok, stop talking</h2>
-
-<p>As Boxen is made by GitHub, updating it is much like updating any other project on there that you’ve made a fork of.  First we’re going to add it as a remote repository:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src/our-boxen
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git remote add upstream https://github.com/boxen/our-boxen.git</div></div></pre></div></figure>
-
-<p>Then we’re going to fetch the stuff from the upstream repository:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git fetch upstream</div></div></pre></div></figure>
-
-<p>Now we’re going to merge the updated repository with our own:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git checkout master
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git merge upstream/master</div></div></pre></div></figure>
-
-<p>If you haven’t modified any of the core Boxen files (<code>Puppetfile</code>, <code>Gemfile</code> or <code>manifests/site.pp</code> in my case), you might get away without having to fix any conflicts (you can ignore any in <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>, we’ll deal with those next). I had conflicts as I had previously:</p>
-
-<ul>
-  <li>Been stupid and tried to update Boxen by just changing the Puppet Module and Gem versions</li>
-  <li>Edited <code>site.pp</code> as I didn’t want Nginx or node.js installed</li>
-  <li>Been dumb and put my custom Puppet modules in the wrong place in my <code>Puppetfile</code></li>
-</ul>
-
-<p>None of these were particularly arduous to fix, but annoying none the less. If you find you have loads, you might want to run:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git mergetool</div></div></pre></div></figure>
-
-<p>The next step is to update your Puppet modules and RubyGems. First delete <code>Puppetfile.lock</code> and <code>Gemfile.lock</code>. Now go back to your trusty Terminal and:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>bundle install --without development
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>bundle <span class="nb">exec </span>librarian-puppet install --clean</div></div></pre></div></figure>
-
-<p>At this point, you might want to go through the custom modules you’ve added to your <code>Puppetfile</code> and update those, although this is by no means required - some apps I’ve installed through Boxen don’t have a built in updater, so Boxen is more convenient than hunting for installers on various vendor’s websites. Once your modules are up to date in your <code>Puppetfile</code>,  you’re done! You can now get your Mac back to how you like it by issuing the usual:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>boxen</div></div></pre></div></figure>
 
 
   </div>

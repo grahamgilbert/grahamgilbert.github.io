@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <script type="text/javascript">
+    var host = "grahamgilbert.com";
+    if ((host == window.location.host) && (window.location.protocol != "https:"))
+        window.location.protocol = "https";
+  </script>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Imagr with target disk mode &middot; graham gilbert
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <!--link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico"-->
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+  <link href='/stylesheets/all-b18cc7d6d5710987503b687ec013f838.css' media='all' rel='stylesheet' type='text/css'>
+  <link type="application/atom+xml" rel="alternate" href="https://grahamgilbert.com//atom.xml" title="graham gilbert" />
+  <style>
+  .clear{
+    clear:both
+  }
+  .float-left {
+    float:left;
+    padding-right:25px;
+    padding-bottom:25px;
+  }
+
+  .float-right {
+    float:right;
+    padding-left:25px;
+    padding-bottom:25px;
+  }
+  </style>
+</head>
+
+  <body class="theme-base-0d">
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          graham gilbert
+        </a>
+      </h1>
+      <p class="lead">A Mac admin, automating the hell out of things.</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">About</a>
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/projects/">Projects</a>
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/talks/">Talks</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      </nav>
+      <p>
+
+      <a href="https://twitter.com/grahamgilbert"><img style="display:inline;" src="/images/social/twitter.png" /></a> <a href="https://github.com/grahamgilbert"><img style="display:inline;" src="/images/social/github.png" /></a> <a href="https://www.linkedin.com/in/grahamgilbert"><img style="display:inline;" src="/images/social/linkedin.png" /></a>
+      </p>
+
+    <p>
+      <small>The opinions on this site are my own, and are not necessarily shared by my employer.</small>
+    </p>
+
+  </div>
+</div>
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Imagr with target disk mode</h1>
+  <span class="post-date">11 Jan 2017</span>
+  <p><a href="https://github.com/grahamgilbert/imagr">Imagr</a> is a great tool when you’re wanting to deploy machines quickly in your office. But sometimes you will want to deploy machines when you’re in a smaller remote site, or a site where security concerns mean you can’t have servers. Imagr is flexible enough to handle this, and with a little creativity, we can deploy at these sites as easily as we can at our offices with NetBoot.</p>
+
+<h2 id="setup">Setup</h2>
+
+<p>The first thing you are going to want to do it get your Imagr repo onto your own machine. I would recommend having your repo in a central repository - <a href="https://www.afp548.com/2014/11/24/introduction-to-git-fat-for-munki/">git fat</a> works well, so does putting everything on an <a href="https://aws.amazon.com/s3/">S3 bucket</a> and using the <a href="https://aws.amazon.com/cli/">aws cli tools</a> to sync it down. We use an S3 bucket, as we can ship read only credentials to the machines that are performing the imaging. This guide will assume you are using S3, but you can substitute that aspect for whichever method you wish to sync your files. <!-- more --></p>
+
+<p>You will also need to place <a href="https://github.com/grahamgilbert/imagr/releases">Imagr.app</a> on the machine somewhere, and <a href="https://github.com/grahamgilbert/imagr/wiki/App-Config">point it to your configuration file</a>. The configuration file can be on a web server (as it’s tiny, it will only take a second to download), or it can be on your local disk.</p>
+
+<h2 id="the-wrapper-script">The wrapper script</h2>
+
+<p>Imagr was originally designed to be run from a NetInstall / NetBoot environment - this means that it is running as root. To ensure that the people performing the imaging don’t open it as a user without the right permissions, we use a wrapper script. This script is also a great place for you to put the code that syncs the code down to the local machine, to ensure your techs are using the latest version of your repo. The following script assumes that:</p>
+
+<ul>
+  <li>The aws cli tools are installed (<code>sudo easy_install awscli</code>)</li>
+  <li>You have Imagr.app in <code>/Applications</code></li>
+  <li>You will be storing the Imagr repo at <code>/usr/local/imagr</code></li>
+</ul>
+
+<p>The below script will:</p>
+
+<ul>
+  <li>Download sync your local copy of the Imagr repo with what is in S3</li>
+  <li>Make sure there is a writable disk available, with Preserve Ownership enabled</li>
+  <li>Open Imagr.app as root</li>
+</ul>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/usr/local/bin/imagr</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">#!/usr/bin/python</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">import</span> <span class="nn">subprocess</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">import</span> <span class="nn">os</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">import</span> <span class="nn">filecmp</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">import</span> <span class="nn">shutil</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">import</span> <span class="nn">sys</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">import</span> <span class="nn">plistlib</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">import</span> <span class="nn">pprint</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getuid</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">print</span> <span class="s">&#39;You need to run this as root or via sudo.&#39;</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s">&#39;/usr/local/imagr&#39;</span><span class="p">):</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s">&#39;/usr/local/imagr&#39;</span><span class="p">)</span>
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">print</span> <span class="s">&#39;Creating Imagr repo. The initial download may take some time.&#39;</span>
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;AWS_ACCESS_KEY_ID&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;YOUR ACCESS KEY&quot;</span>
+</div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;AWS_SECRET_ACCESS_KEY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;YOUR ACCESS SECRET&#39;</span>
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;AWS_DEFAULT_REGION&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;us-east-1&#39;</span>
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">s3_bucket_url</span> <span class="o">=</span> <span class="s">&#39;YOUR S3 BUCKET&#39;</span> <span class="c"># in the form of s3://somebucketname</span>
+</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/usr/local/bin/aws&#39;</span><span class="p">,</span> <span class="s">&#39;s3&#39;</span><span class="p">,</span> <span class="s">&#39;sync&#39;</span><span class="p">,</span> <span class="n">s3_bucket_url</span><span class="p">,</span> <span class="s">&#39;/usr/local/imagr/&#39;</span><span class="p">,</span> <span class="s">&#39;--exclude&#39;</span><span class="p">,</span> <span class="s">&#39;.git/*&#39;</span><span class="p">,</span> <span class="s">&#39;--delete&#39;</span><span class="p">]</span>
+</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">execute</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">print</span> <span class="n">line</span>
+</div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">diskutil_list</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s">&#39;/usr/sbin/diskutil&#39;</span><span class="p">,</span> <span class="s">&#39;list&#39;</span><span class="p">,</span> <span class="s">&#39;-plist&#39;</span><span class="p">])</span>
+</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">diskutil_plist</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">diskutil_list</span><span class="p">)</span>
+</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">for</span> <span class="n">disk</span> <span class="ow">in</span> <span class="n">diskutil_plist</span><span class="p">[</span><span class="s">&#39;AllDisks&#39;</span><span class="p">]:</span>
+</div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">disk_info</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s">&#39;/usr/sbin/diskutil&#39;</span><span class="p">,</span> <span class="s">&#39;info&#39;</span><span class="p">,</span> <span class="s">&#39;-plist&#39;</span><span class="p">,</span> <span class="n">disk</span><span class="p">])</span>
+</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">disk_plist</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">disk_info</span><span class="p">)</span>
+</div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">disk_plist</span><span class="p">[</span><span class="s">&#39;VolumeName&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&#39;Recovery HD&#39;</span> <span class="ow">and</span> \
+</div></div><div data-line="37" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">disk_plist</span><span class="p">[</span><span class="s">&#39;Internal&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">False</span> <span class="ow">and</span> \
+</div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">disk_plist</span><span class="p">[</span><span class="s">&#39;MountPoint&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">:</span>
+</div></div><div data-line="39" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="k">if</span> <span class="n">disk_plist</span><span class="p">[</span><span class="s">&#39;GlobalPermissionsEnabled&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+</div></div><div data-line="40" class="code-highlight-row numbered"><div class="code-highlight-line">                <span class="k">try</span><span class="p">:</span>
+</div></div><div data-line="41" class="code-highlight-row numbered"><div class="code-highlight-line">                    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;/usr/sbin/vsdbutil&#39;</span><span class="p">,</span> <span class="s">&#39;-a&#39;</span><span class="p">,</span> <span class="n">disk_plist</span><span class="p">[</span><span class="s">&#39;MountPoint&#39;</span><span class="p">]])</span>
+</div></div><div data-line="42" class="code-highlight-row numbered"><div class="code-highlight-line">                <span class="k">except</span><span class="p">:</span>
+</div></div><div data-line="43" class="code-highlight-row numbered"><div class="code-highlight-line">                    <span class="k">print</span> <span class="s">&#39;Could not enable Ownership&#39;</span>
+</div></div><div data-line="44" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="45" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># Run diskutil again</span>
+</div></div><div data-line="46" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">diskutil_list</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s">&#39;/usr/sbin/diskutil&#39;</span><span class="p">,</span> <span class="s">&#39;list&#39;</span><span class="p">,</span> <span class="s">&#39;-plist&#39;</span><span class="p">])</span>
+</div></div><div data-line="47" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">diskutil_plist</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">diskutil_list</span><span class="p">)</span>
+</div></div><div data-line="48" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">good_disks</span> <span class="o">=</span> <span class="mi">0</span>
+</div></div><div data-line="49" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="c"># See if there is at least one disk that satisfies our crieria above (+ ownership enabled)</span>
+</div></div><div data-line="50" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">for</span> <span class="n">disk</span> <span class="ow">in</span> <span class="n">diskutil_plist</span><span class="p">[</span><span class="s">&#39;AllDisks&#39;</span><span class="p">]:</span>
+</div></div><div data-line="51" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">disk_info</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s">&#39;/usr/sbin/diskutil&#39;</span><span class="p">,</span> <span class="s">&#39;info&#39;</span><span class="p">,</span> <span class="s">&#39;-plist&#39;</span><span class="p">,</span> <span class="n">disk</span><span class="p">])</span>
+</div></div><div data-line="52" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">disk_plist</span> <span class="o">=</span> <span class="n">plistlib</span><span class="o">.</span><span class="n">readPlistFromString</span><span class="p">(</span><span class="n">disk_info</span><span class="p">)</span>
+</div></div><div data-line="53" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">disk_plist</span><span class="p">[</span><span class="s">&#39;VolumeName&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&#39;Recovery HD&#39;</span> <span class="ow">and</span> \
+</div></div><div data-line="54" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">disk_plist</span><span class="p">[</span><span class="s">&#39;Internal&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">False</span> <span class="ow">and</span> \
+</div></div><div data-line="55" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">disk_plist</span><span class="p">[</span><span class="s">&#39;MountPoint&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span> <span class="ow">and</span> \
+</div></div><div data-line="56" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">disk_plist</span><span class="p">[</span><span class="s">&#39;GlobalPermissionsEnabled&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+</div></div><div data-line="57" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">good_disks</span> <span class="o">+=</span> <span class="mi">1</span>
+</div></div><div data-line="58" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="59" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">if</span> <span class="n">good_disks</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</div></div><div data-line="60" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">print</span> <span class="s">&#39;We couldn</span><span class="se">\&#39;</span><span class="s">t find any disks that are external and have ignore permissions disabled.&#39;</span>
+</div></div><div data-line="61" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">print</span> <span class="s">&#39;Please make sure the disk is attached before running this script.&#39;</span>
+</div></div><div data-line="62" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</div></div><div data-line="63" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="64" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s">&#39;/Applications/Imagr.app/Contents/MacOS/Imagr&#39;</span><span class="p">])</span>
+</div></div><div data-line="65" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="66" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
+</div></div><div data-line="67" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">popen</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</div></div><div data-line="68" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">stdout_lines</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">popen</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+</div></div><div data-line="69" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">for</span> <span class="n">stdout_line</span> <span class="ow">in</span> <span class="n">stdout_lines</span><span class="p">:</span>
+</div></div><div data-line="70" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">yield</span> <span class="n">stdout_line</span>
+</div></div><div data-line="71" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="72" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">popen</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</div></div><div data-line="73" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">return_code</span> <span class="o">=</span> <span class="n">popen</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</div></div><div data-line="74" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">if</span> <span class="n">return_code</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+</div></div><div data-line="75" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span><span class="n">return_code</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+</div></div><div data-line="76" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="77" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+</div></div><div data-line="78" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">main</span><span class="p">()</span></div></div></pre></div></figure>
+
+<h2 id="the-imagrconfigplist">The imagr_config.plist</h2>
+
+<p>Now Imagr is opening up, it’s time to make get our workflows ready. I’ve tried to keep things as simple as possible for our techs, so we use scripted included workflows. The basic idea is that we test if the local repo is present, and use that if it is. If not, we fall back to the repo that is on our web server. (Note: this isn’t a full configuration, it is merely an example of the scenario described above)</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">imagr_config.plist</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">   <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">      <span class="nt">&lt;key&gt;</span>workflows<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">      <span class="nt">&lt;array&gt;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">         <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>components<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;array&gt;</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">               <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;key&gt;</span>script<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;string&gt;</span>#!/usr/bin/python
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">import os
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">def main():
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">    if os.path.exists(&#39;/usr/local/imagr&#39;):
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">        print &#39;ImagrIncludedWorkflow: sierra_local&#39;
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">    else:
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">        print &#39;ImagrIncludedWorkflow: sierra_remote&#39;
+</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">if __name__ == &#39;__main__&#39;:
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">    main()<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;key&gt;</span>type<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;string&gt;</span>included_workflow<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">               <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;/array&gt;</span>
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>description<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;string&gt;</span>Deploys a 10.12.2 image<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>name<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;string&gt;</span>sierra<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">         <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line">         <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>description<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;string&gt;</span>Deploys 10.12.2 from local repo<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>hidden<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="37" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;true</span> <span class="nt">/&gt;</span>
+</div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>name<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="39" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;string&gt;</span>sierra_local<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="40" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>components<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="41" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;array&gt;</span>
+</div></div><div data-line="42" class="code-highlight-row numbered"><div class="code-highlight-line">               <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="43" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;key&gt;</span>type<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="44" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;string&gt;</span>image<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="45" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;key&gt;</span>url<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="46" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;string&gt;</span>file:///usr/local/imagr/masters/sierra.dmg<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="47" class="code-highlight-row numbered"><div class="code-highlight-line">               <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="48" class="code-highlight-row numbered"><div class="code-highlight-line">               <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="49" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;key&gt;</span>type<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="50" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;string&gt;</span>restart_action<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="51" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;key&gt;</span>action<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="52" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;string&gt;</span>none<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="53" class="code-highlight-row numbered"><div class="code-highlight-line">               <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="54" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;/array&gt;</span>
+</div></div><div data-line="55" class="code-highlight-row numbered"><div class="code-highlight-line">         <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="56" class="code-highlight-row numbered"><div class="code-highlight-line">         <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="57" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>description<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="58" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;string&gt;</span>Deploys 10.12.2 from remote repo<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="59" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>hidden<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="60" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;true</span> <span class="nt">/&gt;</span>
+</div></div><div data-line="61" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>name<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="62" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;string&gt;</span>sierra_remote<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="63" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;key&gt;</span>components<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="64" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;array&gt;</span>
+</div></div><div data-line="65" class="code-highlight-row numbered"><div class="code-highlight-line">               <span class="nt">&lt;dict&gt;</span>
+</div></div><div data-line="66" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;key&gt;</span>type<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="67" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;string&gt;</span>image<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="68" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;key&gt;</span>url<span class="nt">&lt;/key&gt;</span>
+</div></div><div data-line="69" class="code-highlight-row numbered"><div class="code-highlight-line">                  <span class="nt">&lt;string&gt;</span>https://imagr.company.com/masters/sierra.dmg<span class="nt">&lt;/string&gt;</span>
+</div></div><div data-line="70" class="code-highlight-row numbered"><div class="code-highlight-line">               <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="71" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;/array&gt;</span>
+</div></div><div data-line="72" class="code-highlight-row numbered"><div class="code-highlight-line">         <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="73" class="code-highlight-row numbered"><div class="code-highlight-line">      <span class="nt">&lt;/array&gt;</span>
+</div></div><div data-line="74" class="code-highlight-row numbered"><div class="code-highlight-line">   <span class="nt">&lt;/dict&gt;</span>
+</div></div><div data-line="75" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;/plist&gt;</span></div></div></pre></div></figure>
+
+<h2 id="things-to-note">Things to note</h2>
+
+<p>When you see references to Reboot or Shutdown, this is referring to the machine Imagr is running on, not the volume you are imaging. Similarly, there is no way to know anything about the machine you are imaging (as it is just an external disk), so all <a href="https://github.com/grahamgilbert/imagr/wiki/Workflow-Config#scripts">variable substitution</a> will be for the machine that Imagr is running on, not the disk you are restoring.</p>
+
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+
+        s.src = '//grahamgilbert.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/12/15/enable-sip-with-munki/">
+            Enable SIP with Munki
+            <small>15 Dec 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/12/07/sal-an-overview/">
+            Sal: an overview
+            <small>07 Dec 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/blog/2016/12/06/sal-3-0/">
+            Sal 3.0
+            <small>06 Dec 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27233739-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
