@@ -103,8 +103,6 @@
         
       
         
-      
-        
           
         
       
@@ -182,6 +180,8 @@
       
         
           
+        
+      
         
       
       </nav>
@@ -199,6 +199,22 @@
 
     <div class="content container">
       <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/blog/2016/02/10/macad-uk-2016-puppet-on-os-x/">
+        MacAD.UK 2016&#58; Puppet on OS X
+      </a>
+    </h1>
+
+    <span class="post-date">10 Feb 2016</span>
+
+
+    
+  <p>First off, thanks for coming (if you did indeed come - if you didn’t, you can go away). All of the code I used in my talk is <a href="https://github.com/grahamgilbert/macaduk_2016">up on Github</a>, and you can <a href="/images/posts/2016-02-09/Puppet_On_OS_X.pdf">grab the slides as well</a> if you feel so inclined.</p>
+
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -278,31 +294,6 @@
 
 <p>Last time we built a basic app that will ask for a username and password to access it. Now we’re going to add in some other data that will eventually be sent by Imagr to let our script be dynamically generated. 
   <p><a href="/blog/2016/01/07/dynamic-first-boot-scripts-with-imagr-and-flask-part-2/">Read more →</a></p>
-  
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">
-        Dynamic first boot scripts with Imagr and Flask
-      </a>
-    </h1>
-
-    <span class="post-date">05 Jan 2016</span>
-
-
-    
-    <p>Some may wonder why you would go to the trouble of dynamically generating first boot scripts. I mean, how many can you need?</p>
-
-<p>Let’s say you have ten sites, each with five builds - that fifty first boot scripts to maintain already. It’s entirely possible that they’re all the same, so you could use <a href="https://github.com/grahamgilbert/imagr/wiki/Workflow-Config#scripts">Imagr’s ability to use a script from a central URL</a>. But you also may need to make slight tweaks depending on what type of machine it is and where it is located.</p>
-
-<p>Over the next few posts, we are going to build an app using the <a href="http://flask.pocoo.org">Flask</a> framework that will:</p>
-
-<ul>
-  <li>Read in headers sent by <a href="https://github.com/grahamgilbert/">Imagr</a> to return a dynamically generated first boot script</li>
-  <li>Create a Munki manifest for the Mac</li>
-  <li>Wrap up the application into a Docker image so it can be easily deployed
-  <p><a href="/blog/2016/01/05/dynamic-first-boot-scripts-with-imagr-and-flask/">Read more →</a></p>
   
   </div>
   
