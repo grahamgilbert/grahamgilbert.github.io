@@ -103,8 +103,6 @@
         
       
         
-      
-        
           
         
       
@@ -182,6 +180,8 @@
       
         
           
+        
+      
         
       
       </nav>
@@ -199,6 +199,55 @@
 
     <div class="content container">
       <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/blog/2012/08/18/location-based-printers-with-puppet/">
+        Location based printers with Puppet
+      </a>
+    </h1>
+
+    <span class="post-date">18 Aug 2012</span>
+
+
+    
+  <p>This will probably be obvious to most seasoned Puppet inclined OS X admins, but this is a relatively recent revelation for me. Up until very recently, I wasn’t really making full use of Facter, merely pointing my clients to the appropriate classes and leaving it at that. When tasked with giving end users the option to install their own printers when they went to a different site than the one they usually work at, my initial thought was to go for a Payload-free package and pop it into their optional installs in Munki. But then I was asked if it could happen without the user doing anything - they go to the other site, and they automatically get the right printers set up - so after a little thought,  came up with this. I’ve made use of the excellent <a href="https://github.com/mosen/puppet-cups">mosen-puppet-cups</a> module on GitHub to get the printers set up, and the drivers are already deployed with Munki (I did consider moving them to Puppet, but why reinvent the wheel for the sake of it?).</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">case $operatingsystem&#x7b;
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">	Darwin:&#x7b;
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">		##London is on the 10.30.2.0 and 10.30.3.0 Subnets
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">		if ($network_en0 == '10.30.2.0') or ($network_en1 == '10.30.2.0') or ($network_en0 == '10.30.3.0') or ($network_en1 == '10.30.3.0')&#x7b;
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">            	printer &#x7b; "Sharp_ARM316":
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">                	ensure      =&gt; present,
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">			uri         =&gt; "lpd://sharparm316.ldn.example.com",
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">			description =&gt; "Sharp ARM316",
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">			shared      =&gt; false,
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">			ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/SHARP AR-M316.PPD.gz", # PPD file will be autorequired
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">			&#x7d;
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">		printer &#x7b; "Xerox_WorkCentre_7120":
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">			ensure      =&gt; present,
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">			uri         =&gt; "lpd://xeroxwc7120.ldn.example.com",
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">			description =&gt; "Xerox WorkCentre 7120",
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">			shared      =&gt; false,
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">			ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/Xerox WorkCentre 7120.gz", # PPD file will be autorequired
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">			&#x7d;
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">		&#x7d;
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">		##San Francisco is on the 10.30.10.0 Subnet
+</div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">		if ($network_en0 == '10.30.10.0') or ($network_en1 == '10.30.10.0')&#x7b;
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line"> 		printer &#x7b; "Xerox_550":
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">			ensure      =&gt; present,
+</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">			uri         =&gt; "lpd://xerox550.sf.example.com",
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">			description =&gt; "Xerox 550",
+</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">			shared      =&gt; false,
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">			ppd         =&gt; "/Library/Printers/PPDs/Contents/Resources/en.lproj/Xerox 550-560 Integrated Fiery", # PPD file will be autorequired
+</div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line">			&#x7d;
+</div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">		&#x7d;
+</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">	&#x7d;
+</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">&#x7d;</div></div></pre></div></figure>
+
+
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -317,35 +366,6 @@
 	sudo launchctl unload /Library/LaunchDaemons/com.yourcompany.mysupervm.plist</p>
 
 <p>The vm will start at boot, and will continue to run, so to stop it, you need to unload the plist.</p>
-
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2012/04/06/profile-manager-enrollment-package/">
-        Profile Manager Enrollment Package
-      </a>
-    </h1>
-
-    <span class="post-date">06 Apr 2012</span>
-
-
-    
-  <p>Over the past week or so, we had a need to enroll macs automagically with a Lion Profile Manager server. My first plan was to do what Charles Edge did in his recent <a href="http://krypted.com/mac-os-x/automating-profile-manager-enrollment-through-deploystudio/">blog post</a> and use DeployStudio. Then I remembered another post by Charles on <a href="http://krypted.com/iphone/profile-manager-and-profiles/">/usr/bin/profiles</a> and wondered if I could make a workflow that can be used throughout our deployment and system maintenance process - yup, the humble pkg, that can be popped into Munki for existing macs, installed with DeployStudio for imaging and pushed out with ARD if need be.</p>
-
-<p><a href="https://github.com/grahamgilbert/Profile-Manager-Enrollment">Get the code from GitHub</a></p>
-
-<p>Assuming you’ve got <a href="https://github.com/unixorn/luggage">The Luggage</a> set up, first off you’ll need your enrollment and trust profiles:
-
-1.	Create a new enrollment profile
-2. Give your enrollement profile a name
-3. Download the trust profile
-4. Download the enrollment profile</p>
-
-<p><a href="/images/posts/2012-04-06/profile_enrollment_and_trust-full.jpg"><img class="center" src="/images/posts/2012-04-06/profile_enrollment_and_trust-thumb.jpg" /></a></p>
-
-<p>If your attachments auto open, click cancel when you’re asked if you want to install the profiles so they stay in ~/Downloads. Rename them to enroll.mobileconfig and trust.mobileconfig and pop them into the directory you cloned from GitHub. A quick <code>make pkg</code> and you’ve got your package.</p>
 
 
   </div>

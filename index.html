@@ -103,8 +103,6 @@
         
       
         
-      
-        
           
         
       
@@ -182,6 +180,8 @@
       
         
           
+        
+      
         
       
       </nav>
@@ -199,6 +199,22 @@
 
     <div class="content container">
       <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/blog/2017/02/08/something-something-commercial-something-something-opensource/">
+        Something something commercial, something something opensource
+      </a>
+    </h1>
+
+    <span class="post-date">08 Feb 2017</span>
+
+
+    
+  <p>Thanks to everyone who came to my session at <a href="http://www.macad.uk/">MacAd.UK</a>. I will link the video here when it is available, but in the meantime here are the <a href="/images/posts/2017-02-08/something_something.pdf">slides</a>.</p>
+
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -282,50 +298,6 @@
 <p>The first thing you see when you log into Sal is the dashboard. This is where you can get access to a quick overview of your fleet. Each graph, chart, set of buttons is a plugin - this means that each one can be re-ordered and removed - you can even make your own if you need to (more on that another time). Most plugins are clickable - click on the relevent part to show a list of machines it is referring to - and if the plugin supports showing the list (and all of the built in ones do), you can export the list to CSV (since all managers love spreadsheets, right?).
   <p><a href="/blog/2016/12/07/sal-an-overview/">Read more →</a></p>
   
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2016/12/06/sal-3-0/">
-        Sal 3.0
-      </a>
-    </h1>
-
-    <span class="post-date">06 Dec 2016</span>
-
-
-    
-  <p><a href="https://github.com/salopensource/sal/releases/tag/3.0.0">Sal 3.0</a> is a massive upgrade on Sal 2.7, so massive thanks to everyone who has contributed code and bug reports. In particular, big thanks go out to <a href="https://github.com/sheagcraig">@sheagcraig</a>  for his work on the completely rewritten application inventory features.</p>
-
-<h2 id="whats-new-in-sal-30">What’s new in Sal 3.0?</h2>
-
-<h3 id="inventory">Inventory</h3>
-
-<p>Sal’s application inventory tracking has been completely re-written (thanks again Shea), and is much more useful, allowing for greater detail on what is installed, and where across your fleet.</p>
-
-<h3 id="search">Search</h3>
-
-<p>We have migrated the basic search from using an external application that relied on building caches (so doubling the size of your database), to just querying the database directly.</p>
-
-<p>The advanced search is completely new - it allows you to build up complex queries that would previously require you to build a plugin. These queries can also be saved so they can be shared with the rest of your team.</p>
-
-<h3 id="plugins">Plugins</h3>
-
-<p>Your plugins can now process data server side during checkin. Perhaps you want to update Sal with information from your Inventory tool, or call out to a web service. Documentation can be found <a href="https://github.com/salopensource/sal/wiki/Additional-processing-of-data-in-Pugins">over here</a>.</p>
-
-<h3 id="security">Security</h3>
-
-<p>Sal scripts version <a href="https://github.com/salopensource/sal-scripts/releases/tag/2.0.0">2.0.0</a> now uses basic http authentication by default (<a href="https://github.com/salopensource/sal/wiki/Client-configuration">using the key set in preferences</a>) on any endpoint that it retrieves data from (external scripts etc). This means that any potentially sensitive data you may have in your client side scripts is now protected. This can be <a href="https://github.com/salopensource/sal/wiki/Settings#basic-authentication-on-http-endpoints">disabled if desired</a> - not recommended!.</p>
-
-<h3 id="performance">Performance</h3>
-
-<p>If you have a lot of plugins enabled with client side scripts to download, you will be getting a lot of requests to your server. There is now a script available that will build a package containing all the external scripts enabled on your Sal install (or just download the files so they can be deployed with something like Puppet or Chef), and after setting the <a href="https://github.com/salopensource/sal/wiki/Client-configuration">preference</a>, the client will use these in preference to downloading them again.</p>
-
-<p>If you are running Facter, you may be shipping duplicate data that Sal already collects - you are now able to specify facts that should not be sent to the server (enabling you to set different facts to ignore per client) or <a href="https://github.com/salopensource/sal/wiki/Settings#ignore_facts">set it on the server to configure it globally</a>.</p>
-
-<p>Finally, every single transaction with the database has been optimised. A usual run from a client that has Facter installed with 50 facts has been reduced from 70+ calls to the database to less than 10 (Postgres only, sorry SQLite and MySQL users).</p>
-
-
   </div>
   
 </div>

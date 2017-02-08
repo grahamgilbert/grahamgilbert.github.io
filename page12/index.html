@@ -103,8 +103,6 @@
         
       
         
-      
-        
           
         
       
@@ -182,6 +180,8 @@
       
         
           
+        
+      
         
       
       </nav>
@@ -199,6 +199,71 @@
 
     <div class="content container">
       <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/blog/2014/05/19/deploying-sal-on-heroku/">
+        Deploying Sal on Heroku
+      </a>
+    </h1>
+
+    <span class="post-date">19 May 2014</span>
+
+
+    
+  <p>Setting up everything you need for Sal can be difficult, especially if you only have an OS X server available. Thankfully, Sal is built on top of a very common Python framework, Django. And even more thankfully, you can run Django on a whole host of <a href="http://en.wikipedia.org/wiki/Platform_as_a_service">PaaS</a> providers, including <a href="https://www.heroku.com">Heroku</a>.</p>
+
+<p>Heroku has a very generous <a href="https://www.heroku.com/pricing">free tier</a> that will easily handle a small Sal installation, so let’s get started.</p>
+
+<h2 id="heroku-toolbelt">Heroku toolbelt</h2>
+
+<p>If you’ve never used Heroku before, you’re going to need to head over to <a href="http://heroku.com">their site</a> and sign up for a free account. Whilst you’re there, you’re also going to need to install their toolbelt. <a href="http://toolbelt.herokuapp.com/">Grab the package</a> and follow their instructions for linking it to your account.</p>
+
+<h2 id="configure">Configure</h2>
+
+<p>Now we need to get a copy of Sal and configure it. Assuming you keep your code in ~/src:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd</span> ~/src
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git clone https://github.com/grahamgilbert/sal
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span><span class="nb">cd </span>sal</div></div></pre></div></figure>
+
+<p>Now we need to make a copy of sal/example_settings.py</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>cp sal/example_settings.py sal/settings.py</div></div></pre></div></figure>
+
+<p>And edit sal/settings.py in your favourite editor to your liking (probably time zone at least).</p>
+
+<p>Heroku uses git for deployment, so we need to commit our changes.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git add .
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git commit -m <span class="s2">&quot;initial commit to heroku&quot;</span></div></div></pre></div></figure>
+
+<p>We’re nearly there! Time to create our environment on Heroku</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>heroku create</div></div></pre></div></figure>
+
+<p>Of course we haven’t pushed Sal to Heroku yet. Let’s fix that.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>git push heroku master</div></div></pre></div></figure>
+
+<p>You’ll see Sal being pushed up to Heroku and Sal’s requirements being installed. A Postgres database will also automatically be created for you. The database will be empty though, so let’s populate it with what we need.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>heroku run python manage.py syncdb</div></div></pre></div></figure>
+
+<p>When asked, you certainly <em>do</em> want to create a super user. Use a strong username and password as this is the admin for your Sal application.</p>
+
+<p>One last command to run:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>heroku run python manage.py migrate</div></div></pre></div></figure>
+
+<p>Your Sal installation is ready to use:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">$ </span>heroku open</div></div></pre></div></figure>
+
+<p>As said earlier, the free version does have some limits. The most important with Sal is the number of rows you can have in the free database (10,000), so the more information you collect from each machine (Facter Facts and Munki Conditions), the larger your database is. It’s a measley $9 a month to upgrade your database to 10 million rows, so it’s easy to scale your database. For more information on upgrading your Heroku environment see <a href="https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups">their documentation</a>.</p>
+
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -232,12 +297,12 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/blog/2014/04/03/updating-boxen/">
+      <a href="/blog/2014/04/04/updating-boxen/">
         Updating Boxen
       </a>
     </h1>
 
-    <span class="post-date">03 Apr 2014</span>
+    <span class="post-date">04 Apr 2014</span>
 
 
     
@@ -383,88 +448,6 @@
 <p>Notice the if statement on line 1? If the number of machines is 0, we don’t need to show anything. You’ll need to make a similar change on <code>grahamgilbert/mavcompatibility/templates/id.html</code>.</p>
 
 <p>That’s it - a simple plugin for Sal. You can find this completed plugin in my <a href="https://github.com/grahamgilbert/sal-plugins">sal-plugins repository</a>.</p>
-
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog/2014/02/07/writing-plugins-for-sal-part-2/">
-        Writing Plugins for Sal: Part 2
-      </a>
-    </h1>
-
-    <span class="post-date">07 Feb 2014</span>
-
-
-    
-  <p>And now, time for the shocking second part of our series on how to write plugins for Sal.</p>
-
-<p>In the previous part, we got our basic widget working. This time, we’re going to link it up so we can get lists of those pesky non-10.9 compatible Macs when we click on the button.</p>
-
-<h2 id="its-a-list-jim">It’s a list, Jim</h2>
-
-<p>When displaying the list of machines, Sal will call the <code>filter_machines</code> function in your plugin. I’m sure you don’t want to disappoint, so here’s that function added on to the plugin we wrote last time.</p>
-
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">grahamgilbert/mavcompatibility/mavcompatibility.py</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">yapsy.IPlugin</span> <span class="kn">import</span> <span class="n">IPlugin</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">yapsy.PluginManager</span> <span class="kn">import</span> <span class="n">PluginManager</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kn">from</span> <span class="nn">server.models</span> <span class="kn">import</span> <span class="o">*</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">class</span> <span class="nc">MavCompatibility</span><span class="p">(</span><span class="n">IPlugin</span><span class="p">):</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">def</span> <span class="nf">show_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">machines</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theid</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;front&#39;</span><span class="p">:</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/front.html&#39;</span><span class="p">)</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;bu_dashboard&#39;</span><span class="p">:</span>
-</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="s">&#39;group_dashboard&#39;</span><span class="p">:</span>
-</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;grahamgilbert/mavcompatibility/templates/id.html&#39;</span><span class="p">)</span>
-</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">not_compatible</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">(&#x7b;</span>
-</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="s">&#39;10.9 Compatibility&#39;</span><span class="p">,</span>
-</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="s">&#39;not_compatible&#39;</span><span class="p">:</span> <span class="n">not_compatible</span><span class="p">,</span>
-</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
-</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="s">&#39;theid&#39;</span><span class="p">:</span> <span class="n">theid</span>
-</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="p">&#x7d;)</span>
-</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="mi">3</span>
-</div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">def</span> <span class="nf">filter_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&#39;notcompatible&#39;</span><span class="p">:</span>
-</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">machines</span> <span class="o">=</span> <span class="n">machines</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">condition__condition_name</span><span class="o">=</span><span class="s">&#39;supported_major_os_upgrades&#39;</span><span class="p">,</span> <span class="n">condition__condition_data__contains</span><span class="o">=</span><span class="s">&#39;10.9&#39;</span><span class="p">)</span>
-</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Macs not compatible with OS X 10.9&#39;</span>
-</div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">else</span><span class="p">:</span>
-</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">machines</span> <span class="o">=</span> <span class="bp">None</span>
-</div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">title</span> <span class="o">=</span> <span class="bp">None</span>
-</div></div><div data-line="37" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">return</span> <span class="n">machines</span><span class="p">,</span> <span class="n">title</span></div></div></pre></div></figure>
-
-<p>You’ll notice that our filter on the machines is pretty much identical to what we were looking for before - that’s because we’re looking for the same machines. We’re taking some input (a bunch of machines, and a string that we’ll come back to), and giving back the machine that fit our search and a title to show at the top of the page.</p>
-
-<h2 id="more-templating">More templating</h2>
-
-<p>So, how did we pass that string? How do we even get to the page where a list of the machines is shown?</p>
-
-<p>We need to edit the templates. First off, the template that is show on the front page of Sal:</p>
-
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">grahamgilbert/mavcompatibility/templates/front.html</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;legend&gt;</span><span class="cp">&#x7b;&#x7b;</span> <span class="nv">title</span> <span class="cp">&#x7d;&#x7d;</span><span class="nt">&lt;/legend&gt;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">&#x7b;%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_front&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="cp">%&#x7d;</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">&#x7b;&#x7b;</span> <span class="nv">not_compatible</span> <span class="cp">&#x7d;&#x7d;</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">            Not Compatible
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;/a&gt;</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;/div&gt;</span></div></div></pre></div></figure>
-
-<p>The only difference here from last time is we’ve filled out the URL. The options for the first part are <code>machine_list_front</code> or <code>machine_list_id</code> - depending on whether you are coming from the front page (all of the Business Units) or from deeper in the application (the machines are limited), then we’re just passing the name of our plugin.</p>
-
-<p>There isn’t a huge amount you need to change for the other template - just tell Sal what type of page you came from (group or business unit) and the ID of the page you came from.</p>
-
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">grahamgilbert/mavcompatibility/templates/id.html</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span3&quot;</span><span class="nt">&gt;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;legend&gt;</span><span class="cp">&#x7b;&#x7b;</span> <span class="nv">title</span> <span class="cp">&#x7d;&#x7d;</span><span class="nt">&lt;/legend&gt;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">&#x7b;%</span> <span class="k">url</span> <span class="s1">&#39;machine_list_id&#39;</span> <span class="s1">&#39;MavCompatibility&#39;</span> <span class="s1">&#39;notcompatible&#39;</span> <span class="nv">page</span> <span class="nv">theid</span> <span class="cp">%&#x7d;</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger&quot;</span><span class="nt">&gt;</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;bigger&quot;</span><span class="nt">&gt;</span> <span class="cp">&#x7b;&#x7b;</span> <span class="nv">not_compatible</span> <span class="cp">&#x7d;&#x7d;</span> <span class="nt">&lt;/span&gt;&lt;br</span> <span class="nt">/&gt;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">            Not Compatible
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="nt">&lt;/a&gt;</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;/div&gt;</span></div></div></pre></div></figure>
-
-<p>There you go - a simple plugin for Sal. But don’t go away thinking we’re done. Whilst this is functional, it certainly leaves a fair bit to be desired. In the last part of this series, we’ll tidy everything up.</p>
 
 
   </div>
