@@ -103,8 +103,6 @@
         
       
         
-          
-        
       
         
           
@@ -182,6 +180,8 @@
           
         
       
+        
+          
         
       
       </nav>
@@ -200,7 +200,7 @@
     <div class="content container">
       <div class="post">
   <h1 class="post-title">Redirecting Munki Downloads</h1>
-  <span class="post-date">01 Dec 2015</span>
+  <span class="post-date">30 Nov 2015</span>
   <p>Munki 2.4.0 brought the option to have Munki follow http redirects (<a href="https://github.com/munki/munki/pull/530">my first contribution to Munki</a>). This allowed you to set Munki to follow redirects to either just HTTPS URLs or all urls. This allows you to get quite clever about where your Munki content is hosted. For example, I have one piece of software that is quite large, and needs to be downloaded by many remote workers as soon as it is released. Whilst I could stand up a server infrastructure to cope with the demand, there are cloud providers such as Amazon’s CloudFront that will handle this all much better than I ever could. Of course, this is only available to clients running Munki version 2.4.0 or higher, so I am going to use my configuration management tool of choice (Puppet) to only use this feature on clients that support it, whilst allowing legacy clients to still get the update from the Munki server as they always have done. <!-- more --></p>
 
 <p>I use Nginx for my Munki server, but you should be able to translate this technique for your server of choice.</p>
